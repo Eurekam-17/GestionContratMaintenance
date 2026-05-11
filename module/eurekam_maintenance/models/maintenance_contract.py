@@ -150,6 +150,21 @@ class EurekamMaintenanceContract(models.Model):
         tracking=True,
     )
     nb_products = fields.Integer(string='Nombre de produits', default=1)
+    billing_frequency_ids = fields.Many2many(
+        'eurekam.billing.frequency',
+        'maintenance_contract_billing_frequency_rel',
+        'contract_id', 'frequency_id',
+        string='Cadences de facturation',
+        tracking=True,
+        help="Une meme contrat peut combiner plusieurs cadences (ex: Annuelle + a echu).",
+    )
+    module_billing_ids = fields.Many2many(
+        'eurekam.module.billing',
+        'maintenance_contract_module_billing_rel',
+        'contract_id', 'module_billing_id',
+        string='Facturation Assistance module',
+        tracking=True,
+    )
 
     # ------------------------------------------------------------------
     # Lignes annuelles (montants par année 2023, 2024, ...)

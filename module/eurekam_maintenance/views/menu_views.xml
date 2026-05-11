@@ -55,5 +55,15 @@
               parent="menu_maintenance_config"
               action="action_special_equipment"
               sequence="40"/>
+    <menuitem id="menu_config_billing_frequency"
+              name="Cadences de facturation"
+              parent="menu_maintenance_config"
+              action="action_billing_frequency"
+              sequence="50"/>
+    <menuitem id="menu_config_module_billing"
+              name="Facturation modules"
+              parent="menu_maintenance_config"
+              action="action_module_billing"
+              sequence="60"/>
 
 </odoo>

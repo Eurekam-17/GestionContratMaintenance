@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="freq_annual" model="eurekam.billing.frequency">
+            <field name="name">Annuelle</field>
+            <field name="code">annual</field>
+            <field name="sequence">10</field>
+            <field name="description">Facturation une fois par an.</field>
+        </record>
+        <record id="freq_overdue" model="eurekam.billing.frequency">
+            <field name="name">À échu</field>
+            <field name="code">overdue</field>
+            <field name="sequence">20</field>
+            <field name="description">Facturation à terme échu (en fin de période).</field>
+        </record>
+        <record id="freq_upcoming" model="eurekam.billing.frequency">
+            <field name="name">À échoir</field>
+            <field name="code">upcoming</field>
+            <field name="sequence">30</field>
+            <field name="description">Facturation à terme à échoir (en début de période).</field>
+        </record>
+        <record id="freq_full_period" model="eurekam.billing.frequency">
+            <field name="name">Période intégrale</field>
+            <field name="code">full_period</field>
+            <field name="sequence">40</field>
+            <field name="description">Facturation de la totalité de la période en une fois.</field>
+        </record>
+        <record id="freq_semi_annual" model="eurekam.billing.frequency">
+            <field name="name">Semestrielle</field>
+            <field name="code">semi_annual</field>
+            <field name="sequence">50</field>
+            <field name="description">Facturation tous les 6 mois.</field>
+        </record>
+        <record id="freq_quarterly" model="eurekam.billing.frequency">
+            <field name="name">Trimestrielle</field>
+            <field name="code">quarterly</field>
+            <field name="sequence">60</field>
+            <field name="description">Facturation tous les 3 mois.</field>
+        </record>
+
+    </data>
+</odoo>

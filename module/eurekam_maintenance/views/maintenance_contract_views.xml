@@ -82,6 +82,20 @@
                                     <field name="current_year_amount"/>
                                 </group>
                             </group>
+                            <group>
+                                <group string="Cadences de facturation">
+                                    <field name="billing_frequency_ids"
+                                           widget="many2many_tags"
+                                           options="{'color_field': 'color'}"
+                                           nolabel="1"/>
+                                </group>
+                                <group string="Facturation modules">
+                                    <field name="module_billing_ids"
+                                           widget="many2many_tags"
+                                           options="{'color_field': 'color'}"
+                                           nolabel="1"/>
+                                </group>
+                            </group>
                         </page>
                         <page string="Montants annuels" name="annual_lines">
                             <p class="text-muted">

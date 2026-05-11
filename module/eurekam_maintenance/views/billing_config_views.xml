@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================== -->
+    <!-- eurekam.billing.frequency                                       -->
+    <!-- ============================================================== -->
+    <record id="view_billing_frequency_list" model="ir.ui.view">
+        <field name="name">eurekam.billing.frequency.list</field>
+        <field name="model">eurekam.billing.frequency</field>
+        <field name="arch" type="xml">
+            <list string="Cadences de facturation" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="description" optional="show"/>
+                <field name="color" widget="color_picker"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_billing_frequency" model="ir.actions.act_window">
+        <field name="name">Cadences de facturation</field>
+        <field name="res_model">eurekam.billing.frequency</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <!-- ============================================================== -->
+    <!-- eurekam.module.billing                                          -->
+    <!-- ============================================================== -->
+    <record id="view_module_billing_list" model="ir.ui.view">
+        <field name="name">eurekam.module.billing.list</field>
+        <field name="model">eurekam.module.billing</field>
+        <field name="arch" type="xml">
+            <list string="Facturation modules" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="description" optional="show"/>
+                <field name="color" widget="color_picker"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_module_billing" model="ir.actions.act_window">
+        <field name="name">Facturation modules</field>
+        <field name="res_model">eurekam.module.billing</field>
+        <field name="view_mode">list</field>
+    </record>
+
+</odoo>
