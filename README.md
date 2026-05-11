@@ -63,9 +63,9 @@ Le module unifie le tout dans Odoo avec :
 |------:|------------------------------------------------------------------------------------------|--------|
 |     0 | Garde-fou environnement TEST (`scripts/00_check_environment.py`)                         | Fait   |
 |     1 | Modèle `eurekam.maintenance.contract` + vues form/list/kanban/search + sécurité + séquence | Fait   |
-|     2 | Lignes annuelles `eurekam.maintenance.contract.line` (2023 → 2029)                       | À faire |
-|     3 | Extension `res.partner` (établissements, équipements, modules, versions produit)         | À faire |
-|     4 | Cadences de facturation + facturation modules (`billing_frequency`, `module_billing`)    | À faire |
+|     2 | Lignes annuelles `eurekam.maintenance.contract.line` (2023 → 2029)                       | Fait   |
+|     3 | Extension `res.partner` (établissements, équipements, modules, versions produit)         | Fait   |
+|     4 | Cadences de facturation + facturation modules (`billing_frequency`, `module_billing`)    | Fait   |
 |     5 | Wizard de renouvellement + révision Syntec                                               | À faire |
 |     6 | Création de facture depuis contrat (intégration `account`)                               | À faire |
 |     7 | Cron d'expiration + emails de notification                                               | À faire |

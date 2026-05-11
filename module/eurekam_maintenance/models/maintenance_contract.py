@@ -247,6 +247,27 @@ class EurekamMaintenanceContract(models.Model):
     active = fields.Boolean(default=True)
     color = fields.Integer(string='Couleur')
 
+    # ------------------------------------------------------------------
+    # Renouvellement (chainage entre contrats)
+    # ------------------------------------------------------------------
+    renewed_from_id = fields.Many2one(
+        'eurekam.maintenance.contract',
+        string='Contrat précédent (renouvelé depuis)',
+        readonly=True,
+        copy=False,
+        index=True,
+        help="Renseigné automatiquement par le wizard de renouvellement.",
+    )
+    renewed_to_ids = fields.One2many(
+        'eurekam.maintenance.contract',
+        'renewed_from_id',
+        string='Contrats suivants (renouvelés vers)',
+    )
+    renewed_to_count = fields.Integer(
+        string='Nb renouvellements',
+        compute='_compute_renewed_to_count',
+    )
+
     # ==================================================================
     # Compute / Search / Constraints
     # ==================================================================
@@ -284,6 +305,11 @@ class EurekamMaintenanceContract(models.Model):
             rec.line_count = len(rec.line_ids)
             current = rec.line_ids.filtered(lambda l: l.year == today_year)
             rec.current_year_amount = sum(current.mapped('amount'))
+
+    @api.depends('renewed_to_ids')
+    def _compute_renewed_to_count(self):
+        for rec in self:
+            rec.renewed_to_count = len(rec.renewed_to_ids)
 
     def _search_is_expiring_soon(self, operator, value):
         today = fields.Date.context_today(self)
@@ -383,4 +409,57 @@ class EurekamMaintenanceContract(models.Model):
             'view_mode': 'list,pivot,graph,form',
             'domain': [('contract_id', '=', self.id)],
             'context': {'default_contract_id': self.id},
+        }
+
+    def action_open_renewal_wizard(self):
+        """Ouvre le wizard de renouvellement pre-rempli depuis ce contrat."""
+        self.ensure_one()
+        if self.state in ('renewed', 'cancelled'):
+            raise UserError(_(
+                "Ce contrat est %s, impossible de le renouveler.",
+                dict(self._fields['state'].selection).get(self.state),
+            ))
+        return {
+            'name': _("Renouveler — %s", self.sequence_number),
+            'type': 'ir.actions.act_window',
+            'res_model': 'eurekam.contract.renewal.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_contract_id': self.id},
+        }
+
+    def action_view_renewed_from(self):
+        """Ouvre le contrat dont celui-ci est le renouvellement."""
+        self.ensure_one()
+        if not self.renewed_from_id:
+            return False
+        return {
+            'name': _("Contrat précédent"),
+            'type': 'ir.actions.act_window',
+            'res_model': 'eurekam.maintenance.contract',
+            'res_id': self.renewed_from_id.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
+
+    def action_view_renewed_to(self):
+        """Ouvre le ou les contrats qui ont renouvele celui-ci."""
+        self.ensure_one()
+        if not self.renewed_to_ids:
+            return False
+        if len(self.renewed_to_ids) == 1:
+            return {
+                'name': _("Contrat de renouvellement"),
+                'type': 'ir.actions.act_window',
+                'res_model': 'eurekam.maintenance.contract',
+                'res_id': self.renewed_to_ids[0].id,
+                'view_mode': 'form',
+                'target': 'current',
+            }
+        return {
+            'name': _("Contrats de renouvellement"),
+            'type': 'ir.actions.act_window',
+            'res_model': 'eurekam.maintenance.contract',
+            'view_mode': 'list,form',
+            'domain': [('id', 'in', self.renewed_to_ids.ids)],
         }

@@ -29,6 +29,7 @@ Ce module remplace le suivi actuellement fait dans Notion.
         'data/establishment_data.xml',
         'data/billing_frequency_data.xml',
         'data/module_billing_data.xml',
+        'wizard/contract_renewal_wizard_views.xml',
         'views/establishment_config_views.xml',
         'views/billing_config_views.xml',
         'views/res_partner_views.xml',

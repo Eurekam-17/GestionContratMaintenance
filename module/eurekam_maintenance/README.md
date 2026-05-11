@@ -8,10 +8,10 @@ Remplace le suivi historique fait dans Notion (table « Assistance DO »).
 | Phase | Contenu | Statut |
 |-------|---------|--------|
 | 0 | Garde-fou environnement TEST | ✅ Fait |
-| 1 | Modèle `eurekam.maintenance.contract` (de base) + vues + sécurité + séquence | 🟢 En cours |
-| 2 | Lignes annuelles `eurekam.maintenance.contract.line` + montants 2023→2029 | ⏳ À faire |
-| 3 | Extension `res.partner` (établissements, équipements, modules…) | ⏳ À faire |
-| 4 | Cadences de facturation + facturation modules | ⏳ À faire |
+| 1 | Modèle `eurekam.maintenance.contract` (de base) + vues + sécurité + séquence | ✅ Fait |
+| 2 | Lignes annuelles `eurekam.maintenance.contract.line` + montants 2023→2029 | ✅ Fait |
+| 3 | Extension `res.partner` (établissements, équipements, modules…) | ✅ Fait |
+| 4 | Cadences de facturation + facturation modules | ✅ Fait |
 | 5 | Wizard de renouvellement + révision Syntec | ⏳ À faire |
 | 6 | Création de facture depuis contrat | ⏳ À faire |
 | 7 | Cron d'expiration + emails | ⏳ À faire |

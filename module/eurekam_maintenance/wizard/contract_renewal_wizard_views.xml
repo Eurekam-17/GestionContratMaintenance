@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_contract_renewal_wizard_form" model="ir.ui.view">
+        <field name="name">eurekam.contract.renewal.wizard.form</field>
+        <field name="model">eurekam.contract.renewal.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Renouveler le contrat">
+                <sheet>
+                    <div class="oe_title">
+                        <h2>Renouvellement de contrat</h2>
+                    </div>
+                    <group>
+                        <group string="Contrat source">
+                            <field name="contract_id" readonly="1"/>
+                            <field name="partner_id" readonly="1"/>
+                            <field name="product_id" readonly="1"/>
+                            <field name="old_amount" readonly="1"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="Nouveau contrat">
+                            <field name="new_date_start"/>
+                            <field name="new_duration"/>
+                            <field name="new_date_end"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Révision Syntec">
+                            <field name="apply_syntec"/>
+                            <field name="syntec_rate"
+                                   invisible="not apply_syntec"
+                                   required="apply_syntec"/>
+                            <field name="syntec_delta"
+                                   invisible="not apply_syntec"
+                                   readonly="1"/>
+                        </group>
+                        <group string="Montant final">
+                            <field name="new_maintenance_amount"/>
+                        </group>
+                    </group>
+                    <group string="Options">
+                        <field name="generate_lines"/>
+                        <field name="cancel_old_lines_invoiced"/>
+                    </group>
+                    <div class="alert alert-info mt-3" role="alert">
+                        L'ancien contrat sera basculé en état <b>Renouvelé</b> et
+                        un nouveau contrat sera créé en état <b>Actif</b>, lié au
+                        précédent via les smart-buttons « Renouvelé depuis » /
+                        « Renouvelé vers ».
+                    </div>
+                </sheet>
+                <footer>
+                    <button name="action_renew" type="object"
+                            string="Créer le nouveau contrat"
+                            class="oe_highlight"/>
+                    <button string="Annuler" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_contract_renewal_wizard" model="ir.actions.act_window">
+        <field name="name">Renouveler le contrat</field>
+        <field name="res_model">eurekam.contract.renewal.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

@@ -16,6 +16,9 @@
                     <button name="action_generate_lines" type="object"
                             string="Générer les lignes annuelles"
                             invisible="not date_start or not date_end"/>
+                    <button name="action_open_renewal_wizard" type="object"
+                            string="Renouveler" class="btn-primary"
+                            invisible="state in ('draft','renewed','cancelled')"/>
                     <button name="action_cancel" type="object"
                             string="Annuler"
                             invisible="state in ('cancelled','renewed')"/>
@@ -31,6 +34,19 @@
                                 class="oe_stat_button" icon="fa-calendar">
                             <field name="line_count" widget="statinfo"
                                    string="Lignes annuelles"/>
+                        </button>
+                        <button name="action_view_renewed_from" type="object"
+                                class="oe_stat_button" icon="fa-history"
+                                invisible="not renewed_from_id">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Renouvelé depuis</span>
+                            </div>
+                        </button>
+                        <button name="action_view_renewed_to" type="object"
+                                class="oe_stat_button" icon="fa-arrow-right"
+                                invisible="renewed_to_count == 0">
+                            <field name="renewed_to_count" widget="statinfo"
+                                   string="Renouvelé vers"/>
                         </button>
                     </div>
                     <div class="oe_title">
