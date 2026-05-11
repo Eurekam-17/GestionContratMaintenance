@@ -1,4 +1,4 @@
-"""Garde-fou environnement Odoo — Eurekam Maintenance.
+"""Garde-fou environnement Odoo - Eurekam Maintenance.
 
 Ce script DOIT etre execute avant toute autre operation visant la base Odoo
 (installation/maj du module, import, modification de donnees, lancement des tests).
@@ -6,10 +6,14 @@ Ce script DOIT etre execute avant toute autre operation visant la base Odoo
 Verifications effectuees :
     1. Le fichier config/odoo_test.json existe et est lisible.
     2. Le champ "environment" vaut bien "TEST".
-    3. L'URL contient au moins un mot-cle de test (test, staging, dev, preprod).
+    3. L'URL contient au moins un mot-cle de test
+       (test, staging, dev, preprod, recette).
     4. L'URL ne contient AUCUN mot-cle interdit (prod, production, main, ...).
-    5. La connexion XML-RPC a Odoo aboutit et la version serveur est lisible.
-    6. Le nom de base reel correspond a celui declare dans la config.
+    5. La base Odoo cible est resolue : soit via le champ "database" exact,
+       soit via auto-decouverte sur "database_pattern" (regex). Sur odoo.sh,
+       les bases de staging changent de nom a chaque rebuild d'ou l'utilite
+       du pattern.
+    6. La connexion XML-RPC a Odoo aboutit et la version serveur est lisible.
     7. L'authentification reussit avec les credentials fournis.
 
 En cas d'echec d'une de ces verifications, le script s'arrete avec un code != 0
@@ -18,18 +22,22 @@ et toute operation appelante doit etre annulee.
 Usage :
     python scripts/00_check_environment.py
     python scripts/00_check_environment.py --config config/odoo_test.json
-    python scripts/00_check_environment.py --quiet   (n'affiche que les erreurs)
+    python scripts/00_check_environment.py --quiet
+    python scripts/00_check_environment.py --skip-connection
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 import xmlrpc.client
 from pathlib import Path
 
+# ---------------------------------------------------------------------------
 # Codes de sortie
+# ---------------------------------------------------------------------------
 EXIT_OK = 0
 EXIT_CONFIG_MISSING = 10
 EXIT_CONFIG_INVALID = 11
@@ -37,13 +45,17 @@ EXIT_ENV_NOT_TEST = 20
 EXIT_URL_NOT_TEST = 21
 EXIT_URL_FORBIDDEN = 22
 EXIT_CONNECTION_FAILED = 30
-EXIT_DB_MISMATCH = 31
-EXIT_AUTH_FAILED = 32
+EXIT_DB_RESOLUTION_FAILED = 31
+EXIT_DB_PATTERN_FAIL = 32
+EXIT_AUTH_FAILED = 33
 
-DEFAULT_TEST_KEYWORDS = ("test", "staging", "dev", "preprod")
+DEFAULT_TEST_KEYWORDS = ("test", "staging", "dev", "preprod", "recette")
 DEFAULT_FORBIDDEN_KEYWORDS = ("prod", "production", "main")
 
 
+# ---------------------------------------------------------------------------
+# Utilitaires
+# ---------------------------------------------------------------------------
 def log(message: str, *, quiet: bool = False) -> None:
     if not quiet:
         print(message)
@@ -55,8 +67,10 @@ def fail(message: str, code: int) -> None:
     sys.exit(code)
 
 
+# ---------------------------------------------------------------------------
+# Chargement et validation de la configuration
+# ---------------------------------------------------------------------------
 def load_config(config_path: Path) -> dict:
-    """Charge le fichier de configuration JSON."""
     if not config_path.exists():
         fail(
             f"X STOP : fichier de configuration introuvable : {config_path}\n"
@@ -64,7 +78,6 @@ def load_config(config_path: Path) -> dict:
             f"et y renseigner les credentials de la base de TEST.",
             EXIT_CONFIG_MISSING,
         )
-
     try:
         with config_path.open("r", encoding="utf-8") as f:
             return json.load(f)
@@ -74,25 +87,22 @@ def load_config(config_path: Path) -> dict:
             EXIT_CONFIG_INVALID,
         )
     except OSError as exc:
-        fail(
-            f"X STOP : impossible de lire {config_path} : {exc}",
-            EXIT_CONFIG_INVALID,
-        )
+        fail(f"X STOP : impossible de lire {config_path} : {exc}", EXIT_CONFIG_INVALID)
 
 
 def check_environment_field(config: dict) -> None:
-    """Verifie que le champ 'environment' vaut TEST."""
     env = config.get("environment")
     if env != "TEST":
         fail(
-            f"X STOP : le champ 'environment' doit etre 'TEST' (valeur actuelle : {env!r}).\n"
-            f"  -> Refuser tout demarrage sur une configuration qui ne declare pas explicitement TEST.",
+            f"X STOP : le champ 'environment' doit etre 'TEST' "
+            f"(valeur actuelle : {env!r}).\n"
+            f"  -> Refuser tout demarrage sur une configuration qui ne declare "
+            f"pas explicitement TEST.",
             EXIT_ENV_NOT_TEST,
         )
 
 
 def check_url(config: dict) -> str:
-    """Verifie que l'URL ressemble a une base de test et ne contient aucun mot interdit."""
     url = config.get("url", "").strip()
     if not url:
         fail("X STOP : champ 'url' manquant ou vide dans la configuration.", EXIT_CONFIG_INVALID)
@@ -113,8 +123,6 @@ def check_url(config: dict) -> str:
     # 2. Mots-cles interdits
     forbidden = safety.get("forbidden_url_keywords", DEFAULT_FORBIDDEN_KEYWORDS)
     for mot in forbidden:
-        # On ignore les mots interdits qui sont eux-memes presents dans un mot autorise
-        # ex: 'preprod' contient 'prod' -> on traite ce cas en verifiant les frontieres
         mot_lower = mot.lower()
         if mot_lower in url_lower:
             # Cas particulier : 'prod' present dans 'preprod' -> autorise
@@ -129,12 +137,112 @@ def check_url(config: dict) -> str:
     return url
 
 
-def check_odoo_connection(config: dict, url: str, *, quiet: bool = False) -> dict:
-    """Se connecte au serveur Odoo et verifie que la base correspond."""
-    expected_db = config.get("database", "").strip()
-    if not expected_db:
-        fail("X STOP : champ 'database' manquant ou vide dans la configuration.", EXIT_CONFIG_INVALID)
+# ---------------------------------------------------------------------------
+# Resolution de la base : nom exact ou pattern regex (auto-decouverte)
+# ---------------------------------------------------------------------------
+def list_remote_databases(url: str, *, quiet: bool = False) -> list[str] | None:
+    """Tente de lister les bases via XML-RPC. Renvoie None si le service est
+    indisponible (certaines instances le desactivent pour la securite)."""
+    try:
+        db_proxy = xmlrpc.client.ServerProxy(f"{url}/xmlrpc/2/db", allow_none=True)
+        names = db_proxy.list()
+        return list(names) if names else []
+    except (xmlrpc.client.Fault, xmlrpc.client.ProtocolError, ConnectionError, OSError) as exc:
+        log(f"   (info) service db.list() indisponible : {exc}", quiet=quiet)
+        return None
 
+
+def resolve_database(config: dict, url: str, *, quiet: bool = False) -> str:
+    """Resout la base a utiliser :
+    - Si 'database' est present, on l'utilise (et on warn s'il n'apparait plus
+      dans la liste distante, ce qui suggere un rebuild odoo.sh).
+    - Si 'database' est absent et 'database_pattern' present, on essaie
+      d'auto-decouvrir via db.list() + regex.
+    """
+    expected_db = (config.get("database") or "").strip()
+    pattern = (config.get("database_pattern") or "").strip()
+
+    if not expected_db and not pattern:
+        fail(
+            "X STOP : ni 'database' ni 'database_pattern' n'est defini dans la configuration.\n"
+            "  -> Renseigner au moins un des deux.",
+            EXIT_CONFIG_INVALID,
+        )
+
+    available = list_remote_databases(url, quiet=quiet)
+
+    # --- Cas 1 : nom exact fourni ---------------------------------------
+    if expected_db:
+        if available is not None and expected_db not in available:
+            log(
+                f"!! Avertissement : la base {expected_db!r} n'apparait pas dans "
+                f"la liste distante {available}.\n"
+                f"   La base a peut-etre ete renommee (rebuild odoo.sh ?).",
+                quiet=quiet,
+            )
+            # Si pattern fourni, on essaie de retrouver la nouvelle base
+            if pattern and available:
+                try:
+                    regex = re.compile(pattern)
+                except re.error as exc:
+                    fail(
+                        f"X STOP : 'database_pattern' n'est pas une regex valide : {exc}",
+                        EXIT_CONFIG_INVALID,
+                    )
+                candidates = [db for db in available if regex.match(db)]
+                if len(candidates) == 1:
+                    new_db = candidates[0]
+                    log(
+                        f"   -> Auto-discovery : nouvelle base detectee = {new_db!r}.\n"
+                        f"      -> Mettre a jour 'database' dans config/odoo_test.json "
+                        f"pour figer ce nom (sinon ce warning reapparaitra).",
+                        quiet=quiet,
+                    )
+                    return new_db
+        return expected_db
+
+    # --- Cas 2 : pattern fourni sans nom exact --------------------------
+    if available is None:
+        fail(
+            "X STOP : impossible de lister les bases (service db indisponible) "
+            "et 'database' non fourni dans la config.\n"
+            "  -> Renseigner 'database' explicitement.",
+            EXIT_DB_RESOLUTION_FAILED,
+        )
+    if not available:
+        fail("X STOP : aucune base disponible sur le serveur.", EXIT_DB_RESOLUTION_FAILED)
+
+    try:
+        regex = re.compile(pattern)
+    except re.error as exc:
+        fail(
+            f"X STOP : 'database_pattern' n'est pas une regex valide : {exc}",
+            EXIT_CONFIG_INVALID,
+        )
+
+    candidates = [db for db in available if regex.match(db)]
+    if not candidates:
+        fail(
+            f"X STOP : aucune base ne matche {pattern!r}.\n  Disponibles : {available}",
+            EXIT_DB_PATTERN_FAIL,
+        )
+    if len(candidates) > 1:
+        fail(
+            f"X STOP : plusieurs bases matchent {pattern!r} : {candidates}.\n"
+            f"  -> Preciser 'database' explicitement pour lever l'ambiguite.",
+            EXIT_DB_PATTERN_FAIL,
+        )
+
+    log(f"OK Base auto-decouverte via pattern : {candidates[0]!r}", quiet=quiet)
+    return candidates[0]
+
+
+# ---------------------------------------------------------------------------
+# Connexion + authentification
+# ---------------------------------------------------------------------------
+def check_odoo_connection(
+    config: dict, url: str, db_name: str, *, quiet: bool = False
+) -> dict:
     try:
         common = xmlrpc.client.ServerProxy(f"{url}/xmlrpc/2/common", allow_none=True)
         version_info = common.version()
@@ -173,27 +281,31 @@ def check_odoo_connection(config: dict, url: str, *, quiet: bool = False) -> dic
         )
 
     try:
-        uid = common.authenticate(expected_db, username, secret, {})
+        uid = common.authenticate(db_name, username, secret, {})
     except (xmlrpc.client.Fault, xmlrpc.client.ProtocolError, ConnectionError, OSError) as exc:
         fail(
-            f"X STOP : authentification echouee sur la base {expected_db!r} : {exc}",
+            f"X STOP : authentification echouee sur la base {db_name!r} : {exc}",
             EXIT_AUTH_FAILED,
         )
 
     if not uid:
         fail(
-            f"X STOP : authentification refusee pour {username!r} sur la base {expected_db!r}.\n"
-            f"  -> Verifier l'utilisateur, la cle API et le nom exact de la base.",
+            f"X STOP : authentification refusee pour {username!r} sur la base {db_name!r}.\n"
+            f"  -> Verifier l'utilisateur, le mot de passe et le nom exact de la base.",
             EXIT_AUTH_FAILED,
         )
 
-    log(f"OK Authentification reussie (uid={uid}) sur la base {expected_db!r}.", quiet=quiet)
-    return {"version": version_info, "uid": uid, "database": expected_db}
+    log(f"OK Authentification reussie (uid={uid}) sur la base {db_name!r}.", quiet=quiet)
+    return {"version": version_info, "uid": uid, "database": db_name}
 
 
+# ---------------------------------------------------------------------------
+# Main
+# ---------------------------------------------------------------------------
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
-        description="Garde-fou environnement Odoo (Eurekam Maintenance) — verifie qu'on cible bien la base de TEST."
+        description="Garde-fou environnement Odoo (Eurekam Maintenance) - "
+                    "verifie qu'on cible bien la base de TEST."
     )
     parser.add_argument(
         "--config",
@@ -220,7 +332,7 @@ def main(argv: list[str] | None = None) -> int:
 
     log("", quiet=args.quiet)
     log("=" * 60, quiet=args.quiet)
-    log(f">> ENVIRONNEMENT : TEST  --  Base : {config.get('database')}", quiet=args.quiet)
+    log(">> ENVIRONNEMENT : TEST", quiet=args.quiet)
     log(f">> URL           : {url}", quiet=args.quiet)
     log("=" * 60, quiet=args.quiet)
 
@@ -229,7 +341,10 @@ def main(argv: list[str] | None = None) -> int:
         log("OK Verifications de configuration OK.", quiet=args.quiet)
         return EXIT_OK
 
-    info = check_odoo_connection(config, url, quiet=args.quiet)
+    db_name = resolve_database(config, url, quiet=args.quiet)
+    log(f">> Base resolue  : {db_name}", quiet=args.quiet)
+
+    info = check_odoo_connection(config, url, db_name, quiet=args.quiet)
 
     log("", quiet=args.quiet)
     log("OK Toutes les verifications sont passees. Vous pouvez continuer.", quiet=args.quiet)

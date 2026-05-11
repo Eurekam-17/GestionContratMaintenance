@@ -1,7 +1,8 @@
 {
     "environment": "TEST",
-    "url": "https://eurekam-test.odoo.com",
-    "database": "eurekam-test",
+    "url": "https://eurekam-recette.odoo.com",
+    "database": "eurekam-staging-31905051",
+    "database_pattern": "^eurekam-(staging|recette|test|dev|preprod)(-\\d+)?$",
     "username": "loic.tamarelle@eurekam.fr",
     "password": "REMPLACER_PAR_LE_MOT_DE_PASSE_OU_LA_CLE_API",
     "safety_check": {
