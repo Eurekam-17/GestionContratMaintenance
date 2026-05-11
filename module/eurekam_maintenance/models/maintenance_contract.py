@@ -1,5 +1,9 @@
+import logging
+
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
+
+_logger = logging.getLogger(__name__)
 
 
 class EurekamMaintenanceContract(models.Model):
@@ -591,4 +595,115 @@ class EurekamMaintenanceContract(models.Model):
             'res_model': 'account.move',
             'view_mode': 'list,form',
             'domain': [('id', 'in', invoice_ids)],
+        }
+
+    # ==================================================================
+    # Cron expiration et templates de notification
+    # ==================================================================
+
+    def _get_expiring_recipients(self):
+        """Destinataires de l'email 'expirant bientot' : commercial seul."""
+        self.ensure_one()
+        partners = self.env['res.partner']
+        if self.commercial_id.partner_id:
+            partners |= self.commercial_id.partner_id
+        return partners
+
+    def _get_expired_recipients(self):
+        """Destinataires de l'email 'expire' : commercial + tous les managers."""
+        self.ensure_one()
+        partners = self._get_expiring_recipients()
+        managers_group = self.env.ref(
+            'eurekam_maintenance.group_maintenance_manager',
+            raise_if_not_found=False,
+        )
+        if managers_group:
+            partners |= managers_group.users.mapped('partner_id').filtered('email')
+        return partners
+
+    @api.model
+    def _cron_check_expiring_contracts(self):
+        """Job quotidien : bascule les etats actif/expirant/expire et envoie les emails.
+
+        Regles :
+        - Si 0 <= days_to_expiry <= 90 et state == 'active' : passe en 'expiring',
+          envoie email au commercial.
+        - Si days_to_expiry < 0 et state in ('active', 'expiring') : passe en 'expired',
+          envoie email au commercial + aux managers.
+
+        Idempotent : si l'etat est deja le bon (deja notifie precedemment),
+        rien n'est fait pour ce contrat.
+        """
+        today = fields.Date.context_today(self)
+        candidates = self.search([
+            ('state', 'in', ('active', 'expiring')),
+            ('date_end', '!=', False),
+        ])
+        _logger.info(
+            "Cron expiration : %d contrats a verifier.",
+            len(candidates),
+        )
+
+        expiring_template = self.env.ref(
+            'eurekam_maintenance.mail_template_contract_expiring',
+            raise_if_not_found=False,
+        )
+        expired_template = self.env.ref(
+            'eurekam_maintenance.mail_template_contract_expired',
+            raise_if_not_found=False,
+        )
+
+        passed_to_expiring = self.env['eurekam.maintenance.contract']
+        passed_to_expired = self.env['eurekam.maintenance.contract']
+
+        for contract in candidates:
+            days = (contract.date_end - today).days
+            if days < 0 and contract.state != 'expired':
+                contract.write({'state': 'expired'})
+                passed_to_expired |= contract
+            elif 0 <= days <= 90 and contract.state == 'active':
+                contract.write({'state': 'expiring'})
+                passed_to_expiring |= contract
+
+        # ---- Envoi des emails (en queue, pas force_send=True) -----
+        if expiring_template:
+            for contract in passed_to_expiring:
+                try:
+                    expiring_template.with_context(
+                        lang=contract.commercial_id.lang or 'fr_FR',
+                    ).send_mail(
+                        contract.id,
+                        force_send=False,
+                        email_layout_xmlid='mail.mail_notification_light',
+                    )
+                except Exception as exc:
+                    _logger.warning(
+                        "Echec envoi email 'expirant' pour %s : %s",
+                        contract.sequence_number, exc,
+                    )
+
+        if expired_template:
+            for contract in passed_to_expired:
+                try:
+                    expired_template.with_context(
+                        lang=contract.commercial_id.lang or 'fr_FR',
+                    ).send_mail(
+                        contract.id,
+                        force_send=False,
+                        email_layout_xmlid='mail.mail_notification_light',
+                    )
+                except Exception as exc:
+                    _logger.warning(
+                        "Echec envoi email 'expire' pour %s : %s",
+                        contract.sequence_number, exc,
+                    )
+
+        _logger.info(
+            "Cron expiration : %d -> 'expiring', %d -> 'expired'.",
+            len(passed_to_expiring),
+            len(passed_to_expired),
+        )
+        return {
+            'expiring': passed_to_expiring.ids,
+            'expired': passed_to_expired.ids,
         }
