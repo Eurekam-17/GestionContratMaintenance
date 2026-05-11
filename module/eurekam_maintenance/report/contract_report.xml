@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Action de rapport PDF QWeb pour un contrat de maintenance.
+         binding_model_id + binding_type=report : ajoute automatiquement
+         une entree dans le menu "Imprimer" de la vue contrat. -->
+    <record id="action_report_maintenance_contract" model="ir.actions.report">
+        <field name="name">Récapitulatif contrat de maintenance</field>
+        <field name="model">eurekam.maintenance.contract</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">eurekam_maintenance.report_maintenance_contract</field>
+        <field name="report_file">eurekam_maintenance.report_maintenance_contract</field>
+        <field name="binding_model_id" ref="model_eurekam_maintenance_contract"/>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="base.paperformat_euro"/>
+    </record>
+
+</odoo>

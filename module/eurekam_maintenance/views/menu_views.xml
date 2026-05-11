@@ -28,6 +28,13 @@
               action="action_maintenance_establishment"
               sequence="30"/>
 
+    <!-- Sous-menu "Tableau de bord" : pivot et graph -->
+    <menuitem id="menu_maintenance_dashboard"
+              name="Tableau de bord"
+              parent="menu_root_maintenance"
+              action="action_maintenance_dashboard"
+              sequence="40"/>
+
     <!-- Sous-menu "Configuration" (manager uniquement) -->
     <menuitem id="menu_maintenance_config"
               name="Configuration"

@@ -39,6 +39,8 @@ Ce module remplace le suivi actuellement fait dans Notion.
         'views/maintenance_contract_views.xml',
         'views/maintenance_contract_line_views.xml',
         'views/menu_views.xml',
+        'report/contract_report.xml',
+        'report/contract_report_templates.xml',
     ],
     'installable': True,
     'application': True,
