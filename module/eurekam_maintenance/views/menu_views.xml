@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Menu racine "Maintenance" -->
+    <menuitem id="menu_root_maintenance"
+              name="Maintenance"
+              sequence="55"
+              groups="group_maintenance_user"/>
+
+    <!-- Sous-menu "Contrats" -->
+    <menuitem id="menu_maintenance_contracts"
+              name="Contrats"
+              parent="menu_root_maintenance"
+              action="action_maintenance_contract"
+              sequence="10"/>
+
+</odoo>

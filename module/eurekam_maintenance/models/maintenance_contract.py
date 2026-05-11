@@ -1,0 +1,290 @@
+from odoo import _, api, fields, models
+from odoo.exceptions import UserError, ValidationError
+
+
+class EurekamMaintenanceContract(models.Model):
+    _name = 'eurekam.maintenance.contract'
+    _description = 'Contrat de maintenance Eurekam'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _order = 'date_end desc, sequence_number desc'
+    _rec_name = 'name'
+
+    # ------------------------------------------------------------------
+    # Identification
+    # ------------------------------------------------------------------
+    name = fields.Char(
+        string='Référence',
+        compute='_compute_name',
+        store=True,
+        index=True,
+    )
+    sequence_number = fields.Char(
+        string='Numéro',
+        required=True,
+        copy=False,
+        readonly=True,
+        default='Nouveau',
+        index=True,
+    )
+
+    # ------------------------------------------------------------------
+    # Produit & client
+    # ------------------------------------------------------------------
+    product_id = fields.Many2one(
+        'product.template',
+        string='Produit',
+        tracking=True,
+    )
+    product_name = fields.Char(
+        string='Libellé produit',
+        help="Saisie libre si pas de produit lié.",
+    )
+    partner_id = fields.Many2one(
+        'res.partner',
+        string='Établissement',
+        required=True,
+        tracking=True,
+        index=True,
+    )
+    commercial_id = fields.Many2one(
+        'res.users',
+        string='Commercial',
+        default=lambda self: self.env.user,
+        tracking=True,
+    )
+
+    # ------------------------------------------------------------------
+    # Caractéristiques produit / marché
+    # ------------------------------------------------------------------
+    gen = fields.Selection(
+        [
+            ('gen1', 'GEN1'),
+            ('gen2', 'GEN2'),
+            ('upgrade_gen2', 'Upgrade GEN2'),
+        ],
+        string='Génération',
+        tracking=True,
+    )
+    market_type = fields.Selection(
+        [
+            ('uniha_2019', 'UniHA 2019'),
+            ('uniha_2021', 'UniHA 2021'),
+            ('uniha_2023', 'UniHA 2023'),
+            ('uniha_2024', 'UniHA 2024'),
+            ('uniha_2025', 'UniHA 2025'),
+            ('ageps', 'AGEPS'),
+            ('market_internal', 'Marché interne'),
+            ('private', 'Privé'),
+            ('distributor', 'Distributeur'),
+        ],
+        string='Marché',
+        tracking=True,
+    )
+    order_status = fields.Selection(
+        [
+            ('received', 'Reçue'),
+            ('pending', 'En attente'),
+            ('no_po', 'Pas de bon de commande'),
+            ('deploying', 'En déploiement'),
+            ('suspended', 'Suspendue'),
+        ],
+        string='Statut commande',
+        tracking=True,
+    )
+
+    # ------------------------------------------------------------------
+    # Dates & durée
+    # ------------------------------------------------------------------
+    date_start = fields.Date(string='Début du contrat', tracking=True)
+    date_end = fields.Date(string='Fin du contrat', tracking=True)
+    duration = fields.Selection(
+        [
+            ('6m', '6 mois'),
+            ('1y', '1 an'),
+            ('2y', '2 ans'),
+            ('3y', '3 ans'),
+            ('4y', '4 ans'),
+            ('5y', '5 ans'),
+        ],
+        string='Durée commandée',
+        tracking=True,
+    )
+    days_to_expiry = fields.Integer(
+        string='Jours avant expiration',
+        compute='_compute_days_to_expiry',
+        store=False,
+    )
+    is_expiring_soon = fields.Boolean(
+        string='Expire bientôt',
+        compute='_compute_days_to_expiry',
+        store=False,
+        search='_search_is_expiring_soon',
+    )
+
+    # ------------------------------------------------------------------
+    # Facturation
+    # ------------------------------------------------------------------
+    billing_level = fields.Selection(
+        [
+            ('100', '100 %'),
+            ('75', '75 %'),
+            ('50', '50 %'),
+            ('25', '25 %'),
+            ('0', '0 %'),
+        ],
+        string='Niveau de facturation',
+        tracking=True,
+    )
+    maintenance_amount = fields.Monetary(
+        string='Montant de maintenance',
+        currency_field='currency_id',
+        tracking=True,
+    )
+    syntec_revision = fields.Selection(
+        [('yes', 'Oui'), ('no', 'Non')],
+        string='Révision Syntec',
+        default='no',
+        tracking=True,
+    )
+    nb_products = fields.Integer(string='Nombre de produits', default=1)
+
+    # ------------------------------------------------------------------
+    # Notes
+    # ------------------------------------------------------------------
+    comment = fields.Text(string='Commentaire')
+
+    # ------------------------------------------------------------------
+    # État
+    # ------------------------------------------------------------------
+    state = fields.Selection(
+        [
+            ('draft', 'Brouillon'),
+            ('active', 'Actif'),
+            ('expiring', 'Expire bientôt'),
+            ('expired', 'Expiré'),
+            ('renewed', 'Renouvelé'),
+            ('cancelled', 'Annulé'),
+        ],
+        string='État',
+        default='draft',
+        tracking=True,
+        index=True,
+    )
+
+    # ------------------------------------------------------------------
+    # Société / devise / pays
+    # ------------------------------------------------------------------
+    company_id = fields.Many2one(
+        'res.company',
+        string='Société',
+        default=lambda self: self.env.company,
+        required=True,
+    )
+    currency_id = fields.Many2one(
+        'res.currency',
+        string='Devise',
+        related='company_id.currency_id',
+        store=True,
+        readonly=True,
+    )
+    country_id = fields.Many2one(
+        'res.country',
+        string='Pays',
+        compute='_compute_country',
+        store=True,
+    )
+
+    # ------------------------------------------------------------------
+    # Affichage
+    # ------------------------------------------------------------------
+    active = fields.Boolean(default=True)
+    color = fields.Integer(string='Couleur')
+
+    # ==================================================================
+    # Compute / Search / Constraints
+    # ==================================================================
+
+    @api.depends('sequence_number', 'partner_id', 'product_id', 'product_name')
+    def _compute_name(self):
+        for rec in self:
+            seq = rec.sequence_number or ''
+            partner = rec.partner_id.display_name or ''
+            prod = rec.product_id.display_name or rec.product_name or ''
+            parts = [p for p in (seq, partner, prod) if p and p != 'Nouveau']
+            rec.name = ' - '.join(parts) if parts else 'Contrat de maintenance'
+
+    @api.depends('date_end')
+    def _compute_days_to_expiry(self):
+        today = fields.Date.context_today(self)
+        for rec in self:
+            if rec.date_end:
+                rec.days_to_expiry = (rec.date_end - today).days
+                rec.is_expiring_soon = 0 <= rec.days_to_expiry <= 90
+            else:
+                rec.days_to_expiry = 0
+                rec.is_expiring_soon = False
+
+    @api.depends('partner_id')
+    def _compute_country(self):
+        for rec in self:
+            rec.country_id = rec.partner_id.country_id
+
+    def _search_is_expiring_soon(self, operator, value):
+        today = fields.Date.context_today(self)
+        in_90_days = fields.Date.add(today, days=90)
+        truthy = (operator == '=' and value) or (operator == '!=' and not value)
+        if truthy:
+            return [('date_end', '>=', today), ('date_end', '<=', in_90_days)]
+        return ['|', ('date_end', '<', today), ('date_end', '>', in_90_days)]
+
+    @api.constrains('date_start', 'date_end')
+    def _check_dates(self):
+        for rec in self:
+            if rec.date_start and rec.date_end and rec.date_end < rec.date_start:
+                raise ValidationError(_(
+                    "La date de fin (%(end)s) doit être postérieure à la date "
+                    "de début (%(start)s).",
+                    end=rec.date_end, start=rec.date_start,
+                ))
+
+    # ==================================================================
+    # CRUD
+    # ==================================================================
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        for vals in vals_list:
+            if not vals.get('sequence_number') or vals.get('sequence_number') == 'Nouveau':
+                vals['sequence_number'] = self.env['ir.sequence'].next_by_code(
+                    'eurekam.maintenance.contract'
+                ) or 'Nouveau'
+        return super().create(vals_list)
+
+    # ==================================================================
+    # Actions
+    # ==================================================================
+
+    def action_activate(self):
+        for rec in self:
+            if rec.state not in ('draft', 'cancelled'):
+                raise UserError(_(
+                    "Seul un contrat en brouillon ou annulé peut être activé."
+                ))
+            if not rec.date_start or not rec.date_end:
+                raise UserError(_(
+                    "Renseigner les dates de début et de fin avant d'activer."
+                ))
+            rec.state = 'active'
+
+    def action_cancel(self):
+        for rec in self:
+            if rec.state != 'cancelled':
+                rec.state = 'cancelled'
+
+    def action_draft(self):
+        for rec in self:
+            if rec.state != 'cancelled':
+                raise UserError(_(
+                    "Seul un contrat annulé peut revenir en brouillon."
+                ))
+            rec.state = 'draft'

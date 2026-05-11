@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================== -->
+    <!-- Vue formulaire                                                  -->
+    <!-- ============================================================== -->
+    <record id="view_maintenance_contract_form" model="ir.ui.view">
+        <field name="name">eurekam.maintenance.contract.form</field>
+        <field name="model">eurekam.maintenance.contract</field>
+        <field name="arch" type="xml">
+            <form string="Contrat de maintenance">
+                <header>
+                    <button name="action_activate" type="object"
+                            string="Activer" class="oe_highlight"
+                            invisible="state not in ('draft','cancelled')"/>
+                    <button name="action_cancel" type="object"
+                            string="Annuler"
+                            invisible="state in ('cancelled','renewed')"/>
+                    <button name="action_draft" type="object"
+                            string="Remettre en brouillon"
+                            invisible="state != 'cancelled'"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,active,expiring,expired,renewed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="sequence_number" class="oe_edit_only"/>
+                        <h1>
+                            <field name="sequence_number" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Identification">
+                            <field name="partner_id"/>
+                            <field name="product_id"/>
+                            <field name="product_name"/>
+                            <field name="commercial_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="country_id"/>
+                        </group>
+                        <group string="Caractéristiques">
+                            <field name="gen"/>
+                            <field name="market_type"/>
+                            <field name="order_status"/>
+                            <field name="nb_products"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Dates et durée" name="dates">
+                            <group>
+                                <group>
+                                    <field name="date_start"/>
+                                    <field name="date_end"/>
+                                    <field name="duration"/>
+                                </group>
+                                <group>
+                                    <field name="days_to_expiry"/>
+                                    <field name="is_expiring_soon"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Facturation" name="billing">
+                            <group>
+                                <group>
+                                    <field name="maintenance_amount"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="billing_level"/>
+                                </group>
+                                <group>
+                                    <field name="syntec_revision"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Notes" name="notes">
+                            <field name="comment" placeholder="Commentaires libres..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============================================================== -->
+    <!-- Vue liste                                                       -->
+    <!-- ============================================================== -->
+    <record id="view_maintenance_contract_list" model="ir.ui.view">
+        <field name="name">eurekam.maintenance.contract.list</field>
+        <field name="model">eurekam.maintenance.contract</field>
+        <field name="arch" type="xml">
+            <list string="Contrats de maintenance"
+                  decoration-warning="is_expiring_soon"
+                  decoration-danger="state == 'expired'"
+                  decoration-muted="state in ('cancelled','renewed')">
+                <field name="sequence_number"/>
+                <field name="partner_id"/>
+                <field name="product_id" optional="show"/>
+                <field name="gen" optional="show"/>
+                <field name="market_type" optional="show"/>
+                <field name="order_status" optional="show"/>
+                <field name="date_start" optional="hide"/>
+                <field name="date_end"/>
+                <field name="duration" optional="show"/>
+                <field name="maintenance_amount" sum="Total"/>
+                <field name="currency_id" column_invisible="True"/>
+                <field name="syntec_revision" optional="hide"/>
+                <field name="commercial_id" optional="hide"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'active'"
+                       decoration-warning="state == 'expiring'"
+                       decoration-danger="state == 'expired'"
+                       decoration-info="state == 'draft'"
+                       decoration-muted="state in ('cancelled','renewed')"/>
+                <field name="is_expiring_soon" column_invisible="True"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ============================================================== -->
+    <!-- Vue kanban                                                      -->
+    <!-- ============================================================== -->
+    <record id="view_maintenance_contract_kanban" model="ir.ui.view">
+        <field name="name">eurekam.maintenance.contract.kanban</field>
+        <field name="model">eurekam.maintenance.contract</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="order_status" class="o_kanban_small_column">
+                <field name="state"/>
+                <field name="is_expiring_soon"/>
+                <field name="color"/>
+                <field name="currency_id"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                            <div class="oe_kanban_content">
+                                <div class="o_kanban_record_top">
+                                    <strong class="o_kanban_record_title">
+                                        <field name="partner_id"/>
+                                    </strong>
+                                </div>
+                                <div class="o_kanban_record_body">
+                                    <div><field name="product_id"/></div>
+                                    <div>
+                                        <field name="maintenance_amount" widget="monetary"/>
+                                    </div>
+                                    <div t-if="record.date_end.raw_value">
+                                        Fin : <field name="date_end"/>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_bottom">
+                                    <field name="state" widget="label_selection"
+                                           options="{'classes': {'active': 'success', 'expiring': 'warning', 'expired': 'danger', 'draft': 'default'}}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ============================================================== -->
+    <!-- Vue recherche                                                   -->
+    <!-- ============================================================== -->
+    <record id="view_maintenance_contract_search" model="ir.ui.view">
+        <field name="name">eurekam.maintenance.contract.search</field>
+        <field name="model">eurekam.maintenance.contract</field>
+        <field name="arch" type="xml">
+            <search string="Rechercher des contrats">
+                <field name="sequence_number"/>
+                <field name="partner_id"/>
+                <field name="product_id"/>
+                <field name="commercial_id"/>
+                <separator/>
+                <filter string="Brouillon" name="filter_draft"
+                        domain="[('state','=','draft')]"/>
+                <filter string="Actifs" name="filter_active"
+                        domain="[('state','=','active')]"/>
+                <filter string="Expirent bientôt" name="filter_expiring_soon"
+                        domain="[('is_expiring_soon','=',True)]"/>
+                <filter string="Expirés" name="filter_expired"
+                        domain="[('state','=','expired')]"/>
+                <separator/>
+                <filter string="Mes contrats" name="filter_my_contracts"
+                        domain="[('commercial_id','=',uid)]"/>
+                <separator/>
+                <filter string="Avec révision Syntec" name="filter_syntec_yes"
+                        domain="[('syntec_revision','=','yes')]"/>
+                <group expand="0" string="Grouper par">
+                    <filter string="État" name="group_state"
+                            context="{'group_by':'state'}"/>
+                    <filter string="Statut commande" name="group_status"
+                            context="{'group_by':'order_status'}"/>
+                    <filter string="Génération" name="group_gen"
+                            context="{'group_by':'gen'}"/>
+                    <filter string="Marché" name="group_market"
+                            context="{'group_by':'market_type'}"/>
+                    <filter string="Établissement" name="group_partner"
+                            context="{'group_by':'partner_id'}"/>
+                    <filter string="Commercial" name="group_commercial"
+                            context="{'group_by':'commercial_id'}"/>
+                    <filter string="Révision Syntec" name="group_syntec"
+                            context="{'group_by':'syntec_revision'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ============================================================== -->
+    <!-- Action                                                          -->
+    <!-- ============================================================== -->
+    <record id="action_maintenance_contract" model="ir.actions.act_window">
+        <field name="name">Contrats de maintenance</field>
+        <field name="res_model">eurekam.maintenance.contract</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="search_view_id" ref="view_maintenance_contract_search"/>
+        <field name="context">{'search_default_filter_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Créez votre premier contrat de maintenance
+            </p>
+            <p>
+                Suivez le cycle de vie complet de vos contrats Drugcam :
+                facturation, renouvellement, alertes d'expiration.
+            </p>
+        </field>
+    </record>
+
+</odoo>

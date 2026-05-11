@@ -1,0 +1,12 @@
+{
+    "environment": "TEST",
+    "url": "https://eurekam-test.odoo.com",
+    "database": "eurekam-test",
+    "username": "loic.tamarelle@eurekam.fr",
+    "password": "REMPLACER_PAR_LE_MOT_DE_PASSE_OU_LA_CLE_API",
+    "safety_check": {
+        "require_test_in_url": true,
+        "forbidden_url_keywords": ["prod", "production", "main"],
+        "require_explicit_confirmation": false
+    }
+}
