@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================== -->
+    <!-- Extension de la vue formulaire res.partner                      -->
+    <!-- Ajoute un onglet "Maintenance Eurekam" + un smart button.        -->
+    <!-- ============================================================== -->
+    <record id="view_res_partner_form_maintenance" model="ir.ui.view">
+        <field name="name">res.partner.form.maintenance</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Smart button : compteur de contrats de maintenance -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_maintenance_contracts" type="object"
+                        class="oe_stat_button" icon="fa-wrench"
+                        invisible="not is_maintenance_establishment">
+                    <field name="maintenance_contract_count" widget="statinfo"
+                           string="Contrats"/>
+                </button>
+            </xpath>
+
+            <!-- Marqueur dans le bandeau du formulaire (a cote du nom) -->
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="is_maintenance_establishment"/>
+            </xpath>
+
+            <!-- Onglet Maintenance Eurekam dans le notebook -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Maintenance Eurekam" name="maintenance_eurekam"
+                      invisible="not is_maintenance_establishment">
+                    <group>
+                        <group string="Localisation">
+                            <field name="department_number"/>
+                        </group>
+                        <group string="Classification">
+                            <field name="establishment_type_ids" widget="many2many_tags"
+                                   options="{'color_field': 'color'}"/>
+                            <field name="establishment_status"/>
+                            <field name="central_purchasing"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Équipements installés">
+                            <field name="nb_workstations"/>
+                            <field name="product_version_ids" widget="many2many_tags"
+                                   options="{'color_field': 'color'}"/>
+                            <field name="module_status_ids" widget="many2many_tags"
+                                   options="{'color_field': 'color'}"/>
+                            <field name="special_equipment_ids" widget="many2many_tags"
+                                   options="{'color_field': 'color'}"/>
+                        </group>
+                        <group string="Responsables Eurekam">
+                            <field name="commercial_responsible_id"/>
+                            <field name="adv_responsible_id"/>
+                            <field name="active_maintenance_contract_count"
+                                   readonly="1"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+
+    <!-- ============================================================== -->
+    <!-- Extension de la vue liste res.partner (decoration)              -->
+    <!-- ============================================================== -->
+    <record id="view_res_partner_list_maintenance" model="ir.ui.view">
+        <field name="name">res.partner.list.maintenance</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='display_name']" position="after">
+                <field name="is_maintenance_establishment" optional="hide"/>
+                <field name="department_number" optional="hide"/>
+                <field name="maintenance_contract_count" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ============================================================== -->
+    <!-- Extension de la vue search res.partner                          -->
+    <!-- ============================================================== -->
+    <record id="view_res_partner_search_maintenance" model="ir.ui.view">
+        <field name="name">res.partner.search.maintenance</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search/field[@name='name']" position="after">
+                <field name="department_number"/>
+            </xpath>
+            <xpath expr="//search" position="inside">
+                <separator/>
+                <filter string="Établissements maintenance"
+                        name="filter_maintenance_establishments"
+                        domain="[('is_maintenance_establishment','=',True)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ============================================================== -->
+    <!-- Action : liste filtree des etablissements de maintenance        -->
+    <!-- ============================================================== -->
+    <record id="action_maintenance_establishment" model="ir.actions.act_window">
+        <field name="name">Établissements</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('is_maintenance_establishment', '=', True)]</field>
+        <field name="context">
+            {
+                'default_is_maintenance_establishment': True,
+                'default_is_company': True,
+                'search_default_filter_maintenance_establishments': 1,
+            }
+        </field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Référencez votre premier établissement client
+            </p>
+            <p>
+                Les établissements de maintenance regroupent les hôpitaux, cliniques
+                et distributeurs pour lesquels vous suivez des contrats Drugcam.
+            </p>
+        </field>
+    </record>
+
+</odoo>

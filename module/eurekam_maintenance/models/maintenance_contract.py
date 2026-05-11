@@ -45,6 +45,9 @@ class EurekamMaintenanceContract(models.Model):
         required=True,
         tracking=True,
         index=True,
+        domain="[('is_maintenance_establishment', '=', True)]",
+        help="Seuls les contacts marqués comme « Établissement de maintenance » "
+             "(onglet Maintenance Eurekam de la fiche partenaire) sont sélectionnables.",
     )
     commercial_id = fields.Many2one(
         'res.users',

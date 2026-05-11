@@ -21,4 +21,39 @@
               action="action_maintenance_contract_line"
               sequence="20"/>
 
+    <!-- Sous-menu "Établissements" : partenaires marqués maintenance -->
+    <menuitem id="menu_maintenance_establishments"
+              name="Établissements"
+              parent="menu_root_maintenance"
+              action="action_maintenance_establishment"
+              sequence="30"/>
+
+    <!-- Sous-menu "Configuration" (manager uniquement) -->
+    <menuitem id="menu_maintenance_config"
+              name="Configuration"
+              parent="menu_root_maintenance"
+              groups="group_maintenance_manager"
+              sequence="90"/>
+
+    <menuitem id="menu_config_establishment_type"
+              name="Types d'établissement"
+              parent="menu_maintenance_config"
+              action="action_establishment_type"
+              sequence="10"/>
+    <menuitem id="menu_config_product_version"
+              name="Versions produit Drugcam"
+              parent="menu_maintenance_config"
+              action="action_product_version"
+              sequence="20"/>
+    <menuitem id="menu_config_module_status"
+              name="Statuts module"
+              parent="menu_maintenance_config"
+              action="action_module_status"
+              sequence="30"/>
+    <menuitem id="menu_config_special_equipment"
+              name="Équipements spéciaux"
+              parent="menu_maintenance_config"
+              action="action_special_equipment"
+              sequence="40"/>
+
 </odoo>
