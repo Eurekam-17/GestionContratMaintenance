@@ -42,6 +42,9 @@ Ce module remplace le suivi actuellement fait dans Notion.
         'report/contract_report.xml',
         'report/contract_report_templates.xml',
     ],
+    'demo': [
+        'demo/demo_data.xml',
+    ],
     'installable': True,
     'application': True,
     'auto_install': False,

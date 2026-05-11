@@ -66,11 +66,11 @@ Le module unifie le tout dans Odoo avec :
 |     2 | Lignes annuelles `eurekam.maintenance.contract.line` (2023 → 2029)                       | Fait   |
 |     3 | Extension `res.partner` (établissements, équipements, modules, versions produit)         | Fait   |
 |     4 | Cadences de facturation + facturation modules (`billing_frequency`, `module_billing`)    | Fait   |
-|     5 | Wizard de renouvellement + révision Syntec                                               | À faire |
-|     6 | Création de facture depuis contrat (intégration `account`)                               | À faire |
-|     7 | Cron d'expiration + emails de notification                                               | À faire |
-|     8 | Dashboard pivot/graph + rapport PDF                                                      | À faire |
-|     9 | Tests unitaires + données de démo                                                        | À faire |
+|     5 | Wizard de renouvellement + révision Syntec                                               | Fait   |
+|     6 | Création de facture depuis contrat (intégration `account`)                               | Fait   |
+|     7 | Cron d'expiration + emails de notification                                               | Fait   |
+|     8 | Dashboard pivot/graph + rapport PDF                                                      | Fait   |
+|     9 | Tests unitaires + données de démo                                                        | Fait   |
 
 ---
 

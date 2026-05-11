@@ -12,11 +12,11 @@ Remplace le suivi historique fait dans Notion (table « Assistance DO »).
 | 2 | Lignes annuelles `eurekam.maintenance.contract.line` + montants 2023→2029 | ✅ Fait |
 | 3 | Extension `res.partner` (établissements, équipements, modules…) | ✅ Fait |
 | 4 | Cadences de facturation + facturation modules | ✅ Fait |
-| 5 | Wizard de renouvellement + révision Syntec | ⏳ À faire |
-| 6 | Création de facture depuis contrat | ⏳ À faire |
-| 7 | Cron d'expiration + emails | ⏳ À faire |
-| 8 | Dashboard pivot/graph + rapport PDF | ⏳ À faire |
-| 9 | Tests unitaires + données de démo | ⏳ À faire |
+| 5 | Wizard de renouvellement + révision Syntec | ✅ Fait |
+| 6 | Création de facture depuis contrat | ✅ Fait |
+| 7 | Cron d'expiration + emails | ✅ Fait |
+| 8 | Dashboard pivot/graph + rapport PDF | ✅ Fait |
+| 9 | Tests unitaires + données de démo | ✅ Fait |
 
 ## Installation
 

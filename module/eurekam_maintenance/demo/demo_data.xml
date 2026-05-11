@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================== -->
+    <!-- 3 etablissements de demonstration                                -->
+    <!-- ============================================================== -->
+    <record id="demo_partner_chu_lyon" model="res.partner">
+        <field name="name">CHU de Lyon (DEMO)</field>
+        <field name="is_company" eval="True"/>
+        <field name="is_maintenance_establishment" eval="True"/>
+        <field name="department_number">69</field>
+        <field name="city">Lyon</field>
+        <field name="zip">69003</field>
+        <field name="establishment_type_ids" eval="[(6, 0, [ref('estab_type_chu')])]"/>
+        <field name="establishment_status">client_eurekam</field>
+        <field name="central_purchasing">uniha</field>
+        <field name="nb_workstations">15</field>
+        <field name="product_version_ids" eval="[(6, 0, [ref('prod_version_gen2')])]"/>
+    </record>
+
+    <record id="demo_partner_ch_brest" model="res.partner">
+        <field name="name">CH de Brest (DEMO)</field>
+        <field name="is_company" eval="True"/>
+        <field name="is_maintenance_establishment" eval="True"/>
+        <field name="department_number">29</field>
+        <field name="city">Brest</field>
+        <field name="zip">29200</field>
+        <field name="establishment_type_ids" eval="[(6, 0, [ref('estab_type_ch')])]"/>
+        <field name="establishment_status">client_eurekam</field>
+        <field name="central_purchasing">ageps</field>
+        <field name="nb_workstations">6</field>
+        <field name="product_version_ids" eval="[(6, 0, [ref('prod_version_gen1')])]"/>
+    </record>
+
+    <record id="demo_partner_clcc_paris" model="res.partner">
+        <field name="name">CLCC Curie Paris (DEMO)</field>
+        <field name="is_company" eval="True"/>
+        <field name="is_maintenance_establishment" eval="True"/>
+        <field name="department_number">75</field>
+        <field name="city">Paris</field>
+        <field name="zip">75005</field>
+        <field name="establishment_type_ids" eval="[(6, 0, [ref('estab_type_clcc')])]"/>
+        <field name="establishment_status">client_eurekam</field>
+        <field name="central_purchasing">unicancer</field>
+        <field name="nb_workstations">10</field>
+        <field name="product_version_ids" eval="[(6, 0, [ref('prod_version_gen2'), ref('prod_version_do_module')])]"/>
+        <field name="module_status_ids" eval="[(6, 0, [ref('mod_status_clinical_trial')])]"/>
+    </record>
+
+    <!-- ============================================================== -->
+    <!-- Contrat 1 : actif GEN2 UniHA 2024 annuel 3 ans                   -->
+    <!-- ============================================================== -->
+    <record id="demo_contract_active_uniha2024" model="eurekam.maintenance.contract">
+        <field name="partner_id" ref="demo_partner_chu_lyon"/>
+        <field name="product_name">Maintenance Drugcam Oncology FR (DEMO)</field>
+        <field name="gen">gen2</field>
+        <field name="market_type">uniha_2024</field>
+        <field name="order_status">received</field>
+        <field name="date_start">2024-01-01</field>
+        <field name="date_end">2026-12-31</field>
+        <field name="duration">3y</field>
+        <field name="maintenance_amount">15000.00</field>
+        <field name="billing_level">100</field>
+        <field name="syntec_revision">yes</field>
+        <field name="nb_products">3</field>
+        <field name="state">active</field>
+        <field name="billing_frequency_ids" eval="[(6, 0, [ref('freq_annual')])]"/>
+        <field name="comment">Contrat de demonstration actif sur 3 ans (UniHA 2024).</field>
+    </record>
+    <record id="demo_line_active_2024" model="eurekam.maintenance.contract.line">
+        <field name="contract_id" ref="demo_contract_active_uniha2024"/>
+        <field name="year">2024</field>
+        <field name="amount">15000.00</field>
+        <field name="is_invoiced" eval="True"/>
+    </record>
+    <record id="demo_line_active_2025" model="eurekam.maintenance.contract.line">
+        <field name="contract_id" ref="demo_contract_active_uniha2024"/>
+        <field name="year">2025</field>
+        <field name="amount">15000.00</field>
+        <field name="is_invoiced" eval="True"/>
+    </record>
+    <record id="demo_line_active_2026" model="eurekam.maintenance.contract.line">
+        <field name="contract_id" ref="demo_contract_active_uniha2024"/>
+        <field name="year">2026</field>
+        <field name="amount">15450.00</field>
+    </record>
+
+    <!-- ============================================================== -->
+    <!-- Contrat 2 : expirant bientot GEN1 Ageps semestriel               -->
+    <!-- ============================================================== -->
+    <record id="demo_contract_expiring_ageps" model="eurekam.maintenance.contract">
+        <field name="partner_id" ref="demo_partner_ch_brest"/>
+        <field name="product_name">Maintenance logicielle GEN1 (DEMO)</field>
+        <field name="gen">gen1</field>
+        <field name="market_type">ageps</field>
+        <field name="order_status">received</field>
+        <field name="date_start">2025-09-01</field>
+        <field name="date_end">2026-08-31</field>
+        <field name="duration">1y</field>
+        <field name="maintenance_amount">8000.00</field>
+        <field name="billing_level">100</field>
+        <field name="syntec_revision">no</field>
+        <field name="nb_products">2</field>
+        <field name="state">active</field>
+        <field name="billing_frequency_ids" eval="[(6, 0, [ref('freq_semi_annual')])]"/>
+    </record>
+    <record id="demo_line_expiring_2025" model="eurekam.maintenance.contract.line">
+        <field name="contract_id" ref="demo_contract_expiring_ageps"/>
+        <field name="year">2025</field>
+        <field name="amount">3333.00</field>
+        <field name="is_invoiced" eval="True"/>
+    </record>
+    <record id="demo_line_expiring_2026" model="eurekam.maintenance.contract.line">
+        <field name="contract_id" ref="demo_contract_expiring_ageps"/>
+        <field name="year">2026</field>
+        <field name="amount">4667.00</field>
+    </record>
+
+    <!-- ============================================================== -->
+    <!-- Contrat 3 : suspendu avec Syntec                                 -->
+    <!-- ============================================================== -->
+    <record id="demo_contract_suspended_syntec" model="eurekam.maintenance.contract">
+        <field name="partner_id" ref="demo_partner_clcc_paris"/>
+        <field name="product_name">Maintenance Module Statistique (DEMO)</field>
+        <field name="gen">gen2</field>
+        <field name="market_type">private</field>
+        <field name="order_status">suspended</field>
+        <field name="date_start">2024-06-01</field>
+        <field name="date_end">2027-05-31</field>
+        <field name="duration">3y</field>
+        <field name="maintenance_amount">22000.00</field>
+        <field name="billing_level">75</field>
+        <field name="syntec_revision">yes</field>
+        <field name="nb_products">5</field>
+        <field name="state">draft</field>
+        <field name="billing_frequency_ids" eval="[(6, 0, [ref('freq_annual'), ref('freq_overdue')])]"/>
+        <field name="module_billing_ids" eval="[(6, 0, [ref('mod_bill_stats'), ref('mod_bill_clinical_trial')])]"/>
+        <field name="comment">Contrat de demonstration suspendu en attente de validation client.</field>
+    </record>
+
+    <!-- ============================================================== -->
+    <!-- Contrat 4 : en deploiement marche interne                         -->
+    <!-- ============================================================== -->
+    <record id="demo_contract_deploying_internal" model="eurekam.maintenance.contract">
+        <field name="partner_id" ref="demo_partner_chu_lyon"/>
+        <field name="product_name">Maintenance Upgrade GEN2 (DEMO)</field>
+        <field name="gen">upgrade_gen2</field>
+        <field name="market_type">market_internal</field>
+        <field name="order_status">deploying</field>
+        <field name="date_start">2026-03-01</field>
+        <field name="date_end">2027-02-28</field>
+        <field name="duration">1y</field>
+        <field name="maintenance_amount">12500.00</field>
+        <field name="billing_level">50</field>
+        <field name="syntec_revision">no</field>
+        <field name="nb_products">1</field>
+        <field name="state">draft</field>
+        <field name="billing_frequency_ids" eval="[(6, 0, [ref('freq_quarterly')])]"/>
+        <field name="comment">Contrat en cours de deploiement - upgrade en cours.</field>
+    </record>
+
+    <!-- ============================================================== -->
+    <!-- Contrat 5 : expire avec historique 2023-2026                     -->
+    <!-- ============================================================== -->
+    <record id="demo_contract_expired_history" model="eurekam.maintenance.contract">
+        <field name="partner_id" ref="demo_partner_ch_brest"/>
+        <field name="product_name">Maintenance historique GEN1 (DEMO)</field>
+        <field name="gen">gen1</field>
+        <field name="market_type">private</field>
+        <field name="order_status">received</field>
+        <field name="date_start">2023-01-01</field>
+        <field name="date_end">2025-12-31</field>
+        <field name="duration">3y</field>
+        <field name="maintenance_amount">7500.00</field>
+        <field name="billing_level">100</field>
+        <field name="syntec_revision">yes</field>
+        <field name="nb_products">2</field>
+        <field name="state">expired</field>
+        <field name="billing_frequency_ids" eval="[(6, 0, [ref('freq_annual')])]"/>
+        <field name="comment">Contrat de demonstration expire avec historique complet.</field>
+    </record>
+    <record id="demo_line_expired_2023" model="eurekam.maintenance.contract.line">
+        <field name="contract_id" ref="demo_contract_expired_history"/>
+        <field name="year">2023</field>
+        <field name="amount">7500.00</field>
+        <field name="is_invoiced" eval="True"/>
+    </record>
+    <record id="demo_line_expired_2024" model="eurekam.maintenance.contract.line">
+        <field name="contract_id" ref="demo_contract_expired_history"/>
+        <field name="year">2024</field>
+        <field name="amount">7725.00</field>
+        <field name="is_invoiced" eval="True"/>
+    </record>
+    <record id="demo_line_expired_2025" model="eurekam.maintenance.contract.line">
+        <field name="contract_id" ref="demo_contract_expired_history"/>
+        <field name="year">2025</field>
+        <field name="amount">7956.00</field>
+        <field name="is_invoiced" eval="True"/>
+    </record>
+
+</odoo>
