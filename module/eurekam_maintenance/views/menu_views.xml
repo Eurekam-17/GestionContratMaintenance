@@ -14,4 +14,11 @@
               action="action_maintenance_contract"
               sequence="10"/>
 
+    <!-- Sous-menu "Lignes annuelles" : vue transversale par année -->
+    <menuitem id="menu_maintenance_contract_lines"
+              name="Lignes annuelles"
+              parent="menu_root_maintenance"
+              action="action_maintenance_contract_line"
+              sequence="20"/>
+
 </odoo>

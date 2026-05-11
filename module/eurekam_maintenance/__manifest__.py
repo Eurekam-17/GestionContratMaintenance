@@ -27,6 +27,7 @@ Ce module remplace le suivi actuellement fait dans Notion.
         'security/ir.model.access.csv',
         'data/sequence_data.xml',
         'views/maintenance_contract_views.xml',
+        'views/maintenance_contract_line_views.xml',
         'views/menu_views.xml',
     ],
     'installable': True,

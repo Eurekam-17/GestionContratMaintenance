@@ -149,6 +149,35 @@ class EurekamMaintenanceContract(models.Model):
     nb_products = fields.Integer(string='Nombre de produits', default=1)
 
     # ------------------------------------------------------------------
+    # Lignes annuelles (montants par année 2023, 2024, ...)
+    # ------------------------------------------------------------------
+    line_ids = fields.One2many(
+        'eurekam.maintenance.contract.line',
+        'contract_id',
+        string='Montants annuels',
+        copy=True,
+    )
+    total_contract_value = fields.Monetary(
+        string='Valeur totale du contrat',
+        currency_field='currency_id',
+        compute='_compute_totals',
+        store=True,
+        help="Somme des montants annuels de toutes les lignes du contrat.",
+    )
+    current_year_amount = fields.Monetary(
+        string='Montant année courante',
+        currency_field='currency_id',
+        compute='_compute_totals',
+        store=False,
+        help="Montant de la ligne annuelle correspondant à l'année en cours.",
+    )
+    line_count = fields.Integer(
+        string='Nb de lignes annuelles',
+        compute='_compute_totals',
+        store=True,
+    )
+
+    # ------------------------------------------------------------------
     # Notes
     # ------------------------------------------------------------------
     comment = fields.Text(string='Commentaire')
@@ -229,6 +258,15 @@ class EurekamMaintenanceContract(models.Model):
         for rec in self:
             rec.country_id = rec.partner_id.country_id
 
+    @api.depends('line_ids', 'line_ids.amount', 'line_ids.year')
+    def _compute_totals(self):
+        today_year = fields.Date.context_today(self).year
+        for rec in self:
+            rec.total_contract_value = sum(rec.line_ids.mapped('amount'))
+            rec.line_count = len(rec.line_ids)
+            current = rec.line_ids.filtered(lambda l: l.year == today_year)
+            rec.current_year_amount = sum(current.mapped('amount'))
+
     def _search_is_expiring_soon(self, operator, value):
         today = fields.Date.context_today(self)
         in_90_days = fields.Date.add(today, days=90)
@@ -288,3 +326,43 @@ class EurekamMaintenanceContract(models.Model):
                     "Seul un contrat annulé peut revenir en brouillon."
                 ))
             rec.state = 'draft'
+
+    def action_generate_lines(self):
+        """Génère les lignes annuelles vides entre date_start et date_end.
+
+        Crée une ligne par année (year = date_start.year ... date_end.year),
+        avec amount=0 par défaut. Les lignes existantes ne sont pas écrasées.
+        Si maintenance_amount > 0 et qu'aucune ligne n'existe encore, on
+        pré-remplit chaque ligne avec ce montant comme valeur de départ.
+        """
+        Line = self.env['eurekam.maintenance.contract.line']
+        for rec in self:
+            if not rec.date_start or not rec.date_end:
+                raise UserError(_(
+                    "Définir les dates de début et de fin avant de générer "
+                    "les lignes annuelles."
+                ))
+            existing_years = set(rec.line_ids.mapped('year'))
+            default_amount = rec.maintenance_amount if not existing_years else 0.0
+            new_vals = []
+            for year in range(rec.date_start.year, rec.date_end.year + 1):
+                if year not in existing_years:
+                    new_vals.append({
+                        'contract_id': rec.id,
+                        'year': year,
+                        'amount': default_amount,
+                    })
+            if new_vals:
+                Line.create(new_vals)
+
+    def action_view_lines(self):
+        """Ouvre la vue liste des lignes annuelles filtrée sur ce contrat."""
+        self.ensure_one()
+        return {
+            'name': _("Lignes annuelles — %s", self.sequence_number),
+            'type': 'ir.actions.act_window',
+            'res_model': 'eurekam.maintenance.contract.line',
+            'view_mode': 'list,pivot,graph,form',
+            'domain': [('contract_id', '=', self.id)],
+            'context': {'default_contract_id': self.id},
+        }

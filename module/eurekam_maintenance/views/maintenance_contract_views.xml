@@ -13,6 +13,9 @@
                     <button name="action_activate" type="object"
                             string="Activer" class="oe_highlight"
                             invisible="state not in ('draft','cancelled')"/>
+                    <button name="action_generate_lines" type="object"
+                            string="Générer les lignes annuelles"
+                            invisible="not date_start or not date_end"/>
                     <button name="action_cancel" type="object"
                             string="Annuler"
                             invisible="state in ('cancelled','renewed')"/>
@@ -23,6 +26,13 @@
                            statusbar_visible="draft,active,expiring,expired,renewed"/>
                 </header>
                 <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_lines" type="object"
+                                class="oe_stat_button" icon="fa-calendar">
+                            <field name="line_count" widget="statinfo"
+                                   string="Lignes annuelles"/>
+                        </button>
+                    </div>
                     <div class="oe_title">
                         <label for="sequence_number" class="oe_edit_only"/>
                         <h1>
@@ -61,15 +71,35 @@
                         </page>
                         <page string="Facturation" name="billing">
                             <group>
-                                <group>
+                                <group string="Conditions">
                                     <field name="maintenance_amount"/>
                                     <field name="currency_id" invisible="1"/>
                                     <field name="billing_level"/>
-                                </group>
-                                <group>
                                     <field name="syntec_revision"/>
                                 </group>
+                                <group string="Totaux (calculés)">
+                                    <field name="total_contract_value"/>
+                                    <field name="current_year_amount"/>
+                                </group>
                             </group>
+                        </page>
+                        <page string="Montants annuels" name="annual_lines">
+                            <p class="text-muted">
+                                Saisissez le montant annuel pour chaque année du contrat.
+                                Le bouton « Générer les lignes annuelles » dans l'en-tête
+                                pré-crée une ligne pour chaque année entre la date de
+                                début et la date de fin.
+                            </p>
+                            <field name="line_ids">
+                                <list editable="bottom"
+                                      decoration-success="is_invoiced">
+                                    <field name="year"/>
+                                    <field name="amount" sum="Total"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                    <field name="is_invoiced" widget="boolean_toggle"/>
+                                    <field name="notes" optional="hide"/>
+                                </list>
+                            </field>
                         </page>
                         <page string="Notes" name="notes">
                             <field name="comment" placeholder="Commentaires libres..."/>
@@ -102,6 +132,8 @@
                 <field name="date_end"/>
                 <field name="duration" optional="show"/>
                 <field name="maintenance_amount" sum="Total"/>
+                <field name="current_year_amount" optional="show" sum="Total année courante"/>
+                <field name="total_contract_value" optional="hide" sum="Total contrats"/>
                 <field name="currency_id" column_invisible="True"/>
                 <field name="syntec_revision" optional="hide"/>
                 <field name="commercial_id" optional="hide"/>
@@ -128,6 +160,7 @@
                 <field name="is_expiring_soon"/>
                 <field name="color"/>
                 <field name="currency_id"/>
+                <field name="current_year_amount"/>
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_card oe_kanban_global_click">
@@ -140,7 +173,8 @@
                                 <div class="o_kanban_record_body">
                                     <div><field name="product_id"/></div>
                                     <div>
-                                        <field name="maintenance_amount" widget="monetary"/>
+                                        <strong>Année courante :</strong>
+                                        <field name="current_year_amount" widget="monetary"/>
                                     </div>
                                     <div t-if="record.date_end.raw_value">
                                         Fin : <field name="date_end"/>
