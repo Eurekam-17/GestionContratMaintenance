@@ -268,6 +268,14 @@ class EurekamMaintenanceContract(models.Model):
         compute='_compute_renewed_to_count',
     )
 
+    # ------------------------------------------------------------------
+    # Facturation (lien vers account.move)
+    # ------------------------------------------------------------------
+    invoice_count = fields.Integer(
+        string='Nb factures',
+        compute='_compute_invoice_count',
+    )
+
     # ==================================================================
     # Compute / Search / Constraints
     # ==================================================================
@@ -310,6 +318,13 @@ class EurekamMaintenanceContract(models.Model):
     def _compute_renewed_to_count(self):
         for rec in self:
             rec.renewed_to_count = len(rec.renewed_to_ids)
+
+    @api.depends('line_ids.invoice_id')
+    def _compute_invoice_count(self):
+        for rec in self:
+            rec.invoice_count = len(
+                rec.line_ids.filtered(lambda l: l.invoice_id).mapped('invoice_id')
+            )
 
     def _search_is_expiring_soon(self, operator, value):
         today = fields.Date.context_today(self)
@@ -462,4 +477,118 @@ class EurekamMaintenanceContract(models.Model):
             'res_model': 'eurekam.maintenance.contract',
             'view_mode': 'list,form',
             'domain': [('id', 'in', self.renewed_to_ids.ids)],
+        }
+
+    # ==================================================================
+    # Facturation (creation de account.move)
+    # ==================================================================
+
+    def action_create_invoice_for_current_year(self):
+        """Cree une facture brouillon (out_invoice) pour la ligne annee courante."""
+        self.ensure_one()
+        today_year = fields.Date.context_today(self).year
+        line = self.line_ids.filtered(lambda l: l.year == today_year)
+        if not line:
+            raise UserError(_(
+                "Aucune ligne annuelle pour l'année %(year)s. "
+                "Cliquer sur « Générer les lignes annuelles » d'abord.",
+                year=today_year,
+            ))
+        if len(line) > 1:
+            raise UserError(_(
+                "Incohérence : plusieurs lignes existent pour l'année %s.",
+                today_year,
+            ))
+        if line.is_invoiced:
+            raise UserError(_(
+                "La ligne %(year)s est déjà facturée (facture %(inv)s).",
+                year=line.year,
+                inv=line.invoice_id.display_name or line.invoice_id.id,
+            ))
+        return self._create_invoice_from_lines(line)
+
+    def _create_invoice_from_lines(self, lines):
+        """Cree une facture client (out_invoice) regroupant les lignes annuelles donnees.
+
+        Lie la facture aux lignes via invoice_id et coche is_invoiced.
+        Le journal et les comptes comptables sont resolus automatiquement
+        par account.move au moment de la confirmation.
+        """
+        self.ensure_one()
+        if not lines:
+            raise UserError(_("Aucune ligne à facturer."))
+        if any(l.contract_id != self for l in lines):
+            raise UserError(_(
+                "Toutes les lignes à facturer doivent appartenir au même contrat."
+            ))
+        if any(l.is_invoiced for l in lines):
+            raise UserError(_("Une ou plusieurs lignes sont déjà facturées."))
+
+        product_template = self.product_id
+        product_variant = product_template.product_variant_id if product_template else False
+
+        invoice_line_vals = []
+        for line in lines:
+            label = _(
+                "Maintenance %(prod)s — Année %(year)s",
+                prod=product_template.name or self.product_name or '',
+                year=line.year,
+            )
+            invoice_line_vals.append((0, 0, {
+                'name': label,
+                'product_id': product_variant.id if product_variant else False,
+                'quantity': 1.0,
+                'price_unit': line.amount,
+            }))
+
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_id.id,
+            'invoice_origin': self.sequence_number,
+            'currency_id': self.currency_id.id,
+            'company_id': self.company_id.id,
+            'invoice_line_ids': invoice_line_vals,
+        })
+
+        lines.write({
+            'invoice_id': invoice.id,
+            'is_invoiced': True,
+        })
+
+        self.message_post(body=_(
+            "Facture brouillon créée : %(inv)s pour les lignes %(years)s.",
+            inv=invoice.display_name or invoice.id,
+            years=', '.join(str(l.year) for l in lines),
+        ))
+
+        return {
+            'name': _("Facture — %s", invoice.display_name or invoice.id),
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.move',
+            'res_id': invoice.id,
+            'view_mode': 'form',
+            'target': 'current',
+        }
+
+    def action_view_invoices(self):
+        """Ouvre les factures clients liees a ce contrat."""
+        self.ensure_one()
+        invoice_ids = self.line_ids.mapped('invoice_id').ids
+        if not invoice_ids:
+            raise UserError(_("Aucune facture n'est encore liée à ce contrat."))
+        if len(invoice_ids) == 1:
+            return {
+                'name': _("Facture"),
+                'type': 'ir.actions.act_window',
+                'res_model': 'account.move',
+                'res_id': invoice_ids[0],
+                'view_mode': 'form',
+                'target': 'current',
+            }
+        return {
+            'name': _("Factures — %s", self.sequence_number),
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.move',
+            'view_mode': 'list,form',
+            'domain': [('id', 'in', invoice_ids)],
         }

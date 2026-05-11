@@ -32,8 +32,18 @@ class EurekamMaintenanceContractLine(models.Model):
     is_invoiced = fields.Boolean(
         string='Facturée',
         default=False,
-        help="Cocher manuellement quand la facture annuelle est émise (la "
-             "création automatique de facture viendra en Phase 6).",
+        help="Coché automatiquement par l'action « Créer la facture » sur le "
+             "contrat. Peut aussi être basculé manuellement si la facture a "
+             "été émise hors Odoo.",
+    )
+    invoice_id = fields.Many2one(
+        'account.move',
+        string='Facture',
+        readonly=True,
+        copy=False,
+        domain="[('move_type', '=', 'out_invoice')]",
+        help="Facture client liée à cette ligne annuelle. Renseignée "
+             "automatiquement par l'action « Créer la facture » du contrat.",
     )
     notes = fields.Text(string='Notes')
 

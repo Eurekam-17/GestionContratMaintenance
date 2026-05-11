@@ -19,6 +19,9 @@
                     <button name="action_open_renewal_wizard" type="object"
                             string="Renouveler" class="btn-primary"
                             invisible="state in ('draft','renewed','cancelled')"/>
+                    <button name="action_create_invoice_for_current_year" type="object"
+                            string="Créer la facture (année courante)"
+                            invisible="state not in ('active','expiring')"/>
                     <button name="action_cancel" type="object"
                             string="Annuler"
                             invisible="state in ('cancelled','renewed')"/>
@@ -47,6 +50,12 @@
                                 invisible="renewed_to_count == 0">
                             <field name="renewed_to_count" widget="statinfo"
                                    string="Renouvelé vers"/>
+                        </button>
+                        <button name="action_view_invoices" type="object"
+                                class="oe_stat_button" icon="fa-money"
+                                invisible="invoice_count == 0">
+                            <field name="invoice_count" widget="statinfo"
+                                   string="Factures"/>
                         </button>
                     </div>
                     <div class="oe_title">
@@ -127,6 +136,7 @@
                                     <field name="amount" sum="Total"/>
                                     <field name="currency_id" column_invisible="True"/>
                                     <field name="is_invoiced" widget="boolean_toggle"/>
+                                    <field name="invoice_id" optional="show"/>
                                     <field name="notes" optional="hide"/>
                                 </list>
                             </field>

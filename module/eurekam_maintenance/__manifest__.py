@@ -21,6 +21,7 @@ Ce module remplace le suivi actuellement fait dans Notion.
         'mail',
         'product',
         'contacts',
+        'account',
     ],
     'data': [
         'security/maintenance_security.xml',
