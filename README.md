@@ -88,7 +88,7 @@ toute opération automatisée et vérifie :
 1. Le fichier `config/odoo_test.json` existe et est lisible.
 2. Le champ `environment` vaut `TEST`.
 3. L'URL contient au moins un mot-clé de test
-   (`test`, `staging`, `dev`, `preprod`, `recette`).
+   (`test`, `staging`, `dev`, `preprod`, `recette`, `sandbox`).
 4. L'URL ne contient aucun mot-clé interdit (`prod`, `production`, `main`).
 5. La base Odoo cible est résolue (nom exact, ou auto-découverte via
    `database_pattern` regex sur `db.list()`).

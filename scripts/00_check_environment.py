@@ -7,7 +7,7 @@ Verifications effectuees :
     1. Le fichier config/odoo_test.json existe et est lisible.
     2. Le champ "environment" vaut bien "TEST".
     3. L'URL contient au moins un mot-cle de test
-       (test, staging, dev, preprod, recette).
+       (test, staging, dev, preprod, recette, sandbox).
     4. L'URL ne contient AUCUN mot-cle interdit (prod, production, main, ...).
     5. La base Odoo cible est resolue : soit via le champ "database" exact,
        soit via auto-decouverte sur "database_pattern" (regex). Sur odoo.sh,
@@ -49,7 +49,7 @@ EXIT_DB_RESOLUTION_FAILED = 31
 EXIT_DB_PATTERN_FAIL = 32
 EXIT_AUTH_FAILED = 33
 
-DEFAULT_TEST_KEYWORDS = ("test", "staging", "dev", "preprod", "recette")
+DEFAULT_TEST_KEYWORDS = ("test", "staging", "dev", "preprod", "recette", "sandbox")
 DEFAULT_FORBIDDEN_KEYWORDS = ("prod", "production", "main")
 
 
