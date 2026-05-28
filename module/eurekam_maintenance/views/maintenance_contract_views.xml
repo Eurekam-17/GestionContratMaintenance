@@ -290,8 +290,11 @@
                 <field name="partner_id" type="row"/>
                 <field name="gen" type="col"/>
                 <field name="maintenance_amount" type="measure"/>
-                <field name="current_year_amount" type="measure"/>
                 <field name="total_contract_value" type="measure"/>
+                <!-- current_year_amount n'est pas une mesure car le champ
+                     est computed non-stocke (store=False) : impossible a
+                     agreger en SQL. Pour analyser l'annee courante, utiliser
+                     le pivot du menu "Lignes annuelles" filtre sur l'annee. -->
             </pivot>
         </field>
     </record>
@@ -358,7 +361,7 @@
         <field name="view_mode">pivot,graph</field>
         <field name="search_view_id" ref="view_maintenance_contract_search"/>
         <field name="context">{
-            'pivot_measures': ['maintenance_amount', 'current_year_amount', 'total_contract_value'],
+            'pivot_measures': ['maintenance_amount', 'total_contract_value'],
             'pivot_row_groupby': ['partner_id'],
             'pivot_column_groupby': ['gen'],
             'graph_measure': 'maintenance_amount',
