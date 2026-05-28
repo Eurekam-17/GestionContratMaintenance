@@ -17,8 +17,9 @@
                 <field name="year"/>
                 <field name="amount" sum="Total"/>
                 <field name="currency_id" column_invisible="True"/>
-                <field name="is_invoiced" widget="boolean_toggle"/>
-                <field name="invoice_id" optional="show"/>
+                <field name="invoice_count" optional="show"/>
+                <field name="is_invoiced" widget="boolean_toggle" readonly="1"/>
+                <field name="invoice_ids" widget="many2many_tags" optional="show"/>
                 <field name="commercial_id" optional="hide"/>
                 <field name="contract_state" optional="hide"/>
             </list>
@@ -61,8 +62,9 @@
                             <field name="currency_id" invisible="1"/>
                         </group>
                         <group>
-                            <field name="is_invoiced" widget="boolean_toggle"/>
-                            <field name="invoice_id" readonly="1"/>
+                            <field name="is_invoiced" widget="boolean_toggle" readonly="1"/>
+                            <field name="invoice_count" readonly="1"/>
+                            <field name="invoice_ids" widget="many2many_tags" readonly="1"/>
                             <field name="contract_state" readonly="1"/>
                         </group>
                     </group>
@@ -119,6 +121,8 @@
                         domain="[('is_invoiced','=',True)]"/>
                 <filter string="Non facturées" name="filter_not_invoiced"
                         domain="[('is_invoiced','=',False)]"/>
+                <filter string="Partiellement facturées" name="filter_partial"
+                        domain="[('invoice_count','&gt;',0)]"/>
                 <separator/>
                 <filter string="Année courante" name="filter_current_year"
                         domain="[('year','=', context_today().year)]"/>

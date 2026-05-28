@@ -143,7 +143,7 @@
                                         <span t-if="not line.is_invoiced" style="color: #999;">—</span>
                                     </td>
                                     <td>
-                                        <t t-out="line.invoice_id.display_name or '-'"/>
+                                        <t t-out="', '.join(line.invoice_ids.mapped('display_name')) or '-'"/>
                                     </td>
                                 </tr>
                                 <tr style="border-top: 2px solid #333;">

@@ -270,10 +270,10 @@ class TestMaintenanceContract(TransactionCase):
         self.assertEqual(contract.state, 'renewed')
 
     # ======================================================================
-    # 9. Creation de facture depuis contrat
+    # 9. Creation de factures depuis contrat (selon cadence)
     # ======================================================================
     def test_invoice_creation(self):
-        # On utilise l'annee courante pour avoir une ligne 'annee courante'
+        """Test cadence annuelle par défaut : 1 facture pour 1 ligne annuelle."""
         today_year = ofields.Date.context_today(self.env['res.partner']).year
         contract = self._make_contract(
             date_start=date(today_year, 1, 1),
@@ -283,9 +283,13 @@ class TestMaintenanceContract(TransactionCase):
         contract.action_activate()
         contract.action_generate_lines()
 
-        action = contract.action_create_invoice_for_current_year()
+        # Sans cadence definie -> defaut 'annual' -> 1 facture pour 8000 EUR
+        action = contract.action_create_invoices_for_contract()
         self.assertEqual(action['res_model'], 'account.move')
-        invoice = self.env['account.move'].browse(action['res_id'])
+        # action['domain'] = [('id', 'in', [id1, id2, ...])]
+        invoice_ids = action['domain'][0][2]
+        self.assertEqual(len(invoice_ids), 1)
+        invoice = self.env['account.move'].browse(invoice_ids[0])
         self.assertEqual(invoice.move_type, 'out_invoice')
         self.assertEqual(invoice.partner_id, self.partner)
         self.assertEqual(len(invoice.invoice_line_ids), 1)
@@ -293,12 +297,50 @@ class TestMaintenanceContract(TransactionCase):
 
         line = contract.line_ids.filtered(lambda l: l.year == today_year)
         self.assertTrue(line.is_invoiced)
-        self.assertEqual(line.invoice_id, invoice)
+        self.assertIn(invoice, line.invoice_ids)
         self.assertEqual(contract.invoice_count, 1)
 
-        # Refacturation -> erreur
+        # Re-facturer -> erreur (toutes les périodes restantes déjà couvertes)
         with self.assertRaises(UserError):
-            contract.action_create_invoice_for_current_year()
+            contract.action_create_invoices_for_contract()
+
+    def test_invoice_creation_quarterly(self):
+        """Test cadence trimestrielle : 4 factures de quart de montant par annee."""
+        freq_quarterly = self.env.ref('eurekam_maintenance.freq_quarterly')
+        freq_overdue = self.env.ref('eurekam_maintenance.freq_overdue')
+        today_year = ofields.Date.context_today(self.env['res.partner']).year
+        contract = self._make_contract(
+            date_start=date(today_year, 1, 1),
+            date_end=date(today_year, 12, 31),
+            maintenance_amount=10000.0,
+            billing_frequency_ids=[(6, 0, [freq_quarterly.id, freq_overdue.id])],
+        )
+        contract.action_activate()
+        contract.action_generate_lines()
+
+        action = contract.action_create_invoices_for_contract()
+        invoice_ids = action['domain'][0][2]
+        # 1 ligne annuelle * 4 trimestres = 4 factures
+        self.assertEqual(len(invoice_ids), 4)
+        invoices = self.env['account.move'].browse(invoice_ids)
+        # Chaque facture = 10000 / 4 = 2500 HT
+        for inv in invoices:
+            self.assertAlmostEqual(inv.invoice_line_ids.price_unit, 2500.0, places=2)
+        # La ligne annuelle pointe vers 4 factures
+        line = contract.line_ids.filtered(lambda l: l.year == today_year)
+        self.assertEqual(line.invoice_count, 4)
+        self.assertTrue(line.is_invoiced)
+
+    def test_billing_unicity_constraint(self):
+        """Test contrainte : 2 cadences de periode interdites."""
+        freq_quarterly = self.env.ref('eurekam_maintenance.freq_quarterly')
+        freq_semi_annual = self.env.ref('eurekam_maintenance.freq_semi_annual')
+        contract = self._make_contract()
+        from odoo.exceptions import ValidationError
+        with self.assertRaises(ValidationError):
+            contract.billing_frequency_ids = [
+                (6, 0, [freq_quarterly.id, freq_semi_annual.id])
+            ]
 
     # ======================================================================
     # 10. Extension res.partner

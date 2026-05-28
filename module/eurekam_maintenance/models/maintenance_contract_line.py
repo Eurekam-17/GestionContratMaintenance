@@ -29,21 +29,28 @@ class EurekamMaintenanceContractLine(models.Model):
         required=True,
         default=0.0,
     )
-    is_invoiced = fields.Boolean(
-        string='Facturée',
-        default=False,
-        help="Coché automatiquement par l'action « Créer la facture » sur le "
-             "contrat. Peut aussi être basculé manuellement si la facture a "
-             "été émise hors Odoo.",
-    )
-    invoice_id = fields.Many2one(
+    invoice_ids = fields.Many2many(
         'account.move',
-        string='Facture',
-        readonly=True,
+        'eurekam_maintenance_line_invoice_rel',
+        'line_id', 'invoice_id',
+        string='Factures',
         copy=False,
         domain="[('move_type', '=', 'out_invoice')]",
-        help="Facture client liée à cette ligne annuelle. Renseignée "
-             "automatiquement par l'action « Créer la facture » du contrat.",
+        help="Factures clients liées à cette ligne annuelle. Une ligne peut "
+             "avoir plusieurs factures selon la cadence : 4 trimestrielles, "
+             "2 semestrielles, 1 annuelle. Renseignées automatiquement par "
+             "l'action « Créer les factures » du contrat.",
+    )
+    invoice_count = fields.Integer(
+        string='Nb factures',
+        compute='_compute_invoice_status',
+        store=True,
+    )
+    is_invoiced = fields.Boolean(
+        string='Facturée',
+        compute='_compute_invoice_status',
+        store=True,
+        help="Coché automatiquement quand au moins une facture est liée à la ligne.",
     )
     notes = fields.Text(string='Notes')
 
@@ -92,6 +99,12 @@ class EurekamMaintenanceContractLine(models.Model):
         for rec in self:
             seq = rec.contract_id.sequence_number or ''
             rec.display_name = f"{seq} - {rec.year}" if seq else str(rec.year)
+
+    @api.depends('invoice_ids')
+    def _compute_invoice_status(self):
+        for rec in self:
+            rec.invoice_count = len(rec.invoice_ids)
+            rec.is_invoiced = bool(rec.invoice_ids)
 
     # ------------------------------------------------------------------
     # Contraintes

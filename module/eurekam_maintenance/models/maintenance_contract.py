@@ -1,9 +1,15 @@
 import logging
+from datetime import date
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
+
+# Codes de cadence "période" (mutuellement exclusifs sur un même contrat)
+PERIOD_CODES = ('annual', 'semi_annual', 'quarterly', 'full_period')
+# Codes de timing (mutuellement exclusifs sur un même contrat)
+TIMING_CODES = ('overdue', 'upcoming')
 
 
 class EurekamMaintenanceContract(models.Model):
@@ -323,12 +329,10 @@ class EurekamMaintenanceContract(models.Model):
         for rec in self:
             rec.renewed_to_count = len(rec.renewed_to_ids)
 
-    @api.depends('line_ids.invoice_id')
+    @api.depends('line_ids.invoice_ids')
     def _compute_invoice_count(self):
         for rec in self:
-            rec.invoice_count = len(
-                rec.line_ids.filtered(lambda l: l.invoice_id).mapped('invoice_id')
-            )
+            rec.invoice_count = len(rec.line_ids.mapped('invoice_ids'))
 
     def _search_is_expiring_soon(self, operator, value):
         today = fields.Date.context_today(self)
@@ -346,6 +350,38 @@ class EurekamMaintenanceContract(models.Model):
                     "La date de fin (%(end)s) doit être postérieure à la date "
                     "de début (%(start)s).",
                     end=rec.date_end, start=rec.date_start,
+                ))
+
+    @api.constrains('billing_frequency_ids')
+    def _check_billing_unicity(self):
+        """Garantit l'unicite des cadences :
+        - au plus 1 cadence de periode (annual/semi_annual/quarterly/full_period)
+        - au plus 1 cadence de timing (overdue/upcoming)
+        Les conditions sont bloquees le temps du contrat, donc inutile d'en cumuler.
+        """
+        for rec in self:
+            codes = rec.billing_frequency_ids.mapped('code')
+            periods = [c for c in codes if c in PERIOD_CODES]
+            timings = [c for c in codes if c in TIMING_CODES]
+            if len(periods) > 1:
+                names = rec.billing_frequency_ids.filtered(
+                    lambda f: f.code in PERIOD_CODES
+                ).mapped('name')
+                raise ValidationError(_(
+                    "Une seule cadence de période est autorisée par contrat "
+                    "(Annuelle, Semestrielle, Trimestrielle ou Période intégrale).\n"
+                    "Actuellement sélectionné(es) : %s",
+                    ', '.join(names),
+                ))
+            if len(timings) > 1:
+                names = rec.billing_frequency_ids.filtered(
+                    lambda f: f.code in TIMING_CODES
+                ).mapped('name')
+                raise ValidationError(_(
+                    "Une seule cadence de timing est autorisée par contrat "
+                    "(À échu ou À échoir).\n"
+                    "Actuellement sélectionné(es) : %s",
+                    ', '.join(names),
                 ))
 
     # ==================================================================
@@ -491,105 +527,229 @@ class EurekamMaintenanceContract(models.Model):
     # Facturation (creation de account.move)
     # ==================================================================
 
-    def action_create_invoice_for_current_year(self):
-        """Cree une facture brouillon (out_invoice) pour la ligne annee courante."""
+    # ==================================================================
+    # Facturation : helpers de cadence
+    # ==================================================================
+
+    def _get_billing_period_code(self):
+        """Code de période courante du contrat (annual par defaut si non defini)."""
         self.ensure_one()
-        today_year = fields.Date.context_today(self).year
-        line = self.line_ids.filtered(lambda l: l.year == today_year)
-        if not line:
-            raise UserError(_(
-                "Aucune ligne annuelle pour l'année %(year)s. "
-                "Cliquer sur « Générer les lignes annuelles » d'abord.",
-                year=today_year,
-            ))
-        if len(line) > 1:
-            raise UserError(_(
-                "Incohérence : plusieurs lignes existent pour l'année %s.",
-                today_year,
-            ))
-        if line.is_invoiced:
-            raise UserError(_(
-                "La ligne %(year)s est déjà facturée (facture %(inv)s).",
-                year=line.year,
-                inv=line.invoice_id.display_name or line.invoice_id.id,
-            ))
-        return self._create_invoice_from_lines(line)
+        for code in self.billing_frequency_ids.mapped('code'):
+            if code in PERIOD_CODES:
+                return code
+        return 'annual'
 
-    def _create_invoice_from_lines(self, lines):
-        """Cree une facture client (out_invoice) regroupant les lignes annuelles donnees.
+    def _get_billing_timing_code(self):
+        """Code de timing : 'overdue' (echu) ou 'upcoming' (a echoir, par defaut)."""
+        self.ensure_one()
+        for code in self.billing_frequency_ids.mapped('code'):
+            if code in TIMING_CODES:
+                return code
+        return 'upcoming'
 
-        Lie la facture aux lignes via invoice_id et coche is_invoiced.
-        Le journal et les comptes comptables sont resolus automatiquement
-        par account.move au moment de la confirmation.
+    @staticmethod
+    def _periods_for_year(year, amount, period_code):
+        """Retourne la liste des sous-periodes d'une annee :
+        [(label, fraction_amount, period_start, period_end), ...]
+
+        - 'annual'      -> 1 periode (annee entiere)
+        - 'semi_annual' -> 2 periodes (S1, S2), fraction = amount/2
+        - 'quarterly'   -> 4 periodes (T1..T4), fraction = amount/4
+        - 'full_period' -> traite a part (action_create_invoices_for_contract)
+        """
+        if period_code == 'quarterly':
+            return [
+                ("T1 %s" % year, amount / 4.0, date(year, 1, 1), date(year, 3, 31)),
+                ("T2 %s" % year, amount / 4.0, date(year, 4, 1), date(year, 6, 30)),
+                ("T3 %s" % year, amount / 4.0, date(year, 7, 1), date(year, 9, 30)),
+                ("T4 %s" % year, amount / 4.0, date(year, 10, 1), date(year, 12, 31)),
+            ]
+        if period_code == 'semi_annual':
+            return [
+                ("S1 %s" % year, amount / 2.0, date(year, 1, 1), date(year, 6, 30)),
+                ("S2 %s" % year, amount / 2.0, date(year, 7, 1), date(year, 12, 31)),
+            ]
+        # 'annual' par defaut
+        return [
+            ("Année %s" % year, amount, date(year, 1, 1), date(year, 12, 31)),
+        ]
+
+    @staticmethod
+    def _invoice_date_for_period(period_start, period_end, timing_code):
+        """Date d'emission d'une facture pour une periode donnee.
+
+        - 'overdue'  (echu)     -> fin de periode
+        - 'upcoming' (a echoir) -> debut de periode (defaut)
+        """
+        if timing_code == 'overdue':
+            return period_end
+        return period_start
+
+    # ==================================================================
+    # Facturation : actions
+    # ==================================================================
+
+    def action_create_invoices_for_contract(self):
+        """Cree toutes les factures brouillon couvrant la duree restante du contrat.
+
+        Selon la cadence (billing_frequency_ids) :
+          - 'annual'      -> 1 facture par annee restante
+          - 'semi_annual' -> 2 factures par annee restante (S1, S2)
+          - 'quarterly'   -> 4 factures par annee restante (T1..T4)
+          - 'full_period' -> 1 facture globale = somme de toutes les lignes
+          - 'overdue'     -> date facture = fin de periode
+          - 'upcoming'    -> date facture = debut de periode (defaut)
+
+        Idempotent : les periodes deja facturees ne sont pas recreees.
+        """
+        today = fields.Date.context_today(self)
+        created_invoices = self.env['account.move']
+
+        for contract in self:
+            if not contract.line_ids:
+                raise UserError(_(
+                    "Aucune ligne annuelle pour ce contrat. Cliquer sur "
+                    "« Générer les lignes annuelles » d'abord."
+                ))
+
+            period_code = contract._get_billing_period_code()
+            timing_code = contract._get_billing_timing_code()
+
+            # ---- Cas 1 : Période intégrale = 1 facture globale ----
+            if period_code == 'full_period':
+                existing = contract.line_ids.mapped('invoice_ids')
+                if existing:
+                    raise UserError(_(
+                        "Une ou plusieurs factures existent déjà pour ce contrat "
+                        "en « Période intégrale » : %s. Supprimer les factures "
+                        "existantes d'abord si rejeu nécessaire.",
+                        ', '.join(existing.mapped('display_name')),
+                    ))
+                invoice = contract._create_invoice_full_period()
+                contract.line_ids.write({'invoice_ids': [(4, invoice.id)]})
+                created_invoices |= invoice
+                continue
+
+            # ---- Cas 2 : cadence sous-annuelle (annual/semi_annual/quarterly) ----
+            # Iterer sur les lignes futures (annee courante et au-dela).
+            future_lines = contract.line_ids.filtered(lambda l: l.year >= today.year)
+            for line in future_lines.sorted(key=lambda l: l.year):
+                periods = contract._periods_for_year(
+                    line.year, line.amount, period_code,
+                )
+                # On suppose que les N premieres periodes ont deja ete creees
+                # dans l'ordre chronologique (donc invoice_count = nb deja faites)
+                already_created = line.invoice_count
+                for label, fraction, p_start, p_end in periods[already_created:]:
+                    inv_date = contract._invoice_date_for_period(
+                        p_start, p_end, timing_code,
+                    )
+                    invoice = contract._create_invoice_period(
+                        line, label, fraction, inv_date,
+                    )
+                    line.invoice_ids = [(4, invoice.id)]
+                    created_invoices |= invoice
+
+        if not created_invoices:
+            raise UserError(_(
+                "Aucune nouvelle facture à créer (toutes les périodes restantes "
+                "sont déjà facturées)."
+            ))
+
+        for contract in self:
+            contract.message_post(body=_(
+                "%d facture(s) brouillon créée(s) selon la cadence du contrat.",
+                len(created_invoices),
+            ))
+
+        return {
+            'name': _("Factures créées (%d)", len(created_invoices)),
+            'type': 'ir.actions.act_window',
+            'res_model': 'account.move',
+            'view_mode': 'list,form',
+            'domain': [('id', 'in', created_invoices.ids)],
+            'target': 'current',
+        }
+
+    def _create_invoice_period(self, line, period_label, fraction_amount, invoice_date):
+        """Cree une facture brouillon pour une sous-periode (T1, S1, Année N, etc.)."""
+        self.ensure_one()
+        product = self.product_id
+        product_var = product.product_variant_id if product else False
+        description = _(
+            "Maintenance %(prod)s — %(period)s",
+            prod=product.name or self.product_name or '',
+            period=period_label,
+        )
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_id.id,
+            'invoice_origin': "%s / %s" % (self.sequence_number, period_label),
+            'invoice_date': invoice_date,
+            'currency_id': self.currency_id.id,
+            'company_id': self.company_id.id,
+            'invoice_line_ids': [(0, 0, {
+                'name': description,
+                'product_id': product_var.id if product_var else False,
+                'quantity': 1.0,
+                'price_unit': fraction_amount,
+            })],
+        })
+        return invoice
+
+    def _create_invoice_full_period(self):
+        """Cree une facture brouillon unique couvrant l'integralite du contrat.
+
+        Une seule ligne de facture pour la somme totale (total_contract_value).
+        Date d'emission selon le timing :
+          - a echoir (upcoming) -> date_start
+          - echu     (overdue)  -> date_end
+          - defaut              -> aujourd'hui
         """
         self.ensure_one()
-        if not lines:
-            raise UserError(_("Aucune ligne à facturer."))
-        if any(l.contract_id != self for l in lines):
-            raise UserError(_(
-                "Toutes les lignes à facturer doivent appartenir au même contrat."
-            ))
-        if any(l.is_invoiced for l in lines):
-            raise UserError(_("Une ou plusieurs lignes sont déjà facturées."))
+        timing_code = self._get_billing_timing_code()
+        if timing_code == 'overdue':
+            invoice_date = self.date_end or fields.Date.context_today(self)
+        else:
+            invoice_date = self.date_start or fields.Date.context_today(self)
 
-        product_template = self.product_id
-        product_variant = product_template.product_variant_id if product_template else False
-
-        invoice_line_vals = []
-        for line in lines:
-            label = _(
-                "Maintenance %(prod)s — Année %(year)s",
-                prod=product_template.name or self.product_name or '',
-                year=line.year,
-            )
-            invoice_line_vals.append((0, 0, {
-                'name': label,
-                'product_id': product_variant.id if product_variant else False,
-                'quantity': 1.0,
-                'price_unit': line.amount,
-            }))
-
+        product = self.product_id
+        product_var = product.product_variant_id if product else False
+        total = sum(self.line_ids.mapped('amount'))
+        description = _(
+            "Maintenance %(prod)s — Période intégrale (%(start)s → %(end)s)",
+            prod=product.name or self.product_name or '',
+            start=self.date_start or '?',
+            end=self.date_end or '?',
+        )
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner_id.id,
             'invoice_origin': self.sequence_number,
+            'invoice_date': invoice_date,
             'currency_id': self.currency_id.id,
             'company_id': self.company_id.id,
-            'invoice_line_ids': invoice_line_vals,
+            'invoice_line_ids': [(0, 0, {
+                'name': description,
+                'product_id': product_var.id if product_var else False,
+                'quantity': 1.0,
+                'price_unit': total,
+            })],
         })
-
-        lines.write({
-            'invoice_id': invoice.id,
-            'is_invoiced': True,
-        })
-
-        self.message_post(body=_(
-            "Facture brouillon créée : %(inv)s pour les lignes %(years)s.",
-            inv=invoice.display_name or invoice.id,
-            years=', '.join(str(l.year) for l in lines),
-        ))
-
-        return {
-            'name': _("Facture — %s", invoice.display_name or invoice.id),
-            'type': 'ir.actions.act_window',
-            'res_model': 'account.move',
-            'res_id': invoice.id,
-            'view_mode': 'form',
-            'target': 'current',
-        }
+        return invoice
 
     def action_view_invoices(self):
         """Ouvre les factures clients liees a ce contrat."""
         self.ensure_one()
-        invoice_ids = self.line_ids.mapped('invoice_id').ids
-        if not invoice_ids:
+        invoices = self.line_ids.mapped('invoice_ids')
+        if not invoices:
             raise UserError(_("Aucune facture n'est encore liée à ce contrat."))
-        if len(invoice_ids) == 1:
+        if len(invoices) == 1:
             return {
                 'name': _("Facture"),
                 'type': 'ir.actions.act_window',
                 'res_model': 'account.move',
-                'res_id': invoice_ids[0],
+                'res_id': invoices.id,
                 'view_mode': 'form',
                 'target': 'current',
             }
@@ -598,7 +758,7 @@ class EurekamMaintenanceContract(models.Model):
             'type': 'ir.actions.act_window',
             'res_model': 'account.move',
             'view_mode': 'list,form',
-            'domain': [('id', 'in', invoice_ids)],
+            'domain': [('id', 'in', invoices.ids)],
         }
 
     # ==================================================================

@@ -19,9 +19,10 @@
                     <button name="action_open_renewal_wizard" type="object"
                             string="Renouveler" class="btn-primary"
                             invisible="state in ('draft','renewed','cancelled')"/>
-                    <button name="action_create_invoice_for_current_year" type="object"
-                            string="Créer la facture (année courante)"
-                            invisible="state not in ('active','expiring')"/>
+                    <button name="action_create_invoices_for_contract" type="object"
+                            string="Créer les factures du contrat"
+                            invisible="state not in ('active','expiring')"
+                            help="Génère les factures brouillon couvrant la durée restante du contrat selon la cadence (annuelle, semestrielle, trimestrielle ou période intégrale)."/>
                     <button name="action_cancel" type="object"
                             string="Annuler"
                             invisible="state in ('cancelled','renewed')"/>
@@ -135,8 +136,9 @@
                                     <field name="year"/>
                                     <field name="amount" sum="Total"/>
                                     <field name="currency_id" column_invisible="True"/>
-                                    <field name="is_invoiced" widget="boolean_toggle"/>
-                                    <field name="invoice_id" optional="show"/>
+                                    <field name="invoice_count" optional="show"/>
+                                    <field name="is_invoiced" widget="boolean_toggle" readonly="1"/>
+                                    <field name="invoice_ids" widget="many2many_tags" optional="show"/>
                                     <field name="notes" optional="hide"/>
                                 </list>
                             </field>
