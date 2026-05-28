@@ -35,13 +35,12 @@ class ResPartner(models.Model):
     # ------------------------------------------------------------------
     # Classification
     # ------------------------------------------------------------------
-    establishment_type_ids = fields.Many2many(
-        'eurekam.establishment.type',
-        'res_partner_establishment_type_rel',
-        'partner_id', 'type_id',
-        string="Type d'établissement",
-        help="Un établissement peut être à la fois CHU et CLCC, par exemple.",
-    )
+    # Note (refactor option A) : le type d'établissement (CH, CHU, CLCC...)
+    # n'est plus stocké dans un modèle dédié. On utilise le champ standard
+    # `category_id` (Many2many vers res.partner.category) déjà affiché par
+    # la vue partner Odoo. Les tags CH/CHU/CLCC/Clinique/Université etc.
+    # existent déjà dans la base Eurekam.
+
     establishment_status = fields.Selection(
         [
             ('client_eurekam', 'Client Eurekam'),
@@ -68,12 +67,10 @@ class ResPartner(models.Model):
     # ------------------------------------------------------------------
     # Équipements & modules installés
     # ------------------------------------------------------------------
-    product_version_ids = fields.Many2many(
-        'eurekam.product.version',
-        'res_partner_product_version_rel',
-        'partner_id', 'version_id',
-        string="Versions produit installées",
-    )
+    # Note (refactor option A) : la version produit (GEN1, GEN2) n'est plus
+    # stockée dans un modèle dédié. On utilise les tags res.partner.category
+    # standard (GEN1, GEN2 déjà présents dans la base Eurekam).
+
     module_status_ids = fields.Many2many(
         'eurekam.module.status',
         'res_partner_module_status_rel',

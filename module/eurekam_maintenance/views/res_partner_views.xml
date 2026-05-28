@@ -40,8 +40,9 @@
                             <field name="department_number"/>
                         </group>
                         <group string="Classification">
-                            <field name="establishment_type_ids" widget="many2many_tags"
-                                   options="{'color_field': 'color'}"/>
+                            <!-- Type d'établissement (CH, CHU, CLCC...) : utiliser les tags
+                                 standard Odoo (champ category_id) déjà affichés en haut
+                                 de la fiche partenaire. -->
                             <field name="establishment_status"/>
                             <field name="central_purchasing"/>
                         </group>
@@ -49,8 +50,8 @@
                     <group>
                         <group string="Équipements installés">
                             <field name="nb_workstations"/>
-                            <field name="product_version_ids" widget="many2many_tags"
-                                   options="{'color_field': 'color'}"/>
+                            <!-- Version produit (GEN1, GEN2) : utiliser les tags standard
+                                 Odoo (champ category_id) déjà affichés en haut de la fiche. -->
                             <field name="module_status_ids" widget="many2many_tags"
                                    options="{'color_field': 'color'}"/>
                             <field name="special_equipment_ids" widget="many2many_tags"

@@ -11,11 +11,11 @@
         <field name="department_number">69</field>
         <field name="city">Lyon</field>
         <field name="zip">69003</field>
-        <field name="establishment_type_ids" eval="[(6, 0, [ref('estab_type_chu')])]"/>
+        <!-- Type (CHU) et version (GEN2) : utiliser les tags
+             res.partner.category Eurekam si présents sur la base cible. -->
         <field name="establishment_status">client_eurekam</field>
         <field name="central_purchasing">uniha</field>
         <field name="nb_workstations">15</field>
-        <field name="product_version_ids" eval="[(6, 0, [ref('prod_version_gen2')])]"/>
     </record>
 
     <record id="demo_partner_ch_brest" model="res.partner">
@@ -25,11 +25,10 @@
         <field name="department_number">29</field>
         <field name="city">Brest</field>
         <field name="zip">29200</field>
-        <field name="establishment_type_ids" eval="[(6, 0, [ref('estab_type_ch')])]"/>
+        <!-- Type (CH) et version (GEN1) : tags res.partner.category Eurekam. -->
         <field name="establishment_status">client_eurekam</field>
         <field name="central_purchasing">ageps</field>
         <field name="nb_workstations">6</field>
-        <field name="product_version_ids" eval="[(6, 0, [ref('prod_version_gen1')])]"/>
     </record>
 
     <record id="demo_partner_clcc_paris" model="res.partner">
@@ -39,11 +38,10 @@
         <field name="department_number">75</field>
         <field name="city">Paris</field>
         <field name="zip">75005</field>
-        <field name="establishment_type_ids" eval="[(6, 0, [ref('estab_type_clcc')])]"/>
+        <!-- Type (CLCC) et version (GEN2 + DO module) : tags res.partner.category. -->
         <field name="establishment_status">client_eurekam</field>
         <field name="central_purchasing">unicancer</field>
         <field name="nb_workstations">10</field>
-        <field name="product_version_ids" eval="[(6, 0, [ref('prod_version_gen2'), ref('prod_version_do_module')])]"/>
         <field name="module_status_ids" eval="[(6, 0, [ref('mod_status_clinical_trial')])]"/>
     </record>
 

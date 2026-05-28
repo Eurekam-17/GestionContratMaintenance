@@ -346,20 +346,23 @@ class TestMaintenanceContract(TransactionCase):
     # 10. Extension res.partner
     # ======================================================================
     def test_partner_extension(self):
-        ch_type = self.env.ref('eurekam_maintenance.estab_type_ch')
+        # Note refactor option A : on n'utilise plus eurekam.establishment.type
+        # mais le tag standard res.partner.category. On cree un tag de test
+        # pour valider que la classification fonctionne via les tags Odoo.
+        ch_tag = self.env['res.partner.category'].create({'name': 'CH (Test)'})
         partner = self.env['res.partner'].create({
             'name': 'CHU Bordeaux Test',
             'is_company': True,
             'is_maintenance_establishment': True,
             'department_number': '33',
-            'establishment_type_ids': [(6, 0, [ch_type.id])],
+            'category_id': [(6, 0, [ch_tag.id])],
             'establishment_status': 'client_eurekam',
             'central_purchasing': 'uniha',
             'nb_workstations': 12,
         })
         self.assertTrue(partner.is_maintenance_establishment)
         self.assertEqual(partner.department_number, '33')
-        self.assertIn(ch_type, partner.establishment_type_ids)
+        self.assertIn(ch_tag, partner.category_id)
         self.assertEqual(partner.maintenance_contract_count, 0)
 
         # Creation d'un contrat -> compteur passe a 1

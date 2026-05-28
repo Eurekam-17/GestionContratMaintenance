@@ -1,48 +1,20 @@
 """Modeles auxiliaires pour caracteriser un etablissement de maintenance.
 
-Ces 4 modeles partagent une meme structure (name, code, sequence, color, active)
+Ces 2 modeles partagent une meme structure (name, code, sequence, color, active)
 et servent uniquement de tables de reference rattachees a res.partner.
+
+Note (refactor option A) : on ne stocke plus le type d'etablissement ni la
+version produit dans des modeles dedies. Eurekam utilise deja les tags
+standard res.partner.category (CH, CHU, CLCC, Clinique, Universite, GEN1,
+GEN2, ...). Les modeles eurekam.establishment.type et eurekam.product.version
+ont ete supprimes pour eviter le doublon conceptuel et profiter du widget
+many2many_tags deja affiche par la vue partner standard.
+
+Les modeles restants (statut module, equipement special) n'ont pas
+d'equivalent en tag dans la base Eurekam donc on les conserve.
 """
 
 from odoo import fields, models
-
-
-class EurekamEstablishmentType(models.Model):
-    """Type d'etablissement client : CH, CHU, CLCC, CL, HIA, Distributeur, Laboratoire, Universite."""
-
-    _name = 'eurekam.establishment.type'
-    _description = "Type d'établissement Eurekam"
-    _order = 'sequence, name'
-
-    name = fields.Char(string='Nom', required=True, translate=True)
-    code = fields.Char(string='Code', required=True)
-    sequence = fields.Integer(string='Séquence', default=10)
-    color = fields.Integer(string='Couleur')
-    active = fields.Boolean(default=True)
-
-    _sql_constraints = [
-        ('unique_code', 'UNIQUE(code)',
-         "Le code du type d'établissement doit être unique."),
-    ]
-
-
-class EurekamProductVersion(models.Model):
-    """Version produit Drugcam installee chez l'etablissement."""
-
-    _name = 'eurekam.product.version'
-    _description = "Version produit Drugcam"
-    _order = 'sequence, name'
-
-    name = fields.Char(string='Nom', required=True, translate=True)
-    code = fields.Char(string='Code', required=True)
-    sequence = fields.Integer(string='Séquence', default=10)
-    color = fields.Integer(string='Couleur')
-    active = fields.Boolean(default=True)
-
-    _sql_constraints = [
-        ('unique_code', 'UNIQUE(code)',
-         "Le code de la version produit doit être unique."),
-    ]
 
 
 class EurekamModuleStatus(models.Model):

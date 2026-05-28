@@ -42,16 +42,9 @@
               groups="group_maintenance_manager"
               sequence="90"/>
 
-    <menuitem id="menu_config_establishment_type"
-              name="Types d'établissement"
-              parent="menu_maintenance_config"
-              action="action_establishment_type"
-              sequence="10"/>
-    <menuitem id="menu_config_product_version"
-              name="Versions produit Drugcam"
-              parent="menu_maintenance_config"
-              action="action_product_version"
-              sequence="20"/>
+    <!-- Types d'établissement et Versions produit : utiliser les tags
+         res.partner.category standards Odoo (Contacts > Configuration >
+         Contact Tags). Pas de sous-menu Maintenance dédié pour eux. -->
     <menuitem id="menu_config_module_status"
               name="Statuts module"
               parent="menu_maintenance_config"

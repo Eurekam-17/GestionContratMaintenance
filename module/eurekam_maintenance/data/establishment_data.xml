@@ -2,88 +2,14 @@
 <odoo>
     <data noupdate="1">
 
-        <!-- ========================================================== -->
-        <!-- Types d'etablissement                                       -->
-        <!-- ========================================================== -->
-        <record id="estab_type_ch" model="eurekam.establishment.type">
-            <field name="name">Centre hospitalier (CH)</field>
-            <field name="code">ch</field>
-            <field name="sequence">10</field>
-        </record>
-        <record id="estab_type_chu" model="eurekam.establishment.type">
-            <field name="name">CHU</field>
-            <field name="code">chu</field>
-            <field name="sequence">20</field>
-        </record>
-        <record id="estab_type_clcc" model="eurekam.establishment.type">
-            <field name="name">CLCC</field>
-            <field name="code">clcc</field>
-            <field name="sequence">30</field>
-        </record>
-        <record id="estab_type_cl" model="eurekam.establishment.type">
-            <field name="name">Clinique (CL)</field>
-            <field name="code">cl</field>
-            <field name="sequence">40</field>
-        </record>
-        <record id="estab_type_hia" model="eurekam.establishment.type">
-            <field name="name">HIA</field>
-            <field name="code">hia</field>
-            <field name="sequence">50</field>
-        </record>
-        <record id="estab_type_distributor" model="eurekam.establishment.type">
-            <field name="name">Distributeur</field>
-            <field name="code">distributor</field>
-            <field name="sequence">60</field>
-        </record>
-        <record id="estab_type_lab" model="eurekam.establishment.type">
-            <field name="name">Laboratoire</field>
-            <field name="code">lab</field>
-            <field name="sequence">70</field>
-        </record>
-        <record id="estab_type_university" model="eurekam.establishment.type">
-            <field name="name">Université</field>
-            <field name="code">university</field>
-            <field name="sequence">80</field>
-        </record>
-
-        <!-- ========================================================== -->
-        <!-- Versions produit Drugcam                                    -->
-        <!-- ========================================================== -->
-        <record id="prod_version_gen1" model="eurekam.product.version">
-            <field name="name">GEN1</field>
-            <field name="code">gen1</field>
-            <field name="sequence">10</field>
-        </record>
-        <record id="prod_version_gen2" model="eurekam.product.version">
-            <field name="name">GEN2</field>
-            <field name="code">gen2</field>
-            <field name="sequence">20</field>
-        </record>
-        <record id="prod_version_upgrade" model="eurekam.product.version">
-            <field name="name">Upgrade en cours</field>
-            <field name="code">upgrade</field>
-            <field name="sequence">30</field>
-        </record>
-        <record id="prod_version_dgm_vaccine" model="eurekam.product.version">
-            <field name="name">Dgm Vaccine</field>
-            <field name="code">dgm_vaccine</field>
-            <field name="sequence">40</field>
-        </record>
-        <record id="prod_version_mdc" model="eurekam.product.version">
-            <field name="name">Mdc</field>
-            <field name="code">mdc</field>
-            <field name="sequence">50</field>
-        </record>
-        <record id="prod_version_dgm_formation" model="eurekam.product.version">
-            <field name="name">Dgm Formation</field>
-            <field name="code">dgm_formation</field>
-            <field name="sequence">60</field>
-        </record>
-        <record id="prod_version_do_module" model="eurekam.product.version">
-            <field name="name">DO module</field>
-            <field name="code">do_module</field>
-            <field name="sequence">70</field>
-        </record>
+        <!--
+            Note (refactor option A) :
+            Les sections "Types d'etablissement" (CH, CHU, CLCC, ...) et
+            "Versions produit Drugcam" (GEN1, GEN2, ...) ont ete supprimees.
+            Eurekam utilise les tags standard res.partner.category pour ces
+            classifications (deja presents dans la base : CH, CHU, CLCC,
+            Clinique, Universite, GEN1, GEN2, ...).
+        -->
 
         <!-- ========================================================== -->
         <!-- Statuts module                                              -->
