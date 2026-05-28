@@ -376,11 +376,13 @@ class EurekamMaintenanceContract(models.Model):
                     "Renseigner les dates de début et de fin avant d'activer."
                 ))
             rec.state = 'active'
+        return True
 
     def action_cancel(self):
         for rec in self:
             if rec.state != 'cancelled':
                 rec.state = 'cancelled'
+        return True
 
     def action_draft(self):
         for rec in self:
@@ -389,6 +391,7 @@ class EurekamMaintenanceContract(models.Model):
                     "Seul un contrat annulé peut revenir en brouillon."
                 ))
             rec.state = 'draft'
+        return True
 
     def action_generate_lines(self):
         """Génère les lignes annuelles vides entre date_start et date_end.
@@ -417,6 +420,7 @@ class EurekamMaintenanceContract(models.Model):
                     })
             if new_vals:
                 Line.create(new_vals)
+        return True
 
     def action_view_lines(self):
         """Ouvre la vue liste des lignes annuelles filtrée sur ce contrat."""
