@@ -11,8 +11,13 @@
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
 
-            <!-- Smart button : compteur de contrats de maintenance -->
+            <!-- Smart button : compteur de contrats de maintenance.
+                 Le champ is_maintenance_establishment doit etre declare invisible
+                 ICI pour etre pre-fetche cote client (utilise dans plusieurs
+                 expressions 'invisible' qui sont evaluees AVANT le bloc group
+                 ou le champ visible est declare). -->
             <xpath expr="//div[@name='button_box']" position="inside">
+                <field name="is_maintenance_establishment" invisible="1"/>
                 <button name="action_view_maintenance_contracts" type="object"
                         class="oe_stat_button" icon="fa-wrench"
                         invisible="not is_maintenance_establishment">
