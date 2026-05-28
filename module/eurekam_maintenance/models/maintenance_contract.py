@@ -411,6 +411,14 @@ class EurekamMaintenanceContract(models.Model):
                 raise UserError(_(
                     "Renseigner les dates de début et de fin avant d'activer."
                 ))
+            if not rec.product_id:
+                raise UserError(_(
+                    "Renseigner le produit (champ « Produit » lié à la base "
+                    "articles) avant d'activer le contrat. Le champ « Libellé "
+                    "produit » seul ne suffit pas : les factures générées "
+                    "ensuite ont besoin du product_id pour résoudre "
+                    "automatiquement le compte de revenu et les taxes."
+                ))
             rec.state = 'active'
         return True
 
@@ -610,6 +618,14 @@ class EurekamMaintenanceContract(models.Model):
                 raise UserError(_(
                     "Aucune ligne annuelle pour ce contrat. Cliquer sur "
                     "« Générer les lignes annuelles » d'abord."
+                ))
+            if not contract.product_id:
+                raise UserError(_(
+                    "Le contrat %s n'a pas de produit lié (champ « Produit »).\n"
+                    "Renseigner un produit de la base articles avant de générer "
+                    "les factures, sinon le compte de revenu et les taxes ne "
+                    "pourront pas être résolus automatiquement.",
+                    contract.sequence_number,
                 ))
 
             period_code = contract._get_billing_period_code()
