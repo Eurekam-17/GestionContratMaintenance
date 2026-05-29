@@ -192,6 +192,10 @@ le nouveau nom (visible dans l'onglet **Builds** d'odoo.sh).
 
 ## Documentation
 
+- **[docs/guide_utilisateur.md](docs/guide_utilisateur.md)** — guide pas-à-pas
+  en français pour les testeurs Eurekam (commerciaux, ADV, support,
+  manageurs). Contient le workflow standard, les cas spéciaux, les indicateurs
+  fiche partenaire pour le support, et une FAQ.
 - **[CLAUDE.md](CLAUDE.md)** — règles de développement complètes, architecture
   détaillée des modèles, correspondance Notion ↔ Odoo, checklist de validation
   finale.
