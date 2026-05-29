@@ -119,6 +119,30 @@ class ResPartner(models.Model):
         compute='_compute_maintenance_contract_count',
         store=False,
     )
+    expiring_maintenance_contract_count = fields.Integer(
+        string="Nb contrats expirant",
+        compute='_compute_maintenance_contract_count',
+        store=False,
+    )
+    expired_maintenance_contract_count = fields.Integer(
+        string="Nb contrats expirés",
+        compute='_compute_maintenance_contract_count',
+        store=False,
+    )
+    maintenance_status = fields.Selection(
+        [
+            ('none', "Aucune maintenance"),
+            ('active', "Maintenance ACTIVE"),
+            ('expiring', "Maintenance EXPIRE BIENTÔT"),
+            ('expired', "Maintenance EXPIRÉE"),
+        ],
+        string="Statut maintenance",
+        compute='_compute_maintenance_status',
+        store=False,
+        help="Indicateur synthétique visible pour toute l'équipe (notamment "
+             "support) qui résume l'état des contrats de maintenance de "
+             "l'établissement. Calculé en temps réel.",
+    )
 
     @api.depends('maintenance_contract_ids', 'maintenance_contract_ids.state')
     def _compute_maintenance_contract_count(self):
@@ -127,6 +151,37 @@ class ResPartner(models.Model):
             rec.active_maintenance_contract_count = len(
                 rec.maintenance_contract_ids.filtered(lambda c: c.state == 'active')
             )
+            rec.expiring_maintenance_contract_count = len(
+                rec.maintenance_contract_ids.filtered(lambda c: c.state == 'expiring')
+            )
+            rec.expired_maintenance_contract_count = len(
+                rec.maintenance_contract_ids.filtered(lambda c: c.state == 'expired')
+            )
+
+    @api.depends(
+        'maintenance_contract_ids',
+        'active_maintenance_contract_count',
+        'expiring_maintenance_contract_count',
+        'expired_maintenance_contract_count',
+    )
+    def _compute_maintenance_status(self):
+        """Resume synthetique du statut maintenance, par priorite :
+        active > expiring > expired > none.
+        Si plusieurs contrats coexistent, c'est l'etat le plus 'bon' qui gagne
+        (un client avec 1 contrat actif + 1 expire => statut ACTIVE).
+        """
+        for rec in self:
+            if not rec.maintenance_contract_ids:
+                rec.maintenance_status = 'none'
+            elif rec.active_maintenance_contract_count > 0:
+                rec.maintenance_status = 'active'
+            elif rec.expiring_maintenance_contract_count > 0:
+                rec.maintenance_status = 'expiring'
+            elif rec.expired_maintenance_contract_count > 0:
+                rec.maintenance_status = 'expired'
+            else:
+                # Tous les contrats sont en draft/renewed/cancelled
+                rec.maintenance_status = 'none'
 
     # ------------------------------------------------------------------
     # Actions
