@@ -427,6 +427,33 @@ class EurekamMaintenanceContract(models.Model):
     # Actions
     # ==================================================================
 
+    def _evaluate_lifecycle_state(self):
+        """Determine l'etat attendu d'un contrat selon date_end et today.
+
+        Ne modifie pas le record. Retourne le code de state attendu.
+        Logique :
+        - draft / renewed / cancelled / expired -> etats finaux, inchanges
+        - Sinon (active / expiring), recalcule selon days_to_expiry :
+            * days < 0      -> 'expired'
+            * 0 <= days <=90 -> 'expiring'
+            * days > 90     -> 'active'
+
+        Utilise par action_activate et action_recompute_state, et reflete la
+        meme logique que _cron_check_expiring_contracts (sans envoi d'email).
+        """
+        self.ensure_one()
+        if self.state in ('draft', 'renewed', 'cancelled', 'expired'):
+            return self.state
+        if not self.date_end:
+            return self.state
+        today = fields.Date.context_today(self)
+        days = (self.date_end - today).days
+        if days < 0:
+            return 'expired'
+        if 0 <= days <= 90:
+            return 'expiring'
+        return 'active'
+
     def action_activate(self):
         for rec in self:
             if rec.state not in ('draft', 'cancelled'):
@@ -445,7 +472,40 @@ class EurekamMaintenanceContract(models.Model):
                     "ensuite ont besoin du product_id pour résoudre "
                     "automatiquement le compte de revenu et les taxes."
                 ))
+            # Bascule transitoire en 'active' puis recalcul immediat selon date_end.
+            # Couvre le cas import historique / activation d'un contrat dont la
+            # date_end est deja passee (sans attendre le cron quotidien).
             rec.state = 'active'
+            new_state = rec._evaluate_lifecycle_state()
+            if new_state != rec.state:
+                rec.message_post(body=_(
+                    "Activation suivie d'un re-evaluation immediate selon date_end "
+                    "(%(end)s, %(days)s jours) : etat ajusté à « %(state)s ».",
+                    end=rec.date_end,
+                    days=(rec.date_end - fields.Date.context_today(rec)).days,
+                    state=dict(rec._fields['state'].selection).get(new_state),
+                ))
+                rec.state = new_state
+        return True
+
+    def action_recompute_state(self):
+        """Bouton manuel : re-evalue l'etat selon date_end actuelle.
+
+        Utile sur les bases ou le cron quotidien est neutralise (Odoo.sh sandbox).
+        Sur la prod, le cron tourne quotidiennement et rattrape les bascules
+        automatiquement.
+        """
+        transitioned = self.env['eurekam.maintenance.contract']
+        for rec in self:
+            new_state = rec._evaluate_lifecycle_state()
+            if new_state != rec.state:
+                rec.message_post(body=_(
+                    "Recalcul manuel de l'etat : %(old)s -> %(new)s.",
+                    old=dict(rec._fields['state'].selection).get(rec.state),
+                    new=dict(rec._fields['state'].selection).get(new_state),
+                ))
+                rec.state = new_state
+                transitioned |= rec
         return True
 
     def action_cancel(self):
@@ -923,12 +983,15 @@ class EurekamMaintenanceContract(models.Model):
         passed_to_expired = self.env['eurekam.maintenance.contract']
 
         for contract in candidates:
-            days = (contract.date_end - today).days
-            if days < 0 and contract.state != 'expired':
-                contract.write({'state': 'expired'})
+            # Utilise le meme helper que action_activate / action_recompute_state
+            new_state = contract._evaluate_lifecycle_state()
+            if new_state == contract.state:
+                continue
+            old_state = contract.state
+            contract.write({'state': new_state})
+            if new_state == 'expired':
                 passed_to_expired |= contract
-            elif 0 <= days <= 90 and contract.state == 'active':
-                contract.write({'state': 'expiring'})
+            elif new_state == 'expiring' and old_state == 'active':
                 passed_to_expiring |= contract
 
         # ---- Envoi des emails (en queue, pas force_send=True) -----

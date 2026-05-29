@@ -27,6 +27,10 @@
                             string="Créer les factures du contrat"
                             invisible="state not in ('active','expiring') or requires_customer_order"
                             help="Cas rare : facturation directe sans Bon de Commande (établissements privés). Génère les factures brouillon couvrant la durée restante du contrat selon la cadence."/>
+                    <button name="action_recompute_state" type="object"
+                            string="Recalculer l'état"
+                            invisible="state in ('draft','cancelled','renewed')"
+                            help="Re-évalue l'état (Actif / Expire bientôt / Expiré) selon la date de fin et la date du jour. Utile si le cron quotidien n'a pas tourné (cas sandbox / staging)."/>
                     <button name="action_cancel" type="object"
                             string="Annuler"
                             invisible="state in ('cancelled','renewed')"/>
