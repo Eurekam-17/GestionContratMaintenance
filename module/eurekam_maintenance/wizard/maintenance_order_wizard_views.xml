@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_maintenance_order_wizard_form" model="ir.ui.view">
+        <field name="name">eurekam.maintenance.order.wizard.form</field>
+        <field name="model">eurekam.maintenance.order.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Créer une commande client">
+                <sheet>
+                    <div class="oe_title">
+                        <h2>Nouvelle commande client maintenance</h2>
+                    </div>
+                    <group>
+                        <group string="Contrat source">
+                            <field name="contract_id" readonly="1"/>
+                            <field name="partner_id" readonly="1"/>
+                            <field name="product_id" readonly="1"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="Bon de commande client">
+                            <field name="customer_po_reference"/>
+                            <field name="customer_po_date"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Périmètre de la commande">
+                            <field name="coverage_mode" widget="radio"/>
+                            <field name="year"
+                                   invisible="coverage_mode == 'full_contract'"
+                                   required="coverage_mode == 'annual_split'"/>
+                        </group>
+                        <group string="Aperçu de ce qui sera créé">
+                            <field name="preview_period_count"/>
+                            <field name="preview_total_amount"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-info mt-3" role="alert">
+                        Un <b>devis sale.order</b> sera créé en brouillon avec les lignes
+                        ci-dessus. Vous pourrez ensuite :
+                        <ul class="mt-1 mb-0">
+                            <li>Vérifier les lignes et le client</li>
+                            <li>Cliquer sur <b>Confirmer la commande</b> pour passer en bon de commande</li>
+                            <li>Facturer chaque ligne (= chaque trimestre/semestre/année) au fur et
+                                à mesure via le bouton natif <b>Créer une facture</b></li>
+                        </ul>
+                    </div>
+                </sheet>
+                <footer>
+                    <button name="action_create_sale_order" type="object"
+                            string="Créer la commande" class="oe_highlight"/>
+                    <button string="Annuler" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_maintenance_order_wizard" model="ir.actions.act_window">
+        <field name="name">Créer une commande client</field>
+        <field name="res_model">eurekam.maintenance.order.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

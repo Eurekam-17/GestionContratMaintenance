@@ -279,11 +279,32 @@ class EurekamMaintenanceContract(models.Model):
     )
 
     # ------------------------------------------------------------------
-    # Facturation (lien vers account.move)
+    # Facturation (lien vers account.move + sale.order)
     # ------------------------------------------------------------------
     invoice_count = fields.Integer(
         string='Nb factures',
         compute='_compute_invoice_count',
+    )
+    requires_customer_order = fields.Boolean(
+        string="Nécessite une commande client",
+        default=True,
+        tracking=True,
+        help="Si coché (cas majoritaire), la facturation passe obligatoirement "
+             "par une commande client (sale.order) créée à réception du Bon de "
+             "Commande client. L'action « Créer les factures du contrat » est "
+             "alors désactivée — utiliser « Créer une commande client » à la "
+             "place.\n"
+             "Si décoché (cas rare : certains établissements privés), la "
+             "facturation se fait directement sur le contrat sans BC.",
+    )
+    sale_order_ids = fields.One2many(
+        'sale.order',
+        'eurekam_maintenance_contract_id',
+        string="Commandes client",
+    )
+    sale_order_count = fields.Integer(
+        string="Nb commandes client",
+        compute='_compute_sale_order_count',
     )
 
     # ==================================================================
@@ -333,6 +354,11 @@ class EurekamMaintenanceContract(models.Model):
     def _compute_invoice_count(self):
         for rec in self:
             rec.invoice_count = len(rec.line_ids.mapped('invoice_ids'))
+
+    @api.depends('sale_order_ids')
+    def _compute_sale_order_count(self):
+        for rec in self:
+            rec.sale_order_count = len(rec.sale_order_ids)
 
     def _search_is_expiring_soon(self, operator, value):
         today = fields.Date.context_today(self)
@@ -614,6 +640,16 @@ class EurekamMaintenanceContract(models.Model):
         created_invoices = self.env['account.move']
 
         for contract in self:
+            if contract.requires_customer_order:
+                raise UserError(_(
+                    "Le contrat %s nécessite une commande client (BC). "
+                    "La facturation directe est désactivée pour ce contrat.\n"
+                    "Cliquer sur « Créer une commande client » à la place : "
+                    "un sale.order sera créé avec les lignes correspondant à "
+                    "la cadence, et chaque ligne pourra ensuite être facturée "
+                    "indépendamment via le workflow Sales natif.",
+                    contract.sequence_number,
+                ))
             if not contract.line_ids:
                 raise UserError(_(
                     "Aucune ligne annuelle pour ce contrat. Cliquer sur "
@@ -757,7 +793,10 @@ class EurekamMaintenanceContract(models.Model):
     def action_view_invoices(self):
         """Ouvre les factures clients liees a ce contrat."""
         self.ensure_one()
-        invoices = self.line_ids.mapped('invoice_ids')
+        # Factures directes (cas sans BC) + factures via sale.order (cas standard)
+        invoices_direct = self.line_ids.mapped('invoice_ids')
+        invoices_from_so = self.sale_order_ids.mapped('invoice_ids')
+        invoices = invoices_direct | invoices_from_so
         if not invoices:
             raise UserError(_("Aucune facture n'est encore liée à ce contrat."))
         if len(invoices) == 1:
@@ -775,6 +814,53 @@ class EurekamMaintenanceContract(models.Model):
             'res_model': 'account.move',
             'view_mode': 'list,form',
             'domain': [('id', 'in', invoices.ids)],
+        }
+
+    # ==================================================================
+    # Commandes client (sale.order)
+    # ==================================================================
+
+    def action_open_create_order_wizard(self):
+        """Ouvre le wizard de creation d'une commande client maintenance."""
+        self.ensure_one()
+        if self.state in ('cancelled', 'renewed'):
+            raise UserError(_(
+                "Impossible de créer une commande sur un contrat %s.",
+                dict(self._fields['state'].selection).get(self.state),
+            ))
+        return {
+            'name': _("Créer une commande client — %s", self.sequence_number),
+            'type': 'ir.actions.act_window',
+            'res_model': 'eurekam.maintenance.order.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {'default_contract_id': self.id},
+        }
+
+    def action_view_sale_orders(self):
+        """Ouvre les commandes client (sale.order) liees a ce contrat."""
+        self.ensure_one()
+        orders = self.sale_order_ids
+        if not orders:
+            raise UserError(_(
+                "Aucune commande client n'est encore liée à ce contrat. "
+                "Cliquer sur « Créer une commande client » pour en créer une."
+            ))
+        if len(orders) == 1:
+            return {
+                'name': _("Commande client"),
+                'type': 'ir.actions.act_window',
+                'res_model': 'sale.order',
+                'res_id': orders.id,
+                'view_mode': 'form',
+                'target': 'current',
+            }
+        return {
+            'name': _("Commandes client — %s", self.sequence_number),
+            'type': 'ir.actions.act_window',
+            'res_model': 'sale.order',
+            'view_mode': 'list,form',
+            'domain': [('id', 'in', orders.ids)],
         }
 
     # ==================================================================

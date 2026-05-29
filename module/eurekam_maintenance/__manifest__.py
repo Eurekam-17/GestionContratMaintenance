@@ -22,6 +22,7 @@ Ce module remplace le suivi actuellement fait dans Notion.
         'product',
         'contacts',
         'account',
+        'sale_management',
     ],
     'data': [
         'security/maintenance_security.xml',
@@ -33,6 +34,7 @@ Ce module remplace le suivi actuellement fait dans Notion.
         'data/mail_template_data.xml',
         'data/cron_data.xml',
         'wizard/contract_renewal_wizard_views.xml',
+        'wizard/maintenance_order_wizard_views.xml',
         'views/establishment_config_views.xml',
         'views/billing_config_views.xml',
         'views/res_partner_views.xml',

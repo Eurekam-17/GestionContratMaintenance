@@ -78,7 +78,13 @@ class TestMaintenanceContract(TransactionCase):
     # Helper
     # ----------------------------------------------------------------------
     def _make_contract(self, **vals):
-        """Cree un contrat avec des valeurs par defaut surchargeables."""
+        """Cree un contrat avec des valeurs par defaut surchargeables.
+
+        Par defaut requires_customer_order=False pour permettre aux tests
+        historiques (test_invoice_creation*) de continuer a appeler
+        action_create_invoices_for_contract directement.
+        Pour tester le workflow SO, passer explicitement requires_customer_order=True.
+        """
         defaults = {
             'partner_id': self.partner.id,
             'product_id': self.product.id,
@@ -87,6 +93,7 @@ class TestMaintenanceContract(TransactionCase):
             'date_end': date(2026, 12, 31),
             'duration': '1y',
             'maintenance_amount': 10000.0,
+            'requires_customer_order': False,
         }
         defaults.update(vals)
         return self.env['eurekam.maintenance.contract'].create(defaults)
@@ -341,6 +348,54 @@ class TestMaintenanceContract(TransactionCase):
             contract.billing_frequency_ids = [
                 (6, 0, [freq_quarterly.id, freq_semi_annual.id])
             ]
+
+    # ======================================================================
+    # 13. Workflow sale.order (phase B) : creation commande depuis wizard
+    # ======================================================================
+    def test_create_customer_order_quarterly(self):
+        """Cadence trimestrielle + requires_customer_order=True : le wizard
+        cree un sale.order avec 4 lignes (T1/T2/T3/T4), chaque ligne = 1
+        future facture."""
+        freq_quarterly = self.env.ref('eurekam_maintenance.freq_quarterly')
+        freq_overdue = self.env.ref('eurekam_maintenance.freq_overdue')
+        today_year = ofields.Date.context_today(self.env['res.partner']).year
+        contract = self._make_contract(
+            date_start=date(today_year, 1, 1),
+            date_end=date(today_year, 12, 31),
+            maintenance_amount=20000.0,
+            billing_frequency_ids=[(6, 0, [freq_quarterly.id, freq_overdue.id])],
+            requires_customer_order=True,
+        )
+        contract.action_activate()
+        contract.action_generate_lines()
+
+        # Avec requires_customer_order, la facturation directe est bloquee
+        with self.assertRaises(UserError):
+            contract.action_create_invoices_for_contract()
+
+        # Creer le wizard et valider
+        wizard = self.env['eurekam.maintenance.order.wizard'].with_context(
+            default_contract_id=contract.id,
+        ).create({
+            'year': today_year,
+            'customer_po_reference': 'BC-TEST-001',
+            'customer_po_date': ofields.Date.context_today(self.env['res.partner']),
+        })
+        action = wizard.action_create_sale_order()
+        self.assertEqual(action['res_model'], 'sale.order')
+
+        sale_order = self.env['sale.order'].browse(action['res_id'])
+        self.assertEqual(sale_order.partner_id, self.partner)
+        self.assertEqual(sale_order.eurekam_maintenance_contract_id, contract)
+        self.assertEqual(sale_order.eurekam_maintenance_year, today_year)
+        self.assertEqual(sale_order.client_order_ref, 'BC-TEST-001')
+        # 4 lignes de 5000 EUR (= 20000 / 4)
+        self.assertEqual(len(sale_order.order_line), 4)
+        for line in sale_order.order_line:
+            self.assertAlmostEqual(line.price_unit, 5000.0, places=2)
+            self.assertEqual(line.product_uom_qty, 1.0)
+        # Le contrat voit la commande
+        self.assertEqual(contract.sale_order_count, 1)
 
     # ======================================================================
     # 10. Extension res.partner

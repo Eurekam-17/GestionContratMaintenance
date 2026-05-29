@@ -19,10 +19,14 @@
                     <button name="action_open_renewal_wizard" type="object"
                             string="Renouveler" class="btn-primary"
                             invisible="state in ('draft','renewed','cancelled')"/>
+                    <button name="action_open_create_order_wizard" type="object"
+                            string="Créer une commande client" class="btn-primary"
+                            invisible="state not in ('active','expiring') or not requires_customer_order"
+                            help="Cas majoritaire : à réception d'un Bon de Commande client, crée un sale.order avec N lignes selon la cadence (1 pour Annuelle, 2 pour Semestrielle, 4 pour Trimestrielle). Chaque ligne du SO sera facturable indépendamment."/>
                     <button name="action_create_invoices_for_contract" type="object"
                             string="Créer les factures du contrat"
-                            invisible="state not in ('active','expiring')"
-                            help="Génère les factures brouillon couvrant la durée restante du contrat selon la cadence (annuelle, semestrielle, trimestrielle ou période intégrale)."/>
+                            invisible="state not in ('active','expiring') or requires_customer_order"
+                            help="Cas rare : facturation directe sans Bon de Commande (établissements privés). Génère les factures brouillon couvrant la durée restante du contrat selon la cadence."/>
                     <button name="action_cancel" type="object"
                             string="Annuler"
                             invisible="state in ('cancelled','renewed')"/>
@@ -51,6 +55,12 @@
                                 invisible="renewed_to_count == 0">
                             <field name="renewed_to_count" widget="statinfo"
                                    string="Renouvelé vers"/>
+                        </button>
+                        <button name="action_view_sale_orders" type="object"
+                                class="oe_stat_button" icon="fa-shopping-cart"
+                                invisible="sale_order_count == 0">
+                            <field name="sale_order_count" widget="statinfo"
+                                   string="Commandes"/>
                         </button>
                         <button name="action_view_invoices" type="object"
                                 class="oe_stat_button" icon="fa-money"
@@ -102,6 +112,7 @@
                                     <field name="currency_id" invisible="1"/>
                                     <field name="billing_level"/>
                                     <field name="syntec_revision"/>
+                                    <field name="requires_customer_order"/>
                                 </group>
                                 <group string="Totaux (calculés)">
                                     <field name="total_contract_value"/>
