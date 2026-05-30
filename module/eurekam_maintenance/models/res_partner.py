@@ -131,7 +131,8 @@ class ResPartner(models.Model):
     )
     maintenance_status = fields.Selection(
         [
-            ('none', "Aucune maintenance"),
+            ('none', "Aucune relation commerciale"),
+            ('client_no_contract', "Client SANS contrat de maintenance"),
             ('active', "Maintenance ACTIVE"),
             ('expiring', "Maintenance EXPIRE BIENTÔT"),
             ('expired', "Maintenance EXPIRÉE"),
@@ -140,8 +141,14 @@ class ResPartner(models.Model):
         compute='_compute_maintenance_status',
         store=False,
         help="Indicateur synthétique visible pour toute l'équipe (notamment "
-             "support) qui résume l'état des contrats de maintenance de "
-             "l'établissement. Calculé en temps réel.",
+             "support) qui résume l'état des contrats de maintenance et la "
+             "relation commerciale de l'établissement. Calculé en temps réel.\n"
+             "- ACTIVE : au moins 1 contrat actif\n"
+             "- EXPIRE BIENTÔT : pas d'actif mais au moins 1 expire dans 90 jours\n"
+             "- EXPIRÉE : tous les contrats sont expirés\n"
+             "- Client SANS contrat : pas de contrat mais au moins 1 commande client "
+             "(potentiel à transformer)\n"
+             "- Aucune relation commerciale : ni contrat ni commande dans Odoo",
     )
 
     @api.depends('maintenance_contract_ids', 'maintenance_contract_ids.state')
@@ -163,24 +170,31 @@ class ResPartner(models.Model):
         'active_maintenance_contract_count',
         'expiring_maintenance_contract_count',
         'expired_maintenance_contract_count',
+        'sale_order_ids',  # natif module sale : One2many vers sale.order
     )
     def _compute_maintenance_status(self):
-        """Resume synthetique du statut maintenance, par priorite :
-        active > expiring > expired > none.
-        Si plusieurs contrats coexistent, c'est l'etat le plus 'bon' qui gagne
-        (un client avec 1 contrat actif + 1 expire => statut ACTIVE).
+        """Resume synthetique du statut maintenance + relation commerciale.
+
+        Priorite des statuts (du plus important au moins) :
+        - 'active'             : >=1 contrat actif
+        - 'expiring'           : 0 actif, mais >=1 expire bientot
+        - 'expired'            : 0 actif, 0 expire, mais >=1 expire
+        - 'client_no_contract' : 0 contrat de maintenance, mais >=1 sale.order
+                                  (= client connu, a transformer en client maintenance)
+        - 'none'               : aucun contrat, aucune commande
         """
         for rec in self:
-            if not rec.maintenance_contract_ids:
-                rec.maintenance_status = 'none'
-            elif rec.active_maintenance_contract_count > 0:
+            if rec.active_maintenance_contract_count > 0:
                 rec.maintenance_status = 'active'
             elif rec.expiring_maintenance_contract_count > 0:
                 rec.maintenance_status = 'expiring'
             elif rec.expired_maintenance_contract_count > 0:
                 rec.maintenance_status = 'expired'
+            elif rec.sale_order_ids:
+                # Pas de contrat (ou tous draft/renewed/cancelled),
+                # mais au moins une commande client : potentiel a transformer.
+                rec.maintenance_status = 'client_no_contract'
             else:
-                # Tous les contrats sont en draft/renewed/cancelled
                 rec.maintenance_status = 'none'
 
     # ------------------------------------------------------------------

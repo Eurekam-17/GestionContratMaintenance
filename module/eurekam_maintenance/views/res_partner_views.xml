@@ -62,13 +62,23 @@
                         (<field name="expired_maintenance_contract_count" readonly="1" nolabel="1" class="oe_inline"/> contrat(s) expiré(s))
                     </span>
                 </div>
+                <div class="alert alert-info o_form_full_width mt-2 mb-3"
+                     role="alert"
+                     invisible="not is_maintenance_establishment or maintenance_status != 'client_no_contract'">
+                    <i class="fa fa-handshake-o me-2"/>
+                    <strong>Client SANS contrat de maintenance</strong>
+                    <span class="ms-2">
+                        — au moins une commande client enregistrée, mais aucun contrat
+                        de maintenance. <em class="text-muted">Potentiel à transformer.</em>
+                    </span>
+                </div>
                 <div class="alert alert-secondary o_form_full_width mt-2 mb-3"
                      role="alert"
                      invisible="not is_maintenance_establishment or maintenance_status != 'none'">
                     <i class="fa fa-info-circle me-2"/>
-                    <strong>Aucun contrat de maintenance</strong>
+                    <strong>Aucune relation commerciale</strong>
                     <span class="ms-2 text-muted">
-                        — cet établissement n'a pas de contrat actif, expirant ou expiré actuellement.
+                        — pas de contrat de maintenance, ni de commande client enregistrés.
                     </span>
                 </div>
             </xpath>
@@ -134,6 +144,7 @@
                        decoration-success="maintenance_status == 'active'"
                        decoration-warning="maintenance_status == 'expiring'"
                        decoration-danger="maintenance_status == 'expired'"
+                       decoration-info="maintenance_status == 'client_no_contract'"
                        decoration-muted="maintenance_status == 'none'"/>
             </xpath>
         </field>
