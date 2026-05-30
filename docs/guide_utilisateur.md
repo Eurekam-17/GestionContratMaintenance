@@ -316,7 +316,8 @@ client est un établissement de maintenance :
 | **🟢 Vert — Maintenance ACTIVE** | Au moins 1 contrat en cours | Support normal, le client est sous contrat |
 | **🟡 Jaune — Maintenance EXPIRE BIENTÔT** | Aucun actif, mais ≥1 expire dans les 90j | Vérifier que le renouvellement est en cours côté commercial |
 | **🔴 Rouge — Maintenance EXPIRÉE** | Tous les contrats sont expirés | Alerter le commercial, support peut être limité |
-| **⚪ Gris — Aucun contrat** | Pas d'historique de contrat | Voir avec le commercial avant tout support |
+| **🔵 Bleu — Client SANS contrat de maintenance** | Au moins 1 commande client mais aucun contrat de maintenance enregistré | Le client est connu commercialement (a déjà acheté), mais le contrat de maintenance n'a pas encore été tracé dans Odoo — voir avec le commercial pour le créer |
+| **⚪ Gris — Aucune relation commerciale** | Ni contrat de maintenance, ni commande client dans Odoo | Fiche existante mais aucune trace de relation commerciale — vérifier avec le commercial avant tout support |
 
 Le bandeau est aussi visible dans la **vue liste des Contacts** (colonne
 "Statut maintenance" disponible via le bouton "Options" en haut à droite).
