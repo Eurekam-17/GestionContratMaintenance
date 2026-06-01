@@ -308,8 +308,9 @@ Pratique aussi en environnement de test où les crons peuvent être désactivés
 ## 6. Pour les équipes support : voir le statut d'un client
 
 Quand le support ouvre la fiche d'un partenaire (depuis Contacts ou depuis un
-ticket Helpdesk), un **bandeau coloré** apparaît en haut de la fiche si le
-client est un établissement de maintenance :
+ticket Helpdesk), un **bandeau coloré** apparaît en haut de la fiche dès que
+le partenaire a une relation commerciale avec Eurekam (un contrat de
+maintenance OU au moins une commande client) :
 
 | Couleur | Sens | Action support |
 |---|---|---|
