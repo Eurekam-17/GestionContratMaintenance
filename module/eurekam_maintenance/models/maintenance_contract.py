@@ -12,6 +12,22 @@ PERIOD_CODES = ('annual', 'semi_annual', 'quarterly', 'full_period')
 TIMING_CODES = ('overdue', 'upcoming')
 
 
+def _split_amount(amount, n):
+    """Découpe un montant en n fractions arrondies à 2 décimales.
+
+    Les n-1 premières valent round(amount/n, 2) ; la dernière absorbe le
+    reliquat d'arrondi pour que la somme des fractions soit EXACTEMENT
+    égale au montant initial (évite la perte du centime sur les cadences
+    trimestrielle / semestrielle).
+    """
+    if n <= 1:
+        return [amount]
+    base = round(amount / n, 2)
+    parts = [base] * (n - 1)
+    parts.append(round(amount - base * (n - 1), 2))
+    return parts
+
+
 class EurekamMaintenanceContract(models.Model):
     _name = 'eurekam.maintenance.contract'
     _description = 'Contrat de maintenance Eurekam'
@@ -311,7 +327,8 @@ class EurekamMaintenanceContract(models.Model):
     # Compute / Search / Constraints
     # ==================================================================
 
-    @api.depends('sequence_number', 'partner_id', 'product_id', 'product_name')
+    @api.depends('sequence_number', 'partner_id', 'partner_id.display_name',
+                 'product_id', 'product_id.display_name', 'product_name')
     def _compute_name(self):
         for rec in self:
             seq = rec.sequence_number or ''
@@ -331,7 +348,7 @@ class EurekamMaintenanceContract(models.Model):
                 rec.days_to_expiry = 0
                 rec.is_expiring_soon = False
 
-    @api.depends('partner_id')
+    @api.depends('partner_id', 'partner_id.country_id')
     def _compute_country(self):
         for rec in self:
             rec.country_id = rec.partner_id.country_id
@@ -495,7 +512,6 @@ class EurekamMaintenanceContract(models.Model):
         Sur la prod, le cron tourne quotidiennement et rattrape les bascules
         automatiquement.
         """
-        transitioned = self.env['eurekam.maintenance.contract']
         for rec in self:
             new_state = rec._evaluate_lifecycle_state()
             if new_state != rec.state:
@@ -505,7 +521,6 @@ class EurekamMaintenanceContract(models.Model):
                     new=dict(rec._fields['state'].selection).get(new_state),
                 ))
                 rec.state = new_state
-                transitioned |= rec
         return True
 
     def action_cancel(self):
@@ -652,16 +667,18 @@ class EurekamMaintenanceContract(models.Model):
         - 'full_period' -> traite a part (action_create_invoices_for_contract)
         """
         if period_code == 'quarterly':
+            f = _split_amount(amount, 4)
             return [
-                ("T1 %s" % year, amount / 4.0, date(year, 1, 1), date(year, 3, 31)),
-                ("T2 %s" % year, amount / 4.0, date(year, 4, 1), date(year, 6, 30)),
-                ("T3 %s" % year, amount / 4.0, date(year, 7, 1), date(year, 9, 30)),
-                ("T4 %s" % year, amount / 4.0, date(year, 10, 1), date(year, 12, 31)),
+                ("T1 %s" % year, f[0], date(year, 1, 1), date(year, 3, 31)),
+                ("T2 %s" % year, f[1], date(year, 4, 1), date(year, 6, 30)),
+                ("T3 %s" % year, f[2], date(year, 7, 1), date(year, 9, 30)),
+                ("T4 %s" % year, f[3], date(year, 10, 1), date(year, 12, 31)),
             ]
         if period_code == 'semi_annual':
+            f = _split_amount(amount, 2)
             return [
-                ("S1 %s" % year, amount / 2.0, date(year, 1, 1), date(year, 6, 30)),
-                ("S2 %s" % year, amount / 2.0, date(year, 7, 1), date(year, 12, 31)),
+                ("S1 %s" % year, f[0], date(year, 1, 1), date(year, 6, 30)),
+                ("S2 %s" % year, f[1], date(year, 7, 1), date(year, 12, 31)),
             ]
         # 'annual' par defaut
         return [
@@ -744,15 +761,24 @@ class EurekamMaintenanceContract(models.Model):
 
             # ---- Cas 2 : cadence sous-annuelle (annual/semi_annual/quarterly) ----
             # Iterer sur les lignes futures (annee courante et au-dela).
+            prefix = contract.sequence_number + " / "
             future_lines = contract.line_ids.filtered(lambda l: l.year >= today.year)
             for line in future_lines.sorted(key=lambda l: l.year):
                 periods = contract._periods_for_year(
                     line.year, line.amount, period_code,
                 )
-                # On suppose que les N premieres periodes ont deja ete creees
-                # dans l'ordre chronologique (donc invoice_count = nb deja faites)
-                already_created = line.invoice_count
-                for label, fraction, p_start, p_end in periods[already_created:]:
+                # Periodes deja facturees : on lit le suffixe apres " / " dans
+                # invoice_origin des factures deja liees a la ligne. Plus robuste
+                # qu'un simple compteur : si une facture du milieu (ex: T2) a ete
+                # supprimee, on la recree sans dupliquer T1/T3/T4.
+                already_labels = set()
+                for inv in line.invoice_ids:
+                    origin = inv.invoice_origin or ''
+                    if origin.startswith(prefix):
+                        already_labels.add(origin[len(prefix):])
+                for label, fraction, p_start, p_end in periods:
+                    if label in already_labels:
+                        continue
                     inv_date = contract._invoice_date_for_period(
                         p_start, p_end, timing_code,
                     )
@@ -789,7 +815,7 @@ class EurekamMaintenanceContract(models.Model):
         product = self.product_id
         product_var = product.product_variant_id if product else False
         description = _(
-            "Maintenance %(prod)s — %(period)s",
+            "%(prod)s — %(period)s",
             prod=product.name or self.product_name or '',
             period=period_label,
         )
@@ -829,7 +855,7 @@ class EurekamMaintenanceContract(models.Model):
         product_var = product.product_variant_id if product else False
         total = sum(self.line_ids.mapped('amount'))
         description = _(
-            "Maintenance %(prod)s — Période intégrale (%(start)s → %(end)s)",
+            "%(prod)s — Période intégrale (%(start)s → %(end)s)",
             prod=product.name or self.product_name or '',
             start=self.date_start or '?',
             end=self.date_end or '?',

@@ -338,6 +338,34 @@ class TestMaintenanceContract(TransactionCase):
         self.assertEqual(line.invoice_count, 4)
         self.assertTrue(line.is_invoiced)
 
+    def test_invoice_rounding_no_cent_lost(self):
+        """Montant non divisible par 4 : la somme des 4 factures trimestrielles
+        doit etre EXACTEMENT egale au montant annuel (pas de centime perdu).
+
+        48314.25 / 4 = 12078.5625 -> 3 x 12078.56 + 1 x 12078.57 = 48314.25.
+        """
+        freq_quarterly = self.env.ref('eurekam_maintenance.freq_quarterly')
+        freq_overdue = self.env.ref('eurekam_maintenance.freq_overdue')
+        today_year = ofields.Date.context_today(self.env['res.partner']).year
+        contract = self._make_contract(
+            date_start=date(today_year, 1, 1),
+            date_end=date(today_year, 12, 31),
+            maintenance_amount=48314.25,
+            billing_frequency_ids=[(6, 0, [freq_quarterly.id, freq_overdue.id])],
+        )
+        contract.action_activate()
+        contract.action_generate_lines()
+        action = contract.action_create_invoices_for_contract()
+        invoice_ids = action['domain'][0][2]
+        self.assertEqual(len(invoice_ids), 4)
+        invoices = self.env['account.move'].browse(invoice_ids)
+        total = sum(invoices.mapped(lambda m: m.invoice_line_ids.price_unit))
+        self.assertAlmostEqual(total, 48314.25, places=2)
+        # 3 fractions a 12078.56 + 1 a 12078.57
+        prices = sorted(invoices.mapped(lambda m: m.invoice_line_ids.price_unit))
+        self.assertAlmostEqual(prices[0], 12078.56, places=2)
+        self.assertAlmostEqual(prices[-1], 12078.57, places=2)
+
     def test_billing_unicity_constraint(self):
         """Test contrainte : 2 cadences de periode interdites."""
         freq_quarterly = self.env.ref('eurekam_maintenance.freq_quarterly')

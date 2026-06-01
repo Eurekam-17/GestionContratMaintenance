@@ -139,7 +139,7 @@
                 <field name="is_maintenance_establishment" optional="hide"/>
                 <field name="department_number" optional="hide"/>
                 <field name="maintenance_contract_count" optional="hide"/>
-                <field name="maintenance_status" optional="show"
+                <field name="maintenance_status" optional="hide"
                        widget="badge"
                        decoration-success="maintenance_status == 'active'"
                        decoration-warning="maintenance_status == 'expiring'"

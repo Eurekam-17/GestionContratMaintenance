@@ -191,7 +191,7 @@ class EurekamMaintenanceOrderWizard(models.TransientModel):
                     "Générer les lignes annuelles d'abord."
                 ))
             label = _(
-                "Maintenance %(prod)s — Période intégrale (%(start)s → %(end)s)",
+                "%(prod)s — Période intégrale (%(start)s → %(end)s)",
                 prod=product_template.name or '',
                 start=contract.date_start or '?',
                 end=contract.date_end or '?',
@@ -224,7 +224,7 @@ class EurekamMaintenanceOrderWizard(models.TransientModel):
                 order_lines.append((0, 0, {
                     'product_id': product_variant.id,
                     'name': _(
-                        "Maintenance %(prod)s — %(period)s",
+                        "%(prod)s — %(period)s",
                         prod=product_template.name or '',
                         period=label,
                     ),

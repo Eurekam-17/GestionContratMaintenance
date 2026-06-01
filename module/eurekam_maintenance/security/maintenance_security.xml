@@ -36,5 +36,20 @@
             <field name="perm_unlink" eval="True"/>
         </record>
 
+        <!-- Record rule : isolation multi-société sur les lignes annuelles
+             (company_id related stocké depuis le contrat). Indispensable car
+             les lignes sont accessibles directement via le menu « Lignes
+             annuelles », sans passer par le contrat parent. -->
+        <record id="rule_maintenance_contract_line_company" model="ir.rule">
+            <field name="name">Lignes de maintenance : isolation par société</field>
+            <field name="model_id" ref="model_eurekam_maintenance_contract_line"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('group_maintenance_user'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="True"/>
+        </record>
+
     </data>
 </odoo>
