@@ -37,7 +37,7 @@
             <xpath expr="//div[@name='button_box']" position="before">
                 <div class="alert alert-success o_form_full_width mt-2 mb-3"
                      role="alert"
-                     invisible="not is_maintenance_establishment or maintenance_status != 'active'">
+                     invisible="maintenance_status != 'active'">
                     <i class="fa fa-check-circle me-2"/>
                     <strong>Maintenance ACTIVE</strong>
                     <span class="ms-2">
@@ -46,7 +46,7 @@
                 </div>
                 <div class="alert alert-warning o_form_full_width mt-2 mb-3"
                      role="alert"
-                     invisible="not is_maintenance_establishment or maintenance_status != 'expiring'">
+                     invisible="maintenance_status != 'expiring'">
                     <i class="fa fa-exclamation-triangle me-2"/>
                     <strong>Maintenance EXPIRE BIENTÔT</strong>
                     <span class="ms-2">
@@ -55,7 +55,7 @@
                 </div>
                 <div class="alert alert-danger o_form_full_width mt-2 mb-3"
                      role="alert"
-                     invisible="not is_maintenance_establishment or maintenance_status != 'expired'">
+                     invisible="maintenance_status != 'expired'">
                     <i class="fa fa-times-circle me-2"/>
                     <strong>Maintenance EXPIRÉE</strong>
                     <span class="ms-2">
@@ -64,7 +64,7 @@
                 </div>
                 <div class="alert alert-info o_form_full_width mt-2 mb-3"
                      role="alert"
-                     invisible="not is_maintenance_establishment or maintenance_status != 'client_no_contract'">
+                     invisible="maintenance_status != 'client_no_contract'">
                     <i class="fa fa-handshake-o me-2"/>
                     <strong>Client SANS contrat de maintenance</strong>
                     <span class="ms-2">
