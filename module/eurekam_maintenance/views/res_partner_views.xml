@@ -219,8 +219,10 @@ if records:
     partner = records[0]
     # Creer un contrat implique que le partenaire devient un etablissement
     # de maintenance (requis par le domaine du champ partner_id du contrat).
+    # NB : on utilise write() et non l'affectation d'attribut, interdite
+    # (STORE_ATTR) dans le safe_eval des actions serveur.
     if not partner.is_maintenance_establishment:
-        partner.is_maintenance_establishment = True
+        partner.write({'is_maintenance_establishment': True})
     action = {
         'type': 'ir.actions.act_window',
         'name': 'Nouveau contrat de maintenance',
