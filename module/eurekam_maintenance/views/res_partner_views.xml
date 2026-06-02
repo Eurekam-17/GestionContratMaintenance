@@ -203,10 +203,43 @@
     </record>
 
     <!-- ============================================================== -->
+    <!-- Action serveur : créer un contrat de maintenance depuis un        -->
+    <!-- partenaire sélectionné (apparaît dans le menu Action ⚙ des vues   -->
+    <!-- res.partner, pour les utilisateurs maintenance uniquement).       -->
+    <!-- ============================================================== -->
+    <record id="action_server_create_contract_from_partner" model="ir.actions.server">
+        <field name="name">Créer un contrat de maintenance</field>
+        <field name="model_id" ref="base.model_res_partner"/>
+        <field name="binding_model_id" ref="base.model_res_partner"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="groups_id" eval="[(4, ref('group_maintenance_user'))]"/>
+        <field name="state">code</field>
+        <field name="code">
+if records:
+    partner = records[0]
+    # Creer un contrat implique que le partenaire devient un etablissement
+    # de maintenance (requis par le domaine du champ partner_id du contrat).
+    if not partner.is_maintenance_establishment:
+        partner.is_maintenance_establishment = True
+    action = {
+        'type': 'ir.actions.act_window',
+        'name': 'Nouveau contrat de maintenance',
+        'res_model': 'eurekam.maintenance.contract',
+        'view_mode': 'form',
+        'target': 'current',
+        'context': {'default_partner_id': partner.id},
+    }
+        </field>
+    </record>
+
+    <!-- ============================================================== -->
     <!-- Action : clients SANS aucun contrat de maintenance               -->
     <!-- Outil de couverture commerciale : repérer les clients (au moins  -->
     <!-- une commande) qui n'ont encore aucun contrat de maintenance      -->
     <!-- (ni actif, ni expiré), pour n'oublier personne.                  -->
+    <!-- create=False : le bouton « Nouveau » natif créerait un Contact,   -->
+    <!-- ce qui n'a pas de sens ici. Pour créer un contrat, sélectionner   -->
+    <!-- un client puis Action ⚙ > « Créer un contrat de maintenance ».    -->
     <!-- ============================================================== -->
     <record id="action_maintenance_clients_without_contract" model="ir.actions.act_window">
         <field name="name">Clients sans contrat</field>
@@ -214,7 +247,7 @@
         <field name="view_mode">list,kanban,form</field>
         <field name="domain">[('sale_order_ids', '!=', False), ('maintenance_contract_ids', '=', False)]</field>
         <field name="search_view_id" ref="view_res_partner_search_maintenance"/>
-        <field name="context">{'search_default_filter_companies_only': 1}</field>
+        <field name="context">{'search_default_filter_companies_only': 1, 'create': False}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Aucun client oublié 🎉
@@ -225,10 +258,13 @@
                 ni expiré.
             </p>
             <p>
-                Utilisez-la comme outil de couverture commerciale pour vous assurer
-                qu'aucun client n'est oublié dans le suivi maintenance. Le filtre
-                « Sociétés uniquement » est actif par défaut ; retirez-le pour voir
-                aussi les contacts individuels.
+                Pour créer un contrat : <b>sélectionnez un client</b> dans la liste,
+                puis menu <b>Action ⚙ &gt; « Créer un contrat de maintenance »</b>.
+                Le formulaire de contrat s'ouvre pré-rempli avec ce client.
+            </p>
+            <p>
+                Le filtre « Sociétés uniquement » est actif par défaut ; retirez-le
+                pour voir aussi les contacts individuels.
             </p>
         </field>
     </record>

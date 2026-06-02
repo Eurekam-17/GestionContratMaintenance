@@ -370,12 +370,26 @@ C'est l'outil pour **n'oublier aucun client** : il met en évidence les clients
 Eurekam qui devraient potentiellement avoir un contrat de maintenance mais pour
 lesquels aucun n'a encore été créé.
 
+**Créer un contrat depuis cette liste** :
+
+1. **Cocher** la case du client concerné (dans la liste)
+2. Cliquer sur le menu **Action ⚙** (en haut, à côté de « Nouveau ») puis
+   **« Créer un contrat de maintenance »**
+3. Le formulaire de contrat s'ouvre **pré-rempli avec ce client**. Le client est
+   aussi automatiquement marqué « Établissement de maintenance ».
+4. Compléter le contrat (produit, dates, montant, cadence) et l'activer.
+
+> Le bouton « Nouveau » est volontairement désactivé sur cet écran : il créerait
+> un simple contact, pas un contrat. Utilisez toujours le menu Action ⚙.
+
 - Le filtre « Sociétés uniquement » est actif par défaut (pour ne pas afficher
   les contacts individuels). Retirez-le si besoin.
-- Depuis cette liste, ouvrez une fiche client puis cochez « Établissement de
-  maintenance » et créez son contrat via **Maintenance → Contrats → Nouveau**.
-- Dès qu'un contrat actif est créé pour un client, il disparaît
-  automatiquement de cette liste.
+- Dès qu'un contrat est créé pour un client, il disparaît automatiquement de
+  cette liste.
+
+> 💡 L'action « Créer un contrat de maintenance » est aussi disponible dans le
+> menu Action ⚙ de **n'importe quelle fiche contact** (pour les utilisateurs du
+> module Maintenance), pas seulement depuis cette liste.
 
 ### 7.5 Alertes d'expiration
 
