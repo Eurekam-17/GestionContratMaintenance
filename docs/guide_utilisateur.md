@@ -35,7 +35,7 @@ dans Odoo :
 - Les alertes d'expiration
 - L'historique complet par établissement client
 
-Trois profils types d'utilisateurs :
+Quatre profils types d'utilisateurs :
 
 | Profil | Ce qu'il fait dans le module |
 |---|---|
@@ -215,8 +215,8 @@ La page de la commande s'ouvre directement.
 
 Sur la commande qui vient d'être créée :
 
-1. Vérifier les lignes (produit, montant, période — ex: "Maintenance Drugcam
-   GEN2 — T1 2026" à 3 637,50 €)
+1. Vérifier les lignes (produit, montant, période — ex: "Assistance DRUGCAM
+   GEN2 Oncology FR — T1 2026" à 3 637,50 €)
 2. Cliquer **Confirmer la commande** (bouton standard Odoo Sales)
 
 → La commande passe de **Brouillon (devis)** à **Bon de commande**.
@@ -320,8 +320,10 @@ maintenance OU au moins une commande client) :
 | **🔵 Bleu — Client SANS contrat de maintenance** | Au moins 1 commande client mais aucun contrat de maintenance enregistré | Le client est connu commercialement (a déjà acheté), mais le contrat de maintenance n'a pas encore été tracé dans Odoo — voir avec le commercial pour le créer |
 | **⚪ Gris — Aucune relation commerciale** | Ni contrat de maintenance, ni commande client dans Odoo | Fiche existante mais aucune trace de relation commerciale — vérifier avec le commercial avant tout support |
 
-Le bandeau est aussi visible dans la **vue liste des Contacts** (colonne
-"Statut maintenance" disponible via le bouton "Options" en haut à droite).
+Le bandeau se décline aussi en colonne dans la **vue liste des Contacts** :
+colonne "Statut maintenance" **masquée par défaut** (pour ne pas alourdir la
+liste standard), à activer au besoin via le bouton "Options" (icône en haut à
+droite de la liste).
 
 **Smart-button Contrats** : sur la fiche partner, l'icône "Contrats" amène
 directement à la liste des contrats de ce client.
@@ -523,4 +525,4 @@ Pour toute question ou bug rencontré pendant le test, contacter
 
 ---
 
-*Dernière mise à jour : 2026-05-29 — pour la version 18.0.1.0.0 du module `eurekam_maintenance`.*
+*Dernière mise à jour : 2026-06-02 — pour la version 18.0.1.0.0 du module `eurekam_maintenance`.*
