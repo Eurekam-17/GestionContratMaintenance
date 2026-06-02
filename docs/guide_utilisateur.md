@@ -358,7 +358,24 @@ statut de facturation. Utile pour :
 - Filtrer "Année courante" pour voir le CA en cours
 - Filtrer "Non facturées" pour identifier les rattrapages
 
-### 7.4 Alertes d'expiration
+### 7.4 Clients sans contrat (couverture commerciale)
+
+**Maintenance → Clients sans contrat** liste les **clients** (partenaires ayant
+au moins une commande de vente) qui n'ont **aucun contrat de maintenance**
+enregistré — ni actif, ni expiré.
+
+C'est l'outil pour **n'oublier aucun client** : il met en évidence les clients
+Eurekam qui devraient potentiellement avoir un contrat de maintenance mais pour
+lesquels aucun n'a encore été créé.
+
+- Le filtre « Sociétés uniquement » est actif par défaut (pour ne pas afficher
+  les contacts individuels). Retirez-le si besoin.
+- Depuis cette liste, ouvrez une fiche client puis cochez « Établissement de
+  maintenance » et créez son contrat via **Maintenance → Contrats → Nouveau**.
+- Dès qu'un contrat actif est créé pour un client, il disparaît
+  automatiquement de cette liste.
+
+### 7.5 Alertes d'expiration
 
 Un cron quotidien :
 - Bascule les contrats en **Expire bientôt** quand `date_end` est dans 0-90 jours

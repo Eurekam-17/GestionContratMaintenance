@@ -166,6 +166,12 @@
                 <filter string="Établissements maintenance"
                         name="filter_maintenance_establishments"
                         domain="[('is_maintenance_establishment','=',True)]"/>
+                <filter string="Clients sans contrat de maintenance"
+                        name="filter_clients_without_contract"
+                        domain="[('sale_order_ids','!=',False), ('maintenance_contract_ids','=',False)]"/>
+                <filter string="Sociétés uniquement"
+                        name="filter_companies_only"
+                        domain="[('is_company','=',True)]"/>
             </xpath>
         </field>
     </record>
@@ -192,6 +198,37 @@
             <p>
                 Les établissements de maintenance regroupent les hôpitaux, cliniques
                 et distributeurs pour lesquels vous suivez des contrats Drugcam.
+            </p>
+        </field>
+    </record>
+
+    <!-- ============================================================== -->
+    <!-- Action : clients SANS aucun contrat de maintenance               -->
+    <!-- Outil de couverture commerciale : repérer les clients (au moins  -->
+    <!-- une commande) qui n'ont encore aucun contrat de maintenance      -->
+    <!-- (ni actif, ni expiré), pour n'oublier personne.                  -->
+    <!-- ============================================================== -->
+    <record id="action_maintenance_clients_without_contract" model="ir.actions.act_window">
+        <field name="name">Clients sans contrat</field>
+        <field name="res_model">res.partner</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="domain">[('sale_order_ids', '!=', False), ('maintenance_contract_ids', '=', False)]</field>
+        <field name="search_view_id" ref="view_res_partner_search_maintenance"/>
+        <field name="context">{'search_default_filter_companies_only': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Aucun client oublié 🎉
+            </p>
+            <p>
+                Cette liste affiche les <b>clients</b> (au moins une commande de vente)
+                qui n'ont <b>aucun contrat de maintenance</b> enregistré — ni actif,
+                ni expiré.
+            </p>
+            <p>
+                Utilisez-la comme outil de couverture commerciale pour vous assurer
+                qu'aucun client n'est oublié dans le suivi maintenance. Le filtre
+                « Sociétés uniquement » est actif par défaut ; retirez-le pour voir
+                aussi les contacts individuels.
             </p>
         </field>
     </record>
