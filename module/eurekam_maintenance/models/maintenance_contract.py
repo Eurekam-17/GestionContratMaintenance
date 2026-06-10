@@ -6,19 +6,19 @@ from odoo.exceptions import UserError, ValidationError
 
 _logger = logging.getLogger(__name__)
 
-# Codes de cadence "période" (mutuellement exclusifs sur un même contrat)
+# "Period" billing codes (mutually exclusive on a given contract)
 PERIOD_CODES = ('annual', 'semi_annual', 'quarterly', 'full_period')
-# Codes de timing (mutuellement exclusifs sur un même contrat)
+# "Timing" billing codes (mutually exclusive on a given contract)
 TIMING_CODES = ('overdue', 'upcoming')
 
 
 def _split_amount(amount, n):
-    """Découpe un montant en n fractions arrondies à 2 décimales.
+    """Split an amount into n fractions rounded to 2 decimals.
 
-    Les n-1 premières valent round(amount/n, 2) ; la dernière absorbe le
-    reliquat d'arrondi pour que la somme des fractions soit EXACTEMENT
-    égale au montant initial (évite la perte du centime sur les cadences
-    trimestrielle / semestrielle).
+    The first n-1 fractions are round(amount/n, 2); the last one absorbs the
+    rounding remainder so that the sum of the fractions is EXACTLY equal to the
+    initial amount (avoids losing the cent on the quarterly / semi-annual
+    frequencies).
     """
     if n <= 1:
         return [amount]
@@ -30,7 +30,7 @@ def _split_amount(amount, n):
 
 class EurekamMaintenanceContract(models.Model):
     _name = 'eurekam.maintenance.contract'
-    _description = 'Contrat de maintenance Eurekam'
+    _description = 'Eurekam Maintenance Contract'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'date_end desc, sequence_number desc'
     _rec_name = 'name'
@@ -39,51 +39,51 @@ class EurekamMaintenanceContract(models.Model):
     # Identification
     # ------------------------------------------------------------------
     name = fields.Char(
-        string='Référence',
+        string='Reference',
         compute='_compute_name',
         store=True,
         index=True,
     )
     sequence_number = fields.Char(
-        string='Numéro',
+        string='Number',
         required=True,
         copy=False,
         readonly=True,
-        default='Nouveau',
+        default='New',
         index=True,
     )
 
     # ------------------------------------------------------------------
-    # Produit & client
+    # Product & customer
     # ------------------------------------------------------------------
     product_id = fields.Many2one(
         'product.template',
-        string='Produit',
+        string='Product',
         tracking=True,
     )
     product_name = fields.Char(
-        string='Libellé produit',
-        help="Saisie libre si pas de produit lié.",
+        string='Product Label',
+        help="Free text if no linked product.",
     )
     partner_id = fields.Many2one(
         'res.partner',
-        string='Établissement',
+        string='Establishment',
         required=True,
         tracking=True,
         index=True,
         domain="[('is_maintenance_establishment', '=', True)]",
-        help="Seuls les contacts marqués comme « Établissement de maintenance » "
-             "(onglet Maintenance Eurekam de la fiche partenaire) sont sélectionnables.",
+        help="Only contacts flagged as Maintenance Establishment "
+             "(Eurekam Maintenance tab of the partner form) can be selected.",
     )
     commercial_id = fields.Many2one(
         'res.users',
-        string='Commercial',
+        string='Salesperson',
         default=lambda self: self.env.user,
         tracking=True,
     )
 
     # ------------------------------------------------------------------
-    # Caractéristiques produit / marché
+    # Product / market characteristics
     # ------------------------------------------------------------------
     gen = fields.Selection(
         [
@@ -91,7 +91,7 @@ class EurekamMaintenanceContract(models.Model):
             ('gen2', 'GEN2'),
             ('upgrade_gen2', 'Upgrade GEN2'),
         ],
-        string='Génération',
+        string='Generation',
         tracking=True,
     )
     market_type = fields.Selection(
@@ -102,56 +102,56 @@ class EurekamMaintenanceContract(models.Model):
             ('uniha_2024', 'UniHA 2024'),
             ('uniha_2025', 'UniHA 2025'),
             ('ageps', 'AGEPS'),
-            ('market_internal', 'Marché interne'),
-            ('private', 'Privé'),
-            ('distributor', 'Distributeur'),
+            ('market_internal', 'Internal Market'),
+            ('private', 'Private'),
+            ('distributor', 'Distributor'),
         ],
-        string='Marché',
+        string='Market',
         tracking=True,
     )
     order_status = fields.Selection(
         [
-            ('received', 'Reçue'),
-            ('pending', 'En attente'),
-            ('no_po', 'Pas de bon de commande'),
-            ('deploying', 'En déploiement'),
-            ('suspended', 'Suspendue'),
+            ('received', 'Received'),
+            ('pending', 'Pending'),
+            ('no_po', 'No Purchase Order'),
+            ('deploying', 'Deploying'),
+            ('suspended', 'Suspended'),
         ],
-        string='Statut commande',
+        string='Order Status',
         tracking=True,
     )
 
     # ------------------------------------------------------------------
-    # Dates & durée
+    # Dates & duration
     # ------------------------------------------------------------------
-    date_start = fields.Date(string='Début du contrat', tracking=True)
-    date_end = fields.Date(string='Fin du contrat', tracking=True)
+    date_start = fields.Date(string='Contract Start', tracking=True)
+    date_end = fields.Date(string='Contract End', tracking=True)
     duration = fields.Selection(
         [
-            ('6m', '6 mois'),
-            ('1y', '1 an'),
-            ('2y', '2 ans'),
-            ('3y', '3 ans'),
-            ('4y', '4 ans'),
-            ('5y', '5 ans'),
+            ('6m', '6 months'),
+            ('1y', '1 year'),
+            ('2y', '2 years'),
+            ('3y', '3 years'),
+            ('4y', '4 years'),
+            ('5y', '5 years'),
         ],
-        string='Durée commandée',
+        string='Ordered Duration',
         tracking=True,
     )
     days_to_expiry = fields.Integer(
-        string='Jours avant expiration',
+        string='Days to Expiry',
         compute='_compute_days_to_expiry',
         store=False,
     )
     is_expiring_soon = fields.Boolean(
-        string='Expire bientôt',
+        string='Expiring Soon',
         compute='_compute_days_to_expiry',
         store=False,
         search='_search_is_expiring_soon',
     )
 
     # ------------------------------------------------------------------
-    # Facturation
+    # Billing
     # ------------------------------------------------------------------
     billing_level = fields.Selection(
         [
@@ -161,62 +161,62 @@ class EurekamMaintenanceContract(models.Model):
             ('25', '25 %'),
             ('0', '0 %'),
         ],
-        string='Niveau de facturation',
+        string='Billing Level',
         tracking=True,
     )
     maintenance_amount = fields.Monetary(
-        string='Montant de maintenance',
+        string='Maintenance Amount',
         currency_field='currency_id',
         tracking=True,
     )
     syntec_revision = fields.Selection(
-        [('yes', 'Oui'), ('no', 'Non')],
-        string='Révision Syntec',
+        [('yes', 'Yes'), ('no', 'No')],
+        string='Syntec Revision',
         default='no',
         tracking=True,
     )
-    nb_products = fields.Integer(string='Nombre de produits', default=1)
+    nb_products = fields.Integer(string='Number of Products', default=1)
     billing_frequency_ids = fields.Many2many(
         'eurekam.billing.frequency',
         'maintenance_contract_billing_frequency_rel',
         'contract_id', 'frequency_id',
-        string='Cadences de facturation',
+        string='Billing Frequencies',
         tracking=True,
-        help="Une meme contrat peut combiner plusieurs cadences (ex: Annuelle + a echu).",
+        help="A single contract may combine several frequencies (e.g. Annual + Overdue).",
     )
     module_billing_ids = fields.Many2many(
         'eurekam.module.billing',
         'maintenance_contract_module_billing_rel',
         'contract_id', 'module_billing_id',
-        string='Facturation Assistance module',
+        string='Module Assistance Billing',
         tracking=True,
     )
 
     # ------------------------------------------------------------------
-    # Lignes annuelles (montants par année 2023, 2024, ...)
+    # Yearly lines (amounts per year 2023, 2024, ...)
     # ------------------------------------------------------------------
     line_ids = fields.One2many(
         'eurekam.maintenance.contract.line',
         'contract_id',
-        string='Montants annuels',
+        string='Yearly Amounts',
         copy=True,
     )
     total_contract_value = fields.Monetary(
-        string='Valeur totale du contrat',
+        string='Total Contract Value',
         currency_field='currency_id',
         compute='_compute_totals',
         store=True,
-        help="Somme des montants annuels de toutes les lignes du contrat.",
+        help="Sum of the yearly amounts of all contract lines.",
     )
     current_year_amount = fields.Monetary(
-        string='Montant année courante',
+        string='Current Year Amount',
         currency_field='currency_id',
         compute='_compute_totals',
         store=False,
-        help="Montant de la ligne annuelle correspondant à l'année en cours.",
+        help="Amount of the yearly line matching the current year.",
     )
     line_count = fields.Integer(
-        string='Nb de lignes annuelles',
+        string='Yearly Lines Count',
         compute='_compute_totals',
         store=True,
     )
@@ -224,102 +224,101 @@ class EurekamMaintenanceContract(models.Model):
     # ------------------------------------------------------------------
     # Notes
     # ------------------------------------------------------------------
-    comment = fields.Text(string='Commentaire')
+    comment = fields.Text(string='Comment')
 
     # ------------------------------------------------------------------
-    # État
+    # Status
     # ------------------------------------------------------------------
     state = fields.Selection(
         [
-            ('draft', 'Brouillon'),
-            ('active', 'Actif'),
-            ('expiring', 'Expire bientôt'),
-            ('expired', 'Expiré'),
-            ('renewed', 'Renouvelé'),
-            ('cancelled', 'Annulé'),
+            ('draft', 'Draft'),
+            ('active', 'Active'),
+            ('expiring', 'Expiring Soon'),
+            ('expired', 'Expired'),
+            ('renewed', 'Renewed'),
+            ('cancelled', 'Cancelled'),
         ],
-        string='État',
+        string='Status',
         default='draft',
         tracking=True,
         index=True,
     )
 
     # ------------------------------------------------------------------
-    # Société / devise / pays
+    # Company / currency / country
     # ------------------------------------------------------------------
     company_id = fields.Many2one(
         'res.company',
-        string='Société',
+        string='Company',
         default=lambda self: self.env.company,
         required=True,
     )
     currency_id = fields.Many2one(
         'res.currency',
-        string='Devise',
+        string='Currency',
         related='company_id.currency_id',
         store=True,
         readonly=True,
     )
     country_id = fields.Many2one(
         'res.country',
-        string='Pays',
+        string='Country',
         compute='_compute_country',
         store=True,
     )
 
     # ------------------------------------------------------------------
-    # Affichage
+    # Display
     # ------------------------------------------------------------------
     active = fields.Boolean(default=True)
-    color = fields.Integer(string='Couleur')
+    color = fields.Integer(string='Color')
 
     # ------------------------------------------------------------------
-    # Renouvellement (chainage entre contrats)
+    # Renewal (chaining between contracts)
     # ------------------------------------------------------------------
     renewed_from_id = fields.Many2one(
         'eurekam.maintenance.contract',
-        string='Contrat précédent (renouvelé depuis)',
+        string='Previous Contract (renewed from)',
         readonly=True,
         copy=False,
         index=True,
-        help="Renseigné automatiquement par le wizard de renouvellement.",
+        help="Set automatically by the renewal wizard.",
     )
     renewed_to_ids = fields.One2many(
         'eurekam.maintenance.contract',
         'renewed_from_id',
-        string='Contrats suivants (renouvelés vers)',
+        string='Next Contracts (renewed to)',
     )
     renewed_to_count = fields.Integer(
-        string='Nb renouvellements',
+        string='Renewals Count',
         compute='_compute_renewed_to_count',
     )
 
     # ------------------------------------------------------------------
-    # Facturation (lien vers account.move + sale.order)
+    # Billing (link to account.move + sale.order)
     # ------------------------------------------------------------------
     invoice_count = fields.Integer(
-        string='Nb factures',
+        string='Invoices Count',
         compute='_compute_invoice_count',
     )
     requires_customer_order = fields.Boolean(
-        string="Nécessite une commande client",
+        string="Requires Customer Order",
         default=True,
         tracking=True,
-        help="Si coché (cas majoritaire), la facturation passe obligatoirement "
-             "par une commande client (sale.order) créée à réception du Bon de "
-             "Commande client. L'action « Créer les factures du contrat » est "
-             "alors désactivée — utiliser « Créer une commande client » à la "
-             "place.\n"
-             "Si décoché (cas rare : certains établissements privés), la "
-             "facturation se fait directement sur le contrat sans BC.",
+        help="If checked (most common case), billing must go through a customer "
+             "order (sale.order) created upon receipt of the customer purchase "
+             "order. The 'Create Contract Invoices' action is then disabled — "
+             "use 'Create Customer Order' instead.\n"
+             "If unchecked (rare case: some private establishments), billing is "
+             "done directly on the contract without a purchase order.",
     )
     sale_order_ids = fields.One2many(
         'sale.order',
         'eurekam_maintenance_contract_id',
-        string="Commandes client",
+        string="Customer Orders",
     )
     sale_order_count = fields.Integer(
-        string="Nb commandes client",
+        string="Customer Orders Count",
         compute='_compute_sale_order_count',
     )
 
@@ -334,8 +333,8 @@ class EurekamMaintenanceContract(models.Model):
             seq = rec.sequence_number or ''
             partner = rec.partner_id.display_name or ''
             prod = rec.product_id.display_name or rec.product_name or ''
-            parts = [p for p in (seq, partner, prod) if p and p != 'Nouveau']
-            rec.name = ' - '.join(parts) if parts else 'Contrat de maintenance'
+            parts = [p for p in (seq, partner, prod) if p and p != 'New']
+            rec.name = ' - '.join(parts) if parts else 'Maintenance Contract'
 
     @api.depends('date_end')
     def _compute_days_to_expiry(self):
@@ -390,17 +389,16 @@ class EurekamMaintenanceContract(models.Model):
         for rec in self:
             if rec.date_start and rec.date_end and rec.date_end < rec.date_start:
                 raise ValidationError(_(
-                    "La date de fin (%(end)s) doit être postérieure à la date "
-                    "de début (%(start)s).",
+                    "The end date (%(end)s) must be after the start date (%(start)s).",
                     end=rec.date_end, start=rec.date_start,
                 ))
 
     @api.constrains('billing_frequency_ids')
     def _check_billing_unicity(self):
-        """Garantit l'unicite des cadences :
-        - au plus 1 cadence de periode (annual/semi_annual/quarterly/full_period)
-        - au plus 1 cadence de timing (overdue/upcoming)
-        Les conditions sont bloquees le temps du contrat, donc inutile d'en cumuler.
+        """Ensure billing frequency uniqueness:
+        - at most 1 period frequency (annual/semi_annual/quarterly/full_period)
+        - at most 1 timing frequency (overdue/upcoming)
+        Conditions are locked for the contract duration, no need to combine them.
         """
         for rec in self:
             codes = rec.billing_frequency_ids.mapped('code')
@@ -411,9 +409,9 @@ class EurekamMaintenanceContract(models.Model):
                     lambda f: f.code in PERIOD_CODES
                 ).mapped('name')
                 raise ValidationError(_(
-                    "Une seule cadence de période est autorisée par contrat "
-                    "(Annuelle, Semestrielle, Trimestrielle ou Période intégrale).\n"
-                    "Actuellement sélectionné(es) : %s",
+                    "Only one period frequency is allowed per contract "
+                    "(Annual, Semi-annual, Quarterly or Full period).\n"
+                    "Currently selected: %s",
                     ', '.join(names),
                 ))
             if len(timings) > 1:
@@ -421,9 +419,9 @@ class EurekamMaintenanceContract(models.Model):
                     lambda f: f.code in TIMING_CODES
                 ).mapped('name')
                 raise ValidationError(_(
-                    "Une seule cadence de timing est autorisée par contrat "
-                    "(À échu ou À échoir).\n"
-                    "Actuellement sélectionné(es) : %s",
+                    "Only one timing frequency is allowed per contract "
+                    "(Overdue or Upcoming).\n"
+                    "Currently selected: %s",
                     ', '.join(names),
                 ))
 
@@ -434,29 +432,29 @@ class EurekamMaintenanceContract(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         for vals in vals_list:
-            if not vals.get('sequence_number') or vals.get('sequence_number') == 'Nouveau':
+            if not vals.get('sequence_number') or vals.get('sequence_number') == 'New':
                 vals['sequence_number'] = self.env['ir.sequence'].next_by_code(
                     'eurekam.maintenance.contract'
-                ) or 'Nouveau'
+                ) or 'New'
         return super().create(vals_list)
 
     # ==================================================================
-    # Actions
+    # Lifecycle helpers & actions
     # ==================================================================
 
     def _evaluate_lifecycle_state(self):
-        """Determine l'etat attendu d'un contrat selon date_end et today.
+        """Determine the expected state of a contract based on date_end and today.
 
-        Ne modifie pas le record. Retourne le code de state attendu.
-        Logique :
-        - draft / renewed / cancelled / expired -> etats finaux, inchanges
-        - Sinon (active / expiring), recalcule selon days_to_expiry :
-            * days < 0      -> 'expired'
+        Does not modify the record. Returns the expected state code.
+        Logic:
+        - draft / renewed / cancelled / expired -> final states, unchanged
+        - otherwise (active / expiring), recompute based on days_to_expiry:
+            * days < 0       -> 'expired'
             * 0 <= days <=90 -> 'expiring'
-            * days > 90     -> 'active'
+            * days > 90      -> 'active'
 
-        Utilise par action_activate et action_recompute_state, et reflete la
-        meme logique que _cron_check_expiring_contracts (sans envoi d'email).
+        Used by action_activate and action_recompute_state, and mirrors the
+        logic of _cron_check_expiring_contracts (without sending emails).
         """
         self.ensure_one()
         if self.state in ('draft', 'renewed', 'cancelled', 'expired'):
@@ -475,29 +473,30 @@ class EurekamMaintenanceContract(models.Model):
         for rec in self:
             if rec.state not in ('draft', 'cancelled'):
                 raise UserError(_(
-                    "Seul un contrat en brouillon ou annulé peut être activé."
+                    "Only a draft or cancelled contract can be activated."
                 ))
             if not rec.date_start or not rec.date_end:
                 raise UserError(_(
-                    "Renseigner les dates de début et de fin avant d'activer."
+                    "Set the start and end dates before activating."
                 ))
             if not rec.product_id:
                 raise UserError(_(
-                    "Renseigner le produit (champ « Produit » lié à la base "
-                    "articles) avant d'activer le contrat. Le champ « Libellé "
-                    "produit » seul ne suffit pas : les factures générées "
-                    "ensuite ont besoin du product_id pour résoudre "
-                    "automatiquement le compte de revenu et les taxes."
+                    "Set the product (the 'Product' field linked to the product "
+                    "catalog) before activating the contract. The 'Product Label' "
+                    "field alone is not enough: the invoices generated afterwards "
+                    "need the product_id to resolve the income account and taxes "
+                    "automatically."
                 ))
-            # Bascule transitoire en 'active' puis recalcul immediat selon date_end.
-            # Couvre le cas import historique / activation d'un contrat dont la
-            # date_end est deja passee (sans attendre le cron quotidien).
+            # Transient switch to 'active' then immediate re-evaluation on date_end.
+            # Covers the historical-import case / activation of a contract whose
+            # date_end is already past (without waiting for the daily cron).
             rec.state = 'active'
             new_state = rec._evaluate_lifecycle_state()
             if new_state != rec.state:
                 rec.message_post(body=_(
-                    "Activation suivie d'un re-evaluation immediate selon date_end "
-                    "(%(end)s, %(days)s jours) : etat ajusté à « %(state)s ».",
+                    "Activation followed by an immediate re-evaluation based on "
+                    "date_end (%(end)s, %(days)s days): status adjusted to "
+                    "\"%(state)s\".",
                     end=rec.date_end,
                     days=(rec.date_end - fields.Date.context_today(rec)).days,
                     state=dict(rec._fields['state'].selection).get(new_state),
@@ -506,17 +505,17 @@ class EurekamMaintenanceContract(models.Model):
         return True
 
     def action_recompute_state(self):
-        """Bouton manuel : re-evalue l'etat selon date_end actuelle.
+        """Manual button: re-evaluate the state based on the current date_end.
 
-        Utile sur les bases ou le cron quotidien est neutralise (Odoo.sh sandbox).
-        Sur la prod, le cron tourne quotidiennement et rattrape les bascules
-        automatiquement.
+        Useful on databases where the daily cron is disabled (Odoo.sh sandbox).
+        On production the cron runs daily and catches up the transitions
+        automatically.
         """
         for rec in self:
             new_state = rec._evaluate_lifecycle_state()
             if new_state != rec.state:
                 rec.message_post(body=_(
-                    "Recalcul manuel de l'etat : %(old)s -> %(new)s.",
+                    "Manual state recompute: %(old)s -> %(new)s.",
                     old=dict(rec._fields['state'].selection).get(rec.state),
                     new=dict(rec._fields['state'].selection).get(new_state),
                 ))
@@ -533,25 +532,24 @@ class EurekamMaintenanceContract(models.Model):
         for rec in self:
             if rec.state != 'cancelled':
                 raise UserError(_(
-                    "Seul un contrat annulé peut revenir en brouillon."
+                    "Only a cancelled contract can be set back to draft."
                 ))
             rec.state = 'draft'
         return True
 
     def action_generate_lines(self):
-        """Génère les lignes annuelles vides entre date_start et date_end.
+        """Generate the empty yearly lines between date_start and date_end.
 
-        Crée une ligne par année (year = date_start.year ... date_end.year),
-        avec amount=0 par défaut. Les lignes existantes ne sont pas écrasées.
-        Si maintenance_amount > 0 et qu'aucune ligne n'existe encore, on
-        pré-remplit chaque ligne avec ce montant comme valeur de départ.
+        Creates one line per year (year = date_start.year ... date_end.year),
+        with amount=0 by default. Existing lines are not overwritten.
+        If maintenance_amount > 0 and no line exists yet, each line is
+        pre-filled with that amount as a starting value.
         """
         Line = self.env['eurekam.maintenance.contract.line']
         for rec in self:
             if not rec.date_start or not rec.date_end:
                 raise UserError(_(
-                    "Définir les dates de début et de fin avant de générer "
-                    "les lignes annuelles."
+                    "Set the start and end dates before generating the yearly lines."
                 ))
             existing_years = set(rec.line_ids.mapped('year'))
             default_amount = rec.maintenance_amount if not existing_years else 0.0
@@ -568,10 +566,10 @@ class EurekamMaintenanceContract(models.Model):
         return True
 
     def action_view_lines(self):
-        """Ouvre la vue liste des lignes annuelles filtrée sur ce contrat."""
+        """Open the yearly lines list filtered on this contract."""
         self.ensure_one()
         return {
-            'name': _("Lignes annuelles — %s", self.sequence_number),
+            'name': _("Yearly Lines — %s", self.sequence_number),
             'type': 'ir.actions.act_window',
             'res_model': 'eurekam.maintenance.contract.line',
             'view_mode': 'list,pivot,graph,form',
@@ -580,15 +578,15 @@ class EurekamMaintenanceContract(models.Model):
         }
 
     def action_open_renewal_wizard(self):
-        """Ouvre le wizard de renouvellement pre-rempli depuis ce contrat."""
+        """Open the renewal wizard pre-filled from this contract."""
         self.ensure_one()
         if self.state in ('renewed', 'cancelled'):
             raise UserError(_(
-                "Ce contrat est %s, impossible de le renouveler.",
+                "This contract is %s, it cannot be renewed.",
                 dict(self._fields['state'].selection).get(self.state),
             ))
         return {
-            'name': _("Renouveler — %s", self.sequence_number),
+            'name': _("Renew — %s", self.sequence_number),
             'type': 'ir.actions.act_window',
             'res_model': 'eurekam.contract.renewal.wizard',
             'view_mode': 'form',
@@ -597,12 +595,12 @@ class EurekamMaintenanceContract(models.Model):
         }
 
     def action_view_renewed_from(self):
-        """Ouvre le contrat dont celui-ci est le renouvellement."""
+        """Open the contract this one is the renewal of."""
         self.ensure_one()
         if not self.renewed_from_id:
             return False
         return {
-            'name': _("Contrat précédent"),
+            'name': _("Previous Contract"),
             'type': 'ir.actions.act_window',
             'res_model': 'eurekam.maintenance.contract',
             'res_id': self.renewed_from_id.id,
@@ -611,13 +609,13 @@ class EurekamMaintenanceContract(models.Model):
         }
 
     def action_view_renewed_to(self):
-        """Ouvre le ou les contrats qui ont renouvele celui-ci."""
+        """Open the contract(s) that renewed this one."""
         self.ensure_one()
         if not self.renewed_to_ids:
             return False
         if len(self.renewed_to_ids) == 1:
             return {
-                'name': _("Contrat de renouvellement"),
+                'name': _("Renewal Contract"),
                 'type': 'ir.actions.act_window',
                 'res_model': 'eurekam.maintenance.contract',
                 'res_id': self.renewed_to_ids[0].id,
@@ -625,7 +623,7 @@ class EurekamMaintenanceContract(models.Model):
                 'target': 'current',
             }
         return {
-            'name': _("Contrats de renouvellement"),
+            'name': _("Renewal Contracts"),
             'type': 'ir.actions.act_window',
             'res_model': 'eurekam.maintenance.contract',
             'view_mode': 'list,form',
@@ -633,15 +631,11 @@ class EurekamMaintenanceContract(models.Model):
         }
 
     # ==================================================================
-    # Facturation (creation de account.move)
-    # ==================================================================
-
-    # ==================================================================
-    # Facturation : helpers de cadence
+    # Billing: frequency helpers
     # ==================================================================
 
     def _get_billing_period_code(self):
-        """Code de période courante du contrat (annual par defaut si non defini)."""
+        """Current period code of the contract ('annual' by default if unset)."""
         self.ensure_one()
         for code in self.billing_frequency_ids.mapped('code'):
             if code in PERIOD_CODES:
@@ -649,7 +643,7 @@ class EurekamMaintenanceContract(models.Model):
         return 'annual'
 
     def _get_billing_timing_code(self):
-        """Code de timing : 'overdue' (echu) ou 'upcoming' (a echoir, par defaut)."""
+        """Timing code: 'overdue' or 'upcoming' (default)."""
         self.ensure_one()
         for code in self.billing_frequency_ids.mapped('code'):
             if code in TIMING_CODES:
@@ -658,60 +652,60 @@ class EurekamMaintenanceContract(models.Model):
 
     @staticmethod
     def _periods_for_year(year, amount, period_code):
-        """Retourne la liste des sous-periodes d'une annee :
+        """Return the list of sub-periods of a year:
         [(label, fraction_amount, period_start, period_end), ...]
 
-        - 'annual'      -> 1 periode (annee entiere)
-        - 'semi_annual' -> 2 periodes (S1, S2), fraction = amount/2
-        - 'quarterly'   -> 4 periodes (T1..T4), fraction = amount/4
-        - 'full_period' -> traite a part (action_create_invoices_for_contract)
+        - 'annual'      -> 1 period (full year)
+        - 'semi_annual' -> 2 periods (H1, H2), fraction = amount/2
+        - 'quarterly'   -> 4 periods (Q1..Q4), fraction = amount/4
+        - 'full_period' -> handled separately (action_create_invoices_for_contract)
         """
         if period_code == 'quarterly':
             f = _split_amount(amount, 4)
             return [
-                ("T1 %s" % year, f[0], date(year, 1, 1), date(year, 3, 31)),
-                ("T2 %s" % year, f[1], date(year, 4, 1), date(year, 6, 30)),
-                ("T3 %s" % year, f[2], date(year, 7, 1), date(year, 9, 30)),
-                ("T4 %s" % year, f[3], date(year, 10, 1), date(year, 12, 31)),
+                ("Q1 %s" % year, f[0], date(year, 1, 1), date(year, 3, 31)),
+                ("Q2 %s" % year, f[1], date(year, 4, 1), date(year, 6, 30)),
+                ("Q3 %s" % year, f[2], date(year, 7, 1), date(year, 9, 30)),
+                ("Q4 %s" % year, f[3], date(year, 10, 1), date(year, 12, 31)),
             ]
         if period_code == 'semi_annual':
             f = _split_amount(amount, 2)
             return [
-                ("S1 %s" % year, f[0], date(year, 1, 1), date(year, 6, 30)),
-                ("S2 %s" % year, f[1], date(year, 7, 1), date(year, 12, 31)),
+                ("H1 %s" % year, f[0], date(year, 1, 1), date(year, 6, 30)),
+                ("H2 %s" % year, f[1], date(year, 7, 1), date(year, 12, 31)),
             ]
-        # 'annual' par defaut
+        # 'annual' by default
         return [
-            ("Année %s" % year, amount, date(year, 1, 1), date(year, 12, 31)),
+            ("Year %s" % year, amount, date(year, 1, 1), date(year, 12, 31)),
         ]
 
     @staticmethod
     def _invoice_date_for_period(period_start, period_end, timing_code):
-        """Date d'emission d'une facture pour une periode donnee.
+        """Invoice issue date for a given period.
 
-        - 'overdue'  (echu)     -> fin de periode
-        - 'upcoming' (a echoir) -> debut de periode (defaut)
+        - 'overdue'  -> end of period
+        - 'upcoming' -> start of period (default)
         """
         if timing_code == 'overdue':
             return period_end
         return period_start
 
     # ==================================================================
-    # Facturation : actions
+    # Billing: actions
     # ==================================================================
 
     def action_create_invoices_for_contract(self):
-        """Cree toutes les factures brouillon couvrant la duree restante du contrat.
+        """Create all the draft invoices covering the remaining contract duration.
 
-        Selon la cadence (billing_frequency_ids) :
-          - 'annual'      -> 1 facture par annee restante
-          - 'semi_annual' -> 2 factures par annee restante (S1, S2)
-          - 'quarterly'   -> 4 factures par annee restante (T1..T4)
-          - 'full_period' -> 1 facture globale = somme de toutes les lignes
-          - 'overdue'     -> date facture = fin de periode
-          - 'upcoming'    -> date facture = debut de periode (defaut)
+        Depending on the frequency (billing_frequency_ids):
+          - 'annual'      -> 1 invoice per remaining year
+          - 'semi_annual' -> 2 invoices per remaining year (H1, H2)
+          - 'quarterly'   -> 4 invoices per remaining year (Q1..Q4)
+          - 'full_period' -> 1 global invoice = sum of all lines
+          - 'overdue'     -> invoice date = end of period
+          - 'upcoming'    -> invoice date = start of period (default)
 
-        Idempotent : les periodes deja facturees ne sont pas recreees.
+        Idempotent: already invoiced periods are not recreated.
         """
         today = fields.Date.context_today(self)
         created_invoices = self.env['account.move']
@@ -719,39 +713,39 @@ class EurekamMaintenanceContract(models.Model):
         for contract in self:
             if contract.requires_customer_order:
                 raise UserError(_(
-                    "Le contrat %s nécessite une commande client (BC). "
-                    "La facturation directe est désactivée pour ce contrat.\n"
-                    "Cliquer sur « Créer une commande client » à la place : "
-                    "un sale.order sera créé avec les lignes correspondant à "
-                    "la cadence, et chaque ligne pourra ensuite être facturée "
-                    "indépendamment via le workflow Sales natif.",
+                    "Contract %s requires a customer order (PO). Direct billing "
+                    "is disabled for this contract.\n"
+                    "Click 'Create Customer Order' instead: a sale.order will be "
+                    "created with the lines matching the frequency, and each line "
+                    "can then be invoiced independently through the native Sales "
+                    "workflow.",
                     contract.sequence_number,
                 ))
             if not contract.line_ids:
                 raise UserError(_(
-                    "Aucune ligne annuelle pour ce contrat. Cliquer sur "
-                    "« Générer les lignes annuelles » d'abord."
+                    "No yearly line for this contract. Click 'Generate Yearly "
+                    "Lines' first."
                 ))
             if not contract.product_id:
                 raise UserError(_(
-                    "Le contrat %s n'a pas de produit lié (champ « Produit »).\n"
-                    "Renseigner un produit de la base articles avant de générer "
-                    "les factures, sinon le compte de revenu et les taxes ne "
-                    "pourront pas être résolus automatiquement.",
+                    "Contract %s has no linked product (the 'Product' field).\n"
+                    "Set a product from the catalog before generating the "
+                    "invoices, otherwise the income account and taxes cannot be "
+                    "resolved automatically.",
                     contract.sequence_number,
                 ))
 
             period_code = contract._get_billing_period_code()
             timing_code = contract._get_billing_timing_code()
 
-            # ---- Cas 1 : Période intégrale = 1 facture globale ----
+            # ---- Case 1: Full period = 1 global invoice ----
             if period_code == 'full_period':
                 existing = contract.line_ids.mapped('invoice_ids')
                 if existing:
                     raise UserError(_(
-                        "Une ou plusieurs factures existent déjà pour ce contrat "
-                        "en « Période intégrale » : %s. Supprimer les factures "
-                        "existantes d'abord si rejeu nécessaire.",
+                        "One or more invoices already exist for this 'Full "
+                        "period' contract: %s. Delete the existing invoices "
+                        "first if a replay is needed.",
                         ', '.join(existing.mapped('display_name')),
                     ))
                 invoice = contract._create_invoice_full_period()
@@ -759,18 +753,18 @@ class EurekamMaintenanceContract(models.Model):
                 created_invoices |= invoice
                 continue
 
-            # ---- Cas 2 : cadence sous-annuelle (annual/semi_annual/quarterly) ----
-            # Iterer sur les lignes futures (annee courante et au-dela).
+            # ---- Case 2: sub-annual frequency (annual/semi_annual/quarterly) ----
+            # Iterate over the future lines (current year and beyond).
             prefix = contract.sequence_number + " / "
             future_lines = contract.line_ids.filtered(lambda l: l.year >= today.year)
             for line in future_lines.sorted(key=lambda l: l.year):
                 periods = contract._periods_for_year(
                     line.year, line.amount, period_code,
                 )
-                # Periodes deja facturees : on lit le suffixe apres " / " dans
-                # invoice_origin des factures deja liees a la ligne. Plus robuste
-                # qu'un simple compteur : si une facture du milieu (ex: T2) a ete
-                # supprimee, on la recree sans dupliquer T1/T3/T4.
+                # Already invoiced periods: read the suffix after " / " in the
+                # invoice_origin of the invoices already linked to the line.
+                # More robust than a simple counter: if a middle invoice (e.g.
+                # Q2) was deleted, it is recreated without duplicating Q1/Q3/Q4.
                 already_labels = set()
                 for inv in line.invoice_ids:
                     origin = inv.invoice_origin or ''
@@ -790,18 +784,18 @@ class EurekamMaintenanceContract(models.Model):
 
         if not created_invoices:
             raise UserError(_(
-                "Aucune nouvelle facture à créer (toutes les périodes restantes "
-                "sont déjà facturées)."
+                "No new invoice to create (all remaining periods are already "
+                "invoiced)."
             ))
 
         for contract in self:
             contract.message_post(body=_(
-                "%d facture(s) brouillon créée(s) selon la cadence du contrat.",
+                "%d draft invoice(s) created according to the contract frequency.",
                 len(created_invoices),
             ))
 
         return {
-            'name': _("Factures créées (%d)", len(created_invoices)),
+            'name': _("Invoices Created (%d)", len(created_invoices)),
             'type': 'ir.actions.act_window',
             'res_model': 'account.move',
             'view_mode': 'list,form',
@@ -810,7 +804,7 @@ class EurekamMaintenanceContract(models.Model):
         }
 
     def _create_invoice_period(self, line, period_label, fraction_amount, invoice_date):
-        """Cree une facture brouillon pour une sous-periode (T1, S1, Année N, etc.)."""
+        """Create a draft invoice for a sub-period (Q1, H1, Year N, etc.)."""
         self.ensure_one()
         product = self.product_id
         product_var = product.product_variant_id if product else False
@@ -836,13 +830,13 @@ class EurekamMaintenanceContract(models.Model):
         return invoice
 
     def _create_invoice_full_period(self):
-        """Cree une facture brouillon unique couvrant l'integralite du contrat.
+        """Create a single draft invoice covering the whole contract.
 
-        Une seule ligne de facture pour la somme totale (total_contract_value).
-        Date d'emission selon le timing :
-          - a echoir (upcoming) -> date_start
-          - echu     (overdue)  -> date_end
-          - defaut              -> aujourd'hui
+        A single invoice line for the total amount (total_contract_value).
+        Issue date based on the timing:
+          - upcoming -> date_start
+          - overdue  -> date_end
+          - default  -> today
         """
         self.ensure_one()
         timing_code = self._get_billing_timing_code()
@@ -855,7 +849,7 @@ class EurekamMaintenanceContract(models.Model):
         product_var = product.product_variant_id if product else False
         total = sum(self.line_ids.mapped('amount'))
         description = _(
-            "%(prod)s — Période intégrale (%(start)s → %(end)s)",
+            "%(prod)s — Full period (%(start)s → %(end)s)",
             prod=product.name or self.product_name or '',
             start=self.date_start or '?',
             end=self.date_end or '?',
@@ -877,17 +871,17 @@ class EurekamMaintenanceContract(models.Model):
         return invoice
 
     def action_view_invoices(self):
-        """Ouvre les factures clients liees a ce contrat."""
+        """Open the customer invoices linked to this contract."""
         self.ensure_one()
-        # Factures directes (cas sans BC) + factures via sale.order (cas standard)
+        # Direct invoices (no-PO case) + invoices via sale.order (standard case)
         invoices_direct = self.line_ids.mapped('invoice_ids')
         invoices_from_so = self.sale_order_ids.mapped('invoice_ids')
         invoices = invoices_direct | invoices_from_so
         if not invoices:
-            raise UserError(_("Aucune facture n'est encore liée à ce contrat."))
+            raise UserError(_("No invoice is linked to this contract yet."))
         if len(invoices) == 1:
             return {
-                'name': _("Facture"),
+                'name': _("Invoice"),
                 'type': 'ir.actions.act_window',
                 'res_model': 'account.move',
                 'res_id': invoices.id,
@@ -895,7 +889,7 @@ class EurekamMaintenanceContract(models.Model):
                 'target': 'current',
             }
         return {
-            'name': _("Factures — %s", self.sequence_number),
+            'name': _("Invoices — %s", self.sequence_number),
             'type': 'ir.actions.act_window',
             'res_model': 'account.move',
             'view_mode': 'list,form',
@@ -903,19 +897,19 @@ class EurekamMaintenanceContract(models.Model):
         }
 
     # ==================================================================
-    # Commandes client (sale.order)
+    # Customer orders (sale.order)
     # ==================================================================
 
     def action_open_create_order_wizard(self):
-        """Ouvre le wizard de creation d'une commande client maintenance."""
+        """Open the maintenance customer order creation wizard."""
         self.ensure_one()
         if self.state in ('cancelled', 'renewed'):
             raise UserError(_(
-                "Impossible de créer une commande sur un contrat %s.",
+                "Cannot create an order on a %s contract.",
                 dict(self._fields['state'].selection).get(self.state),
             ))
         return {
-            'name': _("Créer une commande client — %s", self.sequence_number),
+            'name': _("Create Customer Order — %s", self.sequence_number),
             'type': 'ir.actions.act_window',
             'res_model': 'eurekam.maintenance.order.wizard',
             'view_mode': 'form',
@@ -924,17 +918,17 @@ class EurekamMaintenanceContract(models.Model):
         }
 
     def action_view_sale_orders(self):
-        """Ouvre les commandes client (sale.order) liees a ce contrat."""
+        """Open the customer orders (sale.order) linked to this contract."""
         self.ensure_one()
         orders = self.sale_order_ids
         if not orders:
             raise UserError(_(
-                "Aucune commande client n'est encore liée à ce contrat. "
-                "Cliquer sur « Créer une commande client » pour en créer une."
+                "No customer order is linked to this contract yet. "
+                "Click 'Create Customer Order' to create one."
             ))
         if len(orders) == 1:
             return {
-                'name': _("Commande client"),
+                'name': _("Customer Order"),
                 'type': 'ir.actions.act_window',
                 'res_model': 'sale.order',
                 'res_id': orders.id,
@@ -942,7 +936,7 @@ class EurekamMaintenanceContract(models.Model):
                 'target': 'current',
             }
         return {
-            'name': _("Commandes client — %s", self.sequence_number),
+            'name': _("Customer Orders — %s", self.sequence_number),
             'type': 'ir.actions.act_window',
             'res_model': 'sale.order',
             'view_mode': 'list,form',
@@ -950,11 +944,11 @@ class EurekamMaintenanceContract(models.Model):
         }
 
     # ==================================================================
-    # Cron expiration et templates de notification
+    # Expiry cron and notification templates
     # ==================================================================
 
     def _get_expiring_recipients(self):
-        """Destinataires de l'email 'expirant bientot' : commercial seul."""
+        """Recipients of the 'expiring soon' email: salesperson only."""
         self.ensure_one()
         partners = self.env['res.partner']
         if self.commercial_id.partner_id:
@@ -962,7 +956,7 @@ class EurekamMaintenanceContract(models.Model):
         return partners
 
     def _get_expired_recipients(self):
-        """Destinataires de l'email 'expire' : commercial + tous les managers."""
+        """Recipients of the 'expired' email: salesperson + all managers."""
         self.ensure_one()
         partners = self._get_expiring_recipients()
         managers_group = self.env.ref(
@@ -975,16 +969,16 @@ class EurekamMaintenanceContract(models.Model):
 
     @api.model
     def _cron_check_expiring_contracts(self):
-        """Job quotidien : bascule les etats actif/expirant/expire et envoie les emails.
+        """Daily job: switch the active/expiring/expired states and send emails.
 
-        Regles :
-        - Si 0 <= days_to_expiry <= 90 et state == 'active' : passe en 'expiring',
-          envoie email au commercial.
-        - Si days_to_expiry < 0 et state in ('active', 'expiring') : passe en 'expired',
-          envoie email au commercial + aux managers.
+        Rules:
+        - If 0 <= days_to_expiry <= 90 and state == 'active': switch to
+          'expiring', send an email to the salesperson.
+        - If days_to_expiry < 0 and state in ('active', 'expiring'): switch to
+          'expired', send an email to the salesperson + managers.
 
-        Idempotent : si l'etat est deja le bon (deja notifie precedemment),
-        rien n'est fait pour ce contrat.
+        Idempotent: if the state is already correct (already notified before),
+        nothing is done for that contract.
         """
         today = fields.Date.context_today(self)
         candidates = self.search([
@@ -992,7 +986,7 @@ class EurekamMaintenanceContract(models.Model):
             ('date_end', '!=', False),
         ])
         _logger.info(
-            "Cron expiration : %d contrats a verifier.",
+            "Expiry cron: %d contracts to check.",
             len(candidates),
         )
 
@@ -1009,7 +1003,7 @@ class EurekamMaintenanceContract(models.Model):
         passed_to_expired = self.env['eurekam.maintenance.contract']
 
         for contract in candidates:
-            # Utilise le meme helper que action_activate / action_recompute_state
+            # Uses the same helper as action_activate / action_recompute_state
             new_state = contract._evaluate_lifecycle_state()
             if new_state == contract.state:
                 continue
@@ -1020,7 +1014,7 @@ class EurekamMaintenanceContract(models.Model):
             elif new_state == 'expiring' and old_state == 'active':
                 passed_to_expiring |= contract
 
-        # ---- Envoi des emails (en queue, pas force_send=True) -----
+        # ---- Send emails (queued, not force_send=True) ----
         if expiring_template:
             for contract in passed_to_expiring:
                 try:
@@ -1033,7 +1027,7 @@ class EurekamMaintenanceContract(models.Model):
                     )
                 except Exception as exc:
                     _logger.warning(
-                        "Echec envoi email 'expirant' pour %s : %s",
+                        "Failed to send 'expiring' email for %s: %s",
                         contract.sequence_number, exc,
                     )
 
@@ -1049,12 +1043,12 @@ class EurekamMaintenanceContract(models.Model):
                     )
                 except Exception as exc:
                     _logger.warning(
-                        "Echec envoi email 'expire' pour %s : %s",
+                        "Failed to send 'expired' email for %s: %s",
                         contract.sequence_number, exc,
                     )
 
         _logger.info(
-            "Cron expiration : %d -> 'expiring', %d -> 'expired'.",
+            "Expiry cron: %d -> 'expiring', %d -> 'expired'.",
             len(passed_to_expiring),
             len(passed_to_expired),
         )

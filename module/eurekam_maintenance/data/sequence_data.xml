@@ -2,9 +2,9 @@
 <odoo>
     <data noupdate="1">
 
-        <!-- Séquence pour les contrats de maintenance : MAINT/AAAA/NNNN -->
+        <!-- Sequence for the maintenance contracts: MAINT/YYYY/NNNN -->
         <record id="seq_eurekam_maintenance_contract" model="ir.sequence">
-            <field name="name">Contrat de maintenance Eurekam</field>
+            <field name="name">Eurekam Maintenance Contract</field>
             <field name="code">eurekam.maintenance.contract</field>
             <field name="prefix">MAINT/%(year)s/</field>
             <field name="padding">4</field>

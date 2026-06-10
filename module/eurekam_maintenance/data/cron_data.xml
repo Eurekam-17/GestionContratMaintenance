@@ -3,14 +3,14 @@
     <data noupdate="1">
 
         <!--
-            Cron quotidien : bascule les contrats en 'expiring' (J-90) ou
-            'expired' (J+0) selon date_end et envoie les emails associes.
+            Daily cron: switch contracts to 'expiring' (D-90) or 'expired' (D+0)
+            based on date_end and send the related emails.
 
-            Code execute :
+            Code executed:
                 model._cron_check_expiring_contracts()
         -->
         <record id="cron_check_expiring_contracts" model="ir.cron">
-            <field name="name">Eurekam Maintenance : vérification contrats expirants</field>
+            <field name="name">Eurekam Maintenance: check expiring contracts</field>
             <field name="model_id" ref="model_eurekam_maintenance_contract"/>
             <field name="state">code</field>
             <field name="code">model._cron_check_expiring_contracts()</field>

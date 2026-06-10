@@ -1,74 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- Menu racine "Maintenance" -->
+    <!-- Root menu "Maintenance" -->
     <menuitem id="menu_root_maintenance"
               name="Maintenance"
               sequence="55"
               groups="group_maintenance_user"/>
 
-    <!-- Sous-menu "Contrats" -->
+    <!-- Submenu "Contracts" -->
     <menuitem id="menu_maintenance_contracts"
-              name="Contrats"
+              name="Contracts"
               parent="menu_root_maintenance"
               action="action_maintenance_contract"
               sequence="10"/>
 
-    <!-- Sous-menu "Lignes annuelles" : vue transversale par année -->
+    <!-- Submenu "Yearly Lines": cross-year view -->
     <menuitem id="menu_maintenance_contract_lines"
-              name="Lignes annuelles"
+              name="Yearly Lines"
               parent="menu_root_maintenance"
               action="action_maintenance_contract_line"
               sequence="20"/>
 
-    <!-- Sous-menu "Établissements" : partenaires marqués maintenance -->
+    <!-- Submenu "Establishments": partners flagged maintenance -->
     <menuitem id="menu_maintenance_establishments"
-              name="Établissements"
+              name="Establishments"
               parent="menu_root_maintenance"
               action="action_maintenance_establishment"
               sequence="30"/>
 
-    <!-- Sous-menu "Clients sans contrat" : couverture commerciale -->
+    <!-- Submenu "Customers Without Contract": commercial coverage -->
     <menuitem id="menu_maintenance_clients_without_contract"
-              name="Clients sans contrat"
+              name="Customers Without Contract"
               parent="menu_root_maintenance"
               action="action_maintenance_clients_without_contract"
               sequence="35"/>
 
-    <!-- Sous-menu "Tableau de bord" : pivot et graph -->
+    <!-- Submenu "Dashboard": pivot and graph -->
     <menuitem id="menu_maintenance_dashboard"
-              name="Tableau de bord"
+              name="Dashboard"
               parent="menu_root_maintenance"
               action="action_maintenance_dashboard"
               sequence="40"/>
 
-    <!-- Sous-menu "Configuration" (manager uniquement) -->
+    <!-- Submenu "Configuration" (manager only) -->
     <menuitem id="menu_maintenance_config"
               name="Configuration"
               parent="menu_root_maintenance"
               groups="group_maintenance_manager"
               sequence="90"/>
 
-    <!-- Types d'établissement et Versions produit : utiliser les tags
-         res.partner.category standards Odoo (Contacts > Configuration >
-         Contact Tags). Pas de sous-menu Maintenance dédié pour eux. -->
+    <!-- Establishment types and product versions: use the standard
+         res.partner.category tags (Contacts > Configuration > Contact Tags).
+         No dedicated Maintenance submenu for them. -->
     <menuitem id="menu_config_module_status"
-              name="Statuts module"
+              name="Module Statuses"
               parent="menu_maintenance_config"
               action="action_module_status"
               sequence="30"/>
     <menuitem id="menu_config_special_equipment"
-              name="Équipements spéciaux"
+              name="Special Equipment"
               parent="menu_maintenance_config"
               action="action_special_equipment"
               sequence="40"/>
     <menuitem id="menu_config_billing_frequency"
-              name="Cadences de facturation"
+              name="Billing Frequencies"
               parent="menu_maintenance_config"
               action="action_billing_frequency"
               sequence="50"/>
     <menuitem id="menu_config_module_billing"
-              name="Facturation modules"
+              name="Module Billing"
               parent="menu_maintenance_config"
               action="action_module_billing"
               sequence="60"/>

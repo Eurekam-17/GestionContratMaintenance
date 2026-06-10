@@ -1,17 +1,17 @@
 {
-    'name': 'Eurekam - Suivi Contrats de Maintenance',
+    'name': 'Eurekam - Maintenance Contracts Tracking',
     'version': '18.0.1.0.0',
     'category': 'Sales/Maintenance',
-    'summary': 'Gestion du cycle de vie des contrats de maintenance Drugcam',
+    'summary': 'Lifecycle management of Drugcam maintenance contracts',
     'description': """
-Suivi des contrats de maintenance Eurekam
-=========================================
+Eurekam maintenance contracts tracking
+======================================
 
-Module de gestion du cycle de vie des contrats de maintenance Drugcam :
-contrats multi-annuels, revision Syntec, cadences de facturation,
-alertes d'expiration, suivi par etablissement.
+Module managing the lifecycle of the Drugcam maintenance contracts:
+multi-year contracts, Syntec revision, billing frequencies,
+expiry alerts, tracking per establishment.
 
-Ce module remplace le suivi actuellement fait dans Notion.
+This module replaces the tracking currently done in Notion.
 """,
     'author': 'Eurekam',
     'website': 'https://www.eurekam.fr',

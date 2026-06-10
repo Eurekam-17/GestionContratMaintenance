@@ -1,14 +1,13 @@
-"""Extension de sale.order pour le rattachement aux contrats de maintenance.
+"""Extension of sale.order to link sale orders to maintenance contracts.
 
-Cas d'usage majoritaire chez Eurekam : 1 commande client par annee de contrat,
-avec autant de lignes que la rythmicite de facturation (1 pour Annuelle,
-2 pour Semestrielle, 4 pour Trimestrielle). Chaque ligne du SO devient une
-facture independante via le workflow Sales natif d'Odoo.
+Main use case at Eurekam: 1 customer order per contract year, with as many
+lines as the billing rhythm (1 for Annual, 2 for Semi-annual, 4 for Quarterly).
+Each SO line becomes an independent invoice through Odoo's native Sales workflow.
 
-Cas rares :
-- 1 SO couvrant l'integralite du contrat (mode 'full_contract' du wizard)
-- Pas de SO du tout : contrat avec requires_customer_order=False, on facture
-  directement comme avant (cas etablissements de sante prives).
+Rare cases:
+- 1 SO covering the whole contract ('full_contract' mode of the wizard)
+- No SO at all: contract with requires_customer_order=False, billed directly
+  as before (private healthcare establishments).
 """
 
 from odoo import fields, models
@@ -19,16 +18,16 @@ class SaleOrder(models.Model):
 
     eurekam_maintenance_contract_id = fields.Many2one(
         'eurekam.maintenance.contract',
-        string="Contrat de maintenance",
+        string="Maintenance Contract",
         index=True,
         copy=False,
-        help="Contrat de maintenance Eurekam pour lequel cette commande client a été émise.",
+        help="Eurekam maintenance contract this customer order was issued for.",
     )
     eurekam_maintenance_year = fields.Integer(
-        string="Année maintenance couverte",
+        string="Covered Maintenance Year",
         copy=False,
-        help="Année du contrat de maintenance que couvre cette commande client. "
-             "0 si la commande couvre l'intégralité du contrat (cas rare).",
+        help="Contract year covered by this customer order. "
+             "0 if the order covers the whole contract (rare case).",
     )
 
 
@@ -37,16 +36,16 @@ class SaleOrderLine(models.Model):
 
     maintenance_line_id = fields.Many2one(
         'eurekam.maintenance.contract.line',
-        string="Ligne annuelle maintenance",
+        string="Maintenance Yearly Line",
         index=True,
         copy=False,
         ondelete='set null',
-        help="Ligne annuelle du contrat de maintenance dont cette ligne de "
-             "commande facture une fraction (ex: T1 2026).",
+        help="Yearly line of the maintenance contract this order line invoices "
+             "a fraction of (e.g. Q1 2026).",
     )
     maintenance_period_label = fields.Char(
-        string="Période maintenance",
+        string="Maintenance Period",
         copy=False,
-        help="Libellé de la période couverte par cette ligne de commande "
-             "(ex: 'T1 2026', 'S2 2026', 'Année 2026', 'Période intégrale').",
+        help="Label of the period covered by this order line "
+             "(e.g. 'Q1 2026', 'H2 2026', 'Year 2026', 'Full period').",
     )

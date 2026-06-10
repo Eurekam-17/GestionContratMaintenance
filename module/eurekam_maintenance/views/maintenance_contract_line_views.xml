@@ -2,13 +2,13 @@
 <odoo>
 
     <!-- ============================================================== -->
-    <!-- Vue liste des lignes annuelles (vue transversale)               -->
+    <!-- Yearly lines list view (cross-contract view)                    -->
     <!-- ============================================================== -->
     <record id="view_maintenance_contract_line_list" model="ir.ui.view">
         <field name="name">eurekam.maintenance.contract.line.list</field>
         <field name="model">eurekam.maintenance.contract.line</field>
         <field name="arch" type="xml">
-            <list string="Lignes annuelles"
+            <list string="Yearly Lines"
                   decoration-success="is_invoiced"
                   decoration-muted="contract_state in ('cancelled','expired')"
                   editable="bottom">
@@ -27,7 +27,7 @@
     </record>
 
     <!-- ============================================================== -->
-    <!-- Vue liste editable in-line dans le formulaire contrat           -->
+    <!-- Inline editable list view inside the contract form              -->
     <!-- ============================================================== -->
     <record id="view_maintenance_contract_line_inline_list" model="ir.ui.view">
         <field name="name">eurekam.maintenance.contract.line.inline.list</field>
@@ -45,13 +45,13 @@
     </record>
 
     <!-- ============================================================== -->
-    <!-- Vue formulaire ligne annuelle                                   -->
+    <!-- Yearly line form view                                           -->
     <!-- ============================================================== -->
     <record id="view_maintenance_contract_line_form" model="ir.ui.view">
         <field name="name">eurekam.maintenance.contract.line.form</field>
         <field name="model">eurekam.maintenance.contract.line</field>
         <field name="arch" type="xml">
-            <form string="Ligne annuelle">
+            <form string="Yearly Line">
                 <sheet>
                     <group>
                         <group>
@@ -77,13 +77,13 @@
     </record>
 
     <!-- ============================================================== -->
-    <!-- Vue pivot (analyse par année / établissement)                   -->
+    <!-- Pivot view (analysis by year / establishment)                   -->
     <!-- ============================================================== -->
     <record id="view_maintenance_contract_line_pivot" model="ir.ui.view">
         <field name="name">eurekam.maintenance.contract.line.pivot</field>
         <field name="model">eurekam.maintenance.contract.line</field>
         <field name="arch" type="xml">
-            <pivot string="Analyse des montants annuels">
+            <pivot string="Yearly Amounts Analysis">
                 <field name="year" type="col"/>
                 <field name="partner_id" type="row"/>
                 <field name="amount" type="measure"/>
@@ -92,13 +92,13 @@
     </record>
 
     <!-- ============================================================== -->
-    <!-- Vue graph                                                       -->
+    <!-- Graph view                                                      -->
     <!-- ============================================================== -->
     <record id="view_maintenance_contract_line_graph" model="ir.ui.view">
         <field name="name">eurekam.maintenance.contract.line.graph</field>
         <field name="model">eurekam.maintenance.contract.line</field>
         <field name="arch" type="xml">
-            <graph string="Montants annuels" type="bar">
+            <graph string="Yearly Amounts" type="bar">
                 <field name="year"/>
                 <field name="amount" type="measure"/>
             </graph>
@@ -106,36 +106,36 @@
     </record>
 
     <!-- ============================================================== -->
-    <!-- Vue recherche                                                   -->
+    <!-- Search view                                                     -->
     <!-- ============================================================== -->
     <record id="view_maintenance_contract_line_search" model="ir.ui.view">
         <field name="name">eurekam.maintenance.contract.line.search</field>
         <field name="model">eurekam.maintenance.contract.line</field>
         <field name="arch" type="xml">
-            <search string="Rechercher">
+            <search string="Search">
                 <field name="contract_id"/>
                 <field name="partner_id"/>
                 <field name="year"/>
                 <separator/>
-                <filter string="Facturées" name="filter_invoiced"
+                <filter string="Invoiced" name="filter_invoiced"
                         domain="[('is_invoiced','=',True)]"/>
-                <filter string="Non facturées" name="filter_not_invoiced"
+                <filter string="Not Invoiced" name="filter_not_invoiced"
                         domain="[('is_invoiced','=',False)]"/>
-                <filter string="Partiellement facturées" name="filter_partial"
+                <filter string="Partially Invoiced" name="filter_partial"
                         domain="[('invoice_count','&gt;',0)]"/>
                 <separator/>
-                <filter string="Année courante" name="filter_current_year"
+                <filter string="Current Year" name="filter_current_year"
                         domain="[('year','=', context_today().year)]"/>
-                <group expand="0" string="Grouper par">
-                    <filter string="Année" name="group_year"
+                <group expand="0" string="Group By">
+                    <filter string="Year" name="group_year"
                             context="{'group_by':'year'}"/>
-                    <filter string="Établissement" name="group_partner"
+                    <filter string="Establishment" name="group_partner"
                             context="{'group_by':'partner_id'}"/>
-                    <filter string="Contrat" name="group_contract"
+                    <filter string="Contract" name="group_contract"
                             context="{'group_by':'contract_id'}"/>
-                    <filter string="État du contrat" name="group_contract_state"
+                    <filter string="Contract Status" name="group_contract_state"
                             context="{'group_by':'contract_state'}"/>
-                    <filter string="Commercial" name="group_commercial"
+                    <filter string="Salesperson" name="group_commercial"
                             context="{'group_by':'commercial_id'}"/>
                 </group>
             </search>
@@ -146,17 +146,17 @@
     <!-- Action                                                          -->
     <!-- ============================================================== -->
     <record id="action_maintenance_contract_line" model="ir.actions.act_window">
-        <field name="name">Lignes annuelles</field>
+        <field name="name">Yearly Lines</field>
         <field name="res_model">eurekam.maintenance.contract.line</field>
         <field name="view_mode">list,pivot,graph,form</field>
         <field name="search_view_id" ref="view_maintenance_contract_line_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Aucune ligne annuelle pour l'instant
+                No yearly line yet
             </p>
             <p>
-                Les lignes annuelles sont créées depuis un contrat de maintenance
-                (bouton « Générer les lignes annuelles »).
+                Yearly lines are created from a maintenance contract
+                ("Generate Yearly Lines" button).
             </p>
         </field>
     </record>

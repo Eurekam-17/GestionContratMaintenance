@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- Template QWeb du rapport "Recapitulatif contrat de maintenance".
-         Utilise web.external_layout pour le bandeau societe automatique. -->
+    <!-- QWeb template of the "Maintenance Contract Summary" report.
+         Uses web.external_layout for the automatic company header. -->
     <template id="report_maintenance_contract">
         <t t-call="web.html_container">
             <t t-foreach="docs" t-as="doc">
                 <t t-call="web.external_layout">
                     <div class="page">
 
-                        <!-- En-tête : numéro + état -->
+                        <!-- Header: number + status -->
                         <div class="row">
                             <div class="col-9">
-                                <h2>Contrat de maintenance</h2>
+                                <h2>Maintenance Contract</h2>
                                 <h3 class="text-muted"><t t-out="doc.sequence_number"/></h3>
                             </div>
                             <div class="col-3 text-end">
@@ -23,112 +23,112 @@
                             </div>
                         </div>
 
-                        <!-- Bloc identité -->
+                        <!-- Identity block -->
                         <div class="row mt-4">
                             <div class="col-6">
-                                <strong>Établissement :</strong><br/>
+                                <strong>Establishment:</strong><br/>
                                 <t t-out="doc.partner_id.display_name"/><br/>
                                 <span t-if="doc.partner_id.street" t-out="doc.partner_id.street"/><br t-if="doc.partner_id.street"/>
                                 <span t-if="doc.partner_id.zip" t-out="doc.partner_id.zip"/>
                                 <span t-if="doc.partner_id.city" t-out="' ' + (doc.partner_id.city or '')"/>
                             </div>
                             <div class="col-6">
-                                <strong>Commercial :</strong> <t t-out="doc.commercial_id.name or '-'"/><br/>
-                                <strong>Pays :</strong> <t t-out="doc.country_id.name or '-'"/><br/>
-                                <strong>Type / étiquettes :</strong>
+                                <strong>Salesperson:</strong> <t t-out="doc.commercial_id.name or '-'"/><br/>
+                                <strong>Country:</strong> <t t-out="doc.country_id.name or '-'"/><br/>
+                                <strong>Type / tags:</strong>
                                 <t t-out="', '.join(doc.partner_id.category_id.mapped('name')) or '-'"/>
                             </div>
                         </div>
 
-                        <!-- Caractéristiques produit -->
-                        <h4 class="mt-4">Caractéristiques</h4>
+                        <!-- Product characteristics -->
+                        <h4 class="mt-4">Characteristics</h4>
                         <table class="table table-sm">
                             <tr>
-                                <th style="width: 30%;">Produit</th>
+                                <th style="width: 30%;">Product</th>
                                 <td><t t-out="doc.product_id.name or doc.product_name or '-'"/></td>
                             </tr>
                             <tr>
-                                <th>Génération</th>
+                                <th>Generation</th>
                                 <td><t t-out="dict(doc._fields['gen'].selection).get(doc.gen, '-')"/></td>
                             </tr>
                             <tr>
-                                <th>Marché</th>
+                                <th>Market</th>
                                 <td><t t-out="dict(doc._fields['market_type'].selection).get(doc.market_type, '-')"/></td>
                             </tr>
                             <tr>
-                                <th>Statut commande</th>
+                                <th>Order Status</th>
                                 <td><t t-out="dict(doc._fields['order_status'].selection).get(doc.order_status, '-')"/></td>
                             </tr>
                             <tr>
-                                <th>Nombre de produits</th>
+                                <th>Number of Products</th>
                                 <td><t t-out="doc.nb_products"/></td>
                             </tr>
                         </table>
 
-                        <!-- Période -->
-                        <h4 class="mt-4">Période et durée</h4>
+                        <!-- Period -->
+                        <h4 class="mt-4">Period and Duration</h4>
                         <table class="table table-sm">
                             <tr>
-                                <th style="width: 30%;">Date de début</th>
+                                <th style="width: 30%;">Start Date</th>
                                 <td><t t-out="doc.date_start"/></td>
                             </tr>
                             <tr>
-                                <th>Date de fin</th>
+                                <th>End Date</th>
                                 <td><t t-out="doc.date_end"/></td>
                             </tr>
                             <tr>
-                                <th>Durée commandée</th>
+                                <th>Ordered Duration</th>
                                 <td><t t-out="dict(doc._fields['duration'].selection).get(doc.duration, '-')"/></td>
                             </tr>
                             <tr>
-                                <th>Jours avant expiration</th>
+                                <th>Days to Expiry</th>
                                 <td><t t-out="doc.days_to_expiry"/></td>
                             </tr>
                         </table>
 
-                        <!-- Facturation -->
-                        <h4 class="mt-4">Facturation</h4>
+                        <!-- Billing -->
+                        <h4 class="mt-4">Billing</h4>
                         <table class="table table-sm">
                             <tr>
-                                <th style="width: 30%;">Montant de maintenance</th>
+                                <th style="width: 30%;">Maintenance Amount</th>
                                 <td>
                                     <span t-out="doc.maintenance_amount"/>
                                     <span t-out="doc.currency_id.symbol or '€'"/>
                                 </td>
                             </tr>
                             <tr>
-                                <th>Niveau de facturation</th>
+                                <th>Billing Level</th>
                                 <td><t t-out="doc.billing_level or '-'"/> %</td>
                             </tr>
                             <tr>
-                                <th>Cadences</th>
+                                <th>Frequencies</th>
                                 <td>
                                     <t t-out="', '.join(doc.billing_frequency_ids.mapped('name')) or '-'"/>
                                 </td>
                             </tr>
                             <tr>
-                                <th>Facturation modules</th>
+                                <th>Module Billing</th>
                                 <td>
                                     <t t-out="', '.join(doc.module_billing_ids.mapped('name')) or '-'"/>
                                 </td>
                             </tr>
                             <tr>
-                                <th>Révision Syntec</th>
+                                <th>Syntec Revision</th>
                                 <td>
                                     <t t-out="dict(doc._fields['syntec_revision'].selection).get(doc.syntec_revision, '-')"/>
                                 </td>
                             </tr>
                         </table>
 
-                        <!-- Montants annuels -->
-                        <h4 class="mt-4">Montants annuels</h4>
+                        <!-- Yearly amounts -->
+                        <h4 class="mt-4">Yearly Amounts</h4>
                         <table class="table table-sm table-striped" t-if="doc.line_ids">
                             <thead>
                                 <tr>
-                                    <th>Année</th>
-                                    <th class="text-end">Montant</th>
-                                    <th class="text-center">Facturée</th>
-                                    <th>Facture</th>
+                                    <th>Year</th>
+                                    <th class="text-end">Amount</th>
+                                    <th class="text-center">Invoiced</th>
+                                    <th>Invoice</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -147,7 +147,7 @@
                                     </td>
                                 </tr>
                                 <tr style="border-top: 2px solid #333;">
-                                    <th>Total contrat</th>
+                                    <th>Contract Total</th>
                                     <th class="text-end">
                                         <t t-out="doc.total_contract_value"/>
                                         <t t-out="doc.currency_id.symbol or '€'"/>
@@ -158,25 +158,25 @@
                             </tbody>
                         </table>
                         <p t-if="not doc.line_ids" class="text-muted">
-                            Aucune ligne annuelle (utiliser « Générer les lignes annuelles »).
+                            No yearly line (use "Generate Yearly Lines").
                         </p>
 
-                        <!-- Renouvellement -->
+                        <!-- Renewal -->
                         <div t-if="doc.renewed_from_id or doc.renewed_to_ids" class="mt-4">
-                            <h4>Renouvellement</h4>
+                            <h4>Renewal</h4>
                             <p t-if="doc.renewed_from_id">
-                                Ce contrat est le renouvellement de
+                                This contract is the renewal of
                                 <strong t-out="doc.renewed_from_id.sequence_number"/>.
                             </p>
                             <p t-if="doc.renewed_to_ids">
-                                Ce contrat a été renouvelé en :
+                                This contract was renewed into:
                                 <strong t-out="', '.join(doc.renewed_to_ids.mapped('sequence_number'))"/>.
                             </p>
                         </div>
 
-                        <!-- Commentaire -->
+                        <!-- Comment -->
                         <div t-if="doc.comment" class="mt-4">
-                            <h4>Commentaire</h4>
+                            <h4>Comment</h4>
                             <p style="white-space: pre-wrap;"><t t-out="doc.comment"/></p>
                         </div>
 

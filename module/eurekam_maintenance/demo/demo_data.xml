@@ -2,7 +2,7 @@
 <odoo>
 
     <!-- ============================================================== -->
-    <!-- 3 etablissements de demonstration                                -->
+    <!-- 3 demo establishments                                           -->
     <!-- ============================================================== -->
     <record id="demo_partner_chu_lyon" model="res.partner">
         <field name="name">CHU de Lyon (DEMO)</field>
@@ -11,8 +11,8 @@
         <field name="department_number">69</field>
         <field name="city">Lyon</field>
         <field name="zip">69003</field>
-        <!-- Type (CHU) et version (GEN2) : utiliser les tags
-             res.partner.category Eurekam si présents sur la base cible. -->
+        <!-- Type (CHU) and version (GEN2): use the Eurekam res.partner.category
+             tags if present on the target database. -->
         <field name="establishment_status">client_eurekam</field>
         <field name="central_purchasing">uniha</field>
         <field name="nb_workstations">15</field>
@@ -25,7 +25,7 @@
         <field name="department_number">29</field>
         <field name="city">Brest</field>
         <field name="zip">29200</field>
-        <!-- Type (CH) et version (GEN1) : tags res.partner.category Eurekam. -->
+        <!-- Type (CH) and version (GEN1): Eurekam res.partner.category tags. -->
         <field name="establishment_status">client_eurekam</field>
         <field name="central_purchasing">ageps</field>
         <field name="nb_workstations">6</field>
@@ -38,7 +38,7 @@
         <field name="department_number">75</field>
         <field name="city">Paris</field>
         <field name="zip">75005</field>
-        <!-- Type (CLCC) et version (GEN2 + DO module) : tags res.partner.category. -->
+        <!-- Type (CLCC) and version (GEN2 + DO module): res.partner.category tags. -->
         <field name="establishment_status">client_eurekam</field>
         <field name="central_purchasing">unicancer</field>
         <field name="nb_workstations">10</field>
@@ -46,11 +46,11 @@
     </record>
 
     <!-- ============================================================== -->
-    <!-- Contrat 1 : actif GEN2 UniHA 2024 annuel 3 ans                   -->
+    <!-- Contract 1: active GEN2 UniHA 2024 annual 3 years               -->
     <!-- ============================================================== -->
     <record id="demo_contract_active_uniha2024" model="eurekam.maintenance.contract">
         <field name="partner_id" ref="demo_partner_chu_lyon"/>
-        <field name="product_name">Maintenance Drugcam Oncology FR (DEMO)</field>
+        <field name="product_name">Drugcam Oncology FR Maintenance (DEMO)</field>
         <field name="gen">gen2</field>
         <field name="market_type">uniha_2024</field>
         <field name="order_status">received</field>
@@ -63,7 +63,7 @@
         <field name="nb_products">3</field>
         <field name="state">active</field>
         <field name="billing_frequency_ids" eval="[(6, 0, [ref('freq_annual')])]"/>
-        <field name="comment">Contrat de demonstration actif sur 3 ans (UniHA 2024).</field>
+        <field name="comment">Demo contract active over 3 years (UniHA 2024).</field>
     </record>
     <record id="demo_line_active_2024" model="eurekam.maintenance.contract.line">
         <field name="contract_id" ref="demo_contract_active_uniha2024"/>
@@ -84,11 +84,11 @@
     </record>
 
     <!-- ============================================================== -->
-    <!-- Contrat 2 : expirant bientot GEN1 Ageps semestriel               -->
+    <!-- Contract 2: expiring soon GEN1 Ageps semi-annual               -->
     <!-- ============================================================== -->
     <record id="demo_contract_expiring_ageps" model="eurekam.maintenance.contract">
         <field name="partner_id" ref="demo_partner_ch_brest"/>
-        <field name="product_name">Maintenance logicielle GEN1 (DEMO)</field>
+        <field name="product_name">GEN1 Software Maintenance (DEMO)</field>
         <field name="gen">gen1</field>
         <field name="market_type">ageps</field>
         <field name="order_status">received</field>
@@ -115,11 +115,11 @@
     </record>
 
     <!-- ============================================================== -->
-    <!-- Contrat 3 : suspendu avec Syntec                                 -->
+    <!-- Contract 3: suspended with Syntec                               -->
     <!-- ============================================================== -->
     <record id="demo_contract_suspended_syntec" model="eurekam.maintenance.contract">
         <field name="partner_id" ref="demo_partner_clcc_paris"/>
-        <field name="product_name">Maintenance Module Statistique (DEMO)</field>
+        <field name="product_name">Statistics Module Maintenance (DEMO)</field>
         <field name="gen">gen2</field>
         <field name="market_type">private</field>
         <field name="order_status">suspended</field>
@@ -133,15 +133,15 @@
         <field name="state">draft</field>
         <field name="billing_frequency_ids" eval="[(6, 0, [ref('freq_annual'), ref('freq_overdue')])]"/>
         <field name="module_billing_ids" eval="[(6, 0, [ref('mod_bill_stats'), ref('mod_bill_clinical_trial')])]"/>
-        <field name="comment">Contrat de demonstration suspendu en attente de validation client.</field>
+        <field name="comment">Demo contract suspended, awaiting customer validation.</field>
     </record>
 
     <!-- ============================================================== -->
-    <!-- Contrat 4 : en deploiement marche interne                         -->
+    <!-- Contract 4: deploying internal market                           -->
     <!-- ============================================================== -->
     <record id="demo_contract_deploying_internal" model="eurekam.maintenance.contract">
         <field name="partner_id" ref="demo_partner_chu_lyon"/>
-        <field name="product_name">Maintenance Upgrade GEN2 (DEMO)</field>
+        <field name="product_name">GEN2 Upgrade Maintenance (DEMO)</field>
         <field name="gen">upgrade_gen2</field>
         <field name="market_type">market_internal</field>
         <field name="order_status">deploying</field>
@@ -154,15 +154,15 @@
         <field name="nb_products">1</field>
         <field name="state">draft</field>
         <field name="billing_frequency_ids" eval="[(6, 0, [ref('freq_quarterly')])]"/>
-        <field name="comment">Contrat en cours de deploiement - upgrade en cours.</field>
+        <field name="comment">Contract being deployed - upgrade in progress.</field>
     </record>
 
     <!-- ============================================================== -->
-    <!-- Contrat 5 : expire avec historique 2023-2026                     -->
+    <!-- Contract 5: expired with 2023-2025 history                      -->
     <!-- ============================================================== -->
     <record id="demo_contract_expired_history" model="eurekam.maintenance.contract">
         <field name="partner_id" ref="demo_partner_ch_brest"/>
-        <field name="product_name">Maintenance historique GEN1 (DEMO)</field>
+        <field name="product_name">GEN1 Legacy Maintenance (DEMO)</field>
         <field name="gen">gen1</field>
         <field name="market_type">private</field>
         <field name="order_status">received</field>
@@ -175,7 +175,7 @@
         <field name="nb_products">2</field>
         <field name="state">expired</field>
         <field name="billing_frequency_ids" eval="[(6, 0, [ref('freq_annual')])]"/>
-        <field name="comment">Contrat de demonstration expire avec historique complet.</field>
+        <field name="comment">Demo contract expired with full history.</field>
     </record>
     <record id="demo_line_expired_2023" model="eurekam.maintenance.contract.line">
         <field name="contract_id" ref="demo_contract_expired_history"/>

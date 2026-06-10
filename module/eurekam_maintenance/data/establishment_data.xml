@@ -3,16 +3,15 @@
     <data noupdate="1">
 
         <!--
-            Note (refactor option A) :
-            Les sections "Types d'etablissement" (CH, CHU, CLCC, ...) et
-            "Versions produit Drugcam" (GEN1, GEN2, ...) ont ete supprimees.
-            Eurekam utilise les tags standard res.partner.category pour ces
-            classifications (deja presents dans la base : CH, CHU, CLCC,
-            Clinique, Universite, GEN1, GEN2, ...).
+            Note (refactor option A):
+            The "Establishment types" (CH, CHU, CLCC, ...) and "Drugcam product
+            versions" (GEN1, GEN2, ...) sections were removed. Eurekam uses the
+            standard res.partner.category tags for these classifications (already
+            present in the DB: CH, CHU, CLCC, Clinic, University, GEN1, GEN2, ...).
         -->
 
         <!-- ========================================================== -->
-        <!-- Statuts module                                              -->
+        <!-- Module statuses                                             -->
         <!-- ========================================================== -->
         <record id="mod_status_beta_test" model="eurekam.module.status">
             <field name="name">Beta-test</field>
@@ -20,33 +19,33 @@
             <field name="sequence">10</field>
         </record>
         <record id="mod_status_active_unvalued" model="eurekam.module.status">
-            <field name="name">Activé / non valorisé</field>
+            <field name="name">Active / not valued</field>
             <field name="code">active_unvalued</field>
             <field name="sequence">20</field>
         </record>
         <record id="mod_status_active_valued" model="eurekam.module.status">
-            <field name="name">Activé / valorisé</field>
+            <field name="name">Active / valued</field>
             <field name="code">active_valued</field>
             <field name="sequence">30</field>
         </record>
         <record id="mod_status_unspecified" model="eurekam.module.status">
-            <field name="name">Non précisé</field>
+            <field name="name">Unspecified</field>
             <field name="code">unspecified</field>
             <field name="sequence">40</field>
         </record>
         <record id="mod_status_statistics" model="eurekam.module.status">
-            <field name="name">Statistique</field>
+            <field name="name">Statistics</field>
             <field name="code">statistics</field>
             <field name="sequence">50</field>
         </record>
         <record id="mod_status_clinical_trial" model="eurekam.module.status">
-            <field name="name">Essais cliniques</field>
+            <field name="name">Clinical trials</field>
             <field name="code">clinical_trial</field>
             <field name="sequence">60</field>
         </record>
 
         <!-- ========================================================== -->
-        <!-- Equipements speciaux                                        -->
+        <!-- Special equipment                                           -->
         <!-- ========================================================== -->
         <record id="equip_robot" model="eurekam.special.equipment">
             <field name="name">Robot</field>

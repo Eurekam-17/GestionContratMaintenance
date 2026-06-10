@@ -2,40 +2,40 @@
 <odoo>
 
     <!-- ============================================================== -->
-    <!-- Vue formulaire                                                  -->
+    <!-- Form view                                                       -->
     <!-- ============================================================== -->
     <record id="view_maintenance_contract_form" model="ir.ui.view">
         <field name="name">eurekam.maintenance.contract.form</field>
         <field name="model">eurekam.maintenance.contract</field>
         <field name="arch" type="xml">
-            <form string="Contrat de maintenance">
+            <form string="Maintenance Contract">
                 <header>
                     <button name="action_activate" type="object"
-                            string="Activer" class="oe_highlight"
+                            string="Activate" class="oe_highlight"
                             invisible="state not in ('draft','cancelled')"/>
                     <button name="action_generate_lines" type="object"
-                            string="Générer les lignes annuelles"
+                            string="Generate Yearly Lines"
                             invisible="not date_start or not date_end"/>
                     <button name="action_open_renewal_wizard" type="object"
-                            string="Renouveler" class="btn-primary"
+                            string="Renew" class="btn-primary"
                             invisible="state in ('draft','renewed','cancelled')"/>
                     <button name="action_open_create_order_wizard" type="object"
-                            string="Créer une commande client" class="btn-primary"
+                            string="Create Customer Order" class="btn-primary"
                             invisible="state not in ('active','expiring') or not requires_customer_order"
-                            help="Cas majoritaire : à réception d'un Bon de Commande client, crée un sale.order avec N lignes selon la cadence (1 pour Annuelle, 2 pour Semestrielle, 4 pour Trimestrielle). Chaque ligne du SO sera facturable indépendamment."/>
+                            help="Most common case: upon receipt of a customer purchase order, creates a sale.order with N lines according to the frequency (1 for Annual, 2 for Semi-annual, 4 for Quarterly). Each SO line can be invoiced independently."/>
                     <button name="action_create_invoices_for_contract" type="object"
-                            string="Créer les factures du contrat"
+                            string="Create Contract Invoices"
                             invisible="state not in ('active','expiring') or requires_customer_order"
-                            help="Cas rare : facturation directe sans Bon de Commande (établissements privés). Génère les factures brouillon couvrant la durée restante du contrat selon la cadence."/>
+                            help="Rare case: direct billing without a purchase order (private establishments). Generates the draft invoices covering the remaining contract duration according to the frequency."/>
                     <button name="action_recompute_state" type="object"
-                            string="Recalculer l'état"
+                            string="Recompute Status"
                             invisible="state in ('draft','cancelled','renewed')"
-                            help="Re-évalue l'état (Actif / Expire bientôt / Expiré) selon la date de fin et la date du jour. Utile si le cron quotidien n'a pas tourné (cas sandbox / staging)."/>
+                            help="Re-evaluates the status (Active / Expiring Soon / Expired) based on the end date and today. Useful if the daily cron has not run (sandbox / staging case)."/>
                     <button name="action_cancel" type="object"
-                            string="Annuler"
+                            string="Cancel"
                             invisible="state in ('cancelled','renewed')"/>
                     <button name="action_draft" type="object"
-                            string="Remettre en brouillon"
+                            string="Reset to Draft"
                             invisible="state != 'cancelled'"/>
                     <field name="state" widget="statusbar"
                            statusbar_visible="draft,active,expiring,expired,renewed"/>
@@ -45,32 +45,32 @@
                         <button name="action_view_lines" type="object"
                                 class="oe_stat_button" icon="fa-calendar">
                             <field name="line_count" widget="statinfo"
-                                   string="Lignes annuelles"/>
+                                   string="Yearly Lines"/>
                         </button>
                         <button name="action_view_renewed_from" type="object"
                                 class="oe_stat_button" icon="fa-history"
                                 invisible="not renewed_from_id">
                             <div class="o_stat_info">
-                                <span class="o_stat_text">Renouvelé depuis</span>
+                                <span class="o_stat_text">Renewed From</span>
                             </div>
                         </button>
                         <button name="action_view_renewed_to" type="object"
                                 class="oe_stat_button" icon="fa-arrow-right"
                                 invisible="renewed_to_count == 0">
                             <field name="renewed_to_count" widget="statinfo"
-                                   string="Renouvelé vers"/>
+                                   string="Renewed To"/>
                         </button>
                         <button name="action_view_sale_orders" type="object"
                                 class="oe_stat_button" icon="fa-shopping-cart"
                                 invisible="sale_order_count == 0">
                             <field name="sale_order_count" widget="statinfo"
-                                   string="Commandes"/>
+                                   string="Orders"/>
                         </button>
                         <button name="action_view_invoices" type="object"
                                 class="oe_stat_button" icon="fa-money"
                                 invisible="invoice_count == 0">
                             <field name="invoice_count" widget="statinfo"
-                                   string="Factures"/>
+                                   string="Invoices"/>
                         </button>
                     </div>
                     <div class="oe_title">
@@ -88,7 +88,7 @@
                             <field name="company_id" groups="base.group_multi_company"/>
                             <field name="country_id"/>
                         </group>
-                        <group string="Caractéristiques">
+                        <group string="Characteristics">
                             <field name="gen"/>
                             <field name="market_type"/>
                             <field name="order_status"/>
@@ -96,7 +96,7 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Dates et durée" name="dates">
+                        <page string="Dates &amp; Duration" name="dates">
                             <group>
                                 <group>
                                     <field name="date_start"/>
@@ -109,7 +109,7 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="Facturation" name="billing">
+                        <page string="Billing" name="billing">
                             <group>
                                 <group string="Conditions">
                                     <field name="maintenance_amount"/>
@@ -118,19 +118,19 @@
                                     <field name="syntec_revision"/>
                                     <field name="requires_customer_order"/>
                                 </group>
-                                <group string="Totaux (calculés)">
+                                <group string="Totals (computed)">
                                     <field name="total_contract_value"/>
                                     <field name="current_year_amount"/>
                                 </group>
                             </group>
                             <group>
-                                <group string="Cadences de facturation">
+                                <group string="Billing Frequencies">
                                     <field name="billing_frequency_ids"
                                            widget="many2many_tags"
                                            options="{'color_field': 'color'}"
                                            nolabel="1"/>
                                 </group>
-                                <group string="Facturation modules">
+                                <group string="Module Billing">
                                     <field name="module_billing_ids"
                                            widget="many2many_tags"
                                            options="{'color_field': 'color'}"
@@ -138,12 +138,12 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="Montants annuels" name="annual_lines">
+                        <page string="Yearly Amounts" name="annual_lines">
                             <p class="text-muted">
-                                Saisissez le montant annuel pour chaque année du contrat.
-                                Le bouton « Générer les lignes annuelles » dans l'en-tête
-                                pré-crée une ligne pour chaque année entre la date de
-                                début et la date de fin.
+                                Enter the yearly amount for each contract year.
+                                The "Generate Yearly Lines" button in the header
+                                pre-creates one line for each year between the start
+                                and end dates.
                             </p>
                             <field name="line_ids">
                                 <list editable="bottom"
@@ -159,7 +159,7 @@
                             </field>
                         </page>
                         <page string="Notes" name="notes">
-                            <field name="comment" placeholder="Commentaires libres..."/>
+                            <field name="comment" placeholder="Free comments..."/>
                         </page>
                     </notebook>
                 </sheet>
@@ -169,13 +169,13 @@
     </record>
 
     <!-- ============================================================== -->
-    <!-- Vue liste                                                       -->
+    <!-- List view                                                       -->
     <!-- ============================================================== -->
     <record id="view_maintenance_contract_list" model="ir.ui.view">
         <field name="name">eurekam.maintenance.contract.list</field>
         <field name="model">eurekam.maintenance.contract</field>
         <field name="arch" type="xml">
-            <list string="Contrats de maintenance"
+            <list string="Maintenance Contracts"
                   decoration-warning="is_expiring_soon"
                   decoration-danger="state == 'expired'"
                   decoration-muted="state in ('cancelled','renewed')">
@@ -189,8 +189,8 @@
                 <field name="date_end"/>
                 <field name="duration" optional="show"/>
                 <field name="maintenance_amount" sum="Total"/>
-                <field name="current_year_amount" optional="show" sum="Total année courante"/>
-                <field name="total_contract_value" optional="hide" sum="Total contrats"/>
+                <field name="current_year_amount" optional="show" sum="Current year total"/>
+                <field name="total_contract_value" optional="hide" sum="Contracts total"/>
                 <field name="currency_id" column_invisible="True"/>
                 <field name="syntec_revision" optional="hide"/>
                 <field name="commercial_id" optional="hide"/>
@@ -206,7 +206,7 @@
     </record>
 
     <!-- ============================================================== -->
-    <!-- Vue kanban                                                      -->
+    <!-- Kanban view                                                     -->
     <!-- ============================================================== -->
     <record id="view_maintenance_contract_kanban" model="ir.ui.view">
         <field name="name">eurekam.maintenance.contract.kanban</field>
@@ -230,11 +230,11 @@
                                 <div class="o_kanban_record_body">
                                     <div><field name="product_id"/></div>
                                     <div>
-                                        <strong>Année courante :</strong>
+                                        <strong>Current year:</strong>
                                         <field name="current_year_amount" widget="monetary"/>
                                     </div>
                                     <div t-if="record.date_end.raw_value">
-                                        Fin : <field name="date_end"/>
+                                        End: <field name="date_end"/>
                                     </div>
                                 </div>
                                 <div class="o_kanban_record_bottom">
@@ -250,46 +250,46 @@
     </record>
 
     <!-- ============================================================== -->
-    <!-- Vue recherche                                                   -->
+    <!-- Search view                                                     -->
     <!-- ============================================================== -->
     <record id="view_maintenance_contract_search" model="ir.ui.view">
         <field name="name">eurekam.maintenance.contract.search</field>
         <field name="model">eurekam.maintenance.contract</field>
         <field name="arch" type="xml">
-            <search string="Rechercher des contrats">
+            <search string="Search Contracts">
                 <field name="sequence_number"/>
                 <field name="partner_id"/>
                 <field name="product_id"/>
                 <field name="commercial_id"/>
                 <separator/>
-                <filter string="Brouillon" name="filter_draft"
+                <filter string="Draft" name="filter_draft"
                         domain="[('state','=','draft')]"/>
-                <filter string="Actifs" name="filter_active"
+                <filter string="Active" name="filter_active"
                         domain="[('state','=','active')]"/>
-                <filter string="Expirent bientôt" name="filter_expiring_soon"
+                <filter string="Expiring Soon" name="filter_expiring_soon"
                         domain="[('is_expiring_soon','=',True)]"/>
-                <filter string="Expirés" name="filter_expired"
+                <filter string="Expired" name="filter_expired"
                         domain="[('state','=','expired')]"/>
                 <separator/>
-                <filter string="Mes contrats" name="filter_my_contracts"
+                <filter string="My Contracts" name="filter_my_contracts"
                         domain="[('commercial_id','=',uid)]"/>
                 <separator/>
-                <filter string="Avec révision Syntec" name="filter_syntec_yes"
+                <filter string="With Syntec Revision" name="filter_syntec_yes"
                         domain="[('syntec_revision','=','yes')]"/>
-                <group expand="0" string="Grouper par">
-                    <filter string="État" name="group_state"
+                <group expand="0" string="Group By">
+                    <filter string="Status" name="group_state"
                             context="{'group_by':'state'}"/>
-                    <filter string="Statut commande" name="group_status"
+                    <filter string="Order Status" name="group_status"
                             context="{'group_by':'order_status'}"/>
-                    <filter string="Génération" name="group_gen"
+                    <filter string="Generation" name="group_gen"
                             context="{'group_by':'gen'}"/>
-                    <filter string="Marché" name="group_market"
+                    <filter string="Market" name="group_market"
                             context="{'group_by':'market_type'}"/>
-                    <filter string="Établissement" name="group_partner"
+                    <filter string="Establishment" name="group_partner"
                             context="{'group_by':'partner_id'}"/>
-                    <filter string="Commercial" name="group_commercial"
+                    <filter string="Salesperson" name="group_commercial"
                             context="{'group_by':'commercial_id'}"/>
-                    <filter string="Révision Syntec" name="group_syntec"
+                    <filter string="Syntec Revision" name="group_syntec"
                             context="{'group_by':'syntec_revision'}"/>
                 </group>
             </search>
@@ -297,33 +297,33 @@
     </record>
 
     <!-- ============================================================== -->
-    <!-- Vue pivot                                                       -->
+    <!-- Pivot view                                                      -->
     <!-- ============================================================== -->
     <record id="view_maintenance_contract_pivot" model="ir.ui.view">
         <field name="name">eurekam.maintenance.contract.pivot</field>
         <field name="model">eurekam.maintenance.contract</field>
         <field name="arch" type="xml">
-            <pivot string="Analyse des contrats" sample="1">
+            <pivot string="Contracts Analysis" sample="1">
                 <field name="partner_id" type="row"/>
                 <field name="gen" type="col"/>
                 <field name="maintenance_amount" type="measure"/>
                 <field name="total_contract_value" type="measure"/>
-                <!-- current_year_amount n'est pas une mesure car le champ
-                     est computed non-stocke (store=False) : impossible a
-                     agreger en SQL. Pour analyser l'annee courante, utiliser
-                     le pivot du menu "Lignes annuelles" filtre sur l'annee. -->
+                <!-- current_year_amount is not a measure because the field is a
+                     non-stored computed (store=False): impossible to aggregate
+                     in SQL. To analyze the current year, use the pivot of the
+                     "Yearly Lines" menu filtered on the year. -->
             </pivot>
         </field>
     </record>
 
     <!-- ============================================================== -->
-    <!-- Vue graph                                                       -->
+    <!-- Graph view                                                      -->
     <!-- ============================================================== -->
     <record id="view_maintenance_contract_graph" model="ir.ui.view">
         <field name="name">eurekam.maintenance.contract.graph</field>
         <field name="model">eurekam.maintenance.contract</field>
         <field name="arch" type="xml">
-            <graph string="Contrats par marché" type="bar" sample="1">
+            <graph string="Contracts by Market" type="bar" sample="1">
                 <field name="market_type"/>
                 <field name="maintenance_amount" type="measure"/>
             </graph>
@@ -331,13 +331,13 @@
     </record>
 
     <!-- ============================================================== -->
-    <!-- Vue calendrier                                                  -->
+    <!-- Calendar view                                                   -->
     <!-- ============================================================== -->
     <record id="view_maintenance_contract_calendar" model="ir.ui.view">
         <field name="name">eurekam.maintenance.contract.calendar</field>
         <field name="model">eurekam.maintenance.contract</field>
         <field name="arch" type="xml">
-            <calendar string="Contrats"
+            <calendar string="Contracts"
                       date_start="date_start"
                       date_stop="date_end"
                       color="commercial_id"
@@ -350,30 +350,30 @@
     </record>
 
     <!-- ============================================================== -->
-    <!-- Action principale (avec toutes les vues disponibles)            -->
+    <!-- Main action (with all available views)                          -->
     <!-- ============================================================== -->
     <record id="action_maintenance_contract" model="ir.actions.act_window">
-        <field name="name">Contrats de maintenance</field>
+        <field name="name">Maintenance Contracts</field>
         <field name="res_model">eurekam.maintenance.contract</field>
         <field name="view_mode">list,kanban,form,pivot,graph,calendar</field>
         <field name="search_view_id" ref="view_maintenance_contract_search"/>
         <field name="context">{'search_default_filter_active': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Créez votre premier contrat de maintenance
+                Create your first maintenance contract
             </p>
             <p>
-                Suivez le cycle de vie complet de vos contrats Drugcam :
-                facturation, renouvellement, alertes d'expiration.
+                Track the full lifecycle of your Drugcam contracts:
+                billing, renewal, expiry alerts.
             </p>
         </field>
     </record>
 
     <!-- ============================================================== -->
-    <!-- Action "Tableau de bord" : ouvre directement pivot/graph        -->
+    <!-- "Dashboard" action: opens pivot/graph directly                  -->
     <!-- ============================================================== -->
     <record id="action_maintenance_dashboard" model="ir.actions.act_window">
-        <field name="name">Tableau de bord</field>
+        <field name="name">Dashboard</field>
         <field name="res_model">eurekam.maintenance.contract</field>
         <field name="view_mode">pivot,graph</field>
         <field name="search_view_id" ref="view_maintenance_contract_search"/>

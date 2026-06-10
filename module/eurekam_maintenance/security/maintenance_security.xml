@@ -2,21 +2,21 @@
 <odoo>
     <data noupdate="1">
 
-        <!-- Catégorie de module pour regrouper les groupes Maintenance -->
+        <!-- Module category to group the Maintenance groups -->
         <record id="module_category_maintenance" model="ir.module.category">
-            <field name="name">Maintenance Eurekam</field>
-            <field name="description">Suivi des contrats de maintenance Eurekam.</field>
+            <field name="name">Eurekam Maintenance</field>
+            <field name="description">Eurekam maintenance contracts tracking.</field>
             <field name="sequence">20</field>
         </record>
 
-        <!-- Groupe utilisateur : voit/édite ses contrats -->
+        <!-- User group: views/edits their contracts -->
         <record id="group_maintenance_user" model="res.groups">
-            <field name="name">Utilisateur</field>
+            <field name="name">User</field>
             <field name="category_id" ref="module_category_maintenance"/>
             <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
         </record>
 
-        <!-- Groupe manager : configuration + suppression + voit tout -->
+        <!-- Manager group: + configuration + deletion + sees everything -->
         <record id="group_maintenance_manager" model="res.groups">
             <field name="name">Manager</field>
             <field name="category_id" ref="module_category_maintenance"/>
@@ -24,9 +24,9 @@
             <field name="users" eval="[(4, ref('base.user_admin'))]"/>
         </record>
 
-        <!-- Record rule : isolation multi-société pour les utilisateurs standard -->
+        <!-- Record rule: multi-company isolation for standard users -->
         <record id="rule_maintenance_contract_company" model="ir.rule">
-            <field name="name">Contrats de maintenance : isolation par société</field>
+            <field name="name">Maintenance contracts: company isolation</field>
             <field name="model_id" ref="model_eurekam_maintenance_contract"/>
             <field name="domain_force">[('company_id', 'in', company_ids)]</field>
             <field name="groups" eval="[(4, ref('group_maintenance_user'))]"/>
@@ -36,12 +36,12 @@
             <field name="perm_unlink" eval="True"/>
         </record>
 
-        <!-- Record rule : isolation multi-société sur les lignes annuelles
-             (company_id related stocké depuis le contrat). Indispensable car
-             les lignes sont accessibles directement via le menu « Lignes
-             annuelles », sans passer par le contrat parent. -->
+        <!-- Record rule: multi-company isolation on the yearly lines
+             (company_id related stored from the contract). Required because the
+             lines are accessible directly via the "Yearly Lines" menu, without
+             going through the parent contract. -->
         <record id="rule_maintenance_contract_line_company" model="ir.rule">
-            <field name="name">Lignes de maintenance : isolation par société</field>
+            <field name="name">Maintenance lines: company isolation</field>
             <field name="model_id" ref="model_eurekam_maintenance_contract_line"/>
             <field name="domain_force">[('company_id', 'in', company_ids)]</field>
             <field name="groups" eval="[(4, ref('group_maintenance_user'))]"/>

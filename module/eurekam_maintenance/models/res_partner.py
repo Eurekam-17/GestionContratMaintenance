@@ -1,8 +1,8 @@
-"""Extension de res.partner pour les etablissements de maintenance Eurekam.
+"""Extension of res.partner for Eurekam maintenance establishments.
 
-Ajoute les champs metier specifiques au suivi des contrats Drugcam :
-classification, equipements, modules, responsables, et un lien inverse
-vers les contrats de maintenance.
+Adds the business fields specific to the Drugcam contract tracking:
+classification, equipment, modules, managers, and a reverse link to the
+maintenance contracts.
 """
 
 from odoo import _, api, fields, models
@@ -12,143 +12,141 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     # ------------------------------------------------------------------
-    # Marqueur principal : ce contact est-il un etablissement de maintenance ?
+    # Main flag: is this contact a maintenance establishment?
     # ------------------------------------------------------------------
     is_maintenance_establishment = fields.Boolean(
-        string="Établissement de maintenance",
+        string="Maintenance Establishment",
         default=False,
         index=True,
-        help="Cocher si ce contact est un établissement client suivi pour les "
-             "contrats de maintenance Eurekam. Seuls les contacts coches "
-             "apparaissent dans la liste de selection lors de la creation "
-             "d'un contrat.",
+        help="Tick if this contact is a client establishment tracked for the "
+             "Eurekam maintenance contracts. Only ticked contacts appear in the "
+             "selection list when creating a contract.",
     )
 
     # ------------------------------------------------------------------
-    # Localisation
+    # Location
     # ------------------------------------------------------------------
     department_number = fields.Char(
-        string="N° Département",
-        help="Numéro du département français (01, 02, ..., 95, 2A, 2B, 971, ...).",
+        string="Department No.",
+        help="French department number (01, 02, ..., 95, 2A, 2B, 971, ...).",
     )
 
     # ------------------------------------------------------------------
     # Classification
     # ------------------------------------------------------------------
-    # Note (refactor option A) : le type d'établissement (CH, CHU, CLCC...)
-    # n'est plus stocké dans un modèle dédié. On utilise le champ standard
-    # `category_id` (Many2many vers res.partner.category) déjà affiché par
-    # la vue partner Odoo. Les tags CH/CHU/CLCC/Clinique/Université etc.
-    # existent déjà dans la base Eurekam.
+    # Note (refactor option A): the establishment type (CH, CHU, CLCC...) is no
+    # longer stored in a dedicated model. We use the standard category_id field
+    # (Many2many to res.partner.category) already shown by the Odoo partner view.
+    # The CH/CHU/CLCC/Clinic/University tags already exist in the Eurekam DB.
 
     establishment_status = fields.Selection(
         [
-            ('client_eurekam', 'Client Eurekam'),
-            ('prospect_eurekam', 'Prospect Eurekam'),
-            ('client_distributor', 'Client distributeur'),
-            ('prospect_distributor', 'Prospect distributeur'),
-            ('client_referrer', 'Client référent'),
-            ('prospect_referrer', 'Prospect référent'),
+            ('client_eurekam', 'Eurekam Customer'),
+            ('prospect_eurekam', 'Eurekam Prospect'),
+            ('client_distributor', 'Distributor Customer'),
+            ('prospect_distributor', 'Distributor Prospect'),
+            ('client_referrer', 'Referrer Customer'),
+            ('prospect_referrer', 'Referrer Prospect'),
         ],
-        string="Statut",
+        string="Status",
     )
     central_purchasing = fields.Selection(
         [
             ('uniha', 'UniHA'),
             ('ageps', 'AGEPS'),
-            ('private', 'Privé'),
-            ('internal', 'Marché interne'),
+            ('private', 'Private'),
+            ('internal', 'Internal Market'),
             ('unicancer', 'Unicancer'),
-            ('industrial', 'Industriel'),
+            ('industrial', 'Industrial'),
         ],
-        string="Centrale d'achat",
+        string="Central Purchasing",
     )
 
     # ------------------------------------------------------------------
-    # Équipements & modules installés
+    # Installed equipment & modules
     # ------------------------------------------------------------------
-    # Note (refactor option A) : la version produit (GEN1, GEN2) n'est plus
-    # stockée dans un modèle dédié. On utilise les tags res.partner.category
-    # standard (GEN1, GEN2 déjà présents dans la base Eurekam).
+    # Note (refactor option A): the product version (GEN1, GEN2) is no longer
+    # stored in a dedicated model. We use the standard res.partner.category tags
+    # (GEN1, GEN2 already present in the Eurekam DB).
 
     module_status_ids = fields.Many2many(
         'eurekam.module.status',
         'res_partner_module_status_rel',
         'partner_id', 'status_id',
-        string="Statuts modules",
+        string="Module Statuses",
     )
     nb_workstations = fields.Integer(
-        string="Nombre de postes",
-        help="Nombre de postes Drugcam installés sur le site.",
+        string="Number of Workstations",
+        help="Number of Drugcam workstations installed on site.",
     )
     special_equipment_ids = fields.Many2many(
         'eurekam.special.equipment',
         'res_partner_special_equipment_rel',
         'partner_id', 'equipment_id',
-        string="Équipements spéciaux",
+        string="Special Equipment",
     )
 
     # ------------------------------------------------------------------
-    # Responsables Eurekam
+    # Eurekam managers
     # ------------------------------------------------------------------
     commercial_responsible_id = fields.Many2one(
         'res.users',
-        string="Responsable commercial",
+        string="Sales Manager",
     )
     adv_responsible_id = fields.Many2one(
         'res.users',
-        string="Responsable ADV",
-        help="Administration des ventes.",
+        string="Sales Admin Manager",
+        help="Sales administration.",
     )
 
     # ------------------------------------------------------------------
-    # Lien inverse vers les contrats
+    # Reverse link to the contracts
     # ------------------------------------------------------------------
     maintenance_contract_ids = fields.One2many(
         'eurekam.maintenance.contract',
         'partner_id',
-        string="Contrats de maintenance",
+        string="Maintenance Contracts",
     )
     maintenance_contract_count = fields.Integer(
-        string="Nb contrats de maintenance",
+        string="Maintenance Contracts Count",
         compute='_compute_maintenance_contract_count',
         store=False,
     )
     active_maintenance_contract_count = fields.Integer(
-        string="Nb contrats actifs",
+        string="Active Contracts Count",
         compute='_compute_maintenance_contract_count',
         store=False,
     )
     expiring_maintenance_contract_count = fields.Integer(
-        string="Nb contrats expirant",
+        string="Expiring Contracts Count",
         compute='_compute_maintenance_contract_count',
         store=False,
     )
     expired_maintenance_contract_count = fields.Integer(
-        string="Nb contrats expirés",
+        string="Expired Contracts Count",
         compute='_compute_maintenance_contract_count',
         store=False,
     )
     maintenance_status = fields.Selection(
         [
-            ('none', "Aucune relation commerciale"),
-            ('client_no_contract', "Client SANS contrat de maintenance"),
+            ('none', "No commercial relationship"),
+            ('client_no_contract', "Customer WITHOUT maintenance contract"),
             ('active', "Maintenance ACTIVE"),
-            ('expiring', "Maintenance EXPIRE BIENTÔT"),
-            ('expired', "Maintenance EXPIRÉE"),
+            ('expiring', "Maintenance EXPIRING SOON"),
+            ('expired', "Maintenance EXPIRED"),
         ],
-        string="Statut maintenance",
+        string="Maintenance Status",
         compute='_compute_maintenance_status',
         store=False,
-        help="Indicateur synthétique visible pour toute l'équipe (notamment "
-             "support) qui résume l'état des contrats de maintenance et la "
-             "relation commerciale de l'établissement. Calculé en temps réel.\n"
-             "- ACTIVE : au moins 1 contrat actif\n"
-             "- EXPIRE BIENTÔT : pas d'actif mais au moins 1 expire dans 90 jours\n"
-             "- EXPIRÉE : tous les contrats sont expirés\n"
-             "- Client SANS contrat : pas de contrat mais au moins 1 commande client "
-             "(potentiel à transformer)\n"
-             "- Aucune relation commerciale : ni contrat ni commande dans Odoo",
+        help="Synthetic indicator visible to the whole team (notably support) "
+             "summarizing the maintenance contract state and the commercial "
+             "relationship of the establishment. Computed in real time.\n"
+             "- ACTIVE: at least 1 active contract\n"
+             "- EXPIRING SOON: no active one but at least 1 expiring within 90 days\n"
+             "- EXPIRED: all contracts are expired\n"
+             "- Customer WITHOUT contract: no contract but at least 1 customer "
+             "order (potential to convert)\n"
+             "- No commercial relationship: neither contract nor order in Odoo",
     )
 
     @api.depends('maintenance_contract_ids', 'maintenance_contract_ids.state')
@@ -170,18 +168,18 @@ class ResPartner(models.Model):
         'active_maintenance_contract_count',
         'expiring_maintenance_contract_count',
         'expired_maintenance_contract_count',
-        'sale_order_ids',  # natif module sale : One2many vers sale.order
+        'sale_order_ids',  # native sale module: One2many to sale.order
     )
     def _compute_maintenance_status(self):
-        """Resume synthetique du statut maintenance + relation commerciale.
+        """Synthetic summary of the maintenance status + commercial relationship.
 
-        Priorite des statuts (du plus important au moins) :
-        - 'active'             : >=1 contrat actif
-        - 'expiring'           : 0 actif, mais >=1 expire bientot
-        - 'expired'            : 0 actif, 0 expire, mais >=1 expire
-        - 'client_no_contract' : 0 contrat de maintenance, mais >=1 sale.order
-                                  (= client connu, a transformer en client maintenance)
-        - 'none'               : aucun contrat, aucune commande
+        Status priority (from most to least important):
+        - 'active'             : >=1 active contract
+        - 'expiring'           : 0 active, but >=1 expiring soon
+        - 'expired'            : 0 active, 0 expiring, but >=1 expired
+        - 'client_no_contract' : 0 maintenance contract, but >=1 sale.order
+                                 (= known customer, to convert)
+        - 'none'               : no contract, no order
         """
         for rec in self:
             if rec.active_maintenance_contract_count > 0:
@@ -191,8 +189,8 @@ class ResPartner(models.Model):
             elif rec.expired_maintenance_contract_count > 0:
                 rec.maintenance_status = 'expired'
             elif rec.sale_order_ids:
-                # Pas de contrat (ou tous draft/renewed/cancelled),
-                # mais au moins une commande client : potentiel a transformer.
+                # No contract (or all draft/renewed/cancelled),
+                # but at least one customer order: potential to convert.
                 rec.maintenance_status = 'client_no_contract'
             else:
                 rec.maintenance_status = 'none'
@@ -201,10 +199,10 @@ class ResPartner(models.Model):
     # Actions
     # ------------------------------------------------------------------
     def action_view_maintenance_contracts(self):
-        """Ouvre la liste des contrats de maintenance lies a ce partenaire."""
+        """Open the maintenance contracts linked to this partner."""
         self.ensure_one()
         return {
-            'name': _("Contrats — %s", self.display_name),
+            'name': _("Contracts — %s", self.display_name),
             'type': 'ir.actions.act_window',
             'res_model': 'eurekam.maintenance.contract',
             'view_mode': 'list,kanban,form',
@@ -216,11 +214,10 @@ class ResPartner(models.Model):
         }
 
     def action_mark_as_maintenance_establishment(self):
-        """Bascule le flag is_maintenance_establishment.
+        """Toggle the is_maintenance_establishment flag.
 
-        Pratique pour marquer rapidement un partner existant comme
-        etablissement de maintenance afin qu'il devienne selectionnable
-        dans les contrats.
+        Handy to quickly flag an existing partner as a maintenance
+        establishment so it becomes selectable in the contracts.
         """
         for rec in self:
             rec.is_maintenance_establishment = not rec.is_maintenance_establishment

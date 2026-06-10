@@ -1,12 +1,12 @@
-"""Extension d'account.move pour gerer le recompute des lignes maintenance.
+"""Extension of account.move to handle the recompute of maintenance lines.
 
-Bug : quand on supprime une account.move (facture) liee a une ou plusieurs
-eurekam.maintenance.contract.line via la m2m invoice_ids, la table de
-liaison est bien nettoyee mais les champs computed stored qui en dependent
-(invoice_count, is_invoiced) ne sont pas auto-recalcules.
+Bug: when an account.move (invoice) linked to one or more
+eurekam.maintenance.contract.line through the invoice_ids m2m is deleted, the
+relation table is cleaned but the stored computed fields depending on it
+(invoice_count, is_invoiced) are not automatically recomputed.
 
-Solution : override unlink pour recuperer les lignes maintenance liees
-avant la suppression, puis invalider et recalculer apres.
+Solution: override unlink to capture the linked maintenance lines before the
+deletion, then invalidate and recompute afterwards.
 """
 
 from odoo import models
@@ -16,21 +16,20 @@ class AccountMove(models.Model):
     _inherit = 'account.move'
 
     def unlink(self):
-        # Recuperer les lignes maintenance liees AVANT la suppression
-        # (apres unlink la m2m est cleanee et on ne peut plus retrouver les ids).
+        # Capture the linked maintenance lines BEFORE deletion
+        # (after unlink the m2m is cleaned and the ids can no longer be found).
         #
-        # IMPORTANT : on utilise sudo(). La suppression d'une facture est une
-        # operation comptable standard, accessible a des utilisateurs qui n'ont
-        # PAS les droits sur le module Maintenance (comptables, etc.). Sans
-        # sudo(), le search() ci-dessous leve une AccessError sur
-        # eurekam.maintenance.contract.line et casse la suppression de toute
-        # facture (regression sur les tests account standards).
+        # IMPORTANT: we use sudo(). Deleting an invoice is a standard accounting
+        # operation, available to users who do NOT have the Maintenance module
+        # rights (accountants, etc.). Without sudo(), the search() below raises
+        # an AccessError on eurekam.maintenance.contract.line and breaks the
+        # deletion of any invoice (regression on the standard account tests).
         maint_lines = self.env['eurekam.maintenance.contract.line'].sudo()
         affected_lines = maint_lines.search([('invoice_ids', 'in', self.ids)])
         res = super().unlink()
         if affected_lines:
-            # Forcer le recompute des champs stored qui dependent de invoice_ids
-            # (recordset deja en sudo -> ecriture des champs stored autorisee).
+            # Force the recompute of the stored fields depending on invoice_ids
+            # (recordset already in sudo -> writing stored fields is allowed).
             affected_lines.invalidate_recordset(
                 fnames=['invoice_count', 'is_invoiced'],
             )

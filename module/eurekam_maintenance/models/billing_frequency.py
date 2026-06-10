@@ -2,24 +2,24 @@ from odoo import fields, models
 
 
 class EurekamBillingFrequency(models.Model):
-    """Cadence de facturation appliquee a un contrat de maintenance.
+    """Billing frequency applied to a maintenance contract.
 
-    Les cadences sont multi-valeurs (Many2many sur le contrat) car un meme
-    contrat peut combiner par exemple une facturation Annuelle + a Echu.
+    Frequencies are multi-valued (Many2many on the contract) because a single
+    contract may combine for example an Annual + Overdue billing.
     """
 
     _name = 'eurekam.billing.frequency'
-    _description = "Cadence de facturation"
+    _description = "Billing Frequency"
     _order = 'sequence, name'
 
-    name = fields.Char(string='Nom', required=True, translate=True)
+    name = fields.Char(string='Name', required=True, translate=True)
     code = fields.Char(string='Code', required=True)
-    sequence = fields.Integer(string='Séquence', default=10)
-    color = fields.Integer(string='Couleur')
+    sequence = fields.Integer(string='Sequence', default=10)
+    color = fields.Integer(string='Color')
     active = fields.Boolean(default=True)
-    description = fields.Text(string='Description')
+    description = fields.Text(string='Description', translate=True)
 
     _sql_constraints = [
         ('unique_code', 'UNIQUE(code)',
-         "Le code de la cadence de facturation doit être unique."),
+         "The billing frequency code must be unique."),
     ]

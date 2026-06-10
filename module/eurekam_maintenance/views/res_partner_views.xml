@@ -2,8 +2,8 @@
 <odoo>
 
     <!-- ============================================================== -->
-    <!-- Extension de la vue formulaire res.partner                      -->
-    <!-- Ajoute un onglet "Maintenance Eurekam" + un smart button.        -->
+    <!-- Extension of the res.partner form view                          -->
+    <!-- Adds an "Eurekam Maintenance" tab + a smart button.             -->
     <!-- ============================================================== -->
     <record id="view_res_partner_form_maintenance" model="ir.ui.view">
         <field name="name">res.partner.form.maintenance</field>
@@ -11,11 +11,11 @@
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
 
-            <!-- Smart button : compteur de contrats de maintenance.
-                 Le champ is_maintenance_establishment doit etre declare invisible
-                 ICI pour etre pre-fetche cote client (utilise dans plusieurs
-                 expressions 'invisible' qui sont evaluees AVANT le bloc group
-                 ou le champ visible est declare). -->
+            <!-- Smart button: maintenance contracts counter.
+                 is_maintenance_establishment must be declared invisible HERE to
+                 be pre-fetched client-side (used in several 'invisible'
+                 expressions evaluated BEFORE the group block where the visible
+                 field is declared). -->
             <xpath expr="//div[@name='button_box']" position="inside">
                 <field name="is_maintenance_establishment" invisible="1"/>
                 <field name="maintenance_status" invisible="1"/>
@@ -26,14 +26,12 @@
                         class="oe_stat_button" icon="fa-wrench"
                         invisible="not is_maintenance_establishment">
                     <field name="maintenance_contract_count" widget="statinfo"
-                           string="Contrats"/>
+                           string="Contracts"/>
                 </button>
             </xpath>
 
-            <!-- ALERTES MAINTENANCE : 4 bandeaux colores selon le statut, visibles
-                 pour TOUTE l'equipe (notamment support) qui ouvre une fiche client.
-                 Visible uniquement si is_maintenance_establishment pour ne pas
-                 polluer les autres contacts (fournisseurs, employes, etc.). -->
+            <!-- MAINTENANCE BANNERS: colored banners by status, visible to the
+                 WHOLE team (notably support) opening a customer form. -->
             <xpath expr="//div[@name='button_box']" position="before">
                 <div class="alert alert-success o_form_full_width mt-2 mb-3"
                      role="alert"
@@ -41,80 +39,80 @@
                     <i class="fa fa-check-circle me-2"/>
                     <strong>Maintenance ACTIVE</strong>
                     <span class="ms-2">
-                        (<field name="active_maintenance_contract_count" readonly="1" nolabel="1" class="oe_inline"/> contrat(s) actif(s))
+                        (<field name="active_maintenance_contract_count" readonly="1" nolabel="1" class="oe_inline"/> active contract(s))
                     </span>
                 </div>
                 <div class="alert alert-warning o_form_full_width mt-2 mb-3"
                      role="alert"
                      invisible="maintenance_status != 'expiring'">
                     <i class="fa fa-exclamation-triangle me-2"/>
-                    <strong>Maintenance EXPIRE BIENTÔT</strong>
+                    <strong>Maintenance EXPIRING SOON</strong>
                     <span class="ms-2">
-                        (<field name="expiring_maintenance_contract_count" readonly="1" nolabel="1" class="oe_inline"/> contrat(s) à renouveler)
+                        (<field name="expiring_maintenance_contract_count" readonly="1" nolabel="1" class="oe_inline"/> contract(s) to renew)
                     </span>
                 </div>
                 <div class="alert alert-danger o_form_full_width mt-2 mb-3"
                      role="alert"
                      invisible="maintenance_status != 'expired'">
                     <i class="fa fa-times-circle me-2"/>
-                    <strong>Maintenance EXPIRÉE</strong>
+                    <strong>Maintenance EXPIRED</strong>
                     <span class="ms-2">
-                        (<field name="expired_maintenance_contract_count" readonly="1" nolabel="1" class="oe_inline"/> contrat(s) expiré(s))
+                        (<field name="expired_maintenance_contract_count" readonly="1" nolabel="1" class="oe_inline"/> expired contract(s))
                     </span>
                 </div>
                 <div class="alert alert-info o_form_full_width mt-2 mb-3"
                      role="alert"
                      invisible="maintenance_status != 'client_no_contract'">
                     <i class="fa fa-handshake-o me-2"/>
-                    <strong>Client SANS contrat de maintenance</strong>
+                    <strong>Customer WITHOUT maintenance contract</strong>
                     <span class="ms-2">
-                        — au moins une commande client enregistrée, mais aucun contrat
-                        de maintenance. <em class="text-muted">Potentiel à transformer.</em>
+                        — at least one customer order recorded, but no maintenance
+                        contract. <em class="text-muted">Potential to convert.</em>
                     </span>
                 </div>
                 <div class="alert alert-secondary o_form_full_width mt-2 mb-3"
                      role="alert"
                      invisible="not is_maintenance_establishment or maintenance_status != 'none'">
                     <i class="fa fa-info-circle me-2"/>
-                    <strong>Aucune relation commerciale</strong>
+                    <strong>No commercial relationship</strong>
                     <span class="ms-2 text-muted">
-                        — pas de contrat de maintenance, ni de commande client enregistrés.
+                        — no maintenance contract and no customer order recorded.
                     </span>
                 </div>
             </xpath>
 
-            <!-- Marqueur dans le bandeau du formulaire (a cote du nom) -->
+            <!-- Flag in the form header (next to the name) -->
             <xpath expr="//field[@name='category_id']" position="after">
                 <field name="is_maintenance_establishment"/>
             </xpath>
 
-            <!-- Onglet Maintenance Eurekam dans le notebook -->
+            <!-- Eurekam Maintenance tab in the notebook -->
             <xpath expr="//notebook" position="inside">
-                <page string="Maintenance Eurekam" name="maintenance_eurekam"
+                <page string="Eurekam Maintenance" name="maintenance_eurekam"
                       invisible="not is_maintenance_establishment">
                     <group>
-                        <group string="Localisation">
+                        <group string="Location">
                             <field name="department_number"/>
                         </group>
                         <group string="Classification">
-                            <!-- Type d'établissement (CH, CHU, CLCC...) : utiliser les tags
-                                 standard Odoo (champ category_id) déjà affichés en haut
-                                 de la fiche partenaire. -->
+                            <!-- Establishment type (CH, CHU, CLCC...): use the
+                                 standard Odoo tags (category_id field) already
+                                 shown at the top of the partner form. -->
                             <field name="establishment_status"/>
                             <field name="central_purchasing"/>
                         </group>
                     </group>
                     <group>
-                        <group string="Équipements installés">
+                        <group string="Installed Equipment">
                             <field name="nb_workstations"/>
-                            <!-- Version produit (GEN1, GEN2) : utiliser les tags standard
-                                 Odoo (champ category_id) déjà affichés en haut de la fiche. -->
+                            <!-- Product version (GEN1, GEN2): use the standard
+                                 Odoo tags (category_id field). -->
                             <field name="module_status_ids" widget="many2many_tags"
                                    options="{'color_field': 'color'}"/>
                             <field name="special_equipment_ids" widget="many2many_tags"
                                    options="{'color_field': 'color'}"/>
                         </group>
-                        <group string="Responsables Eurekam">
+                        <group string="Eurekam Managers">
                             <field name="commercial_responsible_id"/>
                             <field name="adv_responsible_id"/>
                             <field name="active_maintenance_contract_count"
@@ -128,7 +126,7 @@
     </record>
 
     <!-- ============================================================== -->
-    <!-- Extension de la vue liste res.partner (decoration)              -->
+    <!-- Extension of the res.partner list view (decoration)             -->
     <!-- ============================================================== -->
     <record id="view_res_partner_list_maintenance" model="ir.ui.view">
         <field name="name">res.partner.list.maintenance</field>
@@ -151,7 +149,7 @@
     </record>
 
     <!-- ============================================================== -->
-    <!-- Extension de la vue search res.partner                          -->
+    <!-- Extension of the res.partner search view                        -->
     <!-- ============================================================== -->
     <record id="view_res_partner_search_maintenance" model="ir.ui.view">
         <field name="name">res.partner.search.maintenance</field>
@@ -163,13 +161,13 @@
             </xpath>
             <xpath expr="//search" position="inside">
                 <separator/>
-                <filter string="Établissements maintenance"
+                <filter string="Maintenance Establishments"
                         name="filter_maintenance_establishments"
                         domain="[('is_maintenance_establishment','=',True)]"/>
-                <filter string="Clients sans contrat de maintenance"
+                <filter string="Customers Without Maintenance Contract"
                         name="filter_clients_without_contract"
                         domain="[('sale_order_ids','!=',False), ('maintenance_contract_ids','=',False)]"/>
-                <filter string="Sociétés uniquement"
+                <filter string="Companies Only"
                         name="filter_companies_only"
                         domain="[('is_company','=',True)]"/>
             </xpath>
@@ -177,10 +175,10 @@
     </record>
 
     <!-- ============================================================== -->
-    <!-- Action : liste filtree des etablissements de maintenance        -->
+    <!-- Action: filtered list of maintenance establishments             -->
     <!-- ============================================================== -->
     <record id="action_maintenance_establishment" model="ir.actions.act_window">
-        <field name="name">Établissements</field>
+        <field name="name">Establishments</field>
         <field name="res_model">res.partner</field>
         <field name="view_mode">kanban,list,form</field>
         <field name="domain">[('is_maintenance_establishment', '=', True)]</field>
@@ -193,22 +191,22 @@
         </field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Référencez votre premier établissement client
+                Reference your first customer establishment
             </p>
             <p>
-                Les établissements de maintenance regroupent les hôpitaux, cliniques
-                et distributeurs pour lesquels vous suivez des contrats Drugcam.
+                Maintenance establishments gather the hospitals, clinics and
+                distributors for which you track Drugcam contracts.
             </p>
         </field>
     </record>
 
     <!-- ============================================================== -->
-    <!-- Action serveur : créer un contrat de maintenance depuis un        -->
-    <!-- partenaire sélectionné (apparaît dans le menu Action ⚙ des vues   -->
-    <!-- res.partner, pour les utilisateurs maintenance uniquement).       -->
+    <!-- Server action: create a maintenance contract from a selected     -->
+    <!-- partner (shows in the Action menu of res.partner views, for      -->
+    <!-- maintenance users only).                                         -->
     <!-- ============================================================== -->
     <record id="action_server_create_contract_from_partner" model="ir.actions.server">
-        <field name="name">Créer un contrat de maintenance</field>
+        <field name="name">Create Maintenance Contract</field>
         <field name="model_id" ref="base.model_res_partner"/>
         <field name="binding_model_id" ref="base.model_res_partner"/>
         <field name="binding_view_types">list,form</field>
@@ -217,15 +215,15 @@
         <field name="code">
 if records:
     partner = records[0]
-    # Creer un contrat implique que le partenaire devient un etablissement
-    # de maintenance (requis par le domaine du champ partner_id du contrat).
-    # NB : on utilise write() et non l'affectation d'attribut, interdite
-    # (STORE_ATTR) dans le safe_eval des actions serveur.
+    # Creating a contract implies the partner becomes a maintenance
+    # establishment (required by the domain of the contract partner_id field).
+    # NB: we use write() and not attribute assignment, which is forbidden
+    # (STORE_ATTR) in the safe_eval of server actions.
     if not partner.is_maintenance_establishment:
         partner.write({'is_maintenance_establishment': True})
     action = {
         'type': 'ir.actions.act_window',
-        'name': 'Nouveau contrat de maintenance',
+        'name': 'New Maintenance Contract',
         'res_model': 'eurekam.maintenance.contract',
         'view_mode': 'form',
         'target': 'current',
@@ -235,16 +233,16 @@ if records:
     </record>
 
     <!-- ============================================================== -->
-    <!-- Action : clients SANS aucun contrat de maintenance               -->
-    <!-- Outil de couverture commerciale : repérer les clients (au moins  -->
-    <!-- une commande) qui n'ont encore aucun contrat de maintenance      -->
-    <!-- (ni actif, ni expiré), pour n'oublier personne.                  -->
-    <!-- create=False : le bouton « Nouveau » natif créerait un Contact,   -->
-    <!-- ce qui n'a pas de sens ici. Pour créer un contrat, sélectionner   -->
-    <!-- un client puis Action ⚙ > « Créer un contrat de maintenance ».    -->
+    <!-- Action: customers WITHOUT any maintenance contract               -->
+    <!-- Commercial coverage tool: spot the customers (at least one        -->
+    <!-- order) that still have no maintenance contract (neither active    -->
+    <!-- nor expired), so that nobody is forgotten.                        -->
+    <!-- create=False: the native "New" button would create a Contact,     -->
+    <!-- which makes no sense here. To create a contract, select a         -->
+    <!-- customer then Action menu > "Create Maintenance Contract".        -->
     <!-- ============================================================== -->
     <record id="action_maintenance_clients_without_contract" model="ir.actions.act_window">
-        <field name="name">Clients sans contrat</field>
+        <field name="name">Customers Without Contract</field>
         <field name="res_model">res.partner</field>
         <field name="view_mode">list,kanban,form</field>
         <field name="domain">[('sale_order_ids', '!=', False), ('maintenance_contract_ids', '=', False)]</field>
@@ -252,21 +250,21 @@ if records:
         <field name="context">{'search_default_filter_companies_only': 1, 'create': False}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                Aucun client oublié 🎉
+                No customer forgotten 🎉
             </p>
             <p>
-                Cette liste affiche les <b>clients</b> (au moins une commande de vente)
-                qui n'ont <b>aucun contrat de maintenance</b> enregistré — ni actif,
-                ni expiré.
+                This list shows the <b>customers</b> (at least one sale order)
+                that have <b>no maintenance contract</b> recorded — neither active
+                nor expired.
             </p>
             <p>
-                Pour créer un contrat : <b>sélectionnez un client</b> dans la liste,
-                puis menu <b>Action ⚙ &gt; « Créer un contrat de maintenance »</b>.
-                Le formulaire de contrat s'ouvre pré-rempli avec ce client.
+                To create a contract: <b>select a customer</b> in the list, then
+                menu <b>Action &gt; "Create Maintenance Contract"</b>.
+                The contract form opens pre-filled with that customer.
             </p>
             <p>
-                Le filtre « Sociétés uniquement » est actif par défaut ; retirez-le
-                pour voir aussi les contacts individuels.
+                The "Companies Only" filter is active by default; remove it to
+                also see individual contacts.
             </p>
         </field>
     </record>

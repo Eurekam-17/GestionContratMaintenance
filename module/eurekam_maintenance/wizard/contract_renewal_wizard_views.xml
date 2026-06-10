@@ -5,27 +5,27 @@
         <field name="name">eurekam.contract.renewal.wizard.form</field>
         <field name="model">eurekam.contract.renewal.wizard</field>
         <field name="arch" type="xml">
-            <form string="Renouveler le contrat">
+            <form string="Renew Contract">
                 <sheet>
                     <div class="oe_title">
-                        <h2>Renouvellement de contrat</h2>
+                        <h2>Contract Renewal</h2>
                     </div>
                     <group>
-                        <group string="Contrat source">
+                        <group string="Source Contract">
                             <field name="contract_id" readonly="1"/>
                             <field name="partner_id" readonly="1"/>
                             <field name="product_id" readonly="1"/>
                             <field name="old_amount" readonly="1"/>
                             <field name="currency_id" invisible="1"/>
                         </group>
-                        <group string="Nouveau contrat">
+                        <group string="New Contract">
                             <field name="new_date_start"/>
                             <field name="new_duration"/>
                             <field name="new_date_end"/>
                         </group>
                     </group>
                     <group>
-                        <group string="Révision Syntec">
+                        <group string="Syntec Revision">
                             <field name="apply_syntec"/>
                             <field name="syntec_rate"
                                    invisible="not apply_syntec"
@@ -34,7 +34,7 @@
                                    invisible="not apply_syntec"
                                    readonly="1"/>
                         </group>
-                        <group string="Montant final">
+                        <group string="Final Amount">
                             <field name="new_maintenance_amount"/>
                         </group>
                     </group>
@@ -43,17 +43,17 @@
                         <field name="cancel_old_lines_invoiced"/>
                     </group>
                     <div class="alert alert-info mt-3" role="alert">
-                        L'ancien contrat sera basculé en état <b>Renouvelé</b> et
-                        un nouveau contrat sera créé en état <b>Actif</b>, lié au
-                        précédent via les smart-buttons « Renouvelé depuis » /
-                        « Renouvelé vers ».
+                        The old contract will be switched to <b>Renewed</b> and a
+                        new contract will be created as <b>Active</b>, linked to
+                        the previous one through the "Renewed From" / "Renewed To"
+                        smart buttons.
                     </div>
                 </sheet>
                 <footer>
                     <button name="action_renew" type="object"
-                            string="Créer le nouveau contrat"
+                            string="Create New Contract"
                             class="oe_highlight"/>
-                    <button string="Annuler" class="btn-secondary"
+                    <button string="Cancel" class="btn-secondary"
                             special="cancel"/>
                 </footer>
             </form>
@@ -61,7 +61,7 @@
     </record>
 
     <record id="action_contract_renewal_wizard" model="ir.actions.act_window">
-        <field name="name">Renouveler le contrat</field>
+        <field name="name">Renew Contract</field>
         <field name="res_model">eurekam.contract.renewal.wizard</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>

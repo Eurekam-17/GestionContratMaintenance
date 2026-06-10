@@ -3,40 +3,40 @@
     <data noupdate="1">
 
         <record id="freq_annual" model="eurekam.billing.frequency">
-            <field name="name">Annuelle</field>
+            <field name="name">Annual</field>
             <field name="code">annual</field>
             <field name="sequence">10</field>
-            <field name="description">Facturation une fois par an.</field>
+            <field name="description">Billed once a year.</field>
         </record>
         <record id="freq_overdue" model="eurekam.billing.frequency">
-            <field name="name">À échu</field>
+            <field name="name">Overdue</field>
             <field name="code">overdue</field>
             <field name="sequence">20</field>
-            <field name="description">Facturation à terme échu (en fin de période).</field>
+            <field name="description">Billed in arrears (at the end of the period).</field>
         </record>
         <record id="freq_upcoming" model="eurekam.billing.frequency">
-            <field name="name">À échoir</field>
+            <field name="name">Upcoming</field>
             <field name="code">upcoming</field>
             <field name="sequence">30</field>
-            <field name="description">Facturation à terme à échoir (en début de période).</field>
+            <field name="description">Billed in advance (at the start of the period).</field>
         </record>
         <record id="freq_full_period" model="eurekam.billing.frequency">
-            <field name="name">Période intégrale</field>
+            <field name="name">Full Period</field>
             <field name="code">full_period</field>
             <field name="sequence">40</field>
-            <field name="description">Facturation de la totalité de la période en une fois.</field>
+            <field name="description">Billed for the whole period at once.</field>
         </record>
         <record id="freq_semi_annual" model="eurekam.billing.frequency">
-            <field name="name">Semestrielle</field>
+            <field name="name">Semi-annual</field>
             <field name="code">semi_annual</field>
             <field name="sequence">50</field>
-            <field name="description">Facturation tous les 6 mois.</field>
+            <field name="description">Billed every 6 months.</field>
         </record>
         <record id="freq_quarterly" model="eurekam.billing.frequency">
-            <field name="name">Trimestrielle</field>
+            <field name="name">Quarterly</field>
             <field name="code">quarterly</field>
             <field name="sequence">60</field>
-            <field name="description">Facturation tous les 3 mois.</field>
+            <field name="description">Billed every 3 months.</field>
         </record>
 
     </data>

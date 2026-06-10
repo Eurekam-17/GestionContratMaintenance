@@ -2,11 +2,11 @@
 <odoo>
 
     <!--
-        Note (refactor option A) :
-        Les vues pour eurekam.establishment.type et eurekam.product.version
-        ont ete supprimees. Les types d'etablissement et versions produit
-        utilisent maintenant les tags standard res.partner.category
-        (deja accessibles via Contacts > Configuration > Contact Tags).
+        Note (refactor option A):
+        The views for eurekam.establishment.type and eurekam.product.version
+        were removed. Establishment types and product versions now use the
+        standard res.partner.category tags (already accessible via
+        Contacts > Configuration > Contact Tags).
     -->
 
     <!-- =========== eurekam.module.status =========== -->
@@ -14,7 +14,7 @@
         <field name="name">eurekam.module.status.list</field>
         <field name="model">eurekam.module.status</field>
         <field name="arch" type="xml">
-            <list string="Statuts module" editable="bottom">
+            <list string="Module Statuses" editable="bottom">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="code"/>
@@ -24,7 +24,7 @@
         </field>
     </record>
     <record id="action_module_status" model="ir.actions.act_window">
-        <field name="name">Statuts module</field>
+        <field name="name">Module Statuses</field>
         <field name="res_model">eurekam.module.status</field>
         <field name="view_mode">list</field>
     </record>
@@ -34,7 +34,7 @@
         <field name="name">eurekam.special.equipment.list</field>
         <field name="model">eurekam.special.equipment</field>
         <field name="arch" type="xml">
-            <list string="Équipements spéciaux" editable="bottom">
+            <list string="Special Equipment" editable="bottom">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="code"/>
@@ -44,7 +44,7 @@
         </field>
     </record>
     <record id="action_special_equipment" model="ir.actions.act_window">
-        <field name="name">Équipements spéciaux</field>
+        <field name="name">Special Equipment</field>
         <field name="res_model">eurekam.special.equipment</field>
         <field name="view_mode">list</field>
     </record>

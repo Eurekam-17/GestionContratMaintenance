@@ -1,55 +1,55 @@
-"""Modeles auxiliaires pour caracteriser un etablissement de maintenance.
+"""Auxiliary models to characterize a maintenance establishment.
 
-Ces 2 modeles partagent une meme structure (name, code, sequence, color, active)
-et servent uniquement de tables de reference rattachees a res.partner.
+These 2 models share the same structure (name, code, sequence, color, active)
+and act only as reference tables linked to res.partner.
 
-Note (refactor option A) : on ne stocke plus le type d'etablissement ni la
-version produit dans des modeles dedies. Eurekam utilise deja les tags
-standard res.partner.category (CH, CHU, CLCC, Clinique, Universite, GEN1,
-GEN2, ...). Les modeles eurekam.establishment.type et eurekam.product.version
-ont ete supprimes pour eviter le doublon conceptuel et profiter du widget
-many2many_tags deja affiche par la vue partner standard.
+Note (refactor option A): the establishment type and the product version are
+no longer stored in dedicated models. Eurekam already uses the standard
+res.partner.category tags (CH, CHU, CLCC, Clinic, University, GEN1, GEN2, ...).
+The eurekam.establishment.type and eurekam.product.version models were removed
+to avoid the conceptual duplication and to benefit from the many2many_tags
+widget already displayed by the standard partner view.
 
-Les modeles restants (statut module, equipement special) n'ont pas
-d'equivalent en tag dans la base Eurekam donc on les conserve.
+The remaining models (module status, special equipment) have no tag equivalent
+in the Eurekam database, so they are kept.
 """
 
 from odoo import fields, models
 
 
 class EurekamModuleStatus(models.Model):
-    """Statut d'activation d'un module Drugcam chez l'etablissement."""
+    """Activation status of a Drugcam module at the establishment."""
 
     _name = 'eurekam.module.status'
-    _description = "Statut module Drugcam"
+    _description = "Drugcam Module Status"
     _order = 'sequence, name'
 
-    name = fields.Char(string='Nom', required=True, translate=True)
+    name = fields.Char(string='Name', required=True, translate=True)
     code = fields.Char(string='Code', required=True)
-    sequence = fields.Integer(string='Séquence', default=10)
-    color = fields.Integer(string='Couleur')
+    sequence = fields.Integer(string='Sequence', default=10)
+    color = fields.Integer(string='Color')
     active = fields.Boolean(default=True)
 
     _sql_constraints = [
         ('unique_code', 'UNIQUE(code)',
-         "Le code du statut module doit être unique."),
+         "The module status code must be unique."),
     ]
 
 
 class EurekamSpecialEquipment(models.Model):
-    """Equipement special associe a l'etablissement (Robot, Spectro, ...)."""
+    """Special equipment linked to the establishment (Robot, Spectro, ...)."""
 
     _name = 'eurekam.special.equipment'
-    _description = "Équipement spécial"
+    _description = "Special Equipment"
     _order = 'sequence, name'
 
-    name = fields.Char(string='Nom', required=True, translate=True)
+    name = fields.Char(string='Name', required=True, translate=True)
     code = fields.Char(string='Code', required=True)
-    sequence = fields.Integer(string='Séquence', default=10)
-    color = fields.Integer(string='Couleur')
+    sequence = fields.Integer(string='Sequence', default=10)
+    color = fields.Integer(string='Color')
     active = fields.Boolean(default=True)
 
     _sql_constraints = [
         ('unique_code', 'UNIQUE(code)',
-         "Le code de l'équipement spécial doit être unique."),
+         "The special equipment code must be unique."),
     ]

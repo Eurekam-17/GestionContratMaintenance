@@ -1,10 +1,10 @@
-"""Wizard de renouvellement d'un contrat de maintenance.
+"""Maintenance contract renewal wizard.
 
-Pre-remplit un nouveau contrat depuis l'ancien, decale les dates,
-applique optionnellement la revision Syntec, cree le nouveau contrat
-en etat 'active' et bascule l'ancien en etat 'renewed'.
+Pre-fills a new contract from the old one, shifts the dates, optionally applies
+the Syntec revision, creates the new contract in 'active' state and switches
+the old one to 'renewed'.
 
-Les deux contrats sont chaines via le champ renewed_from_id sur le nouveau.
+Both contracts are chained through the renewed_from_id field on the new one.
 """
 
 from dateutil.relativedelta import relativedelta
@@ -12,8 +12,8 @@ from dateutil.relativedelta import relativedelta
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
-# Mapping de la duree (Selection) vers nombre d'unites pour relativedelta.
-# 6 mois est un cas particulier traite a part.
+# Mapping from the duration (Selection) to a number of units for relativedelta.
+# 6 months is a special case handled separately.
 DURATION_TO_YEARS = {
     '1y': 1,
     '2y': 2,
@@ -22,15 +22,15 @@ DURATION_TO_YEARS = {
     '5y': 5,
 }
 
-# Coefficient Syntec par defaut applique si l'utilisateur ne le modifie pas.
+# Default Syntec coefficient applied if the user does not change it.
 DEFAULT_SYNTEC_RATE = 3.0
 
 
 def _calc_end_date(start, duration):
-    """Calcule la date de fin depuis date_start et un code de duree.
+    """Compute the end date from date_start and a duration code.
 
-    La date de fin est inclusive : un contrat de 1 an demarrant le 01/01/2026
-    finit le 31/12/2026 (et non le 01/01/2027).
+    The end date is inclusive: a 1-year contract starting on 2026-01-01 ends on
+    2026-12-31 (and not 2027-01-01).
     """
     if not start or not duration:
         return False
@@ -42,25 +42,25 @@ def _calc_end_date(start, duration):
 
 class EurekamContractRenewalWizard(models.TransientModel):
     _name = 'eurekam.contract.renewal.wizard'
-    _description = "Assistant de renouvellement d'un contrat de maintenance"
+    _description = "Maintenance Contract Renewal Wizard"
 
     # ------------------------------------------------------------------
-    # Contrat source
+    # Source contract
     # ------------------------------------------------------------------
     contract_id = fields.Many2one(
         'eurekam.maintenance.contract',
-        string='Contrat à renouveler',
+        string='Contract to Renew',
         required=True,
         readonly=True,
     )
     partner_id = fields.Many2one(
         related='contract_id.partner_id',
-        string='Établissement',
+        string='Establishment',
         readonly=True,
     )
     product_id = fields.Many2one(
         related='contract_id.product_id',
-        string='Produit',
+        string='Product',
         readonly=True,
     )
     currency_id = fields.Many2one(
@@ -69,58 +69,58 @@ class EurekamContractRenewalWizard(models.TransientModel):
     )
 
     # ------------------------------------------------------------------
-    # Nouveau contrat — dates et durée
+    # New contract — dates and duration
     # ------------------------------------------------------------------
     new_date_start = fields.Date(
-        string='Nouvelle date de début',
+        string='New Start Date',
         required=True,
     )
     new_date_end = fields.Date(
-        string='Nouvelle date de fin',
+        string='New End Date',
         required=True,
     )
     new_duration = fields.Selection(
         [
-            ('6m', '6 mois'),
-            ('1y', '1 an'),
-            ('2y', '2 ans'),
-            ('3y', '3 ans'),
-            ('4y', '4 ans'),
-            ('5y', '5 ans'),
+            ('6m', '6 months'),
+            ('1y', '1 year'),
+            ('2y', '2 years'),
+            ('3y', '3 years'),
+            ('4y', '4 years'),
+            ('5y', '5 years'),
         ],
-        string='Durée',
+        string='Duration',
         required=True,
     )
 
     # ------------------------------------------------------------------
-    # Revision Syntec
+    # Syntec revision
     # ------------------------------------------------------------------
     apply_syntec = fields.Boolean(
-        string='Appliquer la révision Syntec',
+        string='Apply Syntec Revision',
         default=False,
     )
     syntec_rate = fields.Float(
-        string='Taux Syntec (%)',
+        string='Syntec Rate (%)',
         default=DEFAULT_SYNTEC_RATE,
         digits=(5, 2),
-        help="Pourcentage de revalorisation appliqué au montant de maintenance.",
+        help="Percentage of revaluation applied to the maintenance amount.",
     )
 
     # ------------------------------------------------------------------
-    # Montants
+    # Amounts
     # ------------------------------------------------------------------
     old_amount = fields.Monetary(
-        string='Ancien montant',
+        string='Previous Amount',
         currency_field='currency_id',
         readonly=True,
     )
     syntec_delta = fields.Monetary(
-        string='Augmentation Syntec',
+        string='Syntec Increase',
         currency_field='currency_id',
         compute='_compute_syntec_delta',
     )
     new_maintenance_amount = fields.Monetary(
-        string='Nouveau montant de maintenance',
+        string='New Maintenance Amount',
         currency_field='currency_id',
         required=True,
     )
@@ -129,14 +129,14 @@ class EurekamContractRenewalWizard(models.TransientModel):
     # Options
     # ------------------------------------------------------------------
     generate_lines = fields.Boolean(
-        string='Générer les lignes annuelles du nouveau contrat',
+        string='Generate the New Contract Yearly Lines',
         default=True,
     )
     cancel_old_lines_invoiced = fields.Boolean(
-        string="Marquer les lignes non facturées comme transférées",
+        string="Flag Unbilled Lines as Transferred",
         default=False,
-        help="Ajoute une note dans les lignes annuelles non facturées de "
-             "l'ancien contrat pour signaler le report sur le nouveau.",
+        help="Adds a note on the unbilled yearly lines of the old contract to "
+             "signal the carry-over to the new one.",
     )
 
     # ==================================================================
@@ -157,7 +157,7 @@ class EurekamContractRenewalWizard(models.TransientModel):
 
     @api.onchange('apply_syntec', 'syntec_rate', 'old_amount')
     def _onchange_apply_syntec(self):
-        """Met à jour le nouveau montant quand on (dé)coche Syntec."""
+        """Update the new amount when Syntec is (un)checked."""
         if self.apply_syntec and self.old_amount:
             self.new_maintenance_amount = round(
                 self.old_amount * (1 + self.syntec_rate / 100.0), 2
@@ -167,12 +167,12 @@ class EurekamContractRenewalWizard(models.TransientModel):
 
     @api.onchange('new_date_start', 'new_duration')
     def _onchange_duration(self):
-        """Recalcule new_date_end automatiquement."""
+        """Recompute new_date_end automatically."""
         if self.new_date_start and self.new_duration:
             self.new_date_end = _calc_end_date(self.new_date_start, self.new_duration)
 
     # ==================================================================
-    # Default get : pre-remplissage depuis le contrat source
+    # Default get: pre-fill from the source contract
     # ==================================================================
 
     @api.model
@@ -208,38 +208,38 @@ class EurekamContractRenewalWizard(models.TransientModel):
         return res
 
     # ==================================================================
-    # Action principale
+    # Main action
     # ==================================================================
 
     def action_renew(self):
-        """Cree le nouveau contrat (etat actif) et bascule l'ancien en 'renewed'."""
+        """Create the new contract (active state) and switch the old one to 'renewed'."""
         self.ensure_one()
         old = self.contract_id
 
         if old.state in ('renewed', 'cancelled'):
             raise UserError(_(
-                "Ce contrat est %s, impossible de le renouveler.",
+                "This contract is %s, it cannot be renewed.",
                 dict(old._fields['state'].selection).get(old.state),
             ))
         if not self.new_date_start or not self.new_date_end:
-            raise UserError(_("Renseigner la nouvelle date de début et de fin."))
+            raise UserError(_("Set the new start and end dates."))
         if self.new_date_end < self.new_date_start:
             raise UserError(_(
-                "La nouvelle date de fin doit être postérieure à la date de début."
+                "The new end date must be after the start date."
             ))
         if self.new_maintenance_amount < 0:
-            raise UserError(_("Le nouveau montant ne peut pas être négatif."))
+            raise UserError(_("The new amount cannot be negative."))
 
-        # --- Construction des valeurs du nouveau contrat -------------------
+        # --- Build the new contract values ---------------------------------
         new_comment_parts = [_(
-            "Renouvellement de %(seq)s du %(start)s au %(end)s.",
+            "Renewal of %(seq)s from %(start)s to %(end)s.",
             seq=old.sequence_number,
             start=old.date_start or '?',
             end=old.date_end or '?',
         )]
         if self.apply_syntec:
             new_comment_parts.append(_(
-                "Révision Syntec appliquée : +%(rate).2f %% (delta = %(delta).2f).",
+                "Syntec revision applied: +%(rate).2f %% (delta = %(delta).2f).",
                 rate=self.syntec_rate,
                 delta=self.syntec_delta,
             ))
@@ -271,33 +271,33 @@ class EurekamContractRenewalWizard(models.TransientModel):
         }
         new_contract = self.env['eurekam.maintenance.contract'].create(new_vals)
 
-        # --- Lignes annuelles du nouveau contrat ---------------------------
+        # --- Yearly lines of the new contract ------------------------------
         if self.generate_lines:
             new_contract.action_generate_lines()
 
-        # --- Note sur les lignes anciennes non facturees -------------------
+        # --- Note on the old unbilled lines --------------------------------
         if self.cancel_old_lines_invoiced:
             for line in old.line_ids.filtered(lambda l: not l.is_invoiced):
                 note = _(
-                    "Reportée sur le renouvellement %(seq)s.",
+                    "Carried over to renewal %(seq)s.",
                     seq=new_contract.sequence_number,
                 )
                 line.notes = (line.notes or '') + ('\n' if line.notes else '') + note
 
-        # --- Bascule l'ancien en 'renewed' ---------------------------------
+        # --- Switch the old one to 'renewed' -------------------------------
         old.message_post(body=_(
-            "Contrat renouvelé via le wizard. Nouveau contrat : %s.",
+            "Contract renewed through the wizard. New contract: %s.",
             new_contract.sequence_number,
         ))
         new_contract.message_post(body=_(
-            "Renouvellement de %s.",
+            "Renewal of %s.",
             old.sequence_number,
         ))
         old.write({'state': 'renewed'})
 
-        # --- Ouvre le nouveau contrat --------------------------------------
+        # --- Open the new contract -----------------------------------------
         return {
-            'name': _("Nouveau contrat — %s", new_contract.sequence_number),
+            'name': _("New Contract — %s", new_contract.sequence_number),
             'type': 'ir.actions.act_window',
             'res_model': 'eurekam.maintenance.contract',
             'res_id': new_contract.id,

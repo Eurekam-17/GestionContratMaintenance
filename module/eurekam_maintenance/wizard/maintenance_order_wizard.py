@@ -1,16 +1,15 @@
-"""Wizard de creation d'une commande client (sale.order) pour un contrat.
+"""Wizard to create a customer order (sale.order) for a contract.
 
-Cas d'usage : a la reception d'un Bon de Commande client, on cree un
-sale.order pre-rempli avec N lignes selon la cadence du contrat
-(1 pour Annuelle, 2 pour Semestrielle, 4 pour Trimestrielle).
+Use case: upon receipt of a customer purchase order, a sale.order is created
+pre-filled with N lines according to the contract frequency (1 for Annual,
+2 for Semi-annual, 4 for Quarterly).
 
-L'utilisateur peut aussi choisir le mode "Periode integrale" qui cree
-un SO avec une seule ligne couvrant toutes les annees restantes du contrat.
+The user can also choose the 'Full contract' mode which creates an SO with a
+single line covering all the remaining contract years.
 
-Apres creation, le SO est en brouillon. L'utilisateur le valide ensuite
-via le workflow Sales natif d'Odoo (Confirmer la commande), puis facture
-chaque ligne au fil du temps (T1 d'abord, puis T2 trois mois plus tard,
-etc.) via le bouton natif "Creer une facture".
+After creation, the SO is a draft. The user then confirms it through Odoo's
+native Sales workflow (Confirm), then invoices each line over time (Q1 first,
+then Q2 three months later, etc.) via the native 'Create Invoice' button.
 """
 
 from odoo import _, api, fields, models
@@ -19,25 +18,25 @@ from odoo.exceptions import UserError
 
 class EurekamMaintenanceOrderWizard(models.TransientModel):
     _name = 'eurekam.maintenance.order.wizard'
-    _description = "Assistant de creation d'une commande client maintenance"
+    _description = "Maintenance Customer Order Wizard"
 
     # ------------------------------------------------------------------
-    # Contrat source
+    # Source contract
     # ------------------------------------------------------------------
     contract_id = fields.Many2one(
         'eurekam.maintenance.contract',
-        string='Contrat',
+        string='Contract',
         required=True,
         readonly=True,
     )
     partner_id = fields.Many2one(
         related='contract_id.partner_id',
-        string='Client',
+        string='Customer',
         readonly=True,
     )
     product_id = fields.Many2one(
         related='contract_id.product_id',
-        string='Produit',
+        string='Product',
         readonly=True,
     )
     currency_id = fields.Many2one(
@@ -46,42 +45,42 @@ class EurekamMaintenanceOrderWizard(models.TransientModel):
     )
 
     # ------------------------------------------------------------------
-    # Choix de l'utilisateur
+    # User choices
     # ------------------------------------------------------------------
     coverage_mode = fields.Selection(
         [
-            ('annual_split', "Année (découpée selon cadence)"),
-            ('full_contract', "Intégralité du contrat (cas rare)"),
+            ('annual_split', "Year (split by frequency)"),
+            ('full_contract', "Whole contract (rare case)"),
         ],
-        string='Périmètre de la commande',
+        string='Order Scope',
         default='annual_split',
         required=True,
     )
     year = fields.Integer(
-        string='Année couverte',
-        help="Année du contrat couverte par la commande. "
-             "Ignoré si périmètre = Intégralité du contrat.",
+        string='Covered Year',
+        help="Contract year covered by the order. "
+             "Ignored if scope = Whole contract.",
     )
     customer_po_reference = fields.Char(
-        string='Référence BC client',
+        string='Customer PO Reference',
         required=True,
-        help="Numéro de Bon de Commande envoyé par le client.",
+        help="Purchase order number sent by the customer.",
     )
     customer_po_date = fields.Date(
-        string='Date de réception du BC',
+        string='PO Receipt Date',
         required=True,
         default=fields.Date.context_today,
     )
 
     # ------------------------------------------------------------------
-    # Apercu (affiche pour info dans la vue wizard)
+    # Preview (shown for info in the wizard view)
     # ------------------------------------------------------------------
     preview_period_count = fields.Integer(
-        string='Nombre de lignes à créer',
+        string='Number of Lines to Create',
         compute='_compute_preview',
     )
     preview_total_amount = fields.Monetary(
-        string='Montant total HT',
+        string='Total Amount (untaxed)',
         compute='_compute_preview',
         currency_field='currency_id',
     )
@@ -124,8 +123,7 @@ class EurekamMaintenanceOrderWizard(models.TransientModel):
         if contract_id:
             contract = self.env['eurekam.maintenance.contract'].browse(contract_id)
             res['contract_id'] = contract.id
-            # Annee proposee par defaut : la premiere annee future non encore
-            # couverte par une commande
+            # Default proposed year: the first future year not yet covered by an order
             covered_years = set(
                 contract.sale_order_ids.mapped('eurekam_maintenance_year')
             )
@@ -139,27 +137,27 @@ class EurekamMaintenanceOrderWizard(models.TransientModel):
         return res
 
     # ==================================================================
-    # Action principale
+    # Main action
     # ==================================================================
     def action_create_sale_order(self):
-        """Cree le sale.order avec les lignes correspondantes."""
+        """Create the sale.order with the matching lines."""
         self.ensure_one()
         contract = self.contract_id
         if not contract:
-            raise UserError(_("Aucun contrat sélectionné."))
+            raise UserError(_("No contract selected."))
         if contract.state in ('cancelled', 'renewed'):
             raise UserError(_(
-                "Impossible de créer une commande sur un contrat %s.",
+                "Cannot create an order on a %s contract.",
                 dict(contract._fields['state'].selection).get(contract.state),
             ))
         if not contract.product_id:
             raise UserError(_(
-                "Le contrat %s n'a pas de produit lié. Renseigner le champ "
-                "« Produit » avant de créer une commande.",
+                "Contract %s has no linked product. Set the 'Product' field "
+                "before creating an order.",
                 contract.sequence_number,
             ))
 
-        # Construire les vals du SO
+        # Build the SO values
         so_vals = {
             'partner_id': contract.partner_id.id,
             'eurekam_maintenance_contract_id': contract.id,
@@ -171,27 +169,27 @@ class EurekamMaintenanceOrderWizard(models.TransientModel):
             'origin': contract.sequence_number,
         }
 
-        # ---- Construction des lignes ----
+        # ---- Build the lines ----
         product_template = contract.product_id
         product_variant = product_template.product_variant_id
         if not product_variant:
             raise UserError(_(
-                "Le produit %s n'a pas de variante. Impossible de créer la commande.",
+                "Product %s has no variant. Cannot create the order.",
                 product_template.name,
             ))
 
         order_lines = []
 
         if self.coverage_mode == 'full_contract':
-            # ---- Cas rare : 1 ligne pour tout le contrat ----
+            # ---- Rare case: 1 line for the whole contract ----
             total = sum(contract.line_ids.mapped('amount'))
             if not total:
                 raise UserError(_(
-                    "Le contrat n'a pas de lignes annuelles avec un montant. "
-                    "Générer les lignes annuelles d'abord."
+                    "The contract has no yearly lines with an amount. "
+                    "Generate the yearly lines first."
                 ))
             label = _(
-                "%(prod)s — Période intégrale (%(start)s → %(end)s)",
+                "%(prod)s — Full period (%(start)s → %(end)s)",
                 prod=product_template.name or '',
                 start=contract.date_start or '?',
                 end=contract.date_end or '?',
@@ -201,21 +199,21 @@ class EurekamMaintenanceOrderWizard(models.TransientModel):
                 'name': label,
                 'product_uom_qty': 1.0,
                 'price_unit': total,
-                'maintenance_period_label': _("Période intégrale"),
+                'maintenance_period_label': _("Full period"),
             }))
         else:
-            # ---- Cas majoritaire : 1 SO par annee, N lignes selon cadence ----
+            # ---- Main case: 1 SO per year, N lines by frequency ----
             if not self.year:
-                raise UserError(_("L'année à couvrir est obligatoire en mode « Année découpée »."))
+                raise UserError(_("The year to cover is required in 'Year split' mode."))
             line = contract.line_ids.filtered(lambda l: l.year == self.year)
             if not line:
                 raise UserError(_(
-                    "Aucune ligne annuelle pour l'année %s. "
-                    "Cliquer sur « Générer les lignes annuelles » sur le contrat d'abord.",
+                    "No yearly line for year %s. "
+                    "Click 'Generate Yearly Lines' on the contract first.",
                     self.year,
                 ))
             if len(line) > 1:
-                raise UserError(_("Incohérence : plusieurs lignes pour l'année %s.", self.year))
+                raise UserError(_("Inconsistency: several lines for year %s.", self.year))
 
             period_code = contract._get_billing_period_code()
             periods = contract._periods_for_year(self.year, line.amount, period_code)
@@ -236,21 +234,20 @@ class EurekamMaintenanceOrderWizard(models.TransientModel):
 
         so_vals['order_line'] = order_lines
 
-        # ---- Creation effective ----
+        # ---- Actual creation ----
         sale_order = self.env['sale.order'].create(so_vals)
 
         contract.message_post(body=_(
-            "Commande client %(so)s créée pour le BC %(po)s "
-            "(%(n)d ligne(s), %(mode)s).",
+            "Customer order %(so)s created for PO %(po)s (%(n)d line(s), %(mode)s).",
             so=sale_order.name,
             po=self.customer_po_reference,
             n=len(order_lines),
             mode=dict(self._fields['coverage_mode'].selection).get(self.coverage_mode),
         ))
 
-        # Renvoyer l'action pour ouvrir le SO
+        # Return the action to open the SO
         return {
-            'name': _("Commande %s", sale_order.name),
+            'name': _("Order %s", sale_order.name),
             'type': 'ir.actions.act_window',
             'res_model': 'sale.order',
             'res_id': sale_order.id,

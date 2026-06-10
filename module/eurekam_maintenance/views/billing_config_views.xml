@@ -8,7 +8,7 @@
         <field name="name">eurekam.billing.frequency.list</field>
         <field name="model">eurekam.billing.frequency</field>
         <field name="arch" type="xml">
-            <list string="Cadences de facturation" editable="bottom">
+            <list string="Billing Frequencies" editable="bottom">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="code"/>
@@ -19,7 +19,7 @@
         </field>
     </record>
     <record id="action_billing_frequency" model="ir.actions.act_window">
-        <field name="name">Cadences de facturation</field>
+        <field name="name">Billing Frequencies</field>
         <field name="res_model">eurekam.billing.frequency</field>
         <field name="view_mode">list</field>
     </record>
@@ -31,7 +31,7 @@
         <field name="name">eurekam.module.billing.list</field>
         <field name="model">eurekam.module.billing</field>
         <field name="arch" type="xml">
-            <list string="Facturation modules" editable="bottom">
+            <list string="Module Billing" editable="bottom">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="code"/>
@@ -42,7 +42,7 @@
         </field>
     </record>
     <record id="action_module_billing" model="ir.actions.act_window">
-        <field name="name">Facturation modules</field>
+        <field name="name">Module Billing</field>
         <field name="res_model">eurekam.module.billing</field>
         <field name="view_mode">list</field>
     </record>

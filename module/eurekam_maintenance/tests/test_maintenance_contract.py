@@ -1,6 +1,6 @@
-"""Tests unitaires du module eurekam_maintenance.
+"""Unit tests of the eurekam_maintenance module.
 
-Couvre les 12 cas obligatoires definis dans le CLAUDE.md :
+Covers the 12 mandatory cases defined in CLAUDE.md:
     1. test_contract_creation
     2. test_sequence_generation
     3. test_workflow_transitions
@@ -14,7 +14,7 @@ Couvre les 12 cas obligatoires definis dans le CLAUDE.md :
     11. test_security_user_vs_manager
     12. test_company_isolation
 
-Lancement :
+Run with:
     python odoo-bin -d <db> -i eurekam_maintenance --test-enable \\
         --test-tags eurekam_maintenance --stop-after-init
 """
@@ -29,17 +29,17 @@ from odoo.tests.common import TransactionCase
 
 @tagged('post_install', '-at_install', 'eurekam_maintenance')
 class TestMaintenanceContract(TransactionCase):
-    """Tests fonctionnels du module Eurekam Maintenance.
+    """Functional tests of the Eurekam Maintenance module.
 
-    Tag `post_install` : les tests s'executent apres l'installation complete
-    de la base, ce qui garantit que account/mail/etc. sont disponibles.
+    `post_install` tag: tests run after the full database installation, which
+    guarantees that account/mail/etc. are available.
     """
 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
 
-        # ---- Partenaire etablissement (autorise pour les contrats) ----
+        # ---- Establishment partner (allowed for contracts) ----
         cls.partner = cls.env['res.partner'].create({
             'name': 'CHU Test',
             'is_company': True,
@@ -48,9 +48,9 @@ class TestMaintenanceContract(TransactionCase):
             'email': 'chu.test@example.com',
         })
 
-        # ---- Utilisateurs : un commercial (user) et un manager ----
+        # ---- Users: a salesperson (user) and a manager ----
         cls.user_commercial = cls.env['res.users'].create({
-            'name': 'Commercial Test',
+            'name': 'Salesperson Test',
             'login': 'eurekam.test.commercial@example.com',
             'email': 'eurekam.test.commercial@example.com',
             'groups_id': [(6, 0, [
@@ -68,9 +68,9 @@ class TestMaintenanceContract(TransactionCase):
             ])],
         })
 
-        # ---- Produit ----
+        # ---- Product ----
         cls.product = cls.env['product.template'].create({
-            'name': 'Maintenance Drugcam (test)',
+            'name': 'Drugcam Maintenance (test)',
             'type': 'service',
         })
 
@@ -78,12 +78,12 @@ class TestMaintenanceContract(TransactionCase):
     # Helper
     # ----------------------------------------------------------------------
     def _make_contract(self, **vals):
-        """Cree un contrat avec des valeurs par defaut surchargeables.
+        """Create a contract with overridable default values.
 
-        Par defaut requires_customer_order=False pour permettre aux tests
-        historiques (test_invoice_creation*) de continuer a appeler
-        action_create_invoices_for_contract directement.
-        Pour tester le workflow SO, passer explicitement requires_customer_order=True.
+        By default requires_customer_order=False so the historical tests
+        (test_invoice_creation*) can keep calling
+        action_create_invoices_for_contract directly.
+        To test the SO workflow, pass requires_customer_order=True explicitly.
         """
         defaults = {
             'partner_id': self.partner.id,
@@ -99,17 +99,17 @@ class TestMaintenanceContract(TransactionCase):
         return self.env['eurekam.maintenance.contract'].create(defaults)
 
     # ======================================================================
-    # 1. Creation avec champs obligatoires
+    # 1. Creation with mandatory fields
     # ======================================================================
     def test_contract_creation(self):
         contract = self._make_contract()
         self.assertEqual(contract.state, 'draft')
         self.assertEqual(contract.partner_id, self.partner)
         self.assertTrue(contract.sequence_number)
-        self.assertNotEqual(contract.sequence_number, 'Nouveau')
+        self.assertNotEqual(contract.sequence_number, 'New')
         self.assertTrue(contract.name)
 
-        # partner_id est obligatoire
+        # partner_id is mandatory
         with self.assertRaises(Exception):
             self.env['eurekam.maintenance.contract'].create({
                 'product_id': self.product.id,
@@ -117,7 +117,7 @@ class TestMaintenanceContract(TransactionCase):
             })
 
     # ======================================================================
-    # 2. Generation de la sequence MAINT/AAAA/NNNN
+    # 2. Sequence generation MAINT/YYYY/NNNN
     # ======================================================================
     def test_sequence_generation(self):
         c1 = self._make_contract()
@@ -127,7 +127,7 @@ class TestMaintenanceContract(TransactionCase):
         self.assertNotEqual(c1.sequence_number, c2.sequence_number)
 
     # ======================================================================
-    # 3. Transitions d'etat draft -> active -> cancelled -> draft
+    # 3. State transitions draft -> active -> cancelled -> draft
     # ======================================================================
     def test_workflow_transitions(self):
         contract = self._make_contract()
@@ -139,14 +139,14 @@ class TestMaintenanceContract(TransactionCase):
         contract.action_draft()
         self.assertEqual(contract.state, 'draft')
 
-        # Activation impossible sans dates
+        # Activation impossible without dates
         contract2 = self._make_contract()
         contract2.write({'date_start': False, 'date_end': False})
         with self.assertRaises(UserError):
             contract2.action_activate()
 
     # ======================================================================
-    # 4. Calcul correct des totaux des lignes annuelles
+    # 4. Correct computation of the yearly line totals
     # ======================================================================
     def test_line_total_computation(self):
         contract = self._make_contract(
@@ -160,7 +160,7 @@ class TestMaintenanceContract(TransactionCase):
         self.assertEqual(contract.line_count, 3)
         self.assertEqual(contract.total_contract_value, 15000.0 * 3)
 
-        # Modification d'une ligne -> recalcul du total
+        # Editing a line -> total recompute
         line_2027 = contract.line_ids.filtered(lambda l: l.year == 2027)
         line_2027.amount = 20000.0
         contract.invalidate_recordset()
@@ -170,7 +170,7 @@ class TestMaintenanceContract(TransactionCase):
         )
 
     # ======================================================================
-    # 5. Contrainte UNIQUE(contract_id, year)
+    # 5. UNIQUE(contract_id, year) constraint
     # ======================================================================
     def test_unique_year_per_contract(self):
         contract = self._make_contract()
@@ -188,23 +188,23 @@ class TestMaintenanceContract(TransactionCase):
             })
 
     # ======================================================================
-    # 6. Cron de bascule expiring/expired
+    # 6. Expiring/expired cron switch
     # ======================================================================
     def test_expiry_cron_job(self):
         today = ofields.Date.context_today(self.env['res.partner'])
-        # c1 : expire dans 30 jours -> doit passer en 'expiring'
+        # c1: expires in 30 days -> should switch to 'expiring'
         c1 = self._make_contract(
             date_start=today - timedelta(days=300),
             date_end=today + timedelta(days=30),
         )
         c1.action_activate()
-        # c2 : expiree depuis 10 jours -> doit passer en 'expired'
+        # c2: expired 10 days ago -> should switch to 'expired'
         c2 = self._make_contract(
             date_start=today - timedelta(days=400),
             date_end=today - timedelta(days=10),
         )
         c2.action_activate()
-        # c3 : expire dans 200 jours -> reste 'active'
+        # c3: expires in 200 days -> stays 'active'
         c3 = self._make_contract(
             date_start=today - timedelta(days=100),
             date_end=today + timedelta(days=200),
@@ -222,12 +222,12 @@ class TestMaintenanceContract(TransactionCase):
         self.assertEqual(c2.state, 'expired')
         self.assertEqual(c3.state, 'active')
 
-        # Idempotence : second appel ne doit rien changer
+        # Idempotency: a second call must change nothing
         result2 = Contract._cron_check_expiring_contracts()
         self.assertNotIn(c1.id, result2['expiring'])
 
     # ======================================================================
-    # 7. Wizard de renouvellement : pre-remplissage
+    # 7. Renewal wizard: pre-fill
     # ======================================================================
     def test_renewal_wizard(self):
         contract = self._make_contract(
@@ -250,7 +250,7 @@ class TestMaintenanceContract(TransactionCase):
         self.assertEqual(wizard.new_maintenance_amount, 12000.0)
 
     # ======================================================================
-    # 8. Wizard de renouvellement : application Syntec + creation
+    # 8. Renewal wizard: Syntec application + creation
     # ======================================================================
     def test_renewal_syntec_revision(self):
         contract = self._make_contract(
@@ -277,10 +277,10 @@ class TestMaintenanceContract(TransactionCase):
         self.assertEqual(contract.state, 'renewed')
 
     # ======================================================================
-    # 9. Creation de factures depuis contrat (selon cadence)
+    # 9. Invoice creation from contract (by frequency)
     # ======================================================================
     def test_invoice_creation(self):
-        """Test cadence annuelle par défaut : 1 facture pour 1 ligne annuelle."""
+        """Default annual frequency: 1 invoice for 1 yearly line."""
         today_year = ofields.Date.context_today(self.env['res.partner']).year
         contract = self._make_contract(
             date_start=date(today_year, 1, 1),
@@ -290,7 +290,7 @@ class TestMaintenanceContract(TransactionCase):
         contract.action_activate()
         contract.action_generate_lines()
 
-        # Sans cadence definie -> defaut 'annual' -> 1 facture pour 8000 EUR
+        # No frequency set -> default 'annual' -> 1 invoice for 8000 EUR
         action = contract.action_create_invoices_for_contract()
         self.assertEqual(action['res_model'], 'account.move')
         # action['domain'] = [('id', 'in', [id1, id2, ...])]
@@ -307,12 +307,12 @@ class TestMaintenanceContract(TransactionCase):
         self.assertIn(invoice, line.invoice_ids)
         self.assertEqual(contract.invoice_count, 1)
 
-        # Re-facturer -> erreur (toutes les périodes restantes déjà couvertes)
+        # Re-invoice -> error (all remaining periods already covered)
         with self.assertRaises(UserError):
             contract.action_create_invoices_for_contract()
 
     def test_invoice_creation_quarterly(self):
-        """Test cadence trimestrielle : 4 factures de quart de montant par annee."""
+        """Quarterly frequency: 4 invoices of a quarter of the amount per year."""
         freq_quarterly = self.env.ref('eurekam_maintenance.freq_quarterly')
         freq_overdue = self.env.ref('eurekam_maintenance.freq_overdue')
         today_year = ofields.Date.context_today(self.env['res.partner']).year
@@ -327,20 +327,20 @@ class TestMaintenanceContract(TransactionCase):
 
         action = contract.action_create_invoices_for_contract()
         invoice_ids = action['domain'][0][2]
-        # 1 ligne annuelle * 4 trimestres = 4 factures
+        # 1 yearly line * 4 quarters = 4 invoices
         self.assertEqual(len(invoice_ids), 4)
         invoices = self.env['account.move'].browse(invoice_ids)
-        # Chaque facture = 10000 / 4 = 2500 HT
+        # Each invoice = 10000 / 4 = 2500 untaxed
         for inv in invoices:
             self.assertAlmostEqual(inv.invoice_line_ids.price_unit, 2500.0, places=2)
-        # La ligne annuelle pointe vers 4 factures
+        # The yearly line points to 4 invoices
         line = contract.line_ids.filtered(lambda l: l.year == today_year)
         self.assertEqual(line.invoice_count, 4)
         self.assertTrue(line.is_invoiced)
 
     def test_invoice_rounding_no_cent_lost(self):
-        """Montant non divisible par 4 : la somme des 4 factures trimestrielles
-        doit etre EXACTEMENT egale au montant annuel (pas de centime perdu).
+        """Amount not divisible by 4: the sum of the 4 quarterly invoices must
+        be EXACTLY equal to the yearly amount (no cent lost).
 
         48314.25 / 4 = 12078.5625 -> 3 x 12078.56 + 1 x 12078.57 = 48314.25.
         """
@@ -361,13 +361,13 @@ class TestMaintenanceContract(TransactionCase):
         invoices = self.env['account.move'].browse(invoice_ids)
         total = sum(invoices.mapped(lambda m: m.invoice_line_ids.price_unit))
         self.assertAlmostEqual(total, 48314.25, places=2)
-        # 3 fractions a 12078.56 + 1 a 12078.57
+        # 3 fractions of 12078.56 + 1 of 12078.57
         prices = sorted(invoices.mapped(lambda m: m.invoice_line_ids.price_unit))
         self.assertAlmostEqual(prices[0], 12078.56, places=2)
         self.assertAlmostEqual(prices[-1], 12078.57, places=2)
 
     def test_billing_unicity_constraint(self):
-        """Test contrainte : 2 cadences de periode interdites."""
+        """Constraint: 2 period frequencies are forbidden."""
         freq_quarterly = self.env.ref('eurekam_maintenance.freq_quarterly')
         freq_semi_annual = self.env.ref('eurekam_maintenance.freq_semi_annual')
         contract = self._make_contract()
@@ -378,12 +378,12 @@ class TestMaintenanceContract(TransactionCase):
             ]
 
     # ======================================================================
-    # 13. Workflow sale.order (phase B) : creation commande depuis wizard
+    # 13. sale.order workflow (phase B): order creation from the wizard
     # ======================================================================
     def test_create_customer_order_quarterly(self):
-        """Cadence trimestrielle + requires_customer_order=True : le wizard
-        cree un sale.order avec 4 lignes (T1/T2/T3/T4), chaque ligne = 1
-        future facture."""
+        """Quarterly frequency + requires_customer_order=True: the wizard
+        creates a sale.order with 4 lines (Q1/Q2/Q3/Q4), each line = 1
+        future invoice."""
         freq_quarterly = self.env.ref('eurekam_maintenance.freq_quarterly')
         freq_overdue = self.env.ref('eurekam_maintenance.freq_overdue')
         today_year = ofields.Date.context_today(self.env['res.partner']).year
@@ -397,16 +397,16 @@ class TestMaintenanceContract(TransactionCase):
         contract.action_activate()
         contract.action_generate_lines()
 
-        # Avec requires_customer_order, la facturation directe est bloquee
+        # With requires_customer_order, direct billing is blocked
         with self.assertRaises(UserError):
             contract.action_create_invoices_for_contract()
 
-        # Creer le wizard et valider
+        # Create the wizard and validate
         wizard = self.env['eurekam.maintenance.order.wizard'].with_context(
             default_contract_id=contract.id,
         ).create({
             'year': today_year,
-            'customer_po_reference': 'BC-TEST-001',
+            'customer_po_reference': 'PO-TEST-001',
             'customer_po_date': ofields.Date.context_today(self.env['res.partner']),
         })
         action = wizard.action_create_sale_order()
@@ -416,22 +416,22 @@ class TestMaintenanceContract(TransactionCase):
         self.assertEqual(sale_order.partner_id, self.partner)
         self.assertEqual(sale_order.eurekam_maintenance_contract_id, contract)
         self.assertEqual(sale_order.eurekam_maintenance_year, today_year)
-        self.assertEqual(sale_order.client_order_ref, 'BC-TEST-001')
-        # 4 lignes de 5000 EUR (= 20000 / 4)
+        self.assertEqual(sale_order.client_order_ref, 'PO-TEST-001')
+        # 4 lines of 5000 EUR (= 20000 / 4)
         self.assertEqual(len(sale_order.order_line), 4)
         for line in sale_order.order_line:
             self.assertAlmostEqual(line.price_unit, 5000.0, places=2)
             self.assertEqual(line.product_uom_qty, 1.0)
-        # Le contrat voit la commande
+        # The contract sees the order
         self.assertEqual(contract.sale_order_count, 1)
 
     # ======================================================================
-    # 10. Extension res.partner
+    # 10. res.partner extension
     # ======================================================================
     def test_partner_extension(self):
-        # Note refactor option A : on n'utilise plus eurekam.establishment.type
-        # mais le tag standard res.partner.category. On cree un tag de test
-        # pour valider que la classification fonctionne via les tags Odoo.
+        # Note refactor option A: we no longer use eurekam.establishment.type
+        # but the standard res.partner.category tag. We create a test tag to
+        # validate that the classification works through the Odoo tags.
         ch_tag = self.env['res.partner.category'].create({'name': 'CH (Test)'})
         partner = self.env['res.partner'].create({
             'name': 'CHU Bordeaux Test',
@@ -448,32 +448,32 @@ class TestMaintenanceContract(TransactionCase):
         self.assertIn(ch_tag, partner.category_id)
         self.assertEqual(partner.maintenance_contract_count, 0)
 
-        # Creation d'un contrat -> compteur passe a 1
+        # Creating a contract -> counter goes to 1
         self._make_contract(partner_id=partner.id)
         partner.invalidate_recordset()
         self.assertEqual(partner.maintenance_contract_count, 1)
 
     # ======================================================================
-    # 11. Securite : user vs manager (perm_unlink)
+    # 11. Security: user vs manager (perm_unlink)
     # ======================================================================
     def test_security_user_vs_manager(self):
         contract = self._make_contract()
-        # Le commercial (user) ne peut PAS supprimer
+        # The salesperson (user) CANNOT delete
         with self.assertRaises(AccessError):
             contract.with_user(self.user_commercial).unlink()
-        # Le manager peut supprimer
+        # The manager can delete
         contract.with_user(self.user_manager).unlink()
         self.assertFalse(contract.exists())
 
     # ======================================================================
-    # 12. Isolation multi-societe (record rule)
+    # 12. Multi-company isolation (record rule)
     # ======================================================================
     def test_company_isolation(self):
         company2 = self.env['res.company'].create({
             'name': 'Eurekam Subsidiary Test',
         })
         partner_co2 = self.env['res.partner'].create({
-            'name': 'Etablissement Co2',
+            'name': 'Establishment Co2',
             'is_company': True,
             'is_maintenance_establishment': True,
             'company_id': company2.id,
@@ -484,7 +484,7 @@ class TestMaintenanceContract(TransactionCase):
             company_id=company2.id,
         )
 
-        # Le commercial est lie uniquement a co1 (la company par defaut)
+        # The salesperson is linked only to co1 (the default company)
         self.user_commercial.write({
             'company_ids': [(6, 0, [self.env.company.id])],
             'company_id': self.env.company.id,

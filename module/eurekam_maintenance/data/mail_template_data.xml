@@ -3,86 +3,86 @@
     <data noupdate="1">
 
         <!-- ========================================================== -->
-        <!-- Template : contrat passe en 'expiring' (90 jours avant fin) -->
+        <!-- Template: contract switched to 'expiring' (90 days before end) -->
         <!-- ========================================================== -->
         <record id="mail_template_contract_expiring" model="mail.template">
-            <field name="name">Eurekam : contrat de maintenance expirant bientôt</field>
+            <field name="name">Eurekam: maintenance contract expiring soon</field>
             <field name="model_id" ref="model_eurekam_maintenance_contract"/>
-            <field name="subject">Contrat de maintenance expirant : {{ object.sequence_number }}</field>
+            <field name="subject">Maintenance contract expiring: {{ object.sequence_number }}</field>
             <field name="email_from">{{ (object.commercial_id.email_formatted or user.email_formatted) }}</field>
             <field name="partner_to">{{ ','.join(str(p.id) for p in object._get_expiring_recipients()) }}</field>
             <field name="lang">{{ object.commercial_id.lang or 'fr_FR' }}</field>
             <field name="auto_delete" eval="False"/>
             <field name="body_html" type="html">
                 <div style="margin: 0px; padding: 0px;">
-                    <p>Bonjour <t t-out="object.commercial_id.name or 'utilisateur'"/>,</p>
+                    <p>Hello <t t-out="object.commercial_id.name or 'user'"/>,</p>
                     <p>
-                        Le contrat de maintenance
+                        The maintenance contract
                         <strong t-out="object.sequence_number"/>
-                        pour l'établissement
+                        for the establishment
                         <strong t-out="object.partner_id.display_name"/>
-                        expire le
+                        expires on
                         <strong t-out="object.date_end"/>
-                        (soit dans <t t-out="object.days_to_expiry"/> jours).
+                        (that is in <t t-out="object.days_to_expiry"/> days).
                     </p>
                     <p>
-                        <strong>Montant année courante :</strong>
+                        <strong>Current year amount:</strong>
                         <t t-out="object.current_year_amount"/>
                         <t t-out="object.currency_id.symbol or '€'"/>
                     </p>
-                    <p>Pensez à initier le renouvellement avec le client.</p>
+                    <p>Please initiate the renewal with the customer.</p>
                     <p style="margin: 16px 0px 16px 0px;">
                         <a t-att-href="object.get_base_url() + '/odoo/action-eurekam_maintenance.action_maintenance_contract/' + str(object.id)"
                            style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;">
-                            Ouvrir le contrat
+                            Open the contract
                         </a>
                     </p>
-                    <p>L'équipe Eurekam.</p>
+                    <p>The Eurekam team.</p>
                 </div>
             </field>
         </record>
 
         <!-- ========================================================== -->
-        <!-- Template : contrat passe en 'expired' (date_end depassee)    -->
+        <!-- Template: contract switched to 'expired' (date_end passed)   -->
         <!-- ========================================================== -->
         <record id="mail_template_contract_expired" model="mail.template">
-            <field name="name">Eurekam : contrat de maintenance EXPIRÉ</field>
+            <field name="name">Eurekam: maintenance contract EXPIRED</field>
             <field name="model_id" ref="model_eurekam_maintenance_contract"/>
-            <field name="subject">[ALERTE] Contrat de maintenance EXPIRÉ : {{ object.sequence_number }}</field>
+            <field name="subject">[ALERT] Maintenance contract EXPIRED: {{ object.sequence_number }}</field>
             <field name="email_from">{{ (object.commercial_id.email_formatted or user.email_formatted) }}</field>
             <field name="partner_to">{{ ','.join(str(p.id) for p in object._get_expired_recipients()) }}</field>
             <field name="lang">{{ object.commercial_id.lang or 'fr_FR' }}</field>
             <field name="auto_delete" eval="False"/>
             <field name="body_html" type="html">
                 <div style="margin: 0px; padding: 0px;">
-                    <p>Bonjour,</p>
+                    <p>Hello,</p>
                     <p style="color: #b32d00;">
-                        <strong>Le contrat de maintenance
+                        <strong>The maintenance contract
                             <t t-out="object.sequence_number"/>
-                        a expiré.</strong>
+                        has expired.</strong>
                     </p>
                     <p>
-                        <strong>Établissement :</strong>
+                        <strong>Establishment:</strong>
                         <t t-out="object.partner_id.display_name"/><br/>
-                        <strong>Commercial :</strong>
-                        <t t-out="object.commercial_id.name or 'non assigné'"/><br/>
-                        <strong>Date de fin :</strong>
+                        <strong>Salesperson:</strong>
+                        <t t-out="object.commercial_id.name or 'unassigned'"/><br/>
+                        <strong>End date:</strong>
                         <t t-out="object.date_end"/><br/>
-                        <strong>Montant année courante :</strong>
+                        <strong>Current year amount:</strong>
                         <t t-out="object.current_year_amount"/>
                         <t t-out="object.currency_id.symbol or '€'"/>
                     </p>
                     <p>
-                        Action requise : décider rapidement si le contrat doit être
-                        renouvelé, prolongé ou clôturé.
+                        Action required: quickly decide whether the contract should
+                        be renewed, extended or closed.
                     </p>
                     <p style="margin: 16px 0px 16px 0px;">
                         <a t-att-href="object.get_base_url() + '/odoo/action-eurekam_maintenance.action_maintenance_contract/' + str(object.id)"
                            style="background-color: #b32d00; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;">
-                            Ouvrir le contrat
+                            Open the contract
                         </a>
                     </p>
-                    <p>L'équipe Eurekam.</p>
+                    <p>The Eurekam team.</p>
                 </div>
             </field>
         </record>
