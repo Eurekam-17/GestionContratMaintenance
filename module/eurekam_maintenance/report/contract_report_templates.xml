@@ -35,8 +35,8 @@
                             <div class="col-6">
                                 <strong>Commercial :</strong> <t t-out="doc.commercial_id.name or '-'"/><br/>
                                 <strong>Pays :</strong> <t t-out="doc.country_id.name or '-'"/><br/>
-                                <strong>Établissement :</strong>
-                                <t t-out="', '.join(doc.partner_id.establishment_type_ids.mapped('name')) or '-'"/>
+                                <strong>Type / étiquettes :</strong>
+                                <t t-out="', '.join(doc.partner_id.category_id.mapped('name')) or '-'"/>
                             </div>
                         </div>
 
