@@ -113,7 +113,6 @@
                             <group>
                                 <group string="Conditions">
                                     <field name="maintenance_amount"/>
-                                    <field name="currency_id" invisible="1"/>
                                     <field name="billing_level"/>
                                     <field name="syntec_revision"/>
                                     <field name="requires_customer_order"/>
@@ -150,7 +149,6 @@
                                       decoration-success="is_invoiced">
                                     <field name="year"/>
                                     <field name="amount" sum="Total"/>
-                                    <field name="currency_id" column_invisible="True"/>
                                     <field name="invoice_count" optional="show"/>
                                     <field name="is_invoiced" widget="boolean_toggle" readonly="1"/>
                                     <field name="invoice_ids" widget="many2many_tags" optional="show"/>
@@ -176,7 +174,7 @@
         <field name="model">eurekam.maintenance.contract</field>
         <field name="arch" type="xml">
             <list string="Maintenance Contracts"
-                  decoration-warning="is_expiring_soon"
+                  decoration-warning="state == 'expiring'"
                   decoration-danger="state == 'expired'"
                   decoration-muted="state in ('cancelled','renewed')">
                 <field name="sequence_number"/>
@@ -191,7 +189,6 @@
                 <field name="maintenance_amount" sum="Total"/>
                 <field name="current_year_amount" optional="show" sum="Current year total"/>
                 <field name="total_contract_value" optional="hide" sum="Contracts total"/>
-                <field name="currency_id" column_invisible="True"/>
                 <field name="syntec_revision" optional="hide"/>
                 <field name="commercial_id" optional="hide"/>
                 <field name="state" widget="badge"
@@ -200,7 +197,6 @@
                        decoration-danger="state == 'expired'"
                        decoration-info="state == 'draft'"
                        decoration-muted="state in ('cancelled','renewed')"/>
-                <field name="is_expiring_soon" column_invisible="True"/>
             </list>
         </field>
     </record>
@@ -213,35 +209,28 @@
         <field name="model">eurekam.maintenance.contract</field>
         <field name="arch" type="xml">
             <kanban default_group_by="order_status" class="o_kanban_small_column">
-                <field name="state"/>
-                <field name="is_expiring_soon"/>
                 <field name="color"/>
                 <field name="currency_id"/>
-                <field name="current_year_amount"/>
                 <templates>
-                    <t t-name="kanban-box">
-                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
-                            <div class="oe_kanban_content">
-                                <div class="o_kanban_record_top">
-                                    <strong class="o_kanban_record_title">
-                                        <field name="partner_id"/>
-                                    </strong>
-                                </div>
-                                <div class="o_kanban_record_body">
-                                    <div><field name="product_id"/></div>
-                                    <div>
-                                        <strong>Current year:</strong>
-                                        <field name="current_year_amount" widget="monetary"/>
-                                    </div>
-                                    <div t-if="record.date_end.raw_value">
-                                        End: <field name="date_end"/>
-                                    </div>
-                                </div>
-                                <div class="o_kanban_record_bottom">
-                                    <field name="state" widget="label_selection"
-                                           options="{'classes': {'active': 'success', 'expiring': 'warning', 'expired': 'danger', 'draft': 'default'}}"/>
-                                </div>
+                    <t t-name="card">
+                        <div class="o_kanban_record_top">
+                            <strong class="o_kanban_record_title">
+                                <field name="partner_id"/>
+                            </strong>
+                        </div>
+                        <div class="o_kanban_record_body">
+                            <div><field name="product_id"/></div>
+                            <div>
+                                <strong>Current year:</strong>
+                                <field name="current_year_amount" widget="monetary"/>
                             </div>
+                            <div t-if="record.date_end.raw_value">
+                                End: <field name="date_end"/>
+                            </div>
+                        </div>
+                        <div class="o_kanban_record_bottom">
+                            <field name="state" widget="label_selection"
+                                   options="{'classes': {'active': 'success', 'expiring': 'warning', 'expired': 'danger', 'draft': 'default'}}"/>
                         </div>
                     </t>
                 </templates>

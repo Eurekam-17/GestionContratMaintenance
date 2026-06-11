@@ -48,7 +48,11 @@ class ResPartner(models.Model):
             ('client_referrer', 'Referrer Customer'),
             ('prospect_referrer', 'Referrer Prospect'),
         ],
-        string="Status",
+        # Label intentionally NOT "Status": res.users delegates res.partner
+        # fields, and auth_signup already defines a "Status" (state) field on
+        # res.users. A plain "Status" here triggers Odoo's duplicate-label
+        # warning, so we qualify it.
+        string="Establishment Status",
     )
     central_purchasing = fields.Selection(
         [

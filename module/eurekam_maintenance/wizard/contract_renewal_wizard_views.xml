@@ -16,7 +16,6 @@
                             <field name="partner_id" readonly="1"/>
                             <field name="product_id" readonly="1"/>
                             <field name="old_amount" readonly="1"/>
-                            <field name="currency_id" invisible="1"/>
                         </group>
                         <group string="New Contract">
                             <field name="new_date_start"/>

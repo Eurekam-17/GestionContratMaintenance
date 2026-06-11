@@ -311,9 +311,13 @@ msgstr "Commentaire"
 #. module: eurekam_maintenance
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__state
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract_line__contract_state
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_res_partner__establishment_status
 msgid "Status"
 msgstr "Statut"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_res_partner__establishment_status
+msgid "Establishment Status"
+msgstr "Statut établissement"
 
 #. module: eurekam_maintenance
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__country_id

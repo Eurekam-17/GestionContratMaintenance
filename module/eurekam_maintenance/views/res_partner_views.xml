@@ -12,16 +12,15 @@
         <field name="arch" type="xml">
 
             <!-- Smart button: maintenance contracts counter.
-                 is_maintenance_establishment must be declared invisible HERE to
-                 be pre-fetched client-side (used in several 'invisible'
-                 expressions evaluated BEFORE the group block where the visible
-                 field is declared). -->
+                 Only maintenance_status is declared invisible here: it has no
+                 visible occurrence elsewhere in the view and feeds the banner
+                 'invisible' expressions below. The other fields
+                 (is_maintenance_establishment, *_contract_count) are declared
+                 visibly further down (flag near the tags, counters inside the
+                 banners and the Eurekam tab), so an extra always-invisible copy
+                 is redundant and rejected by Odoo 18's view validation. -->
             <xpath expr="//div[@name='button_box']" position="inside">
-                <field name="is_maintenance_establishment" invisible="1"/>
                 <field name="maintenance_status" invisible="1"/>
-                <field name="active_maintenance_contract_count" invisible="1"/>
-                <field name="expiring_maintenance_contract_count" invisible="1"/>
-                <field name="expired_maintenance_contract_count" invisible="1"/>
                 <button name="action_view_maintenance_contracts" type="object"
                         class="oe_stat_button" icon="fa-wrench"
                         invisible="not is_maintenance_establishment">
@@ -36,7 +35,7 @@
                 <div class="alert alert-success o_form_full_width mt-2 mb-3"
                      role="alert"
                      invisible="maintenance_status != 'active'">
-                    <i class="fa fa-check-circle me-2"/>
+                    <i class="fa fa-check-circle me-2" title="Maintenance active" role="img"/>
                     <strong>Maintenance ACTIVE</strong>
                     <span class="ms-2">
                         (<field name="active_maintenance_contract_count" readonly="1" nolabel="1" class="oe_inline"/> active contract(s))
@@ -45,7 +44,7 @@
                 <div class="alert alert-warning o_form_full_width mt-2 mb-3"
                      role="alert"
                      invisible="maintenance_status != 'expiring'">
-                    <i class="fa fa-exclamation-triangle me-2"/>
+                    <i class="fa fa-exclamation-triangle me-2" title="Maintenance expiring soon" role="img"/>
                     <strong>Maintenance EXPIRING SOON</strong>
                     <span class="ms-2">
                         (<field name="expiring_maintenance_contract_count" readonly="1" nolabel="1" class="oe_inline"/> contract(s) to renew)
@@ -54,7 +53,7 @@
                 <div class="alert alert-danger o_form_full_width mt-2 mb-3"
                      role="alert"
                      invisible="maintenance_status != 'expired'">
-                    <i class="fa fa-times-circle me-2"/>
+                    <i class="fa fa-times-circle me-2" title="Maintenance expired" role="img"/>
                     <strong>Maintenance EXPIRED</strong>
                     <span class="ms-2">
                         (<field name="expired_maintenance_contract_count" readonly="1" nolabel="1" class="oe_inline"/> expired contract(s))
@@ -63,7 +62,7 @@
                 <div class="alert alert-info o_form_full_width mt-2 mb-3"
                      role="alert"
                      invisible="maintenance_status != 'client_no_contract'">
-                    <i class="fa fa-handshake-o me-2"/>
+                    <i class="fa fa-handshake-o me-2" title="Customer without maintenance contract" role="img"/>
                     <strong>Customer WITHOUT maintenance contract</strong>
                     <span class="ms-2">
                         — at least one customer order recorded, but no maintenance
@@ -73,7 +72,7 @@
                 <div class="alert alert-secondary o_form_full_width mt-2 mb-3"
                      role="alert"
                      invisible="not is_maintenance_establishment or maintenance_status != 'none'">
-                    <i class="fa fa-info-circle me-2"/>
+                    <i class="fa fa-info-circle me-2" title="No commercial relationship" role="img"/>
                     <strong>No commercial relationship</strong>
                     <span class="ms-2 text-muted">
                         — no maintenance contract and no customer order recorded.

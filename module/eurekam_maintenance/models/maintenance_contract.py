@@ -211,7 +211,7 @@ class EurekamMaintenanceContract(models.Model):
     current_year_amount = fields.Monetary(
         string='Current Year Amount',
         currency_field='currency_id',
-        compute='_compute_totals',
+        compute='_compute_current_year_amount',
         store=False,
         help="Amount of the yearly line matching the current year.",
     )
@@ -352,12 +352,23 @@ class EurekamMaintenanceContract(models.Model):
         for rec in self:
             rec.country_id = rec.partner_id.country_id
 
-    @api.depends('line_ids', 'line_ids.amount', 'line_ids.year')
+    @api.depends('line_ids', 'line_ids.amount')
     def _compute_totals(self):
-        today_year = fields.Date.context_today(self).year
+        # Stored computed fields only (store=True). Kept in a dedicated method,
+        # separate from the non-stored current_year_amount, to avoid Odoo 18's
+        # "inconsistent 'store'/'compute_sudo'" warning that is raised when a
+        # single compute method feeds both stored and non-stored fields.
         for rec in self:
             rec.total_contract_value = sum(rec.line_ids.mapped('amount'))
             rec.line_count = len(rec.line_ids)
+
+    @api.depends('line_ids', 'line_ids.amount', 'line_ids.year')
+    def _compute_current_year_amount(self):
+        # Non-stored (store=False): depends on the current year, which changes
+        # over time without the record being written, so it must be recomputed
+        # on read rather than persisted.
+        today_year = fields.Date.context_today(self).year
+        for rec in self:
             current = rec.line_ids.filtered(lambda l: l.year == today_year)
             rec.current_year_amount = sum(current.mapped('amount'))
 

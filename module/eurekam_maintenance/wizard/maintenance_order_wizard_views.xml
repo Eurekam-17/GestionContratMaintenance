@@ -15,7 +15,6 @@
                             <field name="contract_id" readonly="1"/>
                             <field name="partner_id" readonly="1"/>
                             <field name="product_id" readonly="1"/>
-                            <field name="currency_id" invisible="1"/>
                         </group>
                         <group string="Customer Purchase Order">
                             <field name="customer_po_reference"/>

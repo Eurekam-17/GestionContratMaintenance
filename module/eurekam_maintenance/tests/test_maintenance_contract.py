@@ -192,24 +192,28 @@ class TestMaintenanceContract(TransactionCase):
     # ======================================================================
     def test_expiry_cron_job(self):
         today = ofields.Date.context_today(self.env['res.partner'])
-        # c1: expires in 30 days -> should switch to 'expiring'
+        # NB: we deliberately force the state to 'active' with write() instead of
+        # calling action_activate(). action_activate() re-evaluates the lifecycle
+        # state immediately (active/expiring/expired based on date_end), which
+        # would already transition c1/c2 BEFORE the cron runs, leaving nothing
+        # for the cron to do. Forcing 'active' lets us assert the cron itself
+        # performs the transition.
+        # c1: expires in 30 days -> the cron should switch it to 'expiring'
         c1 = self._make_contract(
             date_start=today - timedelta(days=300),
             date_end=today + timedelta(days=30),
         )
-        c1.action_activate()
-        # c2: expired 10 days ago -> should switch to 'expired'
+        # c2: expired 10 days ago -> the cron should switch it to 'expired'
         c2 = self._make_contract(
             date_start=today - timedelta(days=400),
             date_end=today - timedelta(days=10),
         )
-        c2.action_activate()
         # c3: expires in 200 days -> stays 'active'
         c3 = self._make_contract(
             date_start=today - timedelta(days=100),
             date_end=today + timedelta(days=200),
         )
-        c3.action_activate()
+        (c1 + c2 + c3).write({'state': 'active'})
 
         Contract = self.env['eurekam.maintenance.contract']
         result = Contract._cron_check_expiring_contracts()
