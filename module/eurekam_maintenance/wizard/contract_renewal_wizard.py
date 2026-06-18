@@ -253,7 +253,7 @@ class EurekamContractRenewalWizard(models.TransientModel):
             'partner_id': old.partner_id.id,
             'commercial_id': old.commercial_id.id,
             'gen': old.gen,
-            'market_type': old.market_type,
+            'market_type_ids': [(6, 0, old.market_type_ids.ids)],
             'order_status': old.order_status,
             'date_start': self.new_date_start,
             'date_end': self.new_date_end,
@@ -267,6 +267,17 @@ class EurekamContractRenewalWizard(models.TransientModel):
             'company_id': old.company_id.id,
             'billing_frequency_ids': [(6, 0, old.billing_frequency_ids.ids)],
             'module_billing_ids': [(6, 0, old.module_billing_ids.ids)],
+            'contract_module_line_ids': [
+                (0, 0, {
+                    'module_billing_id': ml.module_billing_id.id,
+                    'product_id': ml.product_id.id,
+                    'amount': ml.amount,
+                    'start_year': ml.start_year,
+                    'end_year': ml.end_year,
+                    'notes': ml.notes,
+                })
+                for ml in old.contract_module_line_ids
+            ],
             'renewed_from_id': old.id,
         }
         new_contract = self.env['eurekam.maintenance.contract'].create(new_vals)

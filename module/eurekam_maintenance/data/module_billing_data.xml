@@ -24,5 +24,34 @@
             <field name="sequence">40</field>
         </record>
 
+        <!-- Added per team feedback (chapter 4). The legacy "No module" and
+             "Free (valued)" entries are deactivated by the 18.0.2.0.0
+             migration (kept in DB for existing references). -->
+        <record id="mod_bill_stats_premium" model="eurekam.module.billing">
+            <field name="name">Premium Statistics Module</field>
+            <field name="code">stats_premium</field>
+            <field name="sequence">50</field>
+        </record>
+        <record id="mod_bill_clinical_trial_premium" model="eurekam.module.billing">
+            <field name="name">Premium Clinical Trial Module</field>
+            <field name="code">clinical_trial_premium</field>
+            <field name="sequence">60</field>
+        </record>
+        <record id="mod_bill_stats_premium_free" model="eurekam.module.billing">
+            <field name="name">Premium Statistics Module (free)</field>
+            <field name="code">stats_premium_free</field>
+            <field name="sequence">70</field>
+        </record>
+        <record id="mod_bill_clinical_trial_premium_free" model="eurekam.module.billing">
+            <field name="name">Premium Clinical Trial Module (free)</field>
+            <field name="code">clinical_trial_premium_free</field>
+            <field name="sequence">80</field>
+        </record>
+        <record id="mod_bill_beta_tester" model="eurekam.module.billing">
+            <field name="name">Beta Tester Module</field>
+            <field name="code">beta_tester</field>
+            <field name="sequence">90</field>
+        </record>
+
     </data>
 </odoo>

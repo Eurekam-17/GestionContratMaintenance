@@ -370,6 +370,76 @@ class TestMaintenanceContract(TransactionCase):
         self.assertAlmostEqual(prices[0], 12078.56, places=2)
         self.assertAlmostEqual(prices[-1], 12078.57, places=2)
 
+    def test_billable_module_invoices(self):
+        """A billable module produces its own invoice lines, only for the years
+        within its window, split by the contract cadence (annual here)."""
+        freq_annual = self.env.ref('eurekam_maintenance.freq_annual')
+        today_year = ofields.Date.context_today(self.env['res.partner']).year
+        contract = self._make_contract(
+            date_start=date(today_year, 1, 1),
+            date_end=date(today_year + 1, 12, 31),
+            duration='2y',
+            maintenance_amount=10000.0,
+            billing_frequency_ids=[(6, 0, [freq_annual.id])],
+        )
+        contract.action_activate()
+        contract.action_generate_lines()
+        # Module billed only from next year onward.
+        self.env['eurekam.contract.module.line'].create({
+            'contract_id': contract.id,
+            'module_billing_id': self.env.ref(
+                'eurekam_maintenance.mod_bill_stats_premium').id,
+            'amount': 4000.0,
+            'start_year': today_year + 1,
+        })
+        action = contract.action_create_invoices_for_contract()
+        invoices = self.env['account.move'].browse(action['domain'][0][2])
+        # 2 maintenance (1/year x 2 years) + 1 module (next year only) = 3
+        self.assertEqual(len(invoices), 3)
+        module_invoices = invoices.filtered(
+            lambda m: 'Premium Statistics' in (m.invoice_line_ids.name or '')
+        )
+        self.assertEqual(len(module_invoices), 1)
+        self.assertAlmostEqual(
+            module_invoices.invoice_line_ids.price_unit, 4000.0, places=2,
+        )
+
+    def test_order_wizard_with_module(self):
+        """The customer order wizard adds the billable module as its own SO line."""
+        freq_annual = self.env.ref('eurekam_maintenance.freq_annual')
+        today_year = ofields.Date.context_today(self.env['res.partner']).year
+        contract = self._make_contract(
+            date_start=date(today_year, 1, 1),
+            date_end=date(today_year, 12, 31),
+            maintenance_amount=10000.0,
+            billing_frequency_ids=[(6, 0, [freq_annual.id])],
+            requires_customer_order=True,
+        )
+        contract.action_activate()
+        contract.action_generate_lines()
+        self.env['eurekam.contract.module.line'].create({
+            'contract_id': contract.id,
+            'module_billing_id': self.env.ref(
+                'eurekam_maintenance.mod_bill_stats_premium').id,
+            'amount': 2000.0,
+            'start_year': today_year,
+        })
+        wizard = self.env['eurekam.maintenance.order.wizard'].with_context(
+            default_contract_id=contract.id,
+        ).create({
+            'year': today_year,
+            'customer_po_reference': 'PO-MOD-001',
+            'customer_po_date': ofields.Date.context_today(self.env['res.partner']),
+        })
+        sale_order = self.env['sale.order'].browse(
+            wizard.action_create_sale_order()['res_id'])
+        # 1 maintenance line + 1 module line
+        self.assertEqual(len(sale_order.order_line), 2)
+        module_lines = sale_order.order_line.filtered(
+            lambda l: 'Premium Statistics' in (l.name or ''))
+        self.assertEqual(len(module_lines), 1)
+        self.assertAlmostEqual(module_lines.price_unit, 2000.0, places=2)
+
     def test_billing_unicity_constraint(self):
         """Constraint: 2 period frequencies are forbidden."""
         freq_quarterly = self.env.ref('eurekam_maintenance.freq_quarterly')
@@ -444,7 +514,7 @@ class TestMaintenanceContract(TransactionCase):
             'department_number': '33',
             'category_id': [(6, 0, [ch_tag.id])],
             'establishment_status': 'client_eurekam',
-            'central_purchasing': 'uniha',
+            'central_purchasing_id': self.env.ref('eurekam_maintenance.cp_uniha').id,
             'nb_workstations': 12,
         })
         self.assertTrue(partner.is_maintenance_establishment)

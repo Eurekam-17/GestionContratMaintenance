@@ -96,8 +96,16 @@ class EurekamMaintenanceOrderWizard(models.TransientModel):
                 w.preview_total_amount = 0.0
                 continue
             if w.coverage_mode == 'full_contract':
-                w.preview_period_count = 1
-                w.preview_total_amount = sum(w.contract_id.line_ids.mapped('amount'))
+                count = 1
+                total = sum(w.contract_id.line_ids.mapped('amount'))
+                contract_years = sorted(w.contract_id.line_ids.mapped('year'))
+                for ml in w.contract_id.contract_module_line_ids.filtered(lambda m: m.amount):
+                    covered = [y for y in contract_years if ml._is_billable_for_year(y)]
+                    if covered:
+                        count += 1
+                        total += round(ml.amount * len(covered), 2)
+                w.preview_period_count = count
+                w.preview_total_amount = total
                 continue
             # annual_split
             line = w.contract_id.line_ids.filtered(lambda l, y=w.year: l.year == y)
@@ -107,8 +115,15 @@ class EurekamMaintenanceOrderWizard(models.TransientModel):
                 continue
             period_code = w.contract_id._get_billing_period_code()
             periods = w.contract_id._periods_for_year(w.year, line.amount, period_code)
-            w.preview_period_count = len(periods)
-            w.preview_total_amount = sum(p[1] for p in periods)
+            count = len(periods)
+            total = sum(p[1] for p in periods)
+            # Billable modules active that year add their own lines.
+            for ml in w.contract_id._active_module_lines_for_year(w.year):
+                m_periods = w.contract_id._periods_for_year(w.year, ml.amount, period_code)
+                count += len(m_periods)
+                total += sum(p[1] for p in m_periods)
+            w.preview_period_count = count
+            w.preview_total_amount = total
 
     # ==================================================================
     # Default get
@@ -201,6 +216,24 @@ class EurekamMaintenanceOrderWizard(models.TransientModel):
                 'price_unit': total,
                 'maintenance_period_label': _("Full period"),
             }))
+            # ---- Billable modules over the whole contract ----
+            contract_years = sorted(contract.line_ids.mapped('year'))
+            for ml in contract.contract_module_line_ids.filtered(lambda m: m.amount):
+                covered = [y for y in contract_years if ml._is_billable_for_year(y)]
+                if not covered:
+                    continue
+                ml_product = ml._get_invoice_product() or product_variant
+                order_lines.append((0, 0, {
+                    'product_id': ml_product.id,
+                    'name': _(
+                        "%(module)s — Full period (%(n)d year(s))",
+                        module=ml.module_billing_id.name or _("Module"),
+                        n=len(covered),
+                    ),
+                    'product_uom_qty': 1.0,
+                    'price_unit': round(ml.amount * len(covered), 2),
+                    'maintenance_period_label': _("Full period"),
+                }))
         else:
             # ---- Main case: 1 SO per year, N lines by frequency ----
             if not self.year:
@@ -231,6 +264,21 @@ class EurekamMaintenanceOrderWizard(models.TransientModel):
                     'maintenance_line_id': line.id,
                     'maintenance_period_label': label,
                 }))
+
+            # ---- Billable modules active that year ----
+            for ml in contract._active_module_lines_for_year(self.year):
+                ml_product = ml._get_invoice_product() or product_variant
+                module_name = ml.module_billing_id.name or _("Module")
+                m_periods = contract._periods_for_year(self.year, ml.amount, period_code)
+                for base_label, fraction, _s, _e in m_periods:
+                    order_lines.append((0, 0, {
+                        'product_id': ml_product.id,
+                        'name': "%s — %s" % (module_name, base_label),
+                        'product_uom_qty': 1.0,
+                        'price_unit': fraction,
+                        'maintenance_line_id': line.id,
+                        'maintenance_period_label': "%s — %s" % (module_name, base_label),
+                    }))
 
         so_vals['order_line'] = order_lines
 

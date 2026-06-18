@@ -18,6 +18,12 @@ class EurekamModuleBilling(models.Model):
     color = fields.Integer(string='Color')
     active = fields.Boolean(default=True)
     description = fields.Text(string='Description', translate=True)
+    product_id = fields.Many2one(
+        'product.product',
+        string='Default Article',
+        help="Catalogue article used by default on the order / invoice lines "
+             "when this module is billed on a contract.",
+    )
 
     _sql_constraints = [
         ('unique_code', 'UNIQUE(code)',

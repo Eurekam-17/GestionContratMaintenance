@@ -1,4 +1,6 @@
 from . import establishment_aux
+from . import market_type
+from . import central_purchasing
 from . import billing_frequency
 from . import module_billing
 from . import res_partner
@@ -6,3 +8,4 @@ from . import account_move
 from . import sale_order
 from . import maintenance_contract
 from . import maintenance_contract_line
+from . import contract_module_line

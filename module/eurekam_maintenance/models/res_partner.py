@@ -54,6 +54,8 @@ class ResPartner(models.Model):
         # warning, so we qualify it.
         string="Establishment Status",
     )
+    # DEPRECATED: replaced by central_purchasing_id (editable list). Kept one
+    # release so the migration can copy values; removed in a later version.
     central_purchasing = fields.Selection(
         [
             ('uniha', 'UniHA'),
@@ -63,7 +65,12 @@ class ResPartner(models.Model):
             ('unicancer', 'Unicancer'),
             ('industrial', 'Industrial'),
         ],
+        string="Central Purchasing (legacy)",
+    )
+    central_purchasing_id = fields.Many2one(
+        'eurekam.central.purchasing',
         string="Central Purchasing",
+        help="Central purchasing body / buying group (editable list).",
     )
 
     # ------------------------------------------------------------------
@@ -88,19 +95,6 @@ class ResPartner(models.Model):
         'res_partner_special_equipment_rel',
         'partner_id', 'equipment_id',
         string="Special Equipment",
-    )
-
-    # ------------------------------------------------------------------
-    # Eurekam managers
-    # ------------------------------------------------------------------
-    commercial_responsible_id = fields.Many2one(
-        'res.users',
-        string="Sales Manager",
-    )
-    adv_responsible_id = fields.Many2one(
-        'res.users',
-        string="Sales Admin Manager",
-        help="Sales administration.",
     )
 
     # ------------------------------------------------------------------

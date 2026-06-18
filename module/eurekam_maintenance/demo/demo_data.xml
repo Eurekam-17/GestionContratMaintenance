@@ -14,7 +14,7 @@
         <!-- Type (CHU) and version (GEN2): use the Eurekam res.partner.category
              tags if present on the target database. -->
         <field name="establishment_status">client_eurekam</field>
-        <field name="central_purchasing">uniha</field>
+        <field name="central_purchasing_id" ref="cp_uniha"/>
         <field name="nb_workstations">15</field>
     </record>
 
@@ -27,7 +27,7 @@
         <field name="zip">29200</field>
         <!-- Type (CH) and version (GEN1): Eurekam res.partner.category tags. -->
         <field name="establishment_status">client_eurekam</field>
-        <field name="central_purchasing">ageps</field>
+        <field name="central_purchasing_id" ref="cp_ageps"/>
         <field name="nb_workstations">6</field>
     </record>
 
@@ -40,7 +40,7 @@
         <field name="zip">75005</field>
         <!-- Type (CLCC) and version (GEN2 + DO module): res.partner.category tags. -->
         <field name="establishment_status">client_eurekam</field>
-        <field name="central_purchasing">unicancer</field>
+        <field name="central_purchasing_id" ref="cp_unicancer"/>
         <field name="nb_workstations">10</field>
         <field name="module_status_ids" eval="[(6, 0, [ref('mod_status_clinical_trial')])]"/>
     </record>
@@ -52,7 +52,7 @@
         <field name="partner_id" ref="demo_partner_chu_lyon"/>
         <field name="product_name">Drugcam Oncology FR Maintenance (DEMO)</field>
         <field name="gen">gen2</field>
-        <field name="market_type">uniha_2024</field>
+        <field name="market_type_ids" eval="[(6, 0, [ref('market_uniha_2024')])]"/>
         <field name="order_status">received</field>
         <field name="date_start">2024-01-01</field>
         <field name="date_end">2026-12-31</field>
@@ -90,7 +90,7 @@
         <field name="partner_id" ref="demo_partner_ch_brest"/>
         <field name="product_name">GEN1 Software Maintenance (DEMO)</field>
         <field name="gen">gen1</field>
-        <field name="market_type">ageps</field>
+        <field name="market_type_ids" eval="[(6, 0, [ref('market_ageps')])]"/>
         <field name="order_status">received</field>
         <field name="date_start">2025-09-01</field>
         <field name="date_end">2026-08-31</field>
@@ -121,7 +121,7 @@
         <field name="partner_id" ref="demo_partner_clcc_paris"/>
         <field name="product_name">Statistics Module Maintenance (DEMO)</field>
         <field name="gen">gen2</field>
-        <field name="market_type">private</field>
+        <field name="market_type_ids" eval="[(6, 0, [ref('market_private')])]"/>
         <field name="order_status">suspended</field>
         <field name="date_start">2024-06-01</field>
         <field name="date_end">2027-05-31</field>
@@ -143,7 +143,7 @@
         <field name="partner_id" ref="demo_partner_chu_lyon"/>
         <field name="product_name">GEN2 Upgrade Maintenance (DEMO)</field>
         <field name="gen">upgrade_gen2</field>
-        <field name="market_type">market_internal</field>
+        <field name="market_type_ids" eval="[(6, 0, [ref('market_internal')])]"/>
         <field name="order_status">deploying</field>
         <field name="date_start">2026-03-01</field>
         <field name="date_end">2027-02-28</field>
@@ -164,7 +164,7 @@
         <field name="partner_id" ref="demo_partner_ch_brest"/>
         <field name="product_name">GEN1 Legacy Maintenance (DEMO)</field>
         <field name="gen">gen1</field>
-        <field name="market_type">private</field>
+        <field name="market_type_ids" eval="[(6, 0, [ref('market_private')])]"/>
         <field name="order_status">received</field>
         <field name="date_start">2023-01-01</field>
         <field name="date_end">2025-12-31</field>

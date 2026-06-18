@@ -90,7 +90,8 @@
                         </group>
                         <group string="Characteristics">
                             <field name="gen"/>
-                            <field name="market_type"/>
+                            <field name="market_type_ids" widget="many2many_tags"
+                                   options="{'color_field': 'color'}"/>
                             <field name="order_status"/>
                             <field name="nb_products"/>
                         </group>
@@ -136,6 +137,24 @@
                                            nolabel="1"/>
                                 </group>
                             </group>
+                            <separator string="Billable Modules"/>
+                            <p class="text-muted">
+                                Modules billed on top of the maintenance, each
+                                with its own annual amount and a start year. They
+                                generate their own order / invoice lines for the
+                                years within their window (e.g. a Premium module
+                                billed from 2027 on a contract started in 2025).
+                            </p>
+                            <field name="contract_module_line_ids">
+                                <list editable="bottom">
+                                    <field name="module_billing_id"/>
+                                    <field name="product_id" optional="show"/>
+                                    <field name="amount" sum="Total / year"/>
+                                    <field name="start_year"/>
+                                    <field name="end_year"/>
+                                    <field name="notes" optional="hide"/>
+                                </list>
+                            </field>
                         </page>
                         <page string="Yearly Amounts" name="annual_lines">
                             <p class="text-muted">
@@ -181,7 +200,7 @@
                 <field name="partner_id"/>
                 <field name="product_id" optional="show"/>
                 <field name="gen" optional="show"/>
-                <field name="market_type" optional="show"/>
+                <field name="market_type_ids" widget="many2many_tags" optional="show"/>
                 <field name="order_status" optional="show"/>
                 <field name="date_start" optional="hide"/>
                 <field name="date_end"/>
@@ -273,7 +292,7 @@
                     <filter string="Generation" name="group_gen"
                             context="{'group_by':'gen'}"/>
                     <filter string="Market" name="group_market"
-                            context="{'group_by':'market_type'}"/>
+                            context="{'group_by':'market_type_ids'}"/>
                     <filter string="Establishment" name="group_partner"
                             context="{'group_by':'partner_id'}"/>
                     <filter string="Salesperson" name="group_commercial"
@@ -313,7 +332,7 @@
         <field name="model">eurekam.maintenance.contract</field>
         <field name="arch" type="xml">
             <graph string="Contracts by Market" type="bar" sample="1">
-                <field name="market_type"/>
+                <field name="market_type_ids"/>
                 <field name="maintenance_amount" type="measure"/>
             </graph>
         </field>
@@ -371,7 +390,7 @@
             'pivot_row_groupby': ['partner_id'],
             'pivot_column_groupby': ['gen'],
             'graph_measure': 'maintenance_amount',
-            'graph_groupbys': ['market_type'],
+            'graph_groupbys': ['market_type_ids'],
         }</field>
     </record>
 

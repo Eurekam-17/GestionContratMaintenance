@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Initial central purchasing bodies. Editable list (Maintenance >
+             Configuration > Central Purchasing). Codes mirror the former
+             central_purchasing selection keys so the migration can map old
+             values. ELSAN / Ramsay / RESAH added per team feedback. -->
+        <record id="cp_uniha" model="eurekam.central.purchasing">
+            <field name="name">UniHA</field>
+            <field name="code">uniha</field>
+            <field name="sequence">10</field>
+        </record>
+        <record id="cp_ageps" model="eurekam.central.purchasing">
+            <field name="name">AGEPS</field>
+            <field name="code">ageps</field>
+            <field name="sequence">20</field>
+        </record>
+        <record id="cp_resah" model="eurekam.central.purchasing">
+            <field name="name">RESAH</field>
+            <field name="code">resah</field>
+            <field name="sequence">30</field>
+        </record>
+        <record id="cp_unicancer" model="eurekam.central.purchasing">
+            <field name="name">Unicancer</field>
+            <field name="code">unicancer</field>
+            <field name="sequence">40</field>
+        </record>
+        <record id="cp_elsan" model="eurekam.central.purchasing">
+            <field name="name">ELSAN</field>
+            <field name="code">elsan</field>
+            <field name="sequence">50</field>
+        </record>
+        <record id="cp_ramsay" model="eurekam.central.purchasing">
+            <field name="name">Ramsay Santé</field>
+            <field name="code">ramsay</field>
+            <field name="sequence">60</field>
+        </record>
+        <record id="cp_private" model="eurekam.central.purchasing">
+            <field name="name">Private</field>
+            <field name="code">private</field>
+            <field name="sequence">70</field>
+        </record>
+        <record id="cp_internal" model="eurekam.central.purchasing">
+            <field name="name">Internal Market</field>
+            <field name="code">internal</field>
+            <field name="sequence">80</field>
+        </record>
+        <record id="cp_industrial" model="eurekam.central.purchasing">
+            <field name="name">Industrial</field>
+            <field name="code">industrial</field>
+            <field name="sequence">90</field>
+        </record>
+
+    </data>
+</odoo>

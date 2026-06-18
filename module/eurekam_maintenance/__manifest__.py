@@ -1,6 +1,6 @@
 {
     'name': 'Eurekam - Maintenance Contracts Tracking',
-    'version': '18.0.1.0.0',
+    'version': '18.0.2.0.0',
     'category': 'Sales/Maintenance',
     'summary': 'Lifecycle management of Drugcam maintenance contracts',
     'description': """
@@ -31,6 +31,8 @@ This module replaces the tracking currently done in Notion.
         'data/establishment_data.xml',
         'data/billing_frequency_data.xml',
         'data/module_billing_data.xml',
+        'data/market_type_data.xml',
+        'data/central_purchasing_data.xml',
         'data/mail_template_data.xml',
         'data/cron_data.xml',
         'wizard/contract_renewal_wizard_views.xml',

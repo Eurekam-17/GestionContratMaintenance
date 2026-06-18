@@ -3,7 +3,7 @@
 > **Public visé** : commerciaux, ADV, support, manageurs Eurekam qui vont tester
 > et utiliser le module de gestion des contrats de maintenance.
 >
-> **Version** : 18.0.1.0.0 — module `eurekam_maintenance`
+> **Version** : 18.0.2.0.0 — module `eurekam_maintenance`
 
 ---
 
@@ -57,7 +57,7 @@ Quatre profils types d'utilisateurs :
 | **BC client** (Bon de Commande) | Document que le client envoie à Eurekam pour déclencher la facturation. Stocké dans Odoo comme **commande client** (`sale.order`). |
 | **Commande client** | Le `sale.order` qui matérialise le BC client dans Odoo. Contient N lignes (1 par future facture). |
 | **Établissement** | Un partenaire (`res.partner`) marqué comme « Établissement de maintenance ». Hôpital, clinique, distributeur, etc. |
-| **Marché** | UniHA 2024, AGEPS, Privé, etc. Type de marché public ou privé. |
+| **Marché** | UniHA 2024, AGEPS, RESAH, Privé, etc. Type de marché public ou privé. **Choix multiples possibles** et liste **librement modifiable** (Configuration → Marchés). |
 | **GEN** | Version du produit Drugcam (GEN1 ou GEN2). |
 | **Révision Syntec** | Indexation annuelle des prix sur l'indice Syntec (typiquement +3 %/an). |
 
@@ -91,12 +91,12 @@ Une fois la case cochée, **un nouvel onglet « Maintenance Eurekam »** appara�
 sur la fiche. Le remplir avec :
 
 - **N° département** (ex: "29" pour Finistère)
-- **Statut** : Client Eurekam, Prospect, etc.
-- **Centrale d'achat** : UniHA, AGEPS, Unicancer, Privé, etc.
+- **Statut établissement** : Client Eurekam, Prospect, etc.
+- **Centrale d'achat** : UniHA, AGEPS, RESAH, ELSAN, Ramsay Santé, Unicancer,
+  Privé, etc. — liste **librement modifiable** (Configuration → Centrales d'achat)
 - **Nombre de postes** (ex: 5)
 - **Statuts modules** : Beta-test, Activé/valorisé, Statistique, Essais cliniques, etc.
 - **Équipements spéciaux** : Robot, Spectro
-- **Responsable commercial** + **Responsable ADV**
 
 > 📝 **Note** : le type d'établissement (CH/CHU/CLCC/Université/...) et la
 > version Drugcam (GEN1/GEN2) se gèrent dans les **Étiquettes** standard du
@@ -111,14 +111,19 @@ Le scénario type Eurekam est le suivant :
 ```
 [Création contrat] → [Activation] → [Génération lignes annuelles]
         ↓
-[Réception BC client annuel]
+[Création + envoi du devis au client]   (statut commande : « Devis envoyé »)
         ↓
-[Création commande client (sale.order)]
+[Réception du BC client annuel]
         ↓
-[Confirmation de la commande]
+[Création / confirmation de la commande client (sale.order)]
         ↓
 À chaque échéance : [Facturation d'une ligne du SO] → [Validation facture]
 ```
+
+> Le devis et la commande client sont **le même objet Odoo** (`sale.order`) : il
+> est créé en **brouillon = devis** (à envoyer au client), puis **confirmé** dès
+> réception du BC. Le statut commande « Devis envoyé » permet de suivre l'étape
+> intermédiaire.
 
 ### 4.1 Créer un nouveau contrat
 
@@ -134,8 +139,10 @@ Le scénario type Eurekam est le suivant :
 
    **Caractéristiques**
    - **Génération** : GEN1, GEN2 ou Upgrade GEN2
-   - **Marché** : UniHA 2024, AGEPS, Privé, etc.
-   - **Statut commande** : Reçue, En attente, Pas de BC, En déploiement, Suspendue
+   - **Marché** : UniHA 2024, AGEPS, RESAH, Privé, etc. — **plusieurs choix
+     possibles**, liste librement modifiable (Configuration → Marchés)
+   - **Statut commande** : Devis envoyé, Reçue, En attente, Facturation sans BC,
+     En déploiement, Suspendue
    - **Nombre de produits** : ex 5
 
    **Onglet Dates et durée**
@@ -154,6 +161,16 @@ Le scénario type Eurekam est le suivant :
        **Trimestrielle** ou **Période intégrale**
      - Choisir UN timing : **À échu** ou **À échoir**
      - Si tu cumules plusieurs, Odoo bloque avec un message d'erreur.
+   - **Modules facturables** (tableau en bas de l'onglet Facturation) : pour
+     facturer un module d'assistance **en plus** de la maintenance (ex : Module
+     Statistique Premium). Pour chaque ligne : choisir le **module**, un
+     **montant annuel**, une **année de début** (« Facturé à partir de ») et,
+     en option, une **année de fin**, ainsi que l'**article** facturé.
+     Le module est ajouté **automatiquement** comme ligne dédiée dans le
+     devis/commande et les factures, **uniquement pour les années de sa
+     période** (ex : un module facturé à partir de 2027 sur un contrat
+     2025→2029 n'apparaît qu'à partir de 2027), réparti selon la cadence du
+     contrat.
 
    **Onglet Notes** : commentaires libres.
 
@@ -407,7 +424,7 @@ Run Manually.
 
 ## 8. Configuration (réservé aux Manageurs)
 
-**Maintenance → Configuration** donne accès aux 4 tables de configuration :
+**Maintenance → Configuration** donne accès aux tables de configuration :
 
 ### 8.1 Statuts module
 Beta-test, Activé/non valorisé, Activé/valorisé, Non précisé, Statistique,
@@ -422,7 +439,20 @@ Annuelle, À échu, À échoir, Période intégrale, Semestrielle, Trimestrielle
 code pour résoudre les cadences. Le libellé est modifiable.
 
 ### 8.4 Facturation modules
-Gratuit (valorisé), Module Statistique, Module Essai Clinique, Aucun module.
+Module Statistique, Module Essai Clinique, **Module Statistique Premium**,
+**Module Essai Clinique Premium**, **Module Statistique Premium offert**,
+**Module Essai Clinique Premium offert**, **Module Beta testeur**. Liste
+modifiable. On peut associer à chaque module un **article par défaut** (utilisé
+pour les lignes de devis/facture quand le module est facturé sur un contrat).
+
+### 8.5 Marchés
+UniHA 2019/21/23/24/25, AGEPS, RESAH, Marché interne, Privé, Distributeur.
+Liste **librement modifiable** : les utilisateurs peuvent ajouter/modifier les
+marchés. Sur un contrat, le champ **Marché** accepte **plusieurs valeurs**.
+
+### 8.6 Centrales d'achat
+UniHA, AGEPS, RESAH, Unicancer, ELSAN, Ramsay Santé, Privé, Marché interne,
+Industriel. Liste **librement modifiable**, utilisée sur la fiche établissement.
 
 > **Types d'établissement et Versions produit** se gèrent dans les **Étiquettes
 > Contact** standard d'Odoo (`res.partner.category`) et non dans la
@@ -496,8 +526,8 @@ montant via le wizard.
 | Libellé produit | `product_name` | Texte libre, optionnel |
 | Commercial | `commercial_id` | Utilisateur Odoo en charge |
 | Génération | `gen` | GEN1, GEN2, Upgrade GEN2 |
-| Marché | `market_type` | UniHA 2019/21/23/24/25, AGEPS, Privé, etc. |
-| Statut commande | `order_status` | Reçue, En attente, Pas de BC, En déploiement, Suspendue |
+| Marché | `market_type_ids` | Liste éditable, **multi-valeurs** (UniHA, AGEPS, RESAH, Privé, etc.) |
+| Statut commande | `order_status` | Devis envoyé, Reçue, En attente, Facturation sans BC, En déploiement, Suspendue |
 | Début / Fin | `date_start` / `date_end` | Dates du contrat |
 | Durée commandée | `duration` | 6m, 1y, 2y, 3y, 4y, 5y |
 | Jours avant expiration | `days_to_expiry` | Calculé en temps réel |
@@ -506,6 +536,7 @@ montant via le wizard.
 | Révision Syntec | `syntec_revision` | Oui / Non |
 | Cadences de facturation | `billing_frequency_ids` | Many2many vers les cadences |
 | Nécessite une commande client | `requires_customer_order` | True = workflow BC, False = facture directe |
+| Modules facturables | `contract_module_line_ids` | Modules facturés en plus de la maintenance (montant annuel + année de début/fin) |
 | État | `state` | Brouillon / Actif / Expire bientôt / Expiré / Renouvelé / Annulé |
 
 ### Sur une commande client (`sale.order`)
@@ -539,4 +570,4 @@ Pour toute question ou bug rencontré pendant le test, contacter
 
 ---
 
-*Dernière mise à jour : 2026-06-02 — pour la version 18.0.1.0.0 du module `eurekam_maintenance`.*
+*Dernière mise à jour : 2026-06-18 — pour la version 18.0.2.0.0 du module `eurekam_maintenance`.*

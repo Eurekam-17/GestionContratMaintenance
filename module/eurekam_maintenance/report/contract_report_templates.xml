@@ -53,7 +53,7 @@
                             </tr>
                             <tr>
                                 <th>Market</th>
-                                <td><t t-out="dict(doc._fields['market_type'].selection).get(doc.market_type, '-')"/></td>
+                                <td><t t-out="', '.join(doc.market_type_ids.mapped('name')) or '-'"/></td>
                             </tr>
                             <tr>
                                 <th>Order Status</th>

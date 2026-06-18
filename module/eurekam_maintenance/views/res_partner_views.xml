@@ -98,7 +98,7 @@
                                  standard Odoo tags (category_id field) already
                                  shown at the top of the partner form. -->
                             <field name="establishment_status"/>
-                            <field name="central_purchasing"/>
+                            <field name="central_purchasing_id"/>
                         </group>
                     </group>
                     <group>
@@ -111,9 +111,7 @@
                             <field name="special_equipment_ids" widget="many2many_tags"
                                    options="{'color_field': 'color'}"/>
                         </group>
-                        <group string="Eurekam Managers">
-                            <field name="commercial_responsible_id"/>
-                            <field name="adv_responsible_id"/>
+                        <group string="Maintenance">
                             <field name="active_maintenance_contract_count"
                                    readonly="1"/>
                         </group>

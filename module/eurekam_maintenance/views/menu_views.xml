@@ -72,5 +72,15 @@
               parent="menu_maintenance_config"
               action="action_module_billing"
               sequence="60"/>
+    <menuitem id="menu_config_market_type"
+              name="Markets"
+              parent="menu_maintenance_config"
+              action="action_market_type"
+              sequence="70"/>
+    <menuitem id="menu_config_central_purchasing"
+              name="Central Purchasing"
+              parent="menu_maintenance_config"
+              action="action_central_purchasing"
+              sequence="80"/>
 
 </odoo>

@@ -224,7 +224,7 @@ msgid "Generation"
 msgstr "Génération"
 
 #. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__market_type
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__market_type_ids
 msgid "Market"
 msgstr "Marché"
 
@@ -430,7 +430,9 @@ msgid "Department No."
 msgstr "N° Département"
 
 #. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_res_partner__central_purchasing
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_res_partner__central_purchasing_id
+#: model:ir.actions.act_window,name:eurekam_maintenance.action_central_purchasing
+#: model:ir.ui.menu,name:eurekam_maintenance.menu_config_central_purchasing
 msgid "Central Purchasing"
 msgstr "Centrale d'achat"
 
@@ -438,16 +440,6 @@ msgstr "Centrale d'achat"
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_res_partner__nb_workstations
 msgid "Number of Workstations"
 msgstr "Nombre de postes"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_res_partner__commercial_responsible_id
-msgid "Sales Manager"
-msgstr "Responsable commercial"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_res_partner__adv_responsible_id
-msgid "Sales Admin Manager"
-msgstr "Responsable ADV"
 
 #. module: eurekam_maintenance
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_res_partner__maintenance_status
@@ -482,16 +474,21 @@ msgstr "Upgrade GEN2"
 #. module: eurekam_maintenance
 #: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__market_type__market_internal
 #: model:ir.model.fields.selection,name:eurekam_maintenance.selection__res_partner__central_purchasing__internal
+#: model:eurekam.market.type,name:eurekam_maintenance.market_internal
+#: model:eurekam.central.purchasing,name:eurekam_maintenance.cp_internal
 msgid "Internal Market"
 msgstr "Marché interne"
 
 #. module: eurekam_maintenance
 #: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__market_type__private
+#: model:eurekam.market.type,name:eurekam_maintenance.market_private
+#: model:eurekam.central.purchasing,name:eurekam_maintenance.cp_private
 msgid "Private"
 msgstr "Privé"
 
 #. module: eurekam_maintenance
 #: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__market_type__distributor
+#: model:eurekam.market.type,name:eurekam_maintenance.market_distributor
 msgid "Distributor"
 msgstr "Distributeur"
 
@@ -507,8 +504,8 @@ msgstr "En attente"
 
 #. module: eurekam_maintenance
 #: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__order_status__no_po
-msgid "No Purchase Order"
-msgstr "Pas de bon de commande"
+msgid "Billing Without PO"
+msgstr "Facturation sans BC"
 
 #. module: eurekam_maintenance
 #: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__order_status__deploying
@@ -907,3 +904,84 @@ msgstr "Contrat de maintenance expirant : {{ object.sequence_number }}"
 #: model:mail.template,subject:eurekam_maintenance.mail_template_contract_expired
 msgid "[ALERT] Maintenance contract EXPIRED: {{ object.sequence_number }}"
 msgstr "[ALERTE] Contrat de maintenance EXPIRÉ : {{ object.sequence_number }}"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__order_status__quote_sent
+msgid "Quote Sent"
+msgstr "Devis envoyé"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__contract_module_line_ids
+msgid "Billable Modules"
+msgstr "Modules facturables"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_module_line__amount
+msgid "Annual Amount"
+msgstr "Montant annuel"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_module_line__start_year
+msgid "Billed From (Year)"
+msgstr "Facturé à partir de (année)"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_module_line__end_year
+msgid "Billed Until (Year)"
+msgstr "Facturé jusqu'à (année)"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_module_line__product_id
+msgid "Invoiced Article"
+msgstr "Article facturé"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_billing__product_id
+msgid "Default Article"
+msgstr "Article par défaut"
+
+#. module: eurekam_maintenance
+#: model:ir.actions.act_window,name:eurekam_maintenance.action_market_type
+#: model:ir.ui.menu,name:eurekam_maintenance.menu_config_market_type
+msgid "Markets"
+msgstr "Marchés"
+
+#. module: eurekam_maintenance
+#: model:ir.model,name:eurekam_maintenance.model_eurekam_market_type
+msgid "Market Type"
+msgstr "Type de marché"
+
+#. module: eurekam_maintenance
+#: model:ir.model,name:eurekam_maintenance.model_eurekam_central_purchasing
+msgid "Central Purchasing Body"
+msgstr "Organisme d'achat"
+
+#. module: eurekam_maintenance
+#: model:ir.model,name:eurekam_maintenance.model_eurekam_contract_module_line
+msgid "Contract Billable Module"
+msgstr "Module facturable du contrat"
+
+#. module: eurekam_maintenance
+#: model:eurekam.module.billing,name:eurekam_maintenance.mod_bill_stats_premium
+msgid "Premium Statistics Module"
+msgstr "Module Statistique Premium"
+
+#. module: eurekam_maintenance
+#: model:eurekam.module.billing,name:eurekam_maintenance.mod_bill_clinical_trial_premium
+msgid "Premium Clinical Trial Module"
+msgstr "Module Essai Clinique Premium"
+
+#. module: eurekam_maintenance
+#: model:eurekam.module.billing,name:eurekam_maintenance.mod_bill_stats_premium_free
+msgid "Premium Statistics Module (free)"
+msgstr "Module Statistique Premium offert"
+
+#. module: eurekam_maintenance
+#: model:eurekam.module.billing,name:eurekam_maintenance.mod_bill_clinical_trial_premium_free
+msgid "Premium Clinical Trial Module (free)"
+msgstr "Module Essai Clinique Premium offert"
+
+#. module: eurekam_maintenance
+#: model:eurekam.module.billing,name:eurekam_maintenance.mod_bill_beta_tester
+msgid "Beta Tester Module"
+msgstr "Module Beta testeur"

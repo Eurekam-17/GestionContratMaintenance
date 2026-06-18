@@ -94,6 +94,9 @@ class EurekamMaintenanceContract(models.Model):
         string='Generation',
         tracking=True,
     )
+    # DEPRECATED: replaced by market_type_ids (editable, multi-valued list).
+    # Kept one release so the migration can copy values; removed in a later
+    # version. No longer shown in any view.
     market_type = fields.Selection(
         [
             ('uniha_2019', 'UniHA 2019'),
@@ -106,14 +109,22 @@ class EurekamMaintenanceContract(models.Model):
             ('private', 'Private'),
             ('distributor', 'Distributor'),
         ],
+        string='Market (legacy)',
+    )
+    market_type_ids = fields.Many2many(
+        'eurekam.market.type',
+        'maintenance_contract_market_type_rel',
+        'contract_id', 'market_type_id',
         string='Market',
         tracking=True,
+        help="Market / public tender. Editable list, several values allowed.",
     )
     order_status = fields.Selection(
         [
+            ('quote_sent', 'Quote Sent'),
             ('received', 'Received'),
             ('pending', 'Pending'),
-            ('no_po', 'No Purchase Order'),
+            ('no_po', 'Billing Without PO'),
             ('deploying', 'Deploying'),
             ('suspended', 'Suspended'),
         ],
@@ -190,6 +201,15 @@ class EurekamMaintenanceContract(models.Model):
         'contract_id', 'module_billing_id',
         string='Module Assistance Billing',
         tracking=True,
+    )
+    contract_module_line_ids = fields.One2many(
+        'eurekam.contract.module.line',
+        'contract_id',
+        string='Billable Modules',
+        copy=True,
+        help="Assistance modules billed on top of the maintenance, each with "
+             "its own annual amount and a start year. They generate their own "
+             "order / invoice lines for the years within their window.",
     )
 
     # ------------------------------------------------------------------
@@ -701,6 +721,13 @@ class EurekamMaintenanceContract(models.Model):
             return period_end
         return period_start
 
+    def _active_module_lines_for_year(self, year):
+        """Billable module lines that apply to a given contract year (amount>0)."""
+        self.ensure_one()
+        return self.contract_module_line_ids.filtered(
+            lambda m: m.amount and m._is_billable_for_year(year)
+        )
+
     # ==================================================================
     # Billing: actions
     # ==================================================================
@@ -793,6 +820,25 @@ class EurekamMaintenanceContract(models.Model):
                     line.invoice_ids = [(4, invoice.id)]
                     created_invoices |= invoice
 
+                # ---- Billable modules active this year (own article lines) ----
+                for module_line in contract._active_module_lines_for_year(line.year):
+                    module_name = module_line.module_billing_id.name or _("Module")
+                    m_periods = contract._periods_for_year(
+                        line.year, module_line.amount, period_code,
+                    )
+                    for base_label, fraction, p_start, p_end in m_periods:
+                        full_label = "%s — %s" % (module_name, base_label)
+                        if full_label in already_labels:
+                            continue
+                        inv_date = contract._invoice_date_for_period(
+                            p_start, p_end, timing_code,
+                        )
+                        invoice = contract._create_invoice_module_period(
+                            line, module_line, base_label, fraction, inv_date,
+                        )
+                        line.invoice_ids = [(4, invoice.id)]
+                        created_invoices |= invoice
+
         if not created_invoices:
             raise UserError(_(
                 "No new invoice to create (all remaining periods are already "
@@ -840,6 +886,40 @@ class EurekamMaintenanceContract(models.Model):
         })
         return invoice
 
+    def _create_invoice_module_period(self, yearly_line, module_line,
+                                      period_label, fraction_amount, invoice_date):
+        """Create a draft invoice for a billable module sub-period.
+
+        The invoice_origin keeps a label of the form "MAINT/.../ Module — Q1
+        2027" so the idempotency check does not collide with the maintenance
+        periods and a deleted module invoice can be recreated alone.
+        """
+        self.ensure_one()
+        product_var = module_line._get_invoice_product()
+        module_name = module_line.module_billing_id.name or _("Module")
+        description = _(
+            "%(module)s — %(period)s",
+            module=module_name,
+            period=period_label,
+        )
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_id.id,
+            'invoice_origin': "%s / %s — %s" % (
+                self.sequence_number, module_name, period_label,
+            ),
+            'invoice_date': invoice_date,
+            'currency_id': self.currency_id.id,
+            'company_id': self.company_id.id,
+            'invoice_line_ids': [(0, 0, {
+                'name': description,
+                'product_id': product_var.id if product_var else False,
+                'quantity': 1.0,
+                'price_unit': fraction_amount,
+            })],
+        })
+        return invoice
+
     def _create_invoice_full_period(self):
         """Create a single draft invoice covering the whole contract.
 
@@ -865,6 +945,29 @@ class EurekamMaintenanceContract(models.Model):
             start=self.date_start or '?',
             end=self.date_end or '?',
         )
+        invoice_lines = [(0, 0, {
+            'name': description,
+            'product_id': product_var.id if product_var else False,
+            'quantity': 1.0,
+            'price_unit': total,
+        })]
+        # Billable modules: amount x number of covered years over the contract.
+        contract_years = sorted(self.line_ids.mapped('year'))
+        for module_line in self.contract_module_line_ids.filtered(lambda m: m.amount):
+            covered = [y for y in contract_years if module_line._is_billable_for_year(y)]
+            if not covered:
+                continue
+            module_product = module_line._get_invoice_product()
+            invoice_lines.append((0, 0, {
+                'name': _(
+                    "%(module)s — Full period (%(n)d year(s))",
+                    module=module_line.module_billing_id.name or _("Module"),
+                    n=len(covered),
+                ),
+                'product_id': module_product.id if module_product else False,
+                'quantity': 1.0,
+                'price_unit': round(module_line.amount * len(covered), 2),
+            }))
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner_id.id,
@@ -872,12 +975,7 @@ class EurekamMaintenanceContract(models.Model):
             'invoice_date': invoice_date,
             'currency_id': self.currency_id.id,
             'company_id': self.company_id.id,
-            'invoice_line_ids': [(0, 0, {
-                'name': description,
-                'product_id': product_var.id if product_var else False,
-                'quantity': 1.0,
-                'price_unit': total,
-            })],
+            'invoice_line_ids': invoice_lines,
         })
         return invoice
 
