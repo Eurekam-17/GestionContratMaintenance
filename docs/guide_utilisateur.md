@@ -5,6 +5,14 @@
 >
 > **Version** : 18.0.2.0.0 — module `eurekam_maintenance`
 
+> ### 🆕 Nouveautés à tester (v18.0.2.0.0)
+> - **Interface en français** (traduction complète des écrans).
+> - **Marché** : plusieurs valeurs possibles sur un contrat + liste librement modifiable.
+> - **Centrale d'achat** : liste librement modifiable (ajout d'ELSAN, Ramsay Santé, RESAH).
+> - **Statut commande** : ajout de « Devis envoyé » ; « Pas de BC » renommé « Facturation sans BC ».
+> - **Modules facturables** : facturer un module (ex. Statistique Premium) **en plus** de la maintenance, à partir d'une année donnée → voir **§5.5**.
+> - Champs « Responsable commercial » / « Responsable ADV » retirés de la fiche établissement.
+
 ---
 
 ## Sommaire
@@ -233,7 +241,7 @@ La page de la commande s'ouvre directement.
 Sur la commande qui vient d'être créée :
 
 1. Vérifier les lignes (produit, montant, période — ex: "Assistance DRUGCAM
-   GEN2 Oncology FR — T1 2026" à 3 637,50 €)
+   GEN2 Oncology FR — Q1 2026" à 3 637,50 €)
 2. Cliquer **Confirmer la commande** (bouton standard Odoo Sales)
 
 → La commande passe de **Brouillon (devis)** à **Bon de commande**.
@@ -249,7 +257,7 @@ cadence) :
 3. Dans le popup :
    - **Type de facture** : "Facture régulière"
    - **Quantité à facturer** : laisser tel que. Pour ne facturer qu'une seule
-     ligne (ex: T1), mettre `0` pour les autres lignes.
+     ligne (ex: Q1), mettre `0` pour les autres lignes.
 4. Cliquer **Créer le brouillon**
 
 → Une facture brouillon (`account.move`) est créée pour la ligne sélectionnée
@@ -319,6 +327,33 @@ immédiatement (par exemple après avoir modifié `date_end`) :
 → Bouton **Recalculer l'état** dans le bandeau du contrat.
 
 Pratique aussi en environnement de test où les crons peuvent être désactivés.
+
+### 5.5 Ajouter un module facturable (en plus de la maintenance)
+
+Cas d'usage : facturer un module d'assistance (ex. **Module Statistique
+Premium**) en supplément de la maintenance, éventuellement **à partir d'une
+année donnée** (le client active le module en cours de contrat).
+
+1. Sur la fiche du contrat, onglet **Facturation**, section **Modules
+   facturables** (en bas), cliquer **Ajouter une ligne**.
+2. Renseigner :
+   - **Module** : le type de module (liste configurable — voir §8.4)
+   - **Montant annuel** : le coût annuel du module (€/an)
+   - **Facturé à partir de (année)** : 1re année facturée (ex. 2027)
+   - **Facturé jusqu'à (année)** *(optionnel)* : vide = jusqu'à la fin du contrat
+   - **Article facturé** *(optionnel)* : l'article à faire apparaître sur la
+     ligne. Si vide, l'article par défaut du module (§8.4) ou, à défaut, le
+     produit du contrat est utilisé.
+3. **Save**.
+
+→ Lors de la création de la commande client (§4.4) **ou** des factures directes
+(§5.2), le module génère **ses propres lignes**, **uniquement pour les années de
+sa période**, **réparties selon la cadence** du contrat.
+
+> **Exemple** : contrat 2025→2029, cadence trimestrielle, module « Statistique
+> Premium » à 4 000 €/an facturé à partir de 2027. Le BC 2026 ne contient que la
+> maintenance ; à partir du BC 2027, 4 lignes « Module Statistique Premium —
+> Q1/Q2/Q3/Q4 » de 1 000 € s'ajoutent automatiquement.
 
 ---
 
@@ -553,7 +588,7 @@ montant via le wizard.
 
 | Champ | Nom technique | Description |
 |---|---|---|
-| Période maintenance | `maintenance_period_label` | "T1 2026", "S2 2026", "Année 2026", "Période intégrale" |
+| Période maintenance | `maintenance_period_label` | Libellé de la période : "Q1 2026", "H2 2026", "Year 2026", "Full period" (Q = trimestre, H = semestre) |
 | Ligne annuelle | `maintenance_line_id` | Lien vers la ligne annuelle du contrat |
 
 ---
@@ -570,4 +605,4 @@ Pour toute question ou bug rencontré pendant le test, contacter
 
 ---
 
-*Dernière mise à jour : 2026-06-18 — pour la version 18.0.2.0.0 du module `eurekam_maintenance`.*
+*Dernière mise à jour : 2026-06-23 — pour la version 18.0.2.0.0 du module `eurekam_maintenance`.*
