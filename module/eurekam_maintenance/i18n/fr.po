@@ -2,808 +2,171 @@
 # This file contains the translation of the following modules:
 # 	* eurekam_maintenance
 #
-# Source language: English (en). Target language: French (fr).
-# Maintained by hand for the Eurekam team. To regenerate/complete it from the
-# installed module, use Odoo: Settings > Translations > Export (language French,
-# module eurekam_maintenance), then merge the missing entries here.
-#
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server 18.0+e\n"
 "Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-23 10:36+0000\n"
+"PO-Revision-Date: 2026-06-23 10:36+0000\n"
 "Last-Translator: \n"
-"Language-Team: French\n"
-"Language: fr\n"
+"Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: \n"
 
 #. module: eurekam_maintenance
-#: model:ir.module.category,name:eurekam_maintenance.module_category_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_res_partner_form_maintenance
-msgid "Eurekam Maintenance"
-msgstr "Maintenance Eurekam"
-
-#. module: eurekam_maintenance
-#: model:ir.module.category,description:eurekam_maintenance.module_category_maintenance
-msgid "Eurekam maintenance contracts tracking."
-msgstr "Suivi des contrats de maintenance Eurekam."
-
-#. module: eurekam_maintenance
-#: model:res.groups,name:eurekam_maintenance.group_maintenance_user
-msgid "User"
-msgstr "Utilisateur"
-
-#. module: eurekam_maintenance
-#: model:res.groups,name:eurekam_maintenance.group_maintenance_manager
-msgid "Manager"
-msgstr "Gestionnaire"
-
-#. module: eurekam_maintenance
-#: model:ir.rule,name:eurekam_maintenance.rule_maintenance_contract_company
-msgid "Maintenance contracts: company isolation"
-msgstr "Contrats de maintenance : isolation par société"
-
-#. module: eurekam_maintenance
-#: model:ir.rule,name:eurekam_maintenance.rule_maintenance_contract_line_company
-msgid "Maintenance lines: company isolation"
-msgstr "Lignes de maintenance : isolation par société"
-
-#. module: eurekam_maintenance
-#: model:ir.sequence,name:eurekam_maintenance.seq_eurekam_maintenance_contract
-#: model:ir.model,name:eurekam_maintenance.model_eurekam_maintenance_contract
-msgid "Eurekam Maintenance Contract"
-msgstr "Contrat de maintenance Eurekam"
-
-#. module: eurekam_maintenance
-#: model:ir.cron,name:eurekam_maintenance.cron_check_expiring_contracts
-msgid "Eurekam Maintenance: check expiring contracts"
-msgstr "Maintenance Eurekam : vérification des contrats expirants"
-
-#. module: eurekam_maintenance
-#: model:ir.ui.menu,name:eurekam_maintenance.menu_root_maintenance
-msgid "Maintenance"
-msgstr "Maintenance"
-
-#. module: eurekam_maintenance
-#: model:ir.ui.menu,name:eurekam_maintenance.menu_maintenance_contracts
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_res_partner_form_maintenance
-msgid "Contracts"
-msgstr "Contrats"
-
-#. module: eurekam_maintenance
-#: model:ir.ui.menu,name:eurekam_maintenance.menu_maintenance_contract_lines
-#: model:ir.actions.act_window,name:eurekam_maintenance.action_maintenance_contract_line
-msgid "Yearly Lines"
-msgstr "Lignes annuelles"
-
-#. module: eurekam_maintenance
-#: model:ir.ui.menu,name:eurekam_maintenance.menu_maintenance_establishments
-#: model:ir.actions.act_window,name:eurekam_maintenance.action_maintenance_establishment
-msgid "Establishments"
-msgstr "Établissements"
-
-#. module: eurekam_maintenance
-#: model:ir.ui.menu,name:eurekam_maintenance.menu_maintenance_clients_without_contract
-#: model:ir.actions.act_window,name:eurekam_maintenance.action_maintenance_clients_without_contract
-msgid "Customers Without Contract"
-msgstr "Clients sans contrat"
-
-#. module: eurekam_maintenance
-#: model:ir.ui.menu,name:eurekam_maintenance.menu_maintenance_dashboard
-#: model:ir.actions.act_window,name:eurekam_maintenance.action_maintenance_dashboard
-msgid "Dashboard"
-msgstr "Tableau de bord"
-
-#. module: eurekam_maintenance
-#: model:ir.ui.menu,name:eurekam_maintenance.menu_maintenance_config
-msgid "Configuration"
-msgstr "Configuration"
-
-#. module: eurekam_maintenance
-#: model:ir.ui.menu,name:eurekam_maintenance.menu_config_module_status
-#: model:ir.actions.act_window,name:eurekam_maintenance.action_module_status
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_res_partner__module_status_ids
-msgid "Module Statuses"
-msgstr "Statuts module"
-
-#. module: eurekam_maintenance
-#: model:ir.ui.menu,name:eurekam_maintenance.menu_config_special_equipment
-#: model:ir.actions.act_window,name:eurekam_maintenance.action_special_equipment
-#: model:ir.model,name:eurekam_maintenance.model_eurekam_special_equipment
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_res_partner__special_equipment_ids
-msgid "Special Equipment"
-msgstr "Équipements spéciaux"
-
-#. module: eurekam_maintenance
-#: model:ir.ui.menu,name:eurekam_maintenance.menu_config_billing_frequency
-#: model:ir.actions.act_window,name:eurekam_maintenance.action_billing_frequency
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__billing_frequency_ids
-msgid "Billing Frequencies"
-msgstr "Cadences de facturation"
-
-#. module: eurekam_maintenance
-#: model:ir.ui.menu,name:eurekam_maintenance.menu_config_module_billing
-#: model:ir.actions.act_window,name:eurekam_maintenance.action_module_billing
-msgid "Module Billing"
-msgstr "Facturation modules"
-
-#. module: eurekam_maintenance
-#: model:ir.actions.act_window,name:eurekam_maintenance.action_maintenance_contract
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_res_partner__maintenance_contract_ids
-msgid "Maintenance Contracts"
-msgstr "Contrats de maintenance"
-
-#. module: eurekam_maintenance
-#: model:ir.actions.server,name:eurekam_maintenance.action_server_create_contract_from_partner
-msgid "Create Maintenance Contract"
-msgstr "Créer un contrat de maintenance"
-
-#. module: eurekam_maintenance
-#: model:ir.actions.act_window,name:eurekam_maintenance.action_contract_renewal_wizard
-msgid "Renew Contract"
-msgstr "Renouveler le contrat"
-
-#. module: eurekam_maintenance
-#: model:ir.actions.act_window,name:eurekam_maintenance.action_maintenance_order_wizard
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
-msgid "Create Customer Order"
-msgstr "Créer une commande client"
-
-#. module: eurekam_maintenance
-#: model:ir.actions.report,name:eurekam_maintenance.action_report_maintenance_contract
-msgid "Maintenance Contract Summary"
-msgstr "Récapitulatif contrat de maintenance"
-
-#. module: eurekam_maintenance
-#: model:ir.model,name:eurekam_maintenance.model_eurekam_maintenance_contract_line
-msgid "Eurekam Maintenance Contract Yearly Line"
-msgstr "Ligne annuelle de contrat de maintenance Eurekam"
-
-#. module: eurekam_maintenance
-#: model:ir.model,name:eurekam_maintenance.model_eurekam_billing_frequency
-msgid "Billing Frequency"
-msgstr "Cadence de facturation"
-
-#. module: eurekam_maintenance
-#: model:ir.model,name:eurekam_maintenance.model_eurekam_module_billing
-msgid "Module Billing Type"
-msgstr "Type de facturation module"
-
-#. module: eurekam_maintenance
-#: model:ir.model,name:eurekam_maintenance.model_eurekam_module_status
-msgid "Drugcam Module Status"
-msgstr "Statut module Drugcam"
-
-#. module: eurekam_maintenance
-#: model:ir.model,name:eurekam_maintenance.model_eurekam_contract_renewal_wizard
-msgid "Maintenance Contract Renewal Wizard"
-msgstr "Assistant de renouvellement de contrat de maintenance"
-
-#. module: eurekam_maintenance
-#: model:ir.model,name:eurekam_maintenance.model_eurekam_maintenance_order_wizard
-msgid "Maintenance Customer Order Wizard"
-msgstr "Assistant de commande client maintenance"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__name
-msgid "Reference"
-msgstr "Référence"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__sequence_number
-msgid "Number"
-msgstr "Numéro"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__product_id
-msgid "Product"
-msgstr "Produit"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__product_name
-msgid "Product Label"
-msgstr "Libellé produit"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__partner_id
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract_line__partner_id
-msgid "Establishment"
-msgstr "Établissement"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__commercial_id
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract_line__commercial_id
-msgid "Salesperson"
-msgstr "Commercial"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__gen
-msgid "Generation"
-msgstr "Génération"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__market_type_ids
-msgid "Market"
-msgstr "Marché"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__order_status
-msgid "Order Status"
-msgstr "Statut de commande"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__date_start
-msgid "Contract Start"
-msgstr "Début du contrat"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__date_end
-msgid "Contract End"
-msgstr "Fin du contrat"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__duration
-msgid "Ordered Duration"
-msgstr "Durée commandée"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__days_to_expiry
-msgid "Days to Expiry"
-msgstr "Jours avant expiration"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__is_expiring_soon
-msgid "Expiring Soon"
-msgstr "Expire bientôt"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__billing_level
-msgid "Billing Level"
-msgstr "Niveau de facturation"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__maintenance_amount
-msgid "Maintenance Amount"
-msgstr "Montant de maintenance"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__syntec_revision
-msgid "Syntec Revision"
-msgstr "Révision Syntec"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__nb_products
-msgid "Number of Products"
-msgstr "Nombre de produits"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__module_billing_ids
-msgid "Module Assistance Billing"
-msgstr "Facturation Assistance module"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__line_ids
-msgid "Yearly Amounts"
-msgstr "Montants annuels"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__total_contract_value
-msgid "Total Contract Value"
-msgstr "Valeur totale du contrat"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__current_year_amount
-msgid "Current Year Amount"
-msgstr "Montant année courante"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__line_count
-msgid "Yearly Lines Count"
-msgstr "Nb de lignes annuelles"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__comment
-msgid "Comment"
-msgstr "Commentaire"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__state
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract_line__contract_state
-msgid "Status"
-msgstr "Statut"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_res_partner__establishment_status
-msgid "Establishment Status"
-msgstr "Statut établissement"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__country_id
-msgid "Country"
-msgstr "Pays"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__renewed_from_id
-msgid "Previous Contract (renewed from)"
-msgstr "Contrat précédent (renouvelé depuis)"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__renewed_to_ids
-msgid "Next Contracts (renewed to)"
-msgstr "Contrats suivants (renouvelés vers)"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__renewed_to_count
-msgid "Renewals Count"
-msgstr "Nb renouvellements"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__requires_customer_order
-msgid "Requires Customer Order"
-msgstr "Nécessite une commande client"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__sale_order_ids
-msgid "Customer Orders"
-msgstr "Commandes client"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__sale_order_count
-msgid "Customer Orders Count"
-msgstr "Nb commandes client"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__invoice_count
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract_line__invoice_count
-msgid "Invoices Count"
-msgstr "Nb factures"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract_line__contract_id
-msgid "Contract"
-msgstr "Contrat"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract_line__year
-msgid "Year"
-msgstr "Année"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract_line__amount
-msgid "Amount"
-msgstr "Montant"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract_line__invoice_ids
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
-msgid "Invoices"
-msgstr "Factures"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract_line__is_invoiced
-msgid "Invoiced"
-msgstr "Facturée"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_billing_frequency__name
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_billing__name
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_status__name
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_special_equipment__name
-msgid "Name"
-msgstr "Nom"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_billing_frequency__code
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_billing__code
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_status__code
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_special_equipment__code
-msgid "Code"
-msgstr "Code"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_billing_frequency__sequence
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_billing__sequence
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_status__sequence
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_special_equipment__sequence
-msgid "Sequence"
-msgstr "Séquence"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_billing_frequency__color
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_billing__color
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_status__color
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_special_equipment__color
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__color
-msgid "Color"
-msgstr "Couleur"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_res_partner__is_maintenance_establishment
-msgid "Maintenance Establishment"
-msgstr "Établissement de maintenance"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_res_partner__department_number
-msgid "Department No."
-msgstr "N° Département"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_res_partner__central_purchasing_id
-#: model:ir.actions.act_window,name:eurekam_maintenance.action_central_purchasing
-#: model:ir.ui.menu,name:eurekam_maintenance.menu_config_central_purchasing
-msgid "Central Purchasing"
-msgstr "Centrale d'achat"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_res_partner__nb_workstations
-msgid "Number of Workstations"
-msgstr "Nombre de postes"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_res_partner__maintenance_status
-msgid "Maintenance Status"
-msgstr "Statut maintenance"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_sale_order__eurekam_maintenance_contract_id
-msgid "Maintenance Contract"
-msgstr "Contrat de maintenance"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_sale_order__eurekam_maintenance_year
-msgid "Covered Maintenance Year"
-msgstr "Année maintenance couverte"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_sale_order_line__maintenance_line_id
-msgid "Maintenance Yearly Line"
-msgstr "Ligne annuelle maintenance"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_sale_order_line__maintenance_period_label
-msgid "Maintenance Period"
-msgstr "Période maintenance"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__gen__upgrade_gen2
-msgid "Upgrade GEN2"
-msgstr "Upgrade GEN2"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__market_type__market_internal
-#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__res_partner__central_purchasing__internal
-#: model:eurekam.market.type,name:eurekam_maintenance.market_internal
-#: model:eurekam.central.purchasing,name:eurekam_maintenance.cp_internal
-msgid "Internal Market"
-msgstr "Marché interne"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__market_type__private
-#: model:eurekam.market.type,name:eurekam_maintenance.market_private
-#: model:eurekam.central.purchasing,name:eurekam_maintenance.cp_private
-msgid "Private"
-msgstr "Privé"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__market_type__distributor
-#: model:eurekam.market.type,name:eurekam_maintenance.market_distributor
-msgid "Distributor"
-msgstr "Distributeur"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__order_status__received
-msgid "Received"
-msgstr "Reçue"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__order_status__pending
-msgid "Pending"
-msgstr "En attente"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__order_status__no_po
-msgid "Billing Without PO"
-msgstr "Facturation sans BC"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__order_status__deploying
-msgid "Deploying"
-msgstr "En déploiement"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__order_status__suspended
-msgid "Suspended"
-msgstr "Suspendue"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__duration__6m
-msgid "6 months"
-msgstr "6 mois"
-
-#. module: eurekam_maintenance
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_contract_renewal_wizard__new_duration__1y
 #: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__duration__1y
 msgid "1 year"
 msgstr "1 an"
 
 #. module: eurekam_maintenance
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_contract_renewal_wizard__new_duration__2y
 #: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__duration__2y
 msgid "2 years"
 msgstr "2 ans"
 
 #. module: eurekam_maintenance
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_contract_renewal_wizard__new_duration__3y
 #: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__duration__3y
 msgid "3 years"
 msgstr "3 ans"
 
 #. module: eurekam_maintenance
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_contract_renewal_wizard__new_duration__4y
 #: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__duration__4y
 msgid "4 years"
 msgstr "4 ans"
 
 #. module: eurekam_maintenance
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_contract_renewal_wizard__new_duration__5y
 #: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__duration__5y
 msgid "5 years"
 msgstr "5 ans"
 
 #. module: eurekam_maintenance
-#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__syntec_revision__yes
-msgid "Yes"
-msgstr "Oui"
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_contract_renewal_wizard__new_duration__6m
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__duration__6m
+msgid "6 months"
+msgstr "6 mois"
 
 #. module: eurekam_maintenance
-#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__syntec_revision__no
-msgid "No"
-msgstr "Non"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__state__draft
-msgid "Draft"
-msgstr "Brouillon"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__state__active
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_search
-msgid "Active"
-msgstr "Actif"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__state__expired
-msgid "Expired"
-msgstr "Expiré"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__state__renewed
-msgid "Renewed"
-msgstr "Renouvelé"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__state__cancelled
-msgid "Cancelled"
-msgstr "Annulé"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__res_partner__establishment_status__client_eurekam
-msgid "Eurekam Customer"
-msgstr "Client Eurekam"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__res_partner__establishment_status__prospect_eurekam
-msgid "Eurekam Prospect"
-msgstr "Prospect Eurekam"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__res_partner__establishment_status__client_distributor
-msgid "Distributor Customer"
-msgstr "Client distributeur"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__res_partner__establishment_status__prospect_distributor
-msgid "Distributor Prospect"
-msgstr "Prospect distributeur"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__res_partner__establishment_status__client_referrer
-msgid "Referrer Customer"
-msgstr "Client référent"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__res_partner__establishment_status__prospect_referrer
-msgid "Referrer Prospect"
-msgstr "Prospect référent"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__res_partner__central_purchasing__industrial
-msgid "Industrial"
-msgstr "Industriel"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__res_partner__maintenance_status__none
-msgid "No commercial relationship"
-msgstr "Aucune relation commerciale"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__res_partner__maintenance_status__client_no_contract
-msgid "Customer WITHOUT maintenance contract"
-msgstr "Client SANS contrat de maintenance"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__res_partner__maintenance_status__active
-msgid "Maintenance ACTIVE"
-msgstr "Maintenance ACTIVE"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__res_partner__maintenance_status__expiring
-msgid "Maintenance EXPIRING SOON"
-msgstr "Maintenance EXPIRE BIENTÔT"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__res_partner__maintenance_status__expired
-msgid "Maintenance EXPIRED"
-msgstr "Maintenance EXPIRÉE"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_order_wizard__coverage_mode__annual_split
-msgid "Year (split by frequency)"
-msgstr "Année (découpée selon cadence)"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_order_wizard__coverage_mode__full_contract
-msgid "Whole contract (rare case)"
-msgstr "Intégralité du contrat (cas rare)"
-
-#. module: eurekam_maintenance
-#: model:eurekam.billing.frequency,name:eurekam_maintenance.freq_annual
-msgid "Annual"
-msgstr "Annuelle"
-
-#. module: eurekam_maintenance
-#: model:eurekam.billing.frequency,name:eurekam_maintenance.freq_overdue
-msgid "Overdue"
-msgstr "À échu"
-
-#. module: eurekam_maintenance
-#: model:eurekam.billing.frequency,name:eurekam_maintenance.freq_upcoming
-msgid "Upcoming"
-msgstr "À échoir"
-
-#. module: eurekam_maintenance
-#: model:eurekam.billing.frequency,name:eurekam_maintenance.freq_full_period
-msgid "Full Period"
-msgstr "Période intégrale"
-
-#. module: eurekam_maintenance
-#: model:eurekam.billing.frequency,name:eurekam_maintenance.freq_semi_annual
-msgid "Semi-annual"
-msgstr "Semestrielle"
-
-#. module: eurekam_maintenance
-#: model:eurekam.billing.frequency,name:eurekam_maintenance.freq_quarterly
-msgid "Quarterly"
-msgstr "Trimestrielle"
-
-#. module: eurekam_maintenance
-#: model:eurekam.module.billing,name:eurekam_maintenance.mod_bill_free_valued
-msgid "Free (valued)"
-msgstr "Gratuit (valorisé)"
-
-#. module: eurekam_maintenance
-#: model:eurekam.module.billing,name:eurekam_maintenance.mod_bill_stats
-msgid "Statistics Module Billing"
-msgstr "Facturation Module Statistique"
-
-#. module: eurekam_maintenance
-#: model:eurekam.module.billing,name:eurekam_maintenance.mod_bill_clinical_trial
-msgid "Clinical Trial Module Billing"
-msgstr "Facturation Module Essai Clinique"
-
-#. module: eurekam_maintenance
-#: model:eurekam.module.billing,name:eurekam_maintenance.mod_bill_none
-msgid "No module"
-msgstr "Aucun module"
-
-#. module: eurekam_maintenance
-#: model:eurekam.module.status,name:eurekam_maintenance.mod_status_beta_test
-msgid "Beta-test"
-msgstr "Beta-test"
-
-#. module: eurekam_maintenance
-#: model:eurekam.module.status,name:eurekam_maintenance.mod_status_active_unvalued
-msgid "Active / not valued"
-msgstr "Activé / non valorisé"
-
-#. module: eurekam_maintenance
-#: model:eurekam.module.status,name:eurekam_maintenance.mod_status_active_valued
-msgid "Active / valued"
-msgstr "Activé / valorisé"
-
-#. module: eurekam_maintenance
-#: model:eurekam.module.status,name:eurekam_maintenance.mod_status_unspecified
-msgid "Unspecified"
-msgstr "Non précisé"
-
-#. module: eurekam_maintenance
-#: model:eurekam.module.status,name:eurekam_maintenance.mod_status_statistics
-msgid "Statistics"
-msgstr "Statistique"
-
-#. module: eurekam_maintenance
-#: model:eurekam.module.status,name:eurekam_maintenance.mod_status_clinical_trial
-msgid "Clinical trials"
-msgstr "Essais cliniques"
-
-#. module: eurekam_maintenance
-#: code:addons/eurekam_maintenance/models/maintenance_contract.py:0
-msgid "Only a draft or cancelled contract can be activated."
-msgstr "Seul un contrat en brouillon ou annulé peut être activé."
-
-#. module: eurekam_maintenance
-#: code:addons/eurekam_maintenance/models/maintenance_contract.py:0
-msgid "Set the start and end dates before activating."
-msgstr "Renseigner les dates de début et de fin avant d'activer."
-
-#. module: eurekam_maintenance
-#: code:addons/eurekam_maintenance/models/maintenance_contract.py:0
-msgid "Only a cancelled contract can be set back to draft."
-msgstr "Seul un contrat annulé peut revenir en brouillon."
-
-#. module: eurekam_maintenance
-#: code:addons/eurekam_maintenance/models/maintenance_contract.py:0
-msgid "Set the start and end dates before generating the yearly lines."
-msgstr "Renseigner les dates de début et de fin avant de générer les lignes annuelles."
-
-#. module: eurekam_maintenance
-#: code:addons/eurekam_maintenance/models/maintenance_contract.py:0
-msgid "No invoice is linked to this contract yet."
-msgstr "Aucune facture n'est encore liée à ce contrat."
-
-#. module: eurekam_maintenance
-#: code:addons/eurekam_maintenance/models/maintenance_contract.py:0
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.report_maintenance_contract
 msgid ""
-"No new invoice to create (all remaining periods are already invoiced)."
-msgstr ""
-"Aucune nouvelle facture à créer (toutes les périodes restantes sont déjà "
-"facturées)."
+"<br/>\n"
+"                                <strong>Country:</strong>"
+msgstr "<br/><strong>Pays :</strong>"
 
 #. module: eurekam_maintenance
-#: code:addons/eurekam_maintenance/models/maintenance_contract.py:0
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.report_maintenance_contract
 msgid ""
-"No customer order is linked to this contract yet. Click 'Create Customer "
-"Order' to create one."
+"<br/>\n"
+"                                <strong>Type / tags:</strong>"
+msgstr "<br/><strong>Type / étiquettes :</strong>"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_res_partner_form_maintenance
+msgid ""
+"<i class=\"fa fa-check-circle me-2\" title=\"Maintenance active\" role=\"img\"/>\n"
+"                    <strong>Maintenance ACTIVE</strong>"
 msgstr ""
-"Aucune commande client n'est encore liée à ce contrat. Cliquer sur « Créer "
-"une commande client » pour en créer une."
+"<i class=\"fa fa-check-circle me-2\" title=\"Maintenance active\" role=\"img\"/>\n"
+"                    <strong>Maintenance ACTIVE</strong>"
 
 #. module: eurekam_maintenance
-#: code:addons/eurekam_maintenance/models/maintenance_contract_line.py:0
-msgid "A yearly line amount cannot be negative."
-msgstr "Le montant d'une ligne annuelle ne peut pas être négatif."
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_res_partner_form_maintenance
+msgid ""
+"<i class=\"fa fa-exclamation-triangle me-2\" title=\"Maintenance expiring soon\" role=\"img\"/>\n"
+"                    <strong>Maintenance EXPIRING SOON</strong>"
+msgstr ""
+"<i class=\"fa fa-exclamation-triangle me-2\" title=\"Maintenance expiring soon\" role=\"img\"/>\n"
+"                    <strong>Maintenance EXPIRE BIENTÔT</strong>"
 
 #. module: eurekam_maintenance
-#: code:addons/eurekam_maintenance/wizard/contract_renewal_wizard.py:0
-msgid "Set the new start and end dates."
-msgstr "Renseigner la nouvelle date de début et de fin."
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_res_partner_form_maintenance
+msgid ""
+"<i class=\"fa fa-handshake-o me-2\" title=\"Customer without maintenance contract\" role=\"img\"/>\n"
+"                    <strong>Customer WITHOUT maintenance contract</strong>\n"
+"                    <span class=\"ms-2\">\n"
+"                        — at least one customer order recorded, but no maintenance\n"
+"                        contract. <em class=\"text-muted\">Potential to convert.</em>\n"
+"                    </span>"
+msgstr ""
+"<i class=\"fa fa-handshake-o me-2\" title=\"Customer without maintenance contract\" role=\"img\"/>\n"
+"                    <strong>Client SANS contrat de maintenance</strong>\n"
+"                    <span class=\"ms-2\">\n"
+"                        — au moins une commande client enregistrée, mais aucun contrat\n"
+"                        de maintenance. <em class=\"text-muted\">Potentiel à convertir.</em>\n"
+"                    </span>"
 
 #. module: eurekam_maintenance
-#: code:addons/eurekam_maintenance/wizard/contract_renewal_wizard.py:0
-msgid "The new end date must be after the start date."
-msgstr "La nouvelle date de fin doit être postérieure à la date de début."
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_res_partner_form_maintenance
+msgid ""
+"<i class=\"fa fa-info-circle me-2\" title=\"No commercial relationship\" role=\"img\"/>\n"
+"                    <strong>No commercial relationship</strong>\n"
+"                    <span class=\"ms-2 text-muted\">\n"
+"                        — no maintenance contract and no customer order recorded.\n"
+"                    </span>"
+msgstr ""
+"<i class=\"fa fa-info-circle me-2\" title=\"No commercial relationship\" role=\"img\"/>\n"
+"                    <strong>Aucune relation commerciale</strong>\n"
+"                    <span class=\"ms-2 text-muted\">\n"
+"                        — aucun contrat de maintenance ni commande client enregistrés.\n"
+"                    </span>"
 
 #. module: eurekam_maintenance
-#: code:addons/eurekam_maintenance/wizard/contract_renewal_wizard.py:0
-msgid "The new amount cannot be negative."
-msgstr "Le nouveau montant ne peut pas être négatif."
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_res_partner_form_maintenance
+msgid ""
+"<i class=\"fa fa-times-circle me-2\" title=\"Maintenance expired\" role=\"img\"/>\n"
+"                    <strong>Maintenance EXPIRED</strong>"
+msgstr ""
+"<i class=\"fa fa-times-circle me-2\" title=\"Maintenance expired\" role=\"img\"/>\n"
+"                    <strong>Maintenance EXPIRÉE</strong>"
 
 #. module: eurekam_maintenance
-#: code:addons/eurekam_maintenance/wizard/maintenance_order_wizard.py:0
-msgid "No contract selected."
-msgstr "Aucun contrat sélectionné."
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
+msgid "<span class=\"o_stat_text\">Renewed From</span>"
+msgstr "<span class=\"o_stat_text\">Renouvelé depuis</span>"
 
 #. module: eurekam_maintenance
-#: code:addons/eurekam_maintenance/wizard/maintenance_order_wizard.py:0
-msgid "The year to cover is required in 'Year split' mode."
-msgstr "L'année à couvrir est obligatoire en mode « Année découpée »."
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_kanban
+msgid "<strong>Current year:</strong>"
+msgstr "<strong>Année courante :</strong>"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.report_maintenance_contract
+msgid "<strong>Establishment:</strong><br/>"
+msgstr "<strong>Établissement :</strong><br/>"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.report_maintenance_contract
+msgid "<strong>Salesperson:</strong>"
+msgstr "<strong>Commercial :</strong>"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_order_wizard_form
+msgid ""
+"A <b>sale.order quotation</b> will be created as a draft with\n"
+"                        the lines above. You will then be able to:"
+msgstr ""
+"Un <b>devis (sale.order)</b> sera créé en brouillon avec les lignes ci-"
+"dessus. Vous pourrez ensuite :"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_contract__billing_frequency_ids
+msgid ""
+"A single contract may combine several frequencies (e.g. Annual + Overdue)."
+msgstr ""
+"Un même contrat peut combiner plusieurs cadences (ex : Annuelle + À échu)."
+
+#. module: eurekam_maintenance
+#: model:eurekam.central.purchasing,name:eurekam_maintenance.cp_ageps
+#: model:eurekam.market.type,name:eurekam_maintenance.market_ageps
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__market_type__ageps
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__res_partner__central_purchasing__ageps
+msgid "AGEPS"
+msgstr "AGEPS"
 
 #. module: eurekam_maintenance
 #: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
@@ -811,114 +174,97 @@ msgid "Activate"
 msgstr "Activer"
 
 #. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
-msgid "Generate Yearly Lines"
-msgstr "Générer les lignes annuelles"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
-msgid "Renew"
-msgstr "Renouveler"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
-msgid "Create Contract Invoices"
-msgstr "Créer les factures du contrat"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
-msgid "Recompute Status"
-msgstr "Recalculer l'état"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
-msgid "Cancel"
-msgstr "Annuler"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
-msgid "Reset to Draft"
-msgstr "Remettre en brouillon"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
-msgid "Renewed From"
-msgstr "Renouvelé depuis"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
-msgid "Renewed To"
-msgstr "Renouvelé vers"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
-msgid "Orders"
-msgstr "Commandes"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
-msgid "Identification"
-msgstr "Identification"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
-msgid "Characteristics"
-msgstr "Caractéristiques"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
-msgid "Dates &amp; Duration"
-msgstr "Dates et durée"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
-msgid "Billing"
-msgstr "Facturation"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
-msgid "Conditions"
-msgstr "Conditions"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
-msgid "Totals (computed)"
-msgstr "Totaux (calculés)"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
-msgid "Notes"
-msgstr "Notes"
-
-#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_billing_frequency__active
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_central_purchasing__active
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__active
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_market_type__active
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_billing__active
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_status__active
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_special_equipment__active
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__state__active
 #: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_search
-msgid "Group By"
-msgstr "Grouper par"
+msgid "Active"
+msgstr "Actif"
 
 #. module: eurekam_maintenance
-#: model:mail.template,subject:eurekam_maintenance.mail_template_contract_expiring
-msgid "Maintenance contract expiring: {{ object.sequence_number }}"
-msgstr "Contrat de maintenance expirant : {{ object.sequence_number }}"
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_res_partner__active_maintenance_contract_count
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_res_users__active_maintenance_contract_count
+msgid "Active Contracts Count"
+msgstr "Nombre de contrats actifs"
 
 #. module: eurekam_maintenance
-#: model:mail.template,subject:eurekam_maintenance.mail_template_contract_expired
-msgid "[ALERT] Maintenance contract EXPIRED: {{ object.sequence_number }}"
-msgstr "[ALERTE] Contrat de maintenance EXPIRÉ : {{ object.sequence_number }}"
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_contract_renewal_wizard__cancel_old_lines_invoiced
+msgid ""
+"Adds a note on the unbilled yearly lines of the old contract to signal the "
+"carry-over to the new one."
+msgstr ""
+"Ajoute une note sur les lignes annuelles non facturées de l'ancien contrat "
+"pour signaler le report vers le nouveau."
 
 #. module: eurekam_maintenance
-#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__order_status__quote_sent
-msgid "Quote Sent"
-msgstr "Devis envoyé"
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract_line__amount
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.report_maintenance_contract
+msgid "Amount"
+msgstr "Montant"
 
 #. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__contract_module_line_ids
-msgid "Billable Modules"
-msgstr "Modules facturables"
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_contract__current_year_amount
+msgid "Amount of the yearly line matching the current year."
+msgstr "Montant de la ligne annuelle correspondant à l'année courante."
 
 #. module: eurekam_maintenance
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_module_line__amount
 msgid "Annual Amount"
 msgstr "Montant annuel"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_contract_module_line__amount
+msgid ""
+"Annual amount of the module. Split by the contract cadence when billed."
+msgstr ""
+"Montant annuel du module. Réparti selon la cadence du contrat lors de la "
+"facturation."
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_renewal_wizard__apply_syntec
+msgid "Apply Syntec Revision"
+msgstr "Appliquer la révision Syntec"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_contract_module_line__product_id
+msgid ""
+"Article used on the order / invoice line for this module. If empty, the "
+"module's default article is used, otherwise the contract product."
+msgstr ""
+"Article utilisé sur la ligne de commande / facture pour ce module. Si vide, "
+"l'article par défaut du module est utilisé, sinon le produit du contrat."
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_contract__contract_module_line_ids
+msgid ""
+"Assistance modules billed on top of the maintenance, each with its own "
+"annual amount and a start year. They generate their own order / invoice "
+"lines for the years within their window."
+msgstr ""
+"Modules d'assistance facturés en plus de la maintenance, chacun avec son "
+"montant annuel et une année de début. Ils génèrent leurs propres lignes de "
+"commande / facture pour les années de leur fenêtre."
+
+#. module: eurekam_maintenance
+#: model:eurekam.module.billing,name:eurekam_maintenance.mod_bill_beta_tester
+msgid "Beta Tester Module"
+msgstr "Module Beta testeur"
+
+#. module: eurekam_maintenance
+#: model:eurekam.module.status,name:eurekam_maintenance.mod_status_beta_test
+msgid "Beta-test"
+msgstr "Beta-test"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__contract_module_line_ids
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
+msgid "Billable Modules"
+msgstr "Modules facturables"
 
 #. module: eurekam_maintenance
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_module_line__start_year
@@ -931,25 +277,71 @@ msgid "Billed Until (Year)"
 msgstr "Facturé jusqu'à (année)"
 
 #. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_module_line__product_id
-msgid "Invoiced Article"
-msgstr "Article facturé"
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.report_maintenance_contract
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
+msgid "Billing"
+msgstr "Facturation"
 
 #. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_billing__product_id
-msgid "Default Article"
-msgstr "Article par défaut"
+#: model:ir.actions.act_window,name:eurekam_maintenance.action_billing_frequency
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__billing_frequency_ids
+#: model:ir.ui.menu,name:eurekam_maintenance.menu_config_billing_frequency
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_billing_frequency_list
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
+msgid "Billing Frequencies"
+msgstr "Cadences de facturation"
 
 #. module: eurekam_maintenance
-#: model:ir.actions.act_window,name:eurekam_maintenance.action_market_type
-#: model:ir.ui.menu,name:eurekam_maintenance.menu_config_market_type
-msgid "Markets"
-msgstr "Marchés"
+#: model:ir.model,name:eurekam_maintenance.model_eurekam_billing_frequency
+msgid "Billing Frequency"
+msgstr "Cadence de facturation"
 
 #. module: eurekam_maintenance
-#: model:ir.model,name:eurekam_maintenance.model_eurekam_market_type
-msgid "Market Type"
-msgstr "Type de marché"
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__billing_level
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.report_maintenance_contract
+msgid "Billing Level"
+msgstr "Niveau de facturation"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__order_status__no_po
+msgid "Billing Without PO"
+msgstr "Facturation sans BC"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_contract_renewal_wizard_form
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_order_wizard_form
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__state__cancelled
+msgid "Cancelled"
+msgstr "Annulé"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_module_billing__product_id
+msgid ""
+"Catalogue article used by default on the order / invoice lines when this "
+"module is billed on a contract."
+msgstr ""
+"Article du catalogue utilisé par défaut sur les lignes de commande / facture"
+" quand ce module est facturé sur un contrat."
+
+#. module: eurekam_maintenance
+#: model:ir.actions.act_window,name:eurekam_maintenance.action_central_purchasing
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_res_partner__central_purchasing_id
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_res_users__central_purchasing_id
+#: model:ir.ui.menu,name:eurekam_maintenance.menu_config_central_purchasing
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_central_purchasing_list
+msgid "Central Purchasing"
+msgstr "Centrale d'achat"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_res_partner__central_purchasing
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_res_users__central_purchasing
+msgid "Central Purchasing (legacy)"
+msgstr "Centrale d'achat (obsolète)"
 
 #. module: eurekam_maintenance
 #: model:ir.model,name:eurekam_maintenance.model_eurekam_central_purchasing
@@ -957,153 +349,153 @@ msgid "Central Purchasing Body"
 msgstr "Organisme d'achat"
 
 #. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_res_partner__central_purchasing_id
+#: model:ir.model.fields,help:eurekam_maintenance.field_res_users__central_purchasing_id
+msgid "Central purchasing body / buying group (editable list)."
+msgstr "Organisme d'achat / groupement (liste modifiable)."
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.report_maintenance_contract
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
+msgid "Characteristics"
+msgstr "Caractéristiques"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_order_wizard_form
+msgid "Check the lines and the customer"
+msgstr "Vérifier les lignes et le client"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_contract_line__is_invoiced
+msgid "Checked automatically when at least one invoice is linked to the line."
+msgstr ""
+"Coché automatiquement dès qu'au moins une facture est liée à la ligne."
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_res_partner_form_maintenance
+msgid "Classification"
+msgstr "Classification"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_order_wizard_form
+msgid "Click <b>Confirm</b> to turn it into a sales order"
+msgstr "Cliquer <b>Confirmer</b> pour le transformer en bon de commande"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_billing_frequency__code
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_central_purchasing__code
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_market_type__code
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_billing__code
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_status__code
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_special_equipment__code
+msgid "Code"
+msgstr "Code"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_billing_frequency__color
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_central_purchasing__color
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__color
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_market_type__color
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_billing__color
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_status__color
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_special_equipment__color
+msgid "Color"
+msgstr "Couleur"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__comment
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.report_maintenance_contract
+msgid "Comment"
+msgstr "Commentaire"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_res_partner_search_maintenance
+msgid "Companies Only"
+msgstr "Sociétés uniquement"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_module_line__company_id
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__company_id
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract_line__company_id
+msgid "Company"
+msgstr "Société"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
+msgid "Conditions"
+msgstr "Conditions"
+
+#. module: eurekam_maintenance
+#: model:ir.ui.menu,name:eurekam_maintenance.menu_maintenance_config
+msgid "Configuration"
+msgstr "Configuration"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_module_line__contract_id
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract_line__contract_id
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_order_wizard__contract_id
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_line_search
+msgid "Contract"
+msgstr "Contrat"
+
+#. module: eurekam_maintenance
 #: model:ir.model,name:eurekam_maintenance.model_eurekam_contract_module_line
 msgid "Contract Billable Module"
 msgstr "Module facturable du contrat"
 
 #. module: eurekam_maintenance
-#: model:eurekam.module.billing,name:eurekam_maintenance.mod_bill_stats_premium
-msgid "Premium Statistics Module"
-msgstr "Module Statistique Premium"
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__date_end
+msgid "Contract End"
+msgstr "Fin du contrat"
 
 #. module: eurekam_maintenance
-#: model:eurekam.module.billing,name:eurekam_maintenance.mod_bill_clinical_trial_premium
-msgid "Premium Clinical Trial Module"
-msgstr "Module Essai Clinique Premium"
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_contract_renewal_wizard_form
+msgid "Contract Renewal"
+msgstr "Renouvellement de contrat"
 
 #. module: eurekam_maintenance
-#: model:eurekam.module.billing,name:eurekam_maintenance.mod_bill_stats_premium_free
-msgid "Premium Statistics Module (free)"
-msgstr "Module Statistique Premium offert"
-
-#. module: eurekam_maintenance
-#: model:eurekam.module.billing,name:eurekam_maintenance.mod_bill_clinical_trial_premium_free
-msgid "Premium Clinical Trial Module (free)"
-msgstr "Module Essai Clinique Premium offert"
-
-#. module: eurekam_maintenance
-#: model:eurekam.module.billing,name:eurekam_maintenance.mod_bill_beta_tester
-msgid "Beta Tester Module"
-msgstr "Module Beta testeur"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_line_inline_list
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_line_list
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_list
-msgid "Total"
-msgstr "Total"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_line_form
-msgid "Yearly Line"
-msgstr "Ligne annuelle"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_line_pivot
-msgid "Yearly Amounts Analysis"
-msgstr "Analyse des montants annuels"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_line_search
-msgid "Search"
-msgstr "Recherche"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_line_search
-msgid "Not Invoiced"
-msgstr "Non facturé"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_line_search
-msgid "Partially Invoiced"
-msgstr "Partiellement facturé"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_line_search
-msgid "Current Year"
-msgstr "Année courante"
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__date_start
+msgid "Contract Start"
+msgstr "Début du contrat"
 
 #. module: eurekam_maintenance
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract_line__contract_state
 #: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_line_search
 msgid "Contract Status"
-msgstr "Statut du contrat"
+msgstr "Statut"
 
 #. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
-msgid "Most common case: upon receipt of a customer purchase order, creates a sale.order with N lines according to the frequency (1 for Annual, 2 for Semi-annual, 4 for Quarterly). Each SO line can be invoiced independently."
-msgstr "Cas le plus courant : à réception d'un bon de commande client, crée un sale.order avec N lignes selon la cadence (1 pour Annuelle, 2 pour Semestrielle, 4 pour Trimestrielle). Chaque ligne du devis peut être facturée indépendamment."
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.report_maintenance_contract
+msgid "Contract Total"
+msgstr "Total contrat"
 
 #. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
-msgid "Rare case: direct billing without a purchase order (private establishments). Generates the draft invoices covering the remaining contract duration according to the frequency."
-msgstr "Cas rare : facturation directe sans bon de commande (établissements privés). Génère les factures brouillon couvrant la durée restante du contrat selon la cadence."
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_renewal_wizard__contract_id
+msgid "Contract to Renew"
+msgstr "Contrat à renouveler"
 
 #. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
-msgid "Re-evaluates the status (Active / Expiring Soon / Expired) based on the end date and today. Useful if the daily cron has not run (sandbox / staging case)."
-msgstr "Réévalue le statut (Actif / Expire bientôt / Expiré) à partir de la date de fin et d'aujourd'hui. Utile si le cron quotidien n'a pas tourné (cas sandbox / recette)."
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_order_wizard__year
+msgid "Contract year covered by the order. Ignored if scope = Whole contract."
+msgstr ""
+"Année du contrat couverte par la commande. Ignoré si le périmètre = "
+"Intégralité du contrat."
 
 #. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
-msgid "Dates & Duration"
-msgstr "Dates et durée"
+#: model:ir.model.fields,help:eurekam_maintenance.field_sale_order__eurekam_maintenance_year
+msgid ""
+"Contract year covered by this customer order. 0 if the order covers the "
+"whole contract (rare case)."
+msgstr ""
+"Année du contrat couverte par cette commande client. 0 si la commande couvre"
+" l'intégralité du contrat (cas rare)."
 
 #. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
-msgid "Modules billed on top of the maintenance, each with its own annual amount and a start year. They generate their own order / invoice lines for the years within their window (e.g. a Premium module billed from 2027 on a contract started in 2025)."
-msgstr "Modules facturés en plus de la maintenance, chacun avec son montant annuel et une année de début. Ils génèrent leurs propres lignes de commande/facture pour les années de leur fenêtre (ex : un module Premium facturé à partir de 2027 sur un contrat commencé en 2025)."
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
-msgid "Total / year"
-msgstr "Total / an"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
-msgid "Enter the yearly amount for each contract year. The \"Generate Yearly Lines\" button in the header pre-creates one line for each year between the start and end dates."
-msgstr "Saisissez le montant annuel pour chaque année du contrat. Le bouton « Générer les lignes annuelles » du bandeau pré-crée une ligne par année entre les dates de début et de fin."
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
-msgid "Free comments..."
-msgstr "Commentaires libres..."
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_list
-msgid "Current year total"
-msgstr "Total année courante"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_list
-msgid "Contracts total"
-msgstr "Total contrats"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_kanban
-msgid "Current year:"
-msgstr "Année courante :"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_kanban
-msgid "End:"
-msgstr "Fin :"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_search
-msgid "Search Contracts"
-msgstr "Rechercher des contrats"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_search
-msgid "My Contracts"
-msgstr "Mes contrats"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_search
-msgid "With Syntec Revision"
-msgstr "Avec révision Syntec"
+#: model:ir.ui.menu,name:eurekam_maintenance.menu_maintenance_contracts
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_calendar
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_res_partner_form_maintenance
+msgid "Contracts"
+msgstr "Contrats"
 
 #. module: eurekam_maintenance
 #: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_pivot
@@ -1116,125 +508,41 @@ msgid "Contracts by Market"
 msgstr "Contrats par marché"
 
 #. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_res_partner_form_maintenance
-msgid "Maintenance active"
-msgstr "Maintenance active"
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_list
+msgid "Contracts total"
+msgstr "Total contrats"
 
 #. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_res_partner_form_maintenance
-msgid "active contract(s))"
-msgstr "contrat(s) actif(s))"
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__country_id
+msgid "Country"
+msgstr "Pays"
 
 #. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_res_partner_form_maintenance
-msgid "Maintenance expiring soon"
-msgstr "Maintenance expirant bientôt"
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_sale_order__eurekam_maintenance_year
+msgid "Covered Maintenance Year"
+msgstr "Année maintenance couverte"
 
 #. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_res_partner_form_maintenance
-msgid "contract(s) to renew)"
-msgstr "contrat(s) à renouveler)"
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_order_wizard__year
+msgid "Covered Year"
+msgstr "Année couverte"
 
 #. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_res_partner_form_maintenance
-msgid "Maintenance expired"
-msgstr "Maintenance expirée"
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
+msgid "Create Contract Invoices"
+msgstr "Créer les factures du contrat"
 
 #. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_res_partner_form_maintenance
-msgid "expired contract(s))"
-msgstr "contrat(s) expiré(s))"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_res_partner_form_maintenance
-msgid "Customer without maintenance contract"
-msgstr "Client sans contrat de maintenance"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_res_partner_form_maintenance
-msgid "— at least one customer order recorded, but no maintenance contract."
-msgstr "— au moins une commande client enregistrée, mais aucun contrat de maintenance."
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_res_partner_form_maintenance
-msgid "Potential to convert."
-msgstr "Potentiel à convertir."
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_res_partner_form_maintenance
-msgid "— no maintenance contract and no customer order recorded."
-msgstr "— aucun contrat de maintenance ni commande client enregistrés."
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_res_partner_form_maintenance
-msgid "Location"
-msgstr "Localisation"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_res_partner_form_maintenance
-msgid "Classification"
-msgstr "Classification"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_res_partner_form_maintenance
-msgid "Installed Equipment"
-msgstr "Équipements installés"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_res_partner_search_maintenance
-msgid "Maintenance Establishments"
-msgstr "Établissements de maintenance"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_res_partner_search_maintenance
-msgid "Customers Without Maintenance Contract"
-msgstr "Clients sans contrat de maintenance"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_res_partner_search_maintenance
-msgid "Companies Only"
-msgstr "Sociétés uniquement"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_contract_renewal_wizard_form
-msgid "Contract Renewal"
-msgstr "Renouvellement de contrat"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_contract_renewal_wizard_form
+#: model:ir.actions.act_window,name:eurekam_maintenance.action_maintenance_order_wizard
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
 #: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_order_wizard_form
-msgid "Source Contract"
-msgstr "Contrat source"
+msgid "Create Customer Order"
+msgstr "Créer une commande client"
 
 #. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_contract_renewal_wizard_form
-msgid "New Contract"
-msgstr "Nouveau contrat"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_contract_renewal_wizard_form
-msgid "Final Amount"
-msgstr "Montant final"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_contract_renewal_wizard_form
-msgid "Options"
-msgstr "Options"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_contract_renewal_wizard_form
-msgid "The old contract will be switched to"
-msgstr "L'ancien contrat sera basculé en"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_contract_renewal_wizard_form
-msgid "and a new contract will be created as"
-msgstr "et un nouveau contrat sera créé en"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_contract_renewal_wizard_form
-msgid ", linked to the previous one through the \"Renewed From\" / \"Renewed To\" smart buttons."
-msgstr ", lié au précédent via les boutons « Renouvelé depuis » / « Renouvelé vers »."
+#: model:ir.actions.server,name:eurekam_maintenance.action_server_create_contract_from_partner
+msgid "Create Maintenance Contract"
+msgstr "Créer un contrat de maintenance"
 
 #. module: eurekam_maintenance
 #: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_contract_renewal_wizard_form
@@ -1243,8 +551,57 @@ msgstr "Créer le nouveau contrat"
 
 #. module: eurekam_maintenance
 #: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_order_wizard_form
-msgid "New Maintenance Customer Order"
-msgstr "Nouvelle commande client de maintenance"
+msgid "Create Order"
+msgstr "Créer la commande"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.actions.act_window,help:eurekam_maintenance.action_maintenance_contract
+msgid "Create your first maintenance contract"
+msgstr "Créez votre premier contrat de maintenance"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_module_line__currency_id
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_renewal_wizard__currency_id
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__currency_id
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract_line__currency_id
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_order_wizard__currency_id
+msgid "Currency"
+msgstr "Devise"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_line_search
+msgid "Current Year"
+msgstr "Année courante"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__current_year_amount
+msgid "Current Year Amount"
+msgstr "Montant année courante"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_list
+msgid "Current year total"
+msgstr "Total année courante"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_order_wizard__partner_id
+msgid "Customer"
+msgstr "Client"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__sale_order_ids
+msgid "Customer Orders"
+msgstr "Commandes client"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__sale_order_count
+msgid "Customer Orders Count"
+msgstr "Nb commandes client"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_order_wizard__customer_po_reference
+msgid "Customer PO Reference"
+msgstr "Référence BC client"
 
 #. module: eurekam_maintenance
 #: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_order_wizard_form
@@ -1252,70 +609,267 @@ msgid "Customer Purchase Order"
 msgstr "Bon de commande client"
 
 #. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_order_wizard__coverage_mode
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_order_wizard_form
-msgid "Order Scope"
-msgstr "Périmètre de la commande"
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__res_partner__maintenance_status__client_no_contract
+msgid "Customer WITHOUT maintenance contract"
+msgstr "Client SANS contrat de maintenance"
 
 #. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_order_wizard_form
-msgid "Preview of What Will Be Created"
-msgstr "Aperçu de ce qui sera créé"
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_contract_line__invoice_ids
+msgid ""
+"Customer invoices linked to this yearly line. A line may have several "
+"invoices depending on the frequency: 4 quarterly, 2 semi-annual, 1 annual. "
+"Set automatically by the 'Create Invoices' action of the contract."
+msgstr ""
+"Factures client liées à cette ligne annuelle. Une ligne peut avoir plusieurs"
+" factures selon la cadence : 4 trimestrielles, 2 semestrielles, 1 annuelle. "
+"Renseigné automatiquement par l'action « Créer les factures » du contrat."
 
 #. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_order_wizard_form
-msgid "sale.order quotation"
-msgstr "devis (sale.order)"
+#: model:ir.actions.act_window,name:eurekam_maintenance.action_maintenance_clients_without_contract
+#: model:ir.ui.menu,name:eurekam_maintenance.menu_maintenance_clients_without_contract
+msgid "Customers Without Contract"
+msgstr "Clients sans contrat"
 
 #. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_order_wizard_form
-msgid "will be created as a draft with the lines above. You will then be able to:"
-msgstr "sera créé en brouillon avec les lignes ci-dessus. Vous pourrez ensuite :"
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_res_partner_search_maintenance
+msgid "Customers Without Maintenance Contract"
+msgstr "Clients sans contrat de maintenance"
 
 #. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_order_wizard_form
-msgid "Check the lines and the customer"
-msgstr "Vérifier les lignes et le client"
+#: model:ir.actions.act_window,name:eurekam_maintenance.action_maintenance_dashboard
+#: model:ir.ui.menu,name:eurekam_maintenance.menu_maintenance_dashboard
+msgid "Dashboard"
+msgstr "Tableau de bord"
 
 #. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_order_wizard_form
-msgid "Click"
-msgstr "Cliquer"
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
+msgid "Dates & Duration"
+msgstr "Dates et durée"
 
 #. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_order_wizard_form
-msgid "Confirm"
-msgstr "Confirmer"
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__days_to_expiry
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.report_maintenance_contract
+msgid "Days to Expiry"
+msgstr "Jours avant expiration"
 
 #. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_order_wizard_form
-msgid "to turn it into a sales order"
-msgstr "pour le transformer en bon de commande"
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_billing__product_id
+msgid "Default Article"
+msgstr "Article par défaut"
 
 #. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_order_wizard_form
-msgid "Invoice each line (= each quarter/half-year/year) over time via the native"
-msgstr "Facturer chaque ligne (= chaque trimestre/semestre/année) au fil du temps via le bouton natif"
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_res_partner__department_number
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_res_users__department_number
+msgid "Department No."
+msgstr "N° Département"
 
 #. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_order_wizard_form
-msgid "Create Invoice"
-msgstr "Créer une facture"
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__order_status__deploying
+msgid "Deploying"
+msgstr "En déploiement"
 
 #. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_order_wizard_form
-msgid "button"
-msgstr "bouton"
+#: model:eurekam.market.type,name:eurekam_maintenance.market_distributor
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__market_type__distributor
+msgid "Distributor"
+msgstr "Distributeur"
 
 #. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_order_wizard_form
-msgid "Create Order"
-msgstr "Créer la commande"
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__res_partner__establishment_status__client_distributor
+msgid "Distributor Customer"
+msgstr "Client distributeur"
 
 #. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_module_line__module_billing_id
-msgid "Module"
-msgstr "Module"
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__res_partner__establishment_status__prospect_distributor
+msgid "Distributor Prospect"
+msgstr "Prospect distributeur"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__state__draft
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_search
+msgid "Draft"
+msgstr "Brouillon"
+
+#. module: eurekam_maintenance
+#: model:ir.model,name:eurekam_maintenance.model_eurekam_module_status
+msgid "Drugcam Module Status"
+msgstr "Statut module Drugcam"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_renewal_wizard__new_duration
+msgid "Duration"
+msgstr "Durée"
+
+#. module: eurekam_maintenance
+#: model:eurekam.central.purchasing,name:eurekam_maintenance.cp_elsan
+msgid "ELSAN"
+msgstr "ELSAN"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.report_maintenance_contract
+msgid "End Date"
+msgstr "Date de fin"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_kanban
+msgid "End:"
+msgstr "Fin :"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
+msgid ""
+"Enter the yearly amount for each contract year.\n"
+"                                The \"Generate Yearly Lines\" button in the header\n"
+"                                pre-creates one line for each year between the start\n"
+"                                and end dates."
+msgstr ""
+"Saisissez le montant annuel pour chaque année du contrat. Le bouton « "
+"Générer les lignes annuelles » du bandeau pré-crée une ligne par année entre"
+" les dates de début et de fin."
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_renewal_wizard__partner_id
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__partner_id
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract_line__partner_id
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_line_search
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_search
+msgid "Establishment"
+msgstr "Établissement"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_res_partner__establishment_status
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_res_users__establishment_status
+msgid "Establishment Status"
+msgstr "Statut établissement"
+
+#. module: eurekam_maintenance
+#: model:ir.actions.act_window,name:eurekam_maintenance.action_maintenance_establishment
+#: model:ir.ui.menu,name:eurekam_maintenance.menu_maintenance_establishments
+msgid "Establishments"
+msgstr "Établissements"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__res_partner__establishment_status__client_eurekam
+msgid "Eurekam Customer"
+msgstr "Client Eurekam"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_res_partner_form_maintenance
+msgid "Eurekam Maintenance"
+msgstr "Maintenance Eurekam"
+
+#. module: eurekam_maintenance
+#: model:ir.model,name:eurekam_maintenance.model_eurekam_maintenance_contract
+msgid "Eurekam Maintenance Contract"
+msgstr "Contrat de maintenance Eurekam"
+
+#. module: eurekam_maintenance
+#: model:ir.model,name:eurekam_maintenance.model_eurekam_maintenance_contract_line
+msgid "Eurekam Maintenance Contract Yearly Line"
+msgstr "Ligne annuelle de contrat de maintenance Eurekam"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__res_partner__establishment_status__prospect_eurekam
+msgid "Eurekam Prospect"
+msgstr "Prospect Eurekam"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_sale_order__eurekam_maintenance_contract_id
+msgid "Eurekam maintenance contract this customer order was issued for."
+msgstr ""
+"Contrat de maintenance Eurekam pour lequel cette commande client a été "
+"émise."
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__state__expired
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_search
+msgid "Expired"
+msgstr "Expiré"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_res_partner__expired_maintenance_contract_count
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_res_users__expired_maintenance_contract_count
+msgid "Expired Contracts Count"
+msgstr "Nombre de contrats expirés"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_res_partner__expiring_maintenance_contract_count
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_res_users__expiring_maintenance_contract_count
+msgid "Expiring Contracts Count"
+msgstr "Nombre de contrats expirant bientôt"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__is_expiring_soon
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__state__expiring
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_search
+msgid "Expiring Soon"
+msgstr "Expire bientôt"
+
+#. module: eurekam_maintenance
+#: model:eurekam.billing.frequency,description:eurekam_maintenance.freq_full_period
+msgid "Facturation de la totalité de la période en une fois."
+msgstr "Facturé en une fois pour toute la période."
+
+#. module: eurekam_maintenance
+#: model:eurekam.billing.frequency,description:eurekam_maintenance.freq_quarterly
+msgid "Facturation tous les 3 mois."
+msgstr "Facturé tous les 3 mois."
+
+#. module: eurekam_maintenance
+#: model:eurekam.billing.frequency,description:eurekam_maintenance.freq_semi_annual
+msgid "Facturation tous les 6 mois."
+msgstr "Facturé tous les 6 mois."
+
+#. module: eurekam_maintenance
+#: model:eurekam.billing.frequency,description:eurekam_maintenance.freq_annual
+msgid "Facturation une fois par an."
+msgstr "Facturé une fois par an."
+
+#. module: eurekam_maintenance
+#: model:eurekam.billing.frequency,description:eurekam_maintenance.freq_upcoming
+msgid "Facturation à terme à échoir (en début de période)."
+msgstr "Facturé à terme à échoir (en début de période)."
+
+#. module: eurekam_maintenance
+#: model:eurekam.billing.frequency,description:eurekam_maintenance.freq_overdue
+msgid "Facturation à terme échu (en fin de période)."
+msgstr "Facturé à terme échu (en fin de période)."
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_contract_renewal_wizard_form
+msgid "Final Amount"
+msgstr "Montant final"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_contract_module_line__start_year
+msgid "First year the module is billed (e.g. 2027)."
+msgstr "Première année de facturation du module (ex : 2027)."
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_renewal_wizard__cancel_old_lines_invoiced
+msgid "Flag Unbilled Lines as Transferred"
+msgstr "Marquer les lignes non facturées comme transférées"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
+msgid "Free comments..."
+msgstr "Commentaires libres..."
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_contract__product_name
+msgid "Free text if no linked product."
+msgstr "Texte libre si aucun produit lié."
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_res_partner__department_number
+#: model:ir.model.fields,help:eurekam_maintenance.field_res_users__department_number
+msgid "French department number (01, 02, ..., 95, 2A, 2B, 971, ...)."
+msgstr "Numéro de département français (01, 02, ..., 95, 2A, 2B, 971, ...)."
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.report_maintenance_contract
+msgid "Frequencies"
+msgstr "Cadences"
 
 #. module: eurekam_maintenance
 #: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__gen__gen1
@@ -1328,9 +882,925 @@ msgid "GEN2"
 msgstr "GEN2"
 
 #. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
+msgid "Generate Yearly Lines"
+msgstr "Générer les lignes annuelles"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_renewal_wizard__generate_lines
+msgid "Generate the New Contract Yearly Lines"
+msgstr "Générer les lignes annuelles du nouveau contrat"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__gen
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.report_maintenance_contract
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_search
+msgid "Generation"
+msgstr "Génération"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_line_search
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_search
+msgid "Group By"
+msgstr "Grouper par"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
+msgid "Identification"
+msgstr "Identification"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_contract__requires_customer_order
+msgid ""
+"If checked (most common case), billing must go through a customer order (sale.order) created upon receipt of the customer purchase order. The 'Create Contract Invoices' action is then disabled — use 'Create Customer Order' instead.\n"
+"If unchecked (rare case: some private establishments), billing is done directly on the contract without a purchase order."
+msgstr ""
+"Si coché (cas le plus courant), la facturation doit passer par une commande client (sale.order) créée à réception du bon de commande client. L'action « Créer les factures du contrat » est alors désactivée — utilisez plutôt « Créer une commande client ».\n"
+"Si décoché (cas rare : certains établissements privés), la facturation se fait directement sur le contrat sans bon de commande."
+
+#. module: eurekam_maintenance
+#: model:eurekam.central.purchasing,name:eurekam_maintenance.cp_industrial
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__res_partner__central_purchasing__industrial
+msgid "Industrial"
+msgstr "Industriel"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_res_partner_form_maintenance
+msgid "Installed Equipment"
+msgstr "Équipements installés"
+
+#. module: eurekam_maintenance
+#: model:eurekam.central.purchasing,name:eurekam_maintenance.cp_internal
+#: model:eurekam.market.type,name:eurekam_maintenance.market_internal
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__market_type__market_internal
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__res_partner__central_purchasing__internal
+msgid "Internal Market"
+msgstr "Marché interne"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.report_maintenance_contract
+msgid "Invoice"
+msgstr "Facture"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_order_wizard_form
+msgid ""
+"Invoice each line (= each quarter/half-year/year)\n"
+"                                over time via the native <b>Create Invoice</b> button"
+msgstr ""
+"Facturer chaque ligne (= chaque trimestre/semestre/année) au fil du temps "
+"via le bouton natif <b>Créer une facture</b>"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract_line__is_invoiced
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.report_maintenance_contract
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_line_search
+msgid "Invoiced"
+msgstr "Facturée"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_module_line__product_id
+msgid "Invoiced Article"
+msgstr "Article facturé"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract_line__invoice_ids
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
+msgid "Invoices"
+msgstr "Factures"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__invoice_count
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract_line__invoice_count
+msgid "Invoices Count"
+msgstr "Nb factures"
+
+#. module: eurekam_maintenance
+#: model:ir.model,name:eurekam_maintenance.model_account_move
+msgid "Journal Entry"
+msgstr "Écriture comptable"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_sale_order_line__maintenance_period_label
+msgid ""
+"Label of the period covered by this order line (e.g. 'Q1 2026', 'H2 2026', "
+"'Year 2026', 'Full period')."
+msgstr ""
+"Libellé de la période couverte par cette ligne de commande (ex : « Q1 2026 "
+"», « H2 2026 », « Year 2026 », « Full period »)."
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_contract_module_line__end_year
+msgid ""
+"Last year the module is billed. Leave empty to bill until the contract end "
+"year."
+msgstr ""
+"Dernière année de facturation du module. Laisser vide pour facturer jusqu'à "
+"l'année de fin du contrat."
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_res_partner_form_maintenance
+msgid "Location"
+msgstr "Localisation"
+
+#. module: eurekam_maintenance
+#: model:ir.ui.menu,name:eurekam_maintenance.menu_root_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_res_partner_form_maintenance
+msgid "Maintenance"
+msgstr "Maintenance"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__res_partner__maintenance_status__active
+msgid "Maintenance ACTIVE"
+msgstr "Maintenance ACTIVE"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__maintenance_amount
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.report_maintenance_contract
+msgid "Maintenance Amount"
+msgstr "Montant de maintenance"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_sale_order__eurekam_maintenance_contract_id
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.report_maintenance_contract
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
+msgid "Maintenance Contract"
+msgstr "Contrat de maintenance"
+
+#. module: eurekam_maintenance
+#: model:ir.model,name:eurekam_maintenance.model_eurekam_contract_renewal_wizard
+msgid "Maintenance Contract Renewal Wizard"
+msgstr "Assistant de renouvellement de contrat de maintenance"
+
+#. module: eurekam_maintenance
+#: model:ir.actions.report,name:eurekam_maintenance.action_report_maintenance_contract
+msgid "Maintenance Contract Summary"
+msgstr "Récapitulatif contrat de maintenance"
+
+#. module: eurekam_maintenance
+#: model:ir.actions.act_window,name:eurekam_maintenance.action_maintenance_contract
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_res_partner__maintenance_contract_ids
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_res_users__maintenance_contract_ids
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_list
+msgid "Maintenance Contracts"
+msgstr "Contrats de maintenance"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_res_partner__maintenance_contract_count
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_res_users__maintenance_contract_count
+msgid "Maintenance Contracts Count"
+msgstr "Nombre de contrats de maintenance"
+
+#. module: eurekam_maintenance
+#: model:ir.model,name:eurekam_maintenance.model_eurekam_maintenance_order_wizard
+msgid "Maintenance Customer Order Wizard"
+msgstr "Assistant de commande client maintenance"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__res_partner__maintenance_status__expired
+msgid "Maintenance EXPIRED"
+msgstr "Maintenance EXPIRÉE"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__res_partner__maintenance_status__expiring
+msgid "Maintenance EXPIRING SOON"
+msgstr "Maintenance EXPIRE BIENTÔT"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_res_partner__is_maintenance_establishment
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_res_users__is_maintenance_establishment
+msgid "Maintenance Establishment"
+msgstr "Établissement de maintenance"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_res_partner_search_maintenance
+msgid "Maintenance Establishments"
+msgstr "Établissements de maintenance"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_sale_order_line__maintenance_period_label
+msgid "Maintenance Period"
+msgstr "Période maintenance"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_res_partner__maintenance_status
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_res_users__maintenance_status
+msgid "Maintenance Status"
+msgstr "Statut maintenance"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_sale_order_line__maintenance_line_id
+msgid "Maintenance Yearly Line"
+msgstr "Ligne annuelle maintenance"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.actions.act_window,help:eurekam_maintenance.action_maintenance_establishment
+msgid ""
+"Maintenance establishments gather the hospitals, clinics and\n"
+"                distributors for which you track Drugcam contracts."
+msgstr ""
+"Les établissements de maintenance regroupent les hôpitaux, cliniques et "
+"distributeurs pour lesquels vous suivez des contrats Drugcam."
+
+#. module: eurekam_maintenance
+#: model:res.groups,name:eurekam_maintenance.group_maintenance_manager
+msgid "Manager"
+msgstr "Gestionnaire"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__market_type_ids
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.report_maintenance_contract
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_search
+msgid "Market"
+msgstr "Marché"
+
+#. module: eurekam_maintenance
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__market_type
 msgid "Market (legacy)"
 msgstr "Marché (obsolète)"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_contract__market_type_ids
+msgid "Market / public tender. Editable list, several values allowed."
+msgstr ""
+"Marché / appel d'offres public. Liste modifiable, plusieurs valeurs "
+"possibles."
+
+#. module: eurekam_maintenance
+#: model:ir.model,name:eurekam_maintenance.model_eurekam_market_type
+msgid "Market Type"
+msgstr "Type de marché"
+
+#. module: eurekam_maintenance
+#: model:ir.actions.act_window,name:eurekam_maintenance.action_market_type
+#: model:ir.ui.menu,name:eurekam_maintenance.menu_config_market_type
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_market_type_list
+msgid "Markets"
+msgstr "Marchés"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_module_line__module_billing_id
+msgid "Module"
+msgstr "Module"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__module_billing_ids
+msgid "Module Assistance Billing"
+msgstr "Facturation Assistance module"
+
+#. module: eurekam_maintenance
+#: model:ir.actions.act_window,name:eurekam_maintenance.action_module_billing
+#: model:ir.ui.menu,name:eurekam_maintenance.menu_config_module_billing
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.report_maintenance_contract
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_module_billing_list
+msgid "Module Billing"
+msgstr "Facturation modules"
+
+#. module: eurekam_maintenance
+#: model:ir.model,name:eurekam_maintenance.model_eurekam_module_billing
+msgid "Module Billing Type"
+msgstr "Type de facturation module"
+
+#. module: eurekam_maintenance
+#: model:ir.actions.act_window,name:eurekam_maintenance.action_module_status
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_res_partner__module_status_ids
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_res_users__module_status_ids
+#: model:ir.ui.menu,name:eurekam_maintenance.menu_config_module_status
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_module_status_list
+msgid "Module Statuses"
+msgstr "Statuts module"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
+msgid ""
+"Modules billed on top of the maintenance, each\n"
+"                                with its own annual amount and a start year. They\n"
+"                                generate their own order / invoice lines for the\n"
+"                                years within their window (e.g. a Premium module\n"
+"                                billed from 2027 on a contract started in 2025)."
+msgstr ""
+"Modules facturés en plus de la maintenance, chacun avec son montant annuel "
+"et une année de début. Ils génèrent leurs propres lignes de commande/facture"
+" pour les années de leur fenêtre (ex : un module Premium facturé à partir de"
+" 2027 sur un contrat commencé en 2025)."
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
+msgid ""
+"Most common case: upon receipt of a customer purchase order, creates a "
+"sale.order with N lines according to the frequency (1 for Annual, 2 for "
+"Semi-annual, 4 for Quarterly). Each SO line can be invoiced independently."
+msgstr ""
+"Cas le plus courant : à réception d'un bon de commande client, crée un "
+"sale.order avec N lignes selon la cadence (1 pour Annuelle, 2 pour "
+"Semestrielle, 4 pour Trimestrielle). Chaque ligne du devis peut être "
+"facturée indépendamment."
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_search
+msgid "My Contracts"
+msgstr "Mes contrats"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_billing_frequency__name
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_central_purchasing__name
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_market_type__name
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_billing__name
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_status__name
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_special_equipment__name
+msgid "Name"
+msgstr "Nom"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_contract_renewal_wizard_form
+msgid "New Contract"
+msgstr "Nouveau contrat"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_renewal_wizard__new_date_end
+msgid "New End Date"
+msgstr "Nouvelle date de fin"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_renewal_wizard__new_maintenance_amount
+msgid "New Maintenance Amount"
+msgstr "Nouveau montant de maintenance"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_order_wizard_form
+msgid "New Maintenance Customer Order"
+msgstr "Nouvelle commande client de maintenance"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_renewal_wizard__new_date_start
+msgid "New Start Date"
+msgstr "Nouvelle date de début"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__renewed_to_ids
+msgid "Next Contracts (renewed to)"
+msgstr "Contrats suivants (renouvelés vers)"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__syntec_revision__no
+msgid "No"
+msgstr "Non"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__res_partner__maintenance_status__none
+msgid "No commercial relationship"
+msgstr "Aucune relation commerciale"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.actions.act_window,help:eurekam_maintenance.action_maintenance_clients_without_contract
+msgid "No customer forgotten 🎉"
+msgstr "Aucun client oublié 🎉"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.report_maintenance_contract
+msgid "No yearly line (use \"Generate Yearly Lines\")."
+msgstr "Aucune ligne annuelle (utilisez « Générer les lignes annuelles »)."
+
+#. module: eurekam_maintenance
+#: model_terms:ir.actions.act_window,help:eurekam_maintenance.action_maintenance_contract_line
+msgid "No yearly line yet"
+msgstr "Aucune ligne annuelle pour le moment"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_line_search
+msgid "Not Invoiced"
+msgstr "Non facturé"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_module_line__notes
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract_line__notes
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_line_form
+msgid "Notes"
+msgstr "Notes"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__sequence_number
+msgid "Number"
+msgstr "Numéro"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_res_partner__nb_workstations
+#: model:ir.model.fields,help:eurekam_maintenance.field_res_users__nb_workstations
+msgid "Number of Drugcam workstations installed on site."
+msgstr "Nombre de postes Drugcam installés sur site."
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_order_wizard__preview_period_count
+msgid "Number of Lines to Create"
+msgstr "Nombre de lignes à créer"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__nb_products
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.report_maintenance_contract
+msgid "Number of Products"
+msgstr "Nombre de produits"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_res_partner__nb_workstations
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_res_users__nb_workstations
+msgid "Number of Workstations"
+msgstr "Nombre de postes"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_contract_renewal_wizard__partner_id
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_contract__partner_id
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_contract_line__partner_id
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_order_wizard__partner_id
+msgid ""
+"Only contacts flagged as Maintenance Establishment (Eurekam Maintenance tab "
+"of the partner form) can be selected."
+msgstr ""
+"Seuls les contacts marqués « Établissement de maintenance » (onglet "
+"Maintenance Eurekam de la fiche) peuvent être sélectionnés."
+
+#. module: eurekam_maintenance
+#: model:ir.model.constraint,message:eurekam_maintenance.constraint_eurekam_maintenance_contract_line_unique_contract_year
+msgid "Only one yearly line is allowed per contract and per year."
+msgstr "Une seule ligne annuelle est autorisée par contrat et par année."
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_contract_renewal_wizard_form
+msgid "Options"
+msgstr "Options"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_order_wizard__coverage_mode
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_order_wizard_form
+msgid "Order Scope"
+msgstr "Périmètre de la commande"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__order_status
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.report_maintenance_contract
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_search
+msgid "Order Status"
+msgstr "Statut de commande"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__duration
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.report_maintenance_contract
+msgid "Ordered Duration"
+msgstr "Durée commandée"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
+msgid "Orders"
+msgstr "Commandes"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_order_wizard__customer_po_date
+msgid "PO Receipt Date"
+msgstr "Date de réception du BC"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_line_search
+msgid "Partially Invoiced"
+msgstr "Partiellement facturé"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__order_status__pending
+msgid "Pending"
+msgstr "En attente"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_contract_renewal_wizard__syntec_rate
+msgid "Percentage of revaluation applied to the maintenance amount."
+msgstr "Pourcentage de revalorisation appliqué au montant de maintenance."
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.report_maintenance_contract
+msgid "Period and Duration"
+msgstr "Période et durée"
+
+#. module: eurekam_maintenance
+#: model:eurekam.module.billing,name:eurekam_maintenance.mod_bill_clinical_trial_premium
+msgid "Premium Clinical Trial Module"
+msgstr "Module Essai Clinique Premium"
+
+#. module: eurekam_maintenance
+#: model:eurekam.module.billing,name:eurekam_maintenance.mod_bill_clinical_trial_premium_free
+msgid "Premium Clinical Trial Module (free)"
+msgstr "Module Essai Clinique Premium offert"
+
+#. module: eurekam_maintenance
+#: model:eurekam.module.billing,name:eurekam_maintenance.mod_bill_stats_premium
+msgid "Premium Statistics Module"
+msgstr "Module Statistique Premium"
+
+#. module: eurekam_maintenance
+#: model:eurekam.module.billing,name:eurekam_maintenance.mod_bill_stats_premium_free
+msgid "Premium Statistics Module (free)"
+msgstr "Module Statistique Premium offert"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_order_wizard_form
+msgid "Preview of What Will Be Created"
+msgstr "Aperçu de ce qui sera créé"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_renewal_wizard__old_amount
+msgid "Previous Amount"
+msgstr "Montant précédent"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__renewed_from_id
+msgid "Previous Contract (renewed from)"
+msgstr "Contrat précédent (renouvelé depuis)"
+
+#. module: eurekam_maintenance
+#: model:eurekam.central.purchasing,name:eurekam_maintenance.cp_private
+#: model:eurekam.market.type,name:eurekam_maintenance.market_private
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__market_type__private
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__res_partner__central_purchasing__private
+msgid "Private"
+msgstr "Privé"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_renewal_wizard__product_id
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__product_id
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_order_wizard__product_id
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.report_maintenance_contract
+msgid "Product"
+msgstr "Produit"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__product_name
+msgid "Product Label"
+msgstr "Libellé produit"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_order_wizard__customer_po_reference
+msgid "Purchase order number sent by the customer."
+msgstr "Numéro du bon de commande envoyé par le client."
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__order_status__quote_sent
+msgid "Quote Sent"
+msgstr "Devis envoyé"
+
+#. module: eurekam_maintenance
+#: model:eurekam.central.purchasing,name:eurekam_maintenance.cp_resah
+#: model:eurekam.market.type,name:eurekam_maintenance.market_resah
+msgid "RESAH"
+msgstr "RESAH"
+
+#. module: eurekam_maintenance
+#: model:eurekam.central.purchasing,name:eurekam_maintenance.cp_ramsay
+msgid "Ramsay Santé"
+msgstr "Ramsay Santé"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
+msgid ""
+"Rare case: direct billing without a purchase order (private establishments)."
+" Generates the draft invoices covering the remaining contract duration "
+"according to the frequency."
+msgstr ""
+"Cas rare : facturation directe sans bon de commande (établissements privés)."
+" Génère les factures brouillon couvrant la durée restante du contrat selon "
+"la cadence."
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
+msgid ""
+"Re-evaluates the status (Active / Expiring Soon / Expired) based on the end "
+"date and today. Useful if the daily cron has not run (sandbox / staging "
+"case)."
+msgstr ""
+"Réévalue le statut (Actif / Expire bientôt / Expiré) à partir de la date de "
+"fin et d'aujourd'hui. Utile si le cron quotidien n'a pas tourné (cas sandbox"
+" / recette)."
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__order_status__received
+msgid "Received"
+msgstr "Reçue"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
+msgid "Recompute Status"
+msgstr "Recalculer l'état"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__name
+msgid "Reference"
+msgstr "Référence"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.actions.act_window,help:eurekam_maintenance.action_maintenance_establishment
+msgid "Reference your first customer establishment"
+msgstr "Référencez votre premier établissement client"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__res_partner__establishment_status__client_referrer
+msgid "Referrer Customer"
+msgstr "Client référent"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__res_partner__establishment_status__prospect_referrer
+msgid "Referrer Prospect"
+msgstr "Prospect référent"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
+msgid "Renew"
+msgstr "Renouveler"
+
+#. module: eurekam_maintenance
+#: model:ir.actions.act_window,name:eurekam_maintenance.action_contract_renewal_wizard
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_contract_renewal_wizard_form
+msgid "Renew Contract"
+msgstr "Renouveler le contrat"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.report_maintenance_contract
+msgid "Renewal"
+msgstr "Renouvellement"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__renewed_to_count
+msgid "Renewals Count"
+msgstr "Nb renouvellements"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__state__renewed
+msgid "Renewed"
+msgstr "Renouvelé"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
+msgid "Renewed To"
+msgstr "Renouvelé vers"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__requires_customer_order
+msgid "Requires Customer Order"
+msgstr "Nécessite une commande client"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
+msgid "Reset to Draft"
+msgstr "Remettre en brouillon"
+
+#. module: eurekam_maintenance
+#: model:ir.model,name:eurekam_maintenance.model_sale_order
+msgid "Sales Order"
+msgstr "Devis"
+
+#. module: eurekam_maintenance
+#: model:ir.model,name:eurekam_maintenance.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Ligne de bons de commande"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__commercial_id
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract_line__commercial_id
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_line_search
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_search
+msgid "Salesperson"
+msgstr "Commercial"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_line_search
+msgid "Search"
+msgstr "Recherche"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_search
+msgid "Search Contracts"
+msgstr "Rechercher des contrats"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_billing_frequency__sequence
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_central_purchasing__sequence
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_market_type__sequence
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_billing__sequence
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_status__sequence
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_special_equipment__sequence
+msgid "Sequence"
+msgstr "Séquence"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_contract__renewed_from_id
+msgid "Set automatically by the renewal wizard."
+msgstr "Renseigné automatiquement par l'assistant de renouvellement."
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_contract_renewal_wizard_form
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_order_wizard_form
+msgid "Source Contract"
+msgstr "Contrat source"
+
+#. module: eurekam_maintenance
+#: model:ir.actions.act_window,name:eurekam_maintenance.action_special_equipment
+#: model:ir.model,name:eurekam_maintenance.model_eurekam_special_equipment
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_res_partner__special_equipment_ids
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_res_users__special_equipment_ids
+#: model:ir.ui.menu,name:eurekam_maintenance.menu_config_special_equipment
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_special_equipment_list
+msgid "Special Equipment"
+msgstr "Équipements spéciaux"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.report_maintenance_contract
+msgid "Start Date"
+msgstr "Date de début"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__state
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_search
+msgid "Status"
+msgstr "Statut"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_contract__total_contract_value
+msgid "Sum of the yearly amounts of all contract lines."
+msgstr "Somme des montants annuels de toutes les lignes du contrat."
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__order_status__suspended
+msgid "Suspended"
+msgstr "Suspendue"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_renewal_wizard__syntec_delta
+msgid "Syntec Increase"
+msgstr "Augmentation Syntec"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_renewal_wizard__syntec_rate
+msgid "Syntec Rate (%)"
+msgstr "Taux Syntec (%)"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__syntec_revision
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.report_maintenance_contract
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_contract_renewal_wizard_form
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_search
+msgid "Syntec Revision"
+msgstr "Révision Syntec"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_res_partner__maintenance_status
+#: model:ir.model.fields,help:eurekam_maintenance.field_res_users__maintenance_status
+msgid ""
+"Synthetic indicator visible to the whole team (notably support) summarizing the maintenance contract state and the commercial relationship of the establishment. Computed in real time.\n"
+"- ACTIVE: at least 1 active contract\n"
+"- EXPIRING SOON: no active one but at least 1 expiring within 90 days\n"
+"- EXPIRED: all contracts are expired\n"
+"- Customer WITHOUT contract: no contract but at least 1 customer order (potential to convert)\n"
+"- No commercial relationship: neither contract nor order in Odoo"
+msgstr ""
+"Indicateur synthétique visible par toute l'équipe (notamment le support) résumant l'état du contrat de maintenance et la relation commerciale de l'établissement. Calculé en temps réel.\n"
+"- ACTIVE : au moins 1 contrat actif\n"
+"- EXPIRE BIENTÔT : aucun actif mais au moins 1 expirant sous 90 jours\n"
+"- EXPIRÉ : tous les contrats sont expirés\n"
+"- Client SANS contrat : aucun contrat mais au moins 1 commande client (potentiel à convertir)\n"
+"- Aucune relation commerciale : ni contrat ni commande dans Odoo"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.actions.act_window,help:eurekam_maintenance.action_maintenance_clients_without_contract
+msgid ""
+"The \"Companies Only\" filter is active by default; remove it to\n"
+"                also see individual contacts."
+msgstr ""
+"Le filtre « Sociétés uniquement » est actif par défaut ; retirez-le pour "
+"voir aussi les contacts individuels."
+
+#. module: eurekam_maintenance
+#: model:ir.model.constraint,message:eurekam_maintenance.constraint_eurekam_billing_frequency_unique_code
+msgid "The billing frequency code must be unique."
+msgstr "Le code de la cadence de facturation doit être unique."
+
+#. module: eurekam_maintenance
+#: model:ir.model.constraint,message:eurekam_maintenance.constraint_eurekam_central_purchasing_unique_code
+msgid "The central purchasing code must be unique."
+msgstr "Le code de la centrale d'achat doit être unique."
+
+#. module: eurekam_maintenance
+#: model:ir.model.constraint,message:eurekam_maintenance.constraint_eurekam_market_type_unique_code
+msgid "The market type code must be unique."
+msgstr "Le code du marché doit être unique."
+
+#. module: eurekam_maintenance
+#: model:ir.model.constraint,message:eurekam_maintenance.constraint_eurekam_module_billing_unique_code
+msgid "The module billing type code must be unique."
+msgstr "Le code du type de facturation module doit être unique."
+
+#. module: eurekam_maintenance
+#: model:ir.model.constraint,message:eurekam_maintenance.constraint_eurekam_module_status_unique_code
+msgid "The module status code must be unique."
+msgstr "Le code du statut module doit être unique."
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_contract_renewal_wizard_form
+msgid ""
+"The old contract will be switched to <b>Renewed</b> and a\n"
+"                        new contract will be created as <b>Active</b>, linked to\n"
+"                        the previous one through the \"Renewed From\" / \"Renewed To\"\n"
+"                        smart buttons."
+msgstr ""
+"L'ancien contrat sera basculé en <b>Renouvelé</b> et un nouveau contrat sera"
+" créé en <b>Actif</b>, lié au précédent via les boutons « Renouvelé depuis »"
+" / « Renouvelé vers »."
+
+#. module: eurekam_maintenance
+#: model:ir.model.constraint,message:eurekam_maintenance.constraint_eurekam_special_equipment_unique_code
+msgid "The special equipment code must be unique."
+msgstr "Le code de l'équipement spécial doit être unique."
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.report_maintenance_contract
+msgid "This contract is the renewal of"
+msgstr "Ce contrat est le renouvellement de"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.report_maintenance_contract
+msgid "This contract was renewed into:"
+msgstr "Ce contrat a été renouvelé en :"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.actions.act_window,help:eurekam_maintenance.action_maintenance_clients_without_contract
+msgid ""
+"This list shows the <b>customers</b> (at least one sale order)\n"
+"                that have <b>no maintenance contract</b> recorded — neither active\n"
+"                nor expired."
+msgstr ""
+"Cette liste affiche les <b>clients</b> (au moins une commande de vente) qui "
+"n'ont <b>aucun contrat de maintenance</b> enregistré — ni actif, ni expiré."
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_res_partner__is_maintenance_establishment
+#: model:ir.model.fields,help:eurekam_maintenance.field_res_users__is_maintenance_establishment
+msgid ""
+"Tick if this contact is a client establishment tracked for the Eurekam "
+"maintenance contracts. Only ticked contacts appear in the selection list "
+"when creating a contract."
+msgstr ""
+"Cochez si ce contact est un établissement client suivi pour les contrats de "
+"maintenance Eurekam. Seuls les contacts cochés apparaissent dans la liste de"
+" sélection lors de la création d'un contrat."
+
+#. module: eurekam_maintenance
+#: model_terms:ir.actions.act_window,help:eurekam_maintenance.action_maintenance_clients_without_contract
+msgid ""
+"To create a contract: <b>select a customer</b> in the list, then\n"
+"                menu <b>Action &gt; \"Create Maintenance Contract\"</b>.\n"
+"                The contract form opens pre-filled with that customer."
+msgstr ""
+"Pour créer un contrat : <b>sélectionnez un client</b> dans la liste, puis "
+"menu <b>Action &gt; « Créer un contrat de maintenance »</b>. Le formulaire "
+"de contrat s'ouvre pré-rempli avec ce client."
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_line_inline_list
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_line_list
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_list
+msgid "Total"
+msgstr "Total"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
+msgid "Total / year"
+msgstr "Total / an"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_order_wizard__preview_total_amount
+msgid "Total Amount (untaxed)"
+msgstr "Montant total (HT)"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__total_contract_value
+msgid "Total Contract Value"
+msgstr "Valeur totale du contrat"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
+msgid "Totals (computed)"
+msgstr "Totaux (calculés)"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.actions.act_window,help:eurekam_maintenance.action_maintenance_contract
+msgid ""
+"Track the full lifecycle of your Drugcam contracts:\n"
+"                billing, renewal, expiry alerts."
+msgstr ""
+"Suivez tout le cycle de vie de vos contrats Drugcam : facturation, "
+"renouvellement, alertes d'expiration."
+
+#. module: eurekam_maintenance
+#: model:eurekam.central.purchasing,name:eurekam_maintenance.cp_uniha
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__res_partner__central_purchasing__uniha
+msgid "UniHA"
+msgstr "UniHA"
 
 #. module: eurekam_maintenance
 #: model:eurekam.market.type,name:eurekam_maintenance.market_uniha_2019
@@ -1363,164 +1833,103 @@ msgid "UniHA 2025"
 msgstr "UniHA 2025"
 
 #. module: eurekam_maintenance
-#: model:eurekam.central.purchasing,name:eurekam_maintenance.cp_ageps
-#: model:eurekam.market.type,name:eurekam_maintenance.market_ageps
-#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__market_type__ageps
-msgid "AGEPS"
-msgstr "AGEPS"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__company_id
-msgid "Company"
-msgstr "Société"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__currency_id
-msgid "Currency"
-msgstr "Devise"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_renewal_wizard__contract_id
-msgid "Contract to Renew"
-msgstr "Contrat à renouveler"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_renewal_wizard__new_date_start
-msgid "New Start Date"
-msgstr "Nouvelle date de début"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_renewal_wizard__new_date_end
-msgid "New End Date"
-msgstr "Nouvelle date de fin"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_renewal_wizard__new_duration
-msgid "Duration"
-msgstr "Durée"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_renewal_wizard__apply_syntec
-msgid "Apply Syntec Revision"
-msgstr "Appliquer la révision Syntec"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_renewal_wizard__syntec_rate
-msgid "Syntec Rate (%)"
-msgstr "Taux Syntec (%)"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_renewal_wizard__old_amount
-msgid "Previous Amount"
-msgstr "Montant précédent"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_renewal_wizard__syntec_delta
-msgid "Syntec Increase"
-msgstr "Augmentation Syntec"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_renewal_wizard__new_maintenance_amount
-msgid "New Maintenance Amount"
-msgstr "Nouveau montant de maintenance"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_renewal_wizard__generate_lines
-msgid "Generate the New Contract Yearly Lines"
-msgstr "Générer les lignes annuelles du nouveau contrat"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_renewal_wizard__cancel_old_lines_invoiced
-msgid "Flag Unbilled Lines as Transferred"
-msgstr "Marquer les lignes non facturées comme transférées"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_order_wizard__partner_id
-msgid "Customer"
-msgstr "Client"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_order_wizard__year
-msgid "Covered Year"
-msgstr "Année couverte"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_order_wizard__customer_po_reference
-msgid "Customer PO Reference"
-msgstr "Référence BC client"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_order_wizard__customer_po_date
-msgid "PO Receipt Date"
-msgstr "Date de réception du BC"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_order_wizard__preview_period_count
-msgid "Number of Lines to Create"
-msgstr "Nombre de lignes à créer"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_order_wizard__preview_total_amount
-msgid "Total Amount (untaxed)"
-msgstr "Montant total (HT)"
-
-#. module: eurekam_maintenance
-#: model:eurekam.billing.frequency,description:eurekam_maintenance.freq_annual
-msgid "Billed once a year."
-msgstr "Facturé une fois par an."
-
-#. module: eurekam_maintenance
-#: model:eurekam.billing.frequency,description:eurekam_maintenance.freq_overdue
-msgid "Billed in arrears (at the end of the period)."
-msgstr "Facturé à terme échu (en fin de période)."
-
-#. module: eurekam_maintenance
-#: model:eurekam.billing.frequency,description:eurekam_maintenance.freq_upcoming
-msgid "Billed in advance (at the start of the period)."
-msgstr "Facturé à terme à échoir (en début de période)."
-
-#. module: eurekam_maintenance
-#: model:eurekam.billing.frequency,description:eurekam_maintenance.freq_full_period
-msgid "Billed for the whole period at once."
-msgstr "Facturé en une fois pour toute la période."
-
-#. module: eurekam_maintenance
-#: model:eurekam.billing.frequency,description:eurekam_maintenance.freq_semi_annual
-msgid "Billed every 6 months."
-msgstr "Facturé tous les 6 mois."
-
-#. module: eurekam_maintenance
-#: model:eurekam.billing.frequency,description:eurekam_maintenance.freq_quarterly
-msgid "Billed every 3 months."
-msgstr "Facturé tous les 3 mois."
-
-#. module: eurekam_maintenance
-#: model:eurekam.central.purchasing,name:eurekam_maintenance.cp_uniha
-msgid "UniHA"
-msgstr "UniHA"
-
-#. module: eurekam_maintenance
-#: model:eurekam.central.purchasing,name:eurekam_maintenance.cp_resah
-#: model:eurekam.market.type,name:eurekam_maintenance.market_resah
-msgid "RESAH"
-msgstr "RESAH"
-
-#. module: eurekam_maintenance
 #: model:eurekam.central.purchasing,name:eurekam_maintenance.cp_unicancer
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__res_partner__central_purchasing__unicancer
 msgid "Unicancer"
 msgstr "Unicancer"
 
 #. module: eurekam_maintenance
-#: model:eurekam.central.purchasing,name:eurekam_maintenance.cp_elsan
-msgid "ELSAN"
-msgstr "ELSAN"
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__gen__upgrade_gen2
+msgid "Upgrade GEN2"
+msgstr "Upgrade GEN2"
 
 #. module: eurekam_maintenance
-#: model:eurekam.central.purchasing,name:eurekam_maintenance.cp_ramsay
-msgid "Ramsay Santé"
-msgstr "Ramsay Santé"
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_order_wizard__coverage_mode__full_contract
+msgid "Whole contract (rare case)"
+msgstr "Intégralité du contrat (cas rare)"
 
 #. module: eurekam_maintenance
-#: model:eurekam.module.billing,description:eurekam_maintenance.mod_bill_free_valued
-msgid "Module provided for free but valued in the contract."
-msgstr "Module fourni gratuitement mais valorisé dans le contrat."
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_search
+msgid "With Syntec Revision"
+msgstr "Avec révision Syntec"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract_line__year
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.report_maintenance_contract
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_line_search
+msgid "Year"
+msgstr "Année"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_order_wizard__coverage_mode__annual_split
+msgid "Year (split by frequency)"
+msgstr "Année (découpée selon cadence)"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__line_ids
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.report_maintenance_contract
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_line_graph
+msgid "Yearly Amounts"
+msgstr "Montants annuels"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_line_pivot
+msgid "Yearly Amounts Analysis"
+msgstr "Analyse des montants annuels"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_line_form
+msgid "Yearly Line"
+msgstr "Ligne annuelle"
+
+#. module: eurekam_maintenance
+#: model:ir.actions.act_window,name:eurekam_maintenance.action_maintenance_contract_line
+#: model:ir.ui.menu,name:eurekam_maintenance.menu_maintenance_contract_lines
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_line_list
+msgid "Yearly Lines"
+msgstr "Lignes annuelles"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__line_count
+msgid "Yearly Lines Count"
+msgstr "Nb de lignes annuelles"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_sale_order_line__maintenance_line_id
+msgid ""
+"Yearly line of the maintenance contract this order line invoices a fraction "
+"of (e.g. Q1 2026)."
+msgstr ""
+"Ligne annuelle du contrat de maintenance dont cette ligne de commande "
+"facture une fraction (ex : Q1 2026)."
+
+#. module: eurekam_maintenance
+#: model_terms:ir.actions.act_window,help:eurekam_maintenance.action_maintenance_contract_line
+msgid ""
+"Yearly lines are created from a maintenance contract\n"
+"                (\"Generate Yearly Lines\" button)."
+msgstr ""
+"Les lignes annuelles sont créées depuis un contrat de maintenance (bouton « "
+"Générer les lignes annuelles »)."
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__syntec_revision__yes
+msgid "Yes"
+msgstr "Oui"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_res_partner_form_maintenance
+msgid "active contract(s))"
+msgstr "contrat(s) actif(s))"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_res_partner_form_maintenance
+msgid "contract(s) to renew)"
+msgstr "contrat(s) à renouveler)"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_res_partner_form_maintenance
+msgid "expired contract(s))"
+msgstr "contrat(s) expiré(s))"
