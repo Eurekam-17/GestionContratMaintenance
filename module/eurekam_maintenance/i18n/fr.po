@@ -1314,11 +1314,12 @@ msgstr "Nombre de postes"
 #: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_contract_line__partner_id
 #: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_order_wizard__partner_id
 msgid ""
-"Only contacts flagged as Maintenance Establishment (Eurekam Maintenance tab "
-"of the partner form) can be selected."
+"Any client company can be selected. It is automatically flagged as a "
+"Maintenance Establishment when the contract is created."
 msgstr ""
-"Seuls les contacts marqués « Établissement de maintenance » (onglet "
-"Maintenance Eurekam de la fiche) peuvent être sélectionnés."
+"N'importe quelle société cliente peut être sélectionnée. Elle est "
+"automatiquement marquée « Établissement de maintenance » à la création du "
+"contrat."
 
 #. module: eurekam_maintenance
 #: model:ir.model.constraint,message:eurekam_maintenance.constraint_eurekam_maintenance_contract_line_unique_contract_year

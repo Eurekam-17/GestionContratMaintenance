@@ -71,9 +71,9 @@ class EurekamMaintenanceContract(models.Model):
         required=True,
         tracking=True,
         index=True,
-        domain="[('is_maintenance_establishment', '=', True)]",
-        help="Only contacts flagged as Maintenance Establishment "
-             "(Eurekam Maintenance tab of the partner form) can be selected.",
+        domain="[('is_company', '=', True)]",
+        help="Any client company can be selected. It is automatically flagged "
+             "as a Maintenance Establishment when the contract is created.",
     )
     commercial_id = fields.Many2one(
         'res.users',
@@ -467,7 +467,26 @@ class EurekamMaintenanceContract(models.Model):
                 vals['sequence_number'] = self.env['ir.sequence'].next_by_code(
                     'eurekam.maintenance.contract'
                 ) or 'New'
-        return super().create(vals_list)
+        contracts = super().create(vals_list)
+        contracts._ensure_establishments_flagged()
+        return contracts
+
+    def write(self, vals):
+        res = super().write(vals)
+        if vals.get('partner_id'):
+            self._ensure_establishments_flagged()
+        return res
+
+    def _ensure_establishments_flagged(self):
+        """A company that gets a maintenance contract becomes a maintenance
+        establishment: it then shows up in the Establishments menu and exposes
+        the Eurekam Maintenance tab on its contact form. sudo() because a
+        maintenance user may not have write access on res.partner."""
+        to_flag = self.partner_id.filtered(
+            lambda p: not p.is_maintenance_establishment
+        )
+        if to_flag:
+            to_flag.sudo().write({'is_maintenance_establishment': True})
 
     # ==================================================================
     # Lifecycle helpers & actions

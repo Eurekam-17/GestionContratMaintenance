@@ -139,7 +139,7 @@ Le scénario type Eurekam est le suivant :
 2. Remplir les champs :
 
    **Identification**
-   - **Établissement** : le client (liste filtrée sur les établissements maintenance)
+   - **Établissement** : le client (toutes vos sociétés clientes ; il est automatiquement marqué « Établissement de maintenance » à la création du contrat)
    - **Produit** : le produit Drugcam de la base articles (ex: "Assistance DRUGCAM GEN2 Oncology FR")
    - **Libellé produit** (optionnel) : texte libre si tu veux préciser
    - **Commercial** : pré-rempli sur toi

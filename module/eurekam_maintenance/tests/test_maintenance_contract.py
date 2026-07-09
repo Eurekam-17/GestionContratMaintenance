@@ -500,6 +500,31 @@ class TestMaintenanceContract(TransactionCase):
         self.assertEqual(contract.sale_order_count, 1)
 
     # ======================================================================
+    # Auto-flag: a company becomes a maintenance establishment on contract
+    # ======================================================================
+    def test_contract_autoflags_establishment(self):
+        """A plain company (not pre-flagged) is automatically marked as a
+        maintenance establishment when a contract is created for it; the
+        partner_id domain no longer restricts selection to flagged partners."""
+        company = self.env['res.partner'].create({
+            'name': 'CH Auto-Flag Test',
+            'is_company': True,
+        })
+        self.assertFalse(company.is_maintenance_establishment)
+        contract = self._make_contract(partner_id=company.id)
+        self.assertTrue(
+            company.is_maintenance_establishment,
+            "The establishment must be auto-flagged on contract creation.",
+        )
+        # Re-pointing an existing contract to another company flags it too.
+        company2 = self.env['res.partner'].create({
+            'name': 'CH Auto-Flag Test 2',
+            'is_company': True,
+        })
+        contract.write({'partner_id': company2.id})
+        self.assertTrue(company2.is_maintenance_establishment)
+
+    # ======================================================================
     # 10. res.partner extension
     # ======================================================================
     def test_partner_extension(self):
