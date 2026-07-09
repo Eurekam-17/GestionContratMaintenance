@@ -11,16 +11,20 @@
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
 
-            <!-- Smart button: maintenance contracts counter.
-                 Only maintenance_status is declared invisible here: it has no
-                 visible occurrence elsewhere in the view and feeds the banner
-                 'invisible' expressions below. The other fields
-                 (is_maintenance_establishment, *_contract_count) are declared
-                 visibly further down (flag near the tags, counters inside the
-                 banners and the Eurekam tab), so an extra always-invisible copy
-                 is redundant and rejected by Odoo 18's view validation. -->
+            <!-- Fields consumed by the 'invisible' expressions of the smart
+                 button (below) and of the banners (declared just BEFORE the
+                 button box). In Odoo 18, a field referenced in an
+                 invisible/readonly/required expression must be declared BEFORE
+                 its first use in the view: a visible occurrence further down
+                 (e.g. is_maintenance_establishment near the tags) is NOT enough
+                 anymore — it was in Odoo 17, it no longer is. We therefore
+                 declare here, invisible, the two fields used by top-of-form
+                 modifiers: maintenance_status and is_maintenance_establishment.
+                 The *_contract_count fields are only displayed (never used in a
+                 modifier expression), so they don't need a copy here. -->
             <xpath expr="//div[@name='button_box']" position="inside">
                 <field name="maintenance_status" invisible="1"/>
+                <field name="is_maintenance_establishment" invisible="1"/>
                 <button name="action_view_maintenance_contracts" type="object"
                         class="oe_stat_button" icon="fa-wrench"
                         invisible="not is_maintenance_establishment">
