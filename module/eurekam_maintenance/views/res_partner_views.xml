@@ -84,9 +84,16 @@
                 </div>
             </xpath>
 
-            <!-- Flag in the form header (next to the name) -->
-            <xpath expr="//field[@name='category_id']" position="after">
-                <field name="is_maintenance_establishment"/>
+            <!-- Establishment flag. Anchored on //notebook (position before),
+                 NOT on category_id: on heavily-customized partner forms
+                 (Studio/Traca/s6r) the Tags field can end up nested inside
+                 another field (observed: inside the mobile/phone widget), where
+                 a plain boolean does not render. //notebook is a stable anchor
+                 (our Eurekam Maintenance tab relies on it too). -->
+            <xpath expr="//notebook" position="before">
+                <group name="maintenance_flag_group">
+                    <field name="is_maintenance_establishment"/>
+                </group>
             </xpath>
 
             <!-- Eurekam Maintenance tab in the notebook -->

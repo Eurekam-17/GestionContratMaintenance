@@ -90,8 +90,8 @@ Avant de créer un contrat, vérifie que ton client existe dans **Contacts** :
 1. Ouvrir le menu **Contacts** standard d'Odoo
 2. Chercher le nom de l'établissement (ex: "CH de Cornouaille")
 3. Si oui : ouvrir la fiche pour vérifier qu'il est bien marqué
-   « **Établissement de maintenance** » (case à cocher dans le bandeau du
-   formulaire, sous les Étiquettes)
+   « **Établissement de maintenance** » (case à cocher juste **au-dessus des
+   onglets** du formulaire)
 4. Si non : créer la fiche normalement, puis cocher
    « Établissement de maintenance »
 
