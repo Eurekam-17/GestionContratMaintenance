@@ -22,7 +22,7 @@ Run with:
 from datetime import date, timedelta
 
 from odoo import fields as ofields
-from odoo.exceptions import AccessError, UserError
+from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
@@ -498,6 +498,55 @@ class TestMaintenanceContract(TransactionCase):
             self.assertEqual(line.product_uom_qty, 1.0)
         # The contract sees the order
         self.assertEqual(contract.sale_order_count, 1)
+
+    # ======================================================================
+    # Guardrail: a contract year can only be ordered once (no duplicates),
+    # but a cancelled/deleted order can be recreated.
+    # ======================================================================
+    def test_order_unicity_guardrail(self):
+        today_year = ofields.Date.context_today(self.env['res.partner']).year
+        contract = self._make_contract(
+            date_start=date(today_year, 1, 1),
+            date_end=date(today_year, 12, 31),
+            maintenance_amount=12000.0,
+            requires_customer_order=True,
+        )
+        contract.action_activate()
+        contract.action_generate_lines()
+
+        def _make_wizard():
+            return self.env['eurekam.maintenance.order.wizard'].with_context(
+                default_contract_id=contract.id,
+            ).create({
+                'year': today_year,
+                'customer_po_reference': 'PO-1',
+                'customer_po_date': ofields.Date.context_today(self.env['res.partner']),
+            })
+
+        # 1st order for the year: OK
+        so = self.env['sale.order'].browse(_make_wizard().action_create_sale_order()['res_id'])
+        self.assertEqual(contract.sale_order_count, 1)
+
+        # 2nd order for the SAME year via the wizard: blocked with a clear message
+        with self.assertRaises(UserError):
+            _make_wizard().action_create_sale_order()
+
+        # Same guardrail at model level (imports / API / manual entry)
+        with self.assertRaises(ValidationError):
+            self.env['sale.order'].create({
+                'partner_id': self.partner.id,
+                'eurekam_maintenance_contract_id': contract.id,
+                'eurekam_maintenance_year': today_year,
+            })
+
+        # Cancel the order -> its year becomes recreatable
+        so._action_cancel()
+        so2 = self.env['sale.order'].browse(_make_wizard().action_create_sale_order()['res_id'])
+        self.assertNotEqual(so2, so)
+        self.assertEqual(so2.eurekam_maintenance_year, today_year)
+        # Only the active (non-cancelled) order is counted
+        self.assertEqual(
+            contract.sale_order_ids.filtered(lambda o: o.state != 'cancel'), so2)
 
     # ======================================================================
     # Auto-flag: a company becomes a maintenance establishment on contract

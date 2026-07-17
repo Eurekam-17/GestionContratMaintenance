@@ -138,9 +138,13 @@ class EurekamMaintenanceOrderWizard(models.TransientModel):
         if contract_id:
             contract = self.env['eurekam.maintenance.contract'].browse(contract_id)
             res['contract_id'] = contract.id
-            # Default proposed year: the first future year not yet covered by an order
+            # Default proposed year: the first future year not yet covered by an order.
+            # A cancelled order covers nothing: its year stays proposable, so a
+            # cancelled (or deleted) order can be recreated.
             covered_years = set(
-                contract.sale_order_ids.mapped('eurekam_maintenance_year')
+                contract.sale_order_ids
+                .filtered(lambda o: o.state != 'cancel')
+                .mapped('eurekam_maintenance_year')
             )
             today_year = fields.Date.context_today(self).year
             for line in contract.line_ids.sorted(key=lambda l: l.year):
@@ -170,6 +174,32 @@ class EurekamMaintenanceOrderWizard(models.TransientModel):
                 "Contract %s has no linked product. Set the 'Product' field "
                 "before creating an order.",
                 contract.sequence_number,
+            ))
+
+        # Guardrail: a contract year can only be ordered once. Checked here for a
+        # clear message before anything is created; sale.order also enforces it
+        # (_check_maintenance_order_unicity) for imports/API/manual entry.
+        # Cancelled orders are ignored -> a cancelled/deleted order is recreatable.
+        year_key = self.year if self.coverage_mode == 'annual_split' else 0
+        existing = contract.sale_order_ids.filtered(
+            lambda o: o.state != 'cancel' and o.eurekam_maintenance_year == year_key
+        )
+        if existing:
+            if year_key:
+                raise UserError(_(
+                    "Year %(year)s of contract %(contract)s is already covered by "
+                    "order %(existing)s.\n\n"
+                    "To recreate it, first cancel or delete %(existing)s.",
+                    year=year_key,
+                    contract=contract.sequence_number,
+                    existing=existing[0].name,
+                ))
+            raise UserError(_(
+                "Contract %(contract)s is already fully covered by order "
+                "%(existing)s.\n\n"
+                "To recreate it, first cancel or delete %(existing)s.",
+                contract=contract.sequence_number,
+                existing=existing[0].name,
             ))
 
         # Build the SO values

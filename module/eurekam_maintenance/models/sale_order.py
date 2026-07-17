@@ -10,7 +10,8 @@ Rare cases:
   as before (private healthcare establishments).
 """
 
-from odoo import fields, models
+from odoo import _, api, fields, models
+from odoo.exceptions import ValidationError
 
 
 class SaleOrder(models.Model):
@@ -29,6 +30,47 @@ class SaleOrder(models.Model):
         help="Contract year covered by this customer order. "
              "0 if the order covers the whole contract (rare case).",
     )
+
+    @api.constrains('eurekam_maintenance_contract_id', 'eurekam_maintenance_year', 'state')
+    def _check_maintenance_order_unicity(self):
+        """A contract year can only be ordered once.
+
+        Guardrail against duplicates: without it the wizard can be replayed
+        indefinitely and recreate an order that already exists. Enforced on the
+        model (not only in the wizard) so that imports/migrations, the API and
+        manual entry are covered too.
+
+        Cancelled orders are ignored: an order that was cancelled -- or deleted --
+        can legitimately be recreated.
+        """
+        for order in self:
+            contract = order.eurekam_maintenance_contract_id
+            if not contract or order.state == 'cancel':
+                continue
+            duplicate = self.sudo().search([
+                ('id', '!=', order.id),
+                ('eurekam_maintenance_contract_id', '=', contract.id),
+                ('eurekam_maintenance_year', '=', order.eurekam_maintenance_year),
+                ('state', '!=', 'cancel'),
+            ], limit=1)
+            if not duplicate:
+                continue
+            if order.eurekam_maintenance_year:
+                raise ValidationError(_(
+                    "Order %(existing)s already covers year %(year)s of contract "
+                    "%(contract)s.\n\n"
+                    "A maintenance year can only be ordered once. To recreate it, "
+                    "first cancel or delete %(existing)s.",
+                    existing=duplicate.name,
+                    year=order.eurekam_maintenance_year,
+                    contract=contract.sequence_number,
+                ))
+            raise ValidationError(_(
+                "Order %(existing)s already covers the whole contract %(contract)s.\n\n"
+                "To recreate it, first cancel or delete %(existing)s.",
+                existing=duplicate.name,
+                contract=contract.sequence_number,
+            ))
 
 
 class SaleOrderLine(models.Model):
