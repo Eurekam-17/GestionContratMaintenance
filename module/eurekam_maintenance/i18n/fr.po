@@ -2048,3 +2048,526 @@ msgstr "Facturation à terme à échoir (en début de période)."
 #: model:eurekam.billing.frequency,description:eurekam_maintenance.freq_overdue
 msgid "Billed in arrears (at the end of the period)."
 msgstr "Facturation à terme échu (en fin de période)."
+
+#. module: eurekam_maintenance
+#: model:mail.template,body_html:eurekam_maintenance.mail_template_contract_expiring
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p>Hello <t t-out=\"object.commercial_id.name or 'user'\"/>,</p>\n"
+"                    <p>\n"
+"                        The maintenance contract\n"
+"                        <strong t-out=\"object.sequence_number\"/>\n"
+"                        for the establishment\n"
+"                        <strong t-out=\"object.partner_id.display_name\"/>\n"
+"                        expires on\n"
+"                        <strong t-out=\"object.date_end\"/>\n"
+"                        (that is in <t t-out=\"object.days_to_expiry\"/> days).\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        <strong>Current year amount:</strong>\n"
+"                        <t t-out=\"object.current_year_amount\"/>\n"
+"                        <t t-out=\"object.currency_id.symbol or '€'\"/>\n"
+"                    </p>\n"
+"                    <p>Please initiate the renewal with the customer.</p>\n"
+"                    <p style=\"margin: 16px 0px 16px 0px;\">\n"
+"                        <a t-att-href=\"object.get_base_url() + '/odoo/action-eurekam_maintenance.action_maintenance_contract/' + str(object.id)\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                            Open the contract\n"
+"                        </a>\n"
+"                    </p>\n"
+"                    <p>The Eurekam team.</p>\n"
+"                </div>\n"
+"            "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p>Bonjour <t t-out=\"object.commercial_id.name or 'utilisateur'\"/>,</p>\n"
+"                    <p>\n"
+"                        Le contrat de maintenance\n"
+"                        <strong t-out=\"object.sequence_number\"/>\n"
+"                        de l'établissement\n"
+"                        <strong t-out=\"object.partner_id.display_name\"/>\n"
+"                        arrive à échéance le\n"
+"                        <strong t-out=\"object.date_end\"/>\n"
+"                        (soit dans <t t-out=\"object.days_to_expiry\"/> jours).\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        <strong>Montant de l'année en cours :</strong>\n"
+"                        <t t-out=\"object.current_year_amount\"/>\n"
+"                        <t t-out=\"object.currency_id.symbol or '€'\"/>\n"
+"                    </p>\n"
+"                    <p>Merci d'engager le renouvellement avec le client.</p>\n"
+"                    <p style=\"margin: 16px 0px 16px 0px;\">\n"
+"                        <a t-att-href=\"object.get_base_url() + '/odoo/action-eurekam_maintenance.action_maintenance_contract/' + str(object.id)\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                            Ouvrir le contrat\n"
+"                        </a>\n"
+"                    </p>\n"
+"                    <p>L'équipe Eurekam.</p>\n"
+"                </div>\n"
+"            "
+
+#. module: eurekam_maintenance
+#: model:mail.template,body_html:eurekam_maintenance.mail_template_contract_expired
+msgid ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p>Hello,</p>\n"
+"                    <p style=\"color: #b32d00;\">\n"
+"                        <strong>The maintenance contract\n"
+"                            <t t-out=\"object.sequence_number\"/>\n"
+"                        has expired.</strong>\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        <strong>Establishment:</strong>\n"
+"                        <t t-out=\"object.partner_id.display_name\"/><br/>\n"
+"                        <strong>Salesperson:</strong>\n"
+"                        <t t-out=\"object.commercial_id.name or 'unassigned'\"/><br/>\n"
+"                        <strong>End date:</strong>\n"
+"                        <t t-out=\"object.date_end\"/><br/>\n"
+"                        <strong>Current year amount:</strong>\n"
+"                        <t t-out=\"object.current_year_amount\"/>\n"
+"                        <t t-out=\"object.currency_id.symbol or '€'\"/>\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        Action required: quickly decide whether the contract should\n"
+"                        be renewed, extended or closed.\n"
+"                    </p>\n"
+"                    <p style=\"margin: 16px 0px 16px 0px;\">\n"
+"                        <a t-att-href=\"object.get_base_url() + '/odoo/action-eurekam_maintenance.action_maintenance_contract/' + str(object.id)\" style=\"background-color: #b32d00; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                            Open the contract\n"
+"                        </a>\n"
+"                    </p>\n"
+"                    <p>The Eurekam team.</p>\n"
+"                </div>\n"
+"            "
+msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"                    <p>Bonjour,</p>\n"
+"                    <p style=\"color: #b32d00;\">\n"
+"                        <strong>Le contrat de maintenance\n"
+"                            <t t-out=\"object.sequence_number\"/>\n"
+"                        est arrivé à échéance.</strong>\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        <strong>Établissement :</strong>\n"
+"                        <t t-out=\"object.partner_id.display_name\"/><br/>\n"
+"                        <strong>Commercial :</strong>\n"
+"                        <t t-out=\"object.commercial_id.name or 'non attribué'\"/><br/>\n"
+"                        <strong>Date de fin :</strong>\n"
+"                        <t t-out=\"object.date_end\"/><br/>\n"
+"                        <strong>Montant de l'année en cours :</strong>\n"
+"                        <t t-out=\"object.current_year_amount\"/>\n"
+"                        <t t-out=\"object.currency_id.symbol or '€'\"/>\n"
+"                    </p>\n"
+"                    <p>\n"
+"                        Action requise : décider rapidement si le contrat doit\n"
+"                        être renouvelé, prolongé ou clôturé.\n"
+"                    </p>\n"
+"                    <p style=\"margin: 16px 0px 16px 0px;\">\n"
+"                        <a t-att-href=\"object.get_base_url() + '/odoo/action-eurekam_maintenance.action_maintenance_contract/' + str(object.id)\" style=\"background-color: #b32d00; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px;\">\n"
+"                            Ouvrir le contrat\n"
+"                        </a>\n"
+"                    </p>\n"
+"                    <p>L'équipe Eurekam.</p>\n"
+"                </div>\n"
+"            "
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__message_needaction
+msgid "Action Needed"
+msgstr "Nécessite une action"
+
+#. module: eurekam_maintenance
+#: model:eurekam.module.status,name:eurekam_maintenance.mod_status_active_unvalued
+msgid "Active / not valued"
+msgstr "Activé / non valorisé"
+
+#. module: eurekam_maintenance
+#: model:eurekam.module.status,name:eurekam_maintenance.mod_status_active_valued
+msgid "Active / valued"
+msgstr "Activé / valorisé"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__activity_ids
+msgid "Activities"
+msgstr "Activités"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Activité exception décoration"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__activity_state
+msgid "Activity State"
+msgstr "Statut"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Icône de type d'activité"
+
+#. module: eurekam_maintenance
+#: model:eurekam.billing.frequency,name:eurekam_maintenance.freq_annual
+msgid "Annual"
+msgstr "Annuelle"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__message_attachment_count
+msgid "Attachment Count"
+msgstr "Nombre de pièces jointes"
+
+#. module: eurekam_maintenance
+#: model:eurekam.module.billing,name:eurekam_maintenance.mod_bill_clinical_trial
+msgid "Clinical Trial Module Billing"
+msgstr "Facturation Module Essai Clinique"
+
+#. module: eurekam_maintenance
+#: model:eurekam.module.status,name:eurekam_maintenance.mod_status_clinical_trial
+msgid "Clinical trials"
+msgstr "Essais cliniques"
+
+#. module: eurekam_maintenance
+#: model:ir.model,name:eurekam_maintenance.model_res_partner
+msgid "Contact"
+msgstr "Contact"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_billing_frequency__create_uid
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_central_purchasing__create_uid
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_module_line__create_uid
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_renewal_wizard__create_uid
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__create_uid
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract_line__create_uid
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_order_wizard__create_uid
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_market_type__create_uid
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_billing__create_uid
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_status__create_uid
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_special_equipment__create_uid
+msgid "Created by"
+msgstr "Créé par"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_billing_frequency__create_date
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_central_purchasing__create_date
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_module_line__create_date
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_renewal_wizard__create_date
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__create_date
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract_line__create_date
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_order_wizard__create_date
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_market_type__create_date
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_billing__create_date
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_status__create_date
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_special_equipment__create_date
+msgid "Created on"
+msgstr "Créé le"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_billing_frequency__description
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_central_purchasing__description
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_market_type__description
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_billing__description
+msgid "Description"
+msgstr "Description"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_billing_frequency__display_name
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_central_purchasing__display_name
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_module_line__display_name
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_renewal_wizard__display_name
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__display_name
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract_line__display_name
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_order_wizard__display_name
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_market_type__display_name
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_billing__display_name
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_status__display_name
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_special_equipment__display_name
+msgid "Display Name"
+msgstr "Nom d'affichage"
+
+#. module: eurekam_maintenance
+#: model:ir.actions.server,name:eurekam_maintenance.cron_check_expiring_contracts_ir_actions_server
+msgid "Eurekam Maintenance: check expiring contracts"
+msgstr "Eurekam Maintenance : vérification des contrats arrivant à échéance"
+
+#. module: eurekam_maintenance
+#: model:ir.module.category,description:eurekam_maintenance.module_category_maintenance
+msgid "Eurekam maintenance contracts tracking."
+msgstr "Suivi des contrats de maintenance Eurekam."
+
+#. module: eurekam_maintenance
+#: model:mail.template,name:eurekam_maintenance.mail_template_contract_expired
+msgid "Eurekam: maintenance contract EXPIRED"
+msgstr "Eurekam : contrat de maintenance ÉCHU"
+
+#. module: eurekam_maintenance
+#: model:mail.template,name:eurekam_maintenance.mail_template_contract_expiring
+msgid "Eurekam: maintenance contract expiring soon"
+msgstr "Eurekam : contrat de maintenance arrivant à échéance"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__message_follower_ids
+msgid "Followers"
+msgstr "Abonnés"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Abonnés (Partenaires)"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_contract__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Icône Font Awesome par ex. fa-tasks"
+
+#. module: eurekam_maintenance
+#: model:eurekam.module.billing,name:eurekam_maintenance.mod_bill_free_valued
+msgid "Free (valued)"
+msgstr "Gratuit (valorisé)"
+
+#. module: eurekam_maintenance
+#: model:eurekam.billing.frequency,name:eurekam_maintenance.freq_full_period
+msgid "Full Period"
+msgstr "Période intégrale"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__has_message
+msgid "Has Message"
+msgstr "A un message"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_billing_frequency__id
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_central_purchasing__id
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_module_line__id
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_renewal_wizard__id
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__id
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract_line__id
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_order_wizard__id
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_market_type__id
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_billing__id
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_status__id
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_special_equipment__id
+msgid "ID"
+msgstr "ID"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__activity_exception_icon
+msgid "Icon"
+msgstr "Icône"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_contract__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Icône pour indiquer une activité d'exception."
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_contract__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr "Si coché, de nouveaux messages demandent votre attention."
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_contract__message_has_error
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_contract__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Si coché, certains messages ont une erreur de livraison."
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__message_is_follower
+msgid "Is Follower"
+msgstr "Est un abonné"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_billing_frequency__write_uid
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_central_purchasing__write_uid
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_module_line__write_uid
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_renewal_wizard__write_uid
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__write_uid
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract_line__write_uid
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_order_wizard__write_uid
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_market_type__write_uid
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_billing__write_uid
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_status__write_uid
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_special_equipment__write_uid
+msgid "Last Updated by"
+msgstr "Dernière mise à jour par"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_billing_frequency__write_date
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_central_purchasing__write_date
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_module_line__write_date
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_renewal_wizard__write_date
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__write_date
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract_line__write_date
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_order_wizard__write_date
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_market_type__write_date
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_billing__write_date
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_status__write_date
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_special_equipment__write_date
+msgid "Last Updated on"
+msgstr "Dernière mise à jour le"
+
+#. module: eurekam_maintenance
+#: model:mail.template,subject:eurekam_maintenance.mail_template_contract_expiring
+msgid "Maintenance contract expiring: {{ object.sequence_number }}"
+msgstr ""
+"Contrat de maintenance arrivant à échéance : {{ object.sequence_number }}"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__message_has_error
+msgid "Message Delivery error"
+msgstr "Erreur d'envoi du message"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__message_ids
+msgid "Messages"
+msgstr "Messages"
+
+#. module: eurekam_maintenance
+#: model:eurekam.module.billing,description:eurekam_maintenance.mod_bill_free_valued
+msgid "Module provided for free but valued in the contract."
+msgstr "Module fourni gratuitement mais valorisé dans le contrat."
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__my_activity_date_deadline
+msgid "My Activity Deadline"
+msgstr "Échéance de mon activité"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__activity_calendar_event_id
+msgid "Next Activity Calendar Event"
+msgstr "Activité suivante de l'événement du calendrier"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Date limite de l'Activité à Venir"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__activity_summary
+msgid "Next Activity Summary"
+msgstr "Résumé d'activité suivant"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__activity_type_id
+msgid "Next Activity Type"
+msgstr "Type d'Activités à Venir"
+
+#. module: eurekam_maintenance
+#: model:eurekam.module.billing,name:eurekam_maintenance.mod_bill_none
+msgid "No module"
+msgstr "Aucun module"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Nombre d'actions"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__message_has_error_counter
+msgid "Number of errors"
+msgstr "Nombre d'erreurs"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_contract__message_needaction_counter
+msgid "Number of messages requiring action"
+msgstr "Nombre de messages nécessitant une action"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_contract__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Nombre de messages avec des erreurs d'envoi"
+
+#. module: eurekam_maintenance
+#: model:eurekam.billing.frequency,name:eurekam_maintenance.freq_overdue
+msgid "Overdue"
+msgstr "À échu"
+
+#. module: eurekam_maintenance
+#: model:eurekam.billing.frequency,name:eurekam_maintenance.freq_quarterly
+msgid "Quarterly"
+msgstr "Trimestrielle"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__rating_ids
+msgid "Ratings"
+msgstr "Évaluations"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__activity_user_id
+msgid "Responsible User"
+msgstr "Responsable"
+
+#. module: eurekam_maintenance
+#: model:eurekam.special.equipment,name:eurekam_maintenance.equip_robot
+msgid "Robot"
+msgstr "Robot"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Erreur d'envoi SMS"
+
+#. module: eurekam_maintenance
+#: model:eurekam.billing.frequency,name:eurekam_maintenance.freq_semi_annual
+msgid "Semi-annual"
+msgstr "Semestrielle"
+
+#. module: eurekam_maintenance
+#: model:eurekam.special.equipment,name:eurekam_maintenance.equip_spectro
+msgid "Spectro"
+msgstr "Spectro"
+
+#. module: eurekam_maintenance
+#: model:eurekam.module.status,name:eurekam_maintenance.mod_status_statistics
+msgid "Statistics"
+msgstr "Statistique"
+
+#. module: eurekam_maintenance
+#: model:eurekam.module.billing,name:eurekam_maintenance.mod_bill_stats
+msgid "Statistics Module Billing"
+msgstr "Facturation Module Statistique"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_contract__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Statut basé sur les activités\n"
+"En retard : la date d'échéance est déjà dépassée\n"
+"Aujourd'hui : la date d'activité est aujourd'hui\n"
+"Planifiée : activités futures"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_contract__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Type d'activité d'exception enregistrée"
+
+#. module: eurekam_maintenance
+#: model:eurekam.module.status,name:eurekam_maintenance.mod_status_unspecified
+msgid "Unspecified"
+msgstr "Non précisé"
+
+#. module: eurekam_maintenance
+#: model:eurekam.billing.frequency,name:eurekam_maintenance.freq_upcoming
+msgid "Upcoming"
+msgstr "À échoir"
+
+#. module: eurekam_maintenance
+#: model:res.groups,name:eurekam_maintenance.group_maintenance_user
+msgid "User"
+msgstr "Utilisateur"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__website_message_ids
+msgid "Website Messages"
+msgstr "Messages du site web"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_contract__website_message_ids
+msgid "Website communication history"
+msgstr "Historique de communication du site web"
+
+#. module: eurekam_maintenance
+#: model:mail.template,subject:eurekam_maintenance.mail_template_contract_expired
+msgid "[ALERT] Maintenance contract EXPIRED: {{ object.sequence_number }}"
+msgstr "[ALERTE] Contrat de maintenance ÉCHU : {{ object.sequence_number }}"
