@@ -807,36 +807,6 @@ msgid "Expiring Soon"
 msgstr "Expire bientôt"
 
 #. module: eurekam_maintenance
-#: model:eurekam.billing.frequency,description:eurekam_maintenance.freq_full_period
-msgid "Facturation de la totalité de la période en une fois."
-msgstr "Facturé en une fois pour toute la période."
-
-#. module: eurekam_maintenance
-#: model:eurekam.billing.frequency,description:eurekam_maintenance.freq_quarterly
-msgid "Facturation tous les 3 mois."
-msgstr "Facturé tous les 3 mois."
-
-#. module: eurekam_maintenance
-#: model:eurekam.billing.frequency,description:eurekam_maintenance.freq_semi_annual
-msgid "Facturation tous les 6 mois."
-msgstr "Facturé tous les 6 mois."
-
-#. module: eurekam_maintenance
-#: model:eurekam.billing.frequency,description:eurekam_maintenance.freq_annual
-msgid "Facturation une fois par an."
-msgstr "Facturé une fois par an."
-
-#. module: eurekam_maintenance
-#: model:eurekam.billing.frequency,description:eurekam_maintenance.freq_upcoming
-msgid "Facturation à terme à échoir (en début de période)."
-msgstr "Facturé à terme à échoir (en début de période)."
-
-#. module: eurekam_maintenance
-#: model:eurekam.billing.frequency,description:eurekam_maintenance.freq_overdue
-msgid "Facturation à terme échu (en fin de période)."
-msgstr "Facturé à terme échu (en fin de période)."
-
-#. module: eurekam_maintenance
 #: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_contract_renewal_wizard_form
 msgid "Final Amount"
 msgstr "Montant final"
@@ -855,11 +825,6 @@ msgstr "Marquer les lignes non facturées comme transférées"
 #: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
 msgid "Free comments..."
 msgstr "Commentaires libres..."
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_contract__product_name
-msgid "Free text if no linked product."
-msgstr "Texte libre si aucun produit lié."
 
 #. module: eurekam_maintenance
 #: model:ir.model.fields,help:eurekam_maintenance.field_res_partner__department_number
@@ -1176,18 +1141,6 @@ msgstr ""
 "et une année de début. Ils génèrent leurs propres lignes de commande/facture"
 " pour les années de leur fenêtre (ex : un module Premium facturé à partir de"
 " 2027 sur un contrat commencé en 2025)."
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
-msgid ""
-"Most common case: upon receipt of a customer purchase order, creates a "
-"sale.order with N lines according to the frequency (1 for Annual, 2 for "
-"Semi-annual, 4 for Quarterly). Each SO line can be invoiced independently."
-msgstr ""
-"Cas le plus courant : à réception d'un bon de commande client, crée un "
-"sale.order avec N lignes selon la cadence (1 pour Annuelle, 2 pour "
-"Semestrielle, 4 pour Trimestrielle). Chaque ligne du devis peut être "
-"facturée indépendamment."
 
 #. module: eurekam_maintenance
 #: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_search
@@ -2002,3 +1955,96 @@ msgstr "Montant actuellement enregistré sur la ligne annuelle du contrat."
 #: code:addons/eurekam_maintenance/wizard/maintenance_order_wizard.py:0
 msgid "The revised amount must be greater than zero."
 msgstr "Le montant révisé doit être supérieur à zéro."
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_contract__product_name
+msgid ""
+"Wording used on the customer order and invoice lines, before the number of workstations and the billed period.\n"
+"Pre-filled from the product's sales description ('Sales' tab, 'Sales Description'); can be overridden manually."
+msgstr ""
+"Libellé repris sur les lignes de devis, de commande et de facture, avant le nombre de postes et la période facturée.\n"
+"Pré-rempli depuis le « Descriptif du devis » de l'article (onglet Vente) ; modifiable à la main."
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
+msgid ""
+"Standard route: upon receipt of a customer purchase order, creates a "
+"sale.order with N lines according to the frequency (1 for Annual, 2 for "
+"Semi-annual, 4 for Quarterly). Each SO line can be invoiced independently."
+msgstr ""
+"Circuit normal : à réception d'un bon de commande client, crée un sale.order"
+" avec N lignes selon la cadence (1 pour Annuelle, 2 pour Semestrielle, 4 "
+"pour Trimestrielle). Chaque ligne du devis peut être facturée "
+"indépendamment."
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
+msgid ""
+"Exceptional fallback, managers only: bills the contract directly, without "
+"going through a customer order. Generates the draft invoices covering the "
+"remaining contract duration according to the frequency."
+msgstr ""
+"Secours exceptionnel, managers uniquement : facture le contrat directement, "
+"sans passer par une commande client. Génère les factures brouillon couvrant "
+"la durée restante du contrat selon la cadence."
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_order_wizard_form
+msgid ""
+"The revised amount will also be written onto the\n"
+"                        <b>contract yearly line</b>, and the change traced in the\n"
+"                        contract chatter."
+msgstr ""
+"Le montant révisé sera également inscrit sur la\n"
+"                        <b>ligne annuelle du contrat</b>, et le changement tracé dans le\n"
+"                        fil de discussion du contrat."
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_order_wizard__apply_syntec
+msgid ""
+"Revalues the covered year before creating the order. The revised amount is written back onto the contract's yearly line, so the contract, the order and the invoices stay consistent.\n"
+"Only available on the 'Year' scope: revaluing the whole contract in one go is done through the renewal wizard."
+msgstr ""
+"Revalorise l'année couverte avant de créer la commande. Le montant révisé est reporté sur la ligne annuelle du contrat, afin que le contrat, la commande et les factures restent cohérents.\n"
+"Disponible uniquement sur le périmètre « Année » : pour revaloriser tout le contrat d'un coup, utilisez l'assistant de renouvellement."
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_order_wizard__revised_amount
+msgid ""
+"Amount actually ordered and written back onto the contract. Suggested from "
+"the rate, but freely editable (e.g. to match the exact figure of the "
+"customer purchase order)."
+msgstr ""
+"Montant réellement commandé et reporté sur le contrat. Proposé à partir du "
+"taux, mais librement modifiable (par exemple pour coller au montant exact du"
+" bon de commande client)."
+
+#. module: eurekam_maintenance
+#: model:eurekam.billing.frequency,description:eurekam_maintenance.freq_annual
+msgid "Billed once a year."
+msgstr "Facturation une fois par an."
+
+#. module: eurekam_maintenance
+#: model:eurekam.billing.frequency,description:eurekam_maintenance.freq_semi_annual
+msgid "Billed every 6 months."
+msgstr "Facturation tous les 6 mois."
+
+#. module: eurekam_maintenance
+#: model:eurekam.billing.frequency,description:eurekam_maintenance.freq_quarterly
+msgid "Billed every 3 months."
+msgstr "Facturation tous les 3 mois."
+
+#. module: eurekam_maintenance
+#: model:eurekam.billing.frequency,description:eurekam_maintenance.freq_full_period
+msgid "Billed for the whole period at once."
+msgstr "Facturation de la totalité de la période en une fois."
+
+#. module: eurekam_maintenance
+#: model:eurekam.billing.frequency,description:eurekam_maintenance.freq_upcoming
+msgid "Billed in advance (at the start of the period)."
+msgstr "Facturation à terme à échoir (en début de période)."
+
+#. module: eurekam_maintenance
+#: model:eurekam.billing.frequency,description:eurekam_maintenance.freq_overdue
+msgid "Billed in arrears (at the end of the period)."
+msgstr "Facturation à terme échu (en fin de période)."
