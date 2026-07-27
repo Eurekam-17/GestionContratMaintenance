@@ -63,7 +63,10 @@ class EurekamMaintenanceContract(models.Model):
     )
     product_name = fields.Char(
         string='Product Label',
-        help="Free text if no linked product.",
+        help="Wording used on the customer order and invoice lines, before the "
+             "number of workstations and the billed period.\n"
+             "Pre-filled from the product's sales description ('Sales' tab, "
+             "'Sales Description'); can be overridden manually.",
     )
     partner_id = fields.Many2one(
         'res.partner',
@@ -321,17 +324,6 @@ class EurekamMaintenanceContract(models.Model):
         string='Invoices Count',
         compute='_compute_invoice_count',
     )
-    requires_customer_order = fields.Boolean(
-        string="Requires Customer Order",
-        default=True,
-        tracking=True,
-        help="If checked (most common case), billing must go through a customer "
-             "order (sale.order) created upon receipt of the customer purchase "
-             "order. The 'Create Contract Invoices' action is then disabled — "
-             "use 'Create Customer Order' instead.\n"
-             "If unchecked (rare case: some private establishments), billing is "
-             "done directly on the contract without a purchase order.",
-    )
     sale_order_ids = fields.One2many(
         'sale.order',
         'eurekam_maintenance_contract_id',
@@ -423,6 +415,26 @@ class EurekamMaintenanceContract(models.Model):
                     "The end date (%(end)s) must be after the start date (%(start)s).",
                     end=rec.date_end, start=rec.date_start,
                 ))
+
+    # ==================================================================
+    # Onchange
+    # ==================================================================
+
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        """Pre-fill the product label from the product's sales description.
+
+        The 'Sales Description' (product.template.description_sale, shown as
+        "Description du devis" in the Sales tab) is the wording the sales team
+        maintains for quotations; reusing it keeps the contract, the customer
+        order and the invoice consistent. Falls back to the product name when
+        no sales description is set. The user can still override the result.
+        """
+        for rec in self:
+            if not rec.product_id:
+                continue
+            description = (rec.product_id.description_sale or '').strip()
+            rec.product_name = description or rec.product_id.name
 
     @api.constrains('billing_frequency_ids')
     def _check_billing_unicity(self):
@@ -703,31 +715,85 @@ class EurekamMaintenanceContract(models.Model):
     @staticmethod
     def _periods_for_year(year, amount, period_code):
         """Return the list of sub-periods of a year:
-        [(label, fraction_amount, period_start, period_end), ...]
+        [(code, label, fraction_amount, period_start, period_end), ...]
 
         - 'annual'      -> 1 period (full year)
         - 'semi_annual' -> 2 periods (H1, H2), fraction = amount/2
         - 'quarterly'   -> 4 periods (Q1..Q4), fraction = amount/4
         - 'full_period' -> handled separately (action_create_invoices_for_contract)
+
+        `code` is a stable, never-translated technical key ("Q1 2026"). It is
+        what gets stored in invoice_origin and maintenance_period_label, so the
+        idempotency checks keep working whatever the user's language -- and the
+        orders/invoices created before the labels were reworded still match.
+        `label` is the customer-facing wording ("1er trimestre 2026" in French),
+        translated at runtime, and only ever used inside line descriptions.
         """
         if period_code == 'quarterly':
             f = _split_amount(amount, 4)
             return [
-                ("Q1 %s" % year, f[0], date(year, 1, 1), date(year, 3, 31)),
-                ("Q2 %s" % year, f[1], date(year, 4, 1), date(year, 6, 30)),
-                ("Q3 %s" % year, f[2], date(year, 7, 1), date(year, 9, 30)),
-                ("Q4 %s" % year, f[3], date(year, 10, 1), date(year, 12, 31)),
+                ("Q1 %s" % year, _("Q1 %(year)s", year=year),
+                 f[0], date(year, 1, 1), date(year, 3, 31)),
+                ("Q2 %s" % year, _("Q2 %(year)s", year=year),
+                 f[1], date(year, 4, 1), date(year, 6, 30)),
+                ("Q3 %s" % year, _("Q3 %(year)s", year=year),
+                 f[2], date(year, 7, 1), date(year, 9, 30)),
+                ("Q4 %s" % year, _("Q4 %(year)s", year=year),
+                 f[3], date(year, 10, 1), date(year, 12, 31)),
             ]
         if period_code == 'semi_annual':
             f = _split_amount(amount, 2)
             return [
-                ("H1 %s" % year, f[0], date(year, 1, 1), date(year, 6, 30)),
-                ("H2 %s" % year, f[1], date(year, 7, 1), date(year, 12, 31)),
+                ("H1 %s" % year, _("H1 %(year)s", year=year),
+                 f[0], date(year, 1, 1), date(year, 6, 30)),
+                ("H2 %s" % year, _("H2 %(year)s", year=year),
+                 f[1], date(year, 7, 1), date(year, 12, 31)),
             ]
         # 'annual' by default
         return [
-            ("Year %s" % year, amount, date(year, 1, 1), date(year, 12, 31)),
+            ("Year %s" % year, _("Year %(year)s", year=year),
+             amount, date(year, 1, 1), date(year, 12, 31)),
         ]
+
+    def _format_workstations(self):
+        """'4 workstations' fragment inserted in the billing line descriptions.
+
+        Empty string when the contract does not carry a meaningful count, so
+        the description degrades to "<label> - <period>" instead of showing a
+        misleading "0 workstations".
+        """
+        self.ensure_one()
+        count = self.nb_products or 0
+        if count <= 0:
+            return ''
+        if count == 1:
+            return _("%(n)s workstation", n=count)
+        return _("%(n)s workstations", n=count)
+
+    def _billing_line_description(self, period_label):
+        """Description of a maintenance billing line (customer order / invoice).
+
+        Format asked for by the sales team:
+            "<Product Label> - <N> workstations - <period>"
+        e.g. "Assistance DRUGCAM Oncology GEN2 - 4 postes - 1er trimestre 2026".
+
+        The product label falls back to the product name when the contract has
+        no explicit label (older contracts created before the field was
+        pre-filled from the product's sales description).
+        """
+        self.ensure_one()
+        base = (self.product_name or '').strip() or self.product_id.name or ''
+        parts = [p for p in (base, self._format_workstations(), period_label) if p]
+        return ' - '.join(parts)
+
+    def _full_period_label(self):
+        """Customer-facing wording of the 'whole contract' period."""
+        self.ensure_one()
+        return _(
+            "Full period (%(start)s to %(end)s)",
+            start=self.date_start or '?',
+            end=self.date_end or '?',
+        )
 
     @staticmethod
     def _invoice_date_for_period(period_start, period_end, timing_code):
@@ -768,16 +834,6 @@ class EurekamMaintenanceContract(models.Model):
         created_invoices = self.env['account.move']
 
         for contract in self:
-            if contract.requires_customer_order:
-                raise UserError(_(
-                    "Contract %s requires a customer order (PO). Direct billing "
-                    "is disabled for this contract.\n"
-                    "Click 'Create Customer Order' instead: a sale.order will be "
-                    "created with the lines matching the frequency, and each line "
-                    "can then be invoiced independently through the native Sales "
-                    "workflow.",
-                    contract.sequence_number,
-                ))
             if not contract.line_ids:
                 raise UserError(_(
                     "No yearly line for this contract. Click 'Generate Yearly "
@@ -827,14 +883,14 @@ class EurekamMaintenanceContract(models.Model):
                     origin = inv.invoice_origin or ''
                     if origin.startswith(prefix):
                         already_labels.add(origin[len(prefix):])
-                for label, fraction, p_start, p_end in periods:
-                    if label in already_labels:
+                for code, label, fraction, p_start, p_end in periods:
+                    if code in already_labels:
                         continue
                     inv_date = contract._invoice_date_for_period(
                         p_start, p_end, timing_code,
                     )
                     invoice = contract._create_invoice_period(
-                        line, label, fraction, inv_date,
+                        line, code, label, fraction, inv_date,
                     )
                     line.invoice_ids = [(4, invoice.id)]
                     created_invoices |= invoice
@@ -845,15 +901,16 @@ class EurekamMaintenanceContract(models.Model):
                     m_periods = contract._periods_for_year(
                         line.year, module_line.amount, period_code,
                     )
-                    for base_label, fraction, p_start, p_end in m_periods:
-                        full_label = "%s — %s" % (module_name, base_label)
-                        if full_label in already_labels:
+                    for base_code, base_label, fraction, p_start, p_end in m_periods:
+                        full_code = "%s — %s" % (module_name, base_code)
+                        if full_code in already_labels:
                             continue
                         inv_date = contract._invoice_date_for_period(
                             p_start, p_end, timing_code,
                         )
                         invoice = contract._create_invoice_module_period(
-                            line, module_line, base_label, fraction, inv_date,
+                            line, module_line, base_code, base_label,
+                            fraction, inv_date,
                         )
                         line.invoice_ids = [(4, invoice.id)]
                         created_invoices |= invoice
@@ -879,20 +936,17 @@ class EurekamMaintenanceContract(models.Model):
             'target': 'current',
         }
 
-    def _create_invoice_period(self, line, period_label, fraction_amount, invoice_date):
+    def _create_invoice_period(self, line, period_code, period_label,
+                               fraction_amount, invoice_date):
         """Create a draft invoice for a sub-period (Q1, H1, Year N, etc.)."""
         self.ensure_one()
         product = self.product_id
         product_var = product.product_variant_id if product else False
-        description = _(
-            "%(prod)s — %(period)s",
-            prod=product.name or self.product_name or '',
-            period=period_label,
-        )
+        description = self._billing_line_description(period_label)
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner_id.id,
-            'invoice_origin': "%s / %s" % (self.sequence_number, period_label),
+            'invoice_origin': "%s / %s" % (self.sequence_number, period_code),
             'invoice_date': invoice_date,
             'currency_id': self.currency_id.id,
             'company_id': self.company_id.id,
@@ -906,7 +960,8 @@ class EurekamMaintenanceContract(models.Model):
         return invoice
 
     def _create_invoice_module_period(self, yearly_line, module_line,
-                                      period_label, fraction_amount, invoice_date):
+                                      period_code, period_label,
+                                      fraction_amount, invoice_date):
         """Create a draft invoice for a billable module sub-period.
 
         The invoice_origin keeps a label of the form "MAINT/.../ Module — Q1
@@ -916,16 +971,12 @@ class EurekamMaintenanceContract(models.Model):
         self.ensure_one()
         product_var = module_line._get_invoice_product()
         module_name = module_line.module_billing_id.name or _("Module")
-        description = _(
-            "%(module)s — %(period)s",
-            module=module_name,
-            period=period_label,
-        )
+        description = "%s - %s" % (module_name, period_label)
         invoice = self.env['account.move'].create({
             'move_type': 'out_invoice',
             'partner_id': self.partner_id.id,
             'invoice_origin': "%s / %s — %s" % (
-                self.sequence_number, module_name, period_label,
+                self.sequence_number, module_name, period_code,
             ),
             'invoice_date': invoice_date,
             'currency_id': self.currency_id.id,
@@ -958,12 +1009,7 @@ class EurekamMaintenanceContract(models.Model):
         product = self.product_id
         product_var = product.product_variant_id if product else False
         total = sum(self.line_ids.mapped('amount'))
-        description = _(
-            "%(prod)s — Full period (%(start)s → %(end)s)",
-            prod=product.name or self.product_name or '',
-            start=self.date_start or '?',
-            end=self.date_end or '?',
-        )
+        description = self._billing_line_description(self._full_period_label())
         invoice_lines = [(0, 0, {
             'name': description,
             'product_id': product_var.id if product_var else False,

@@ -78,13 +78,7 @@ class TestMaintenanceContract(TransactionCase):
     # Helper
     # ----------------------------------------------------------------------
     def _make_contract(self, **vals):
-        """Create a contract with overridable default values.
-
-        By default requires_customer_order=False so the historical tests
-        (test_invoice_creation*) can keep calling
-        action_create_invoices_for_contract directly.
-        To test the SO workflow, pass requires_customer_order=True explicitly.
-        """
+        """Create a contract with overridable default values."""
         defaults = {
             'partner_id': self.partner.id,
             'product_id': self.product.id,
@@ -93,7 +87,6 @@ class TestMaintenanceContract(TransactionCase):
             'date_end': date(2026, 12, 31),
             'duration': '1y',
             'maintenance_amount': 10000.0,
-            'requires_customer_order': False,
         }
         defaults.update(vals)
         return self.env['eurekam.maintenance.contract'].create(defaults)
@@ -413,7 +406,6 @@ class TestMaintenanceContract(TransactionCase):
             date_end=date(today_year, 12, 31),
             maintenance_amount=10000.0,
             billing_frequency_ids=[(6, 0, [freq_annual.id])],
-            requires_customer_order=True,
         )
         contract.action_activate()
         contract.action_generate_lines()
@@ -455,9 +447,8 @@ class TestMaintenanceContract(TransactionCase):
     # 13. sale.order workflow (phase B): order creation from the wizard
     # ======================================================================
     def test_create_customer_order_quarterly(self):
-        """Quarterly frequency + requires_customer_order=True: the wizard
-        creates a sale.order with 4 lines (Q1/Q2/Q3/Q4), each line = 1
-        future invoice."""
+        """Quarterly frequency: the wizard creates a sale.order with 4 lines
+        (Q1/Q2/Q3/Q4), each line = 1 future invoice."""
         freq_quarterly = self.env.ref('eurekam_maintenance.freq_quarterly')
         freq_overdue = self.env.ref('eurekam_maintenance.freq_overdue')
         today_year = ofields.Date.context_today(self.env['res.partner']).year
@@ -466,14 +457,9 @@ class TestMaintenanceContract(TransactionCase):
             date_end=date(today_year, 12, 31),
             maintenance_amount=20000.0,
             billing_frequency_ids=[(6, 0, [freq_quarterly.id, freq_overdue.id])],
-            requires_customer_order=True,
         )
         contract.action_activate()
         contract.action_generate_lines()
-
-        # With requires_customer_order, direct billing is blocked
-        with self.assertRaises(UserError):
-            contract.action_create_invoices_for_contract()
 
         # Create the wizard and validate
         wizard = self.env['eurekam.maintenance.order.wizard'].with_context(
@@ -509,7 +495,6 @@ class TestMaintenanceContract(TransactionCase):
             date_start=date(today_year, 1, 1),
             date_end=date(today_year, 12, 31),
             maintenance_amount=12000.0,
-            requires_customer_order=True,
         )
         contract.action_activate()
         contract.action_generate_lines()
@@ -642,3 +627,143 @@ class TestMaintenanceContract(TransactionCase):
         ).search([])
         self.assertIn(contract_co1, contracts_visible)
         self.assertNotIn(contract_co2, contracts_visible)
+
+    # ======================================================================
+    # 14. Product label pre-filled from the product's sales description
+    # ======================================================================
+    def test_product_label_from_sales_description(self):
+        """Picking a product fills 'Product Label' from its sales description."""
+        self.product.description_sale = 'Assistance DRUGCAM Oncology GEN2'
+        contract = self.env['eurekam.maintenance.contract'].new({
+            'partner_id': self.partner.id,
+            'product_id': self.product.id,
+        })
+        contract._onchange_product_id()
+        self.assertEqual(
+            contract.product_name, 'Assistance DRUGCAM Oncology GEN2',
+        )
+
+        # No sales description -> fall back on the product name
+        product_bare = self.env['product.template'].create({
+            'name': 'Bare Maintenance (test)',
+            'type': 'service',
+        })
+        contract.product_id = product_bare
+        contract._onchange_product_id()
+        self.assertEqual(contract.product_name, 'Bare Maintenance (test)')
+
+    # ======================================================================
+    # 15. Order line wording: "<label> - N workstations - <period>"
+    # ======================================================================
+    def test_order_line_description_format(self):
+        freq_quarterly = self.env.ref('eurekam_maintenance.freq_quarterly')
+        today_year = ofields.Date.context_today(self.env['res.partner']).year
+        contract = self._make_contract(
+            date_start=date(today_year, 1, 1),
+            date_end=date(today_year, 12, 31),
+            maintenance_amount=20000.0,
+            billing_frequency_ids=[(6, 0, [freq_quarterly.id])],
+            product_name='Assistance DRUGCAM Oncology GEN2',
+            nb_products=4,
+        )
+        contract.action_activate()
+        contract.action_generate_lines()
+
+        wizard = self.env['eurekam.maintenance.order.wizard'].with_context(
+            default_contract_id=contract.id,
+        ).create({
+            'year': today_year,
+            'customer_po_reference': 'PO-LABEL-001',
+            'customer_po_date': ofields.Date.context_today(self.env['res.partner']),
+        })
+        sale_order = self.env['sale.order'].browse(
+            wizard.action_create_sale_order()['res_id'])
+
+        self.assertEqual(len(sale_order.order_line), 4)
+        first = sale_order.order_line.sorted(
+            key=lambda l: l.maintenance_period_label)[0]
+        self.assertEqual(
+            first.name,
+            'Assistance DRUGCAM Oncology GEN2 - 4 workstations - Q1 %s' % today_year,
+        )
+        # The stored period key stays the untranslated technical code, so the
+        # anti-duplicate checks keep matching whatever the user's language.
+        self.assertEqual(first.maintenance_period_label, 'Q1 %s' % today_year)
+
+        # A single workstation is worded in the singular, and a contract
+        # without a count degrades to "<label> - <period>".
+        self.assertEqual(
+            contract._billing_line_description('Q1 2026'),
+            'Assistance DRUGCAM Oncology GEN2 - 4 workstations - Q1 2026',
+        )
+        contract.nb_products = 1
+        self.assertIn('1 workstation -', contract._billing_line_description('Q1 2026'))
+        contract.nb_products = 0
+        self.assertEqual(
+            contract._billing_line_description('Q1 2026'),
+            'Assistance DRUGCAM Oncology GEN2 - Q1 2026',
+        )
+
+    # ======================================================================
+    # 16. Syntec revision applied when creating the customer order
+    # ======================================================================
+    def test_order_wizard_syntec_revision(self):
+        """Applying Syntec revalues the order AND the contract yearly line."""
+        freq_annual = self.env.ref('eurekam_maintenance.freq_annual')
+        today_year = ofields.Date.context_today(self.env['res.partner']).year
+        contract = self._make_contract(
+            date_start=date(today_year, 1, 1),
+            date_end=date(today_year, 12, 31),
+            maintenance_amount=10000.0,
+            billing_frequency_ids=[(6, 0, [freq_annual.id])],
+            syntec_revision='yes',
+        )
+        contract.action_activate()
+        contract.action_generate_lines()
+        line = contract.line_ids.filtered(lambda l: l.year == today_year)
+        self.assertAlmostEqual(line.amount, 10000.0, places=2)
+
+        wizard = self.env['eurekam.maintenance.order.wizard'].with_context(
+            default_contract_id=contract.id,
+        ).create({
+            'year': today_year,
+            'customer_po_reference': 'PO-SYNTEC-001',
+            'customer_po_date': ofields.Date.context_today(self.env['res.partner']),
+            'apply_syntec': True,
+            'syntec_rate': 3.0,
+        })
+        # The suggested amount follows the rate, and stays editable.
+        wizard._onchange_apply_syntec()
+        self.assertAlmostEqual(wizard.revised_amount, 10300.0, places=2)
+        self.assertAlmostEqual(wizard.syntec_delta, 300.0, places=2)
+
+        sale_order = self.env['sale.order'].browse(
+            wizard.action_create_sale_order()['res_id'])
+        self.assertAlmostEqual(
+            sum(sale_order.order_line.mapped('price_unit')), 10300.0, places=2,
+        )
+        # The contract yearly line has been revalued too.
+        self.assertAlmostEqual(line.amount, 10300.0, places=2)
+
+    def test_order_wizard_syntec_requires_flagged_contract(self):
+        """Syntec cannot be applied on a contract not flagged for revision."""
+        today_year = ofields.Date.context_today(self.env['res.partner']).year
+        contract = self._make_contract(
+            date_start=date(today_year, 1, 1),
+            date_end=date(today_year, 12, 31),
+            maintenance_amount=10000.0,
+            syntec_revision='no',
+        )
+        contract.action_activate()
+        contract.action_generate_lines()
+        wizard = self.env['eurekam.maintenance.order.wizard'].with_context(
+            default_contract_id=contract.id,
+        ).create({
+            'year': today_year,
+            'customer_po_reference': 'PO-SYNTEC-002',
+            'customer_po_date': ofields.Date.context_today(self.env['res.partner']),
+            'apply_syntec': True,
+            'revised_amount': 10300.0,
+        })
+        with self.assertRaises(UserError):
+            wizard.action_create_sale_order()

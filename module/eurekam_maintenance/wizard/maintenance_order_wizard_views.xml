@@ -7,6 +7,10 @@
         <field name="arch" type="xml">
             <form string="Create Customer Order">
                 <sheet>
+                    <!-- Declared first: currency_id backs every Monetary field
+                         below, and Odoo 18 requires modifier/currency fields to
+                         be present before their first use. -->
+                    <field name="currency_id" invisible="1"/>
                     <div class="oe_title">
                         <h2>New Maintenance Customer Order</h2>
                     </div>
@@ -33,6 +37,28 @@
                             <field name="preview_total_amount"/>
                         </group>
                     </group>
+                    <!-- Syntec revision: only for contracts flagged 'Yes',
+                         and only on the per-year scope (revaluing the whole
+                         contract at once is the renewal wizard's job). -->
+                    <field name="syntec_revision" invisible="1"/>
+                    <group string="Syntec Revision"
+                           invisible="syntec_revision != 'yes' or coverage_mode != 'annual_split'">
+                        <group>
+                            <field name="apply_syntec"/>
+                            <field name="syntec_rate" invisible="not apply_syntec"/>
+                        </group>
+                        <group>
+                            <field name="base_amount"/>
+                            <field name="revised_amount" invisible="not apply_syntec"/>
+                            <field name="syntec_delta" invisible="not apply_syntec"/>
+                        </group>
+                    </group>
+                    <div class="alert alert-warning" role="alert"
+                         invisible="not apply_syntec">
+                        The revised amount will also be written onto the
+                        <b>contract yearly line</b>, and the change traced in the
+                        contract chatter.
+                    </div>
                     <div class="alert alert-info mt-3" role="alert">
                         A <b>sale.order quotation</b> will be created as a draft with
                         the lines above. You will then be able to:

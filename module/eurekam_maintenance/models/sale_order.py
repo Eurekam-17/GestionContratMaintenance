@@ -4,10 +4,12 @@ Main use case at Eurekam: 1 customer order per contract year, with as many
 lines as the billing rhythm (1 for Annual, 2 for Semi-annual, 4 for Quarterly).
 Each SO line becomes an independent invoice through Odoo's native Sales workflow.
 
+Every invoice is normally born from a customer order.
+
 Rare cases:
 - 1 SO covering the whole contract ('full_contract' mode of the wizard)
-- No SO at all: contract with requires_customer_order=False, billed directly
-  as before (private healthcare establishments).
+- No SO at all: managers keep a direct-billing fallback on the contract
+  ('Create Contract Invoices'), for exceptional situations only.
 """
 
 from odoo import _, api, fields, models

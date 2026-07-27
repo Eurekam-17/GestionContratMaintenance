@@ -21,12 +21,15 @@
                             invisible="state in ('draft','renewed','cancelled')"/>
                     <button name="action_open_create_order_wizard" type="object"
                             string="Create Customer Order" class="btn-primary"
-                            invisible="state not in ('active','expiring') or not requires_customer_order"
-                            help="Most common case: upon receipt of a customer purchase order, creates a sale.order with N lines according to the frequency (1 for Annual, 2 for Semi-annual, 4 for Quarterly). Each SO line can be invoiced independently."/>
+                            invisible="state not in ('active','expiring')"
+                            help="Standard route: upon receipt of a customer purchase order, creates a sale.order with N lines according to the frequency (1 for Annual, 2 for Semi-annual, 4 for Quarterly). Each SO line can be invoiced independently."/>
+                    <!-- Fallback kept for managers only: every invoice is
+                         normally born from a customer order. -->
                     <button name="action_create_invoices_for_contract" type="object"
                             string="Create Contract Invoices"
-                            invisible="state not in ('active','expiring') or requires_customer_order"
-                            help="Rare case: direct billing without a purchase order (private establishments). Generates the draft invoices covering the remaining contract duration according to the frequency."/>
+                            groups="eurekam_maintenance.group_maintenance_manager"
+                            invisible="state not in ('active','expiring')"
+                            help="Exceptional fallback, managers only: bills the contract directly, without going through a customer order. Generates the draft invoices covering the remaining contract duration according to the frequency."/>
                     <button name="action_recompute_state" type="object"
                             string="Recompute Status"
                             invisible="state in ('draft','cancelled','renewed')"
@@ -116,7 +119,6 @@
                                     <field name="maintenance_amount"/>
                                     <field name="billing_level"/>
                                     <field name="syntec_revision"/>
-                                    <field name="requires_customer_order"/>
                                 </group>
                                 <group string="Totals (computed)">
                                     <field name="total_contract_value"/>

@@ -227,6 +227,7 @@ msgstr ""
 
 #. module: eurekam_maintenance
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_renewal_wizard__apply_syntec
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_order_wizard__apply_syntec
 msgid "Apply Syntec Revision"
 msgstr "Appliquer la révision Syntec"
 
@@ -910,15 +911,6 @@ msgid "Identification"
 msgstr "Identification"
 
 #. module: eurekam_maintenance
-#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_contract__requires_customer_order
-msgid ""
-"If checked (most common case), billing must go through a customer order (sale.order) created upon receipt of the customer purchase order. The 'Create Contract Invoices' action is then disabled — use 'Create Customer Order' instead.\n"
-"If unchecked (rare case: some private establishments), billing is done directly on the contract without a purchase order."
-msgstr ""
-"Si coché (cas le plus courant), la facturation doit passer par une commande client (sale.order) créée à réception du bon de commande client. L'action « Créer les factures du contrat » est alors désactivée — utilisez plutôt « Créer une commande client ».\n"
-"Si décoché (cas rare : certains établissements privés), la facturation se fait directement sur le contrat sans bon de commande."
-
-#. module: eurekam_maintenance
 #: model:eurekam.central.purchasing,name:eurekam_maintenance.cp_industrial
 #: model:ir.model.fields.selection,name:eurekam_maintenance.selection__res_partner__central_purchasing__industrial
 msgid "Industrial"
@@ -1541,11 +1533,6 @@ msgid "Renewed To"
 msgstr "Renouvelé vers"
 
 #. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__requires_customer_order
-msgid "Requires Customer Order"
-msgstr "Nécessite une commande client"
-
-#. module: eurekam_maintenance
 #: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
 msgid "Reset to Draft"
 msgstr "Remettre en brouillon"
@@ -1637,6 +1624,7 @@ msgstr "Augmentation Syntec"
 
 #. module: eurekam_maintenance
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_renewal_wizard__syntec_rate
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_order_wizard__syntec_rate
 msgid "Syntec Rate (%)"
 msgstr "Taux Syntec (%)"
 
@@ -1934,3 +1922,83 @@ msgstr "contrat(s) à renouveler)"
 #: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_res_partner_form_maintenance
 msgid "expired contract(s))"
 msgstr "contrat(s) expiré(s))"
+
+#. module: eurekam_maintenance
+#: code:addons/eurekam_maintenance/models/maintenance_contract.py:0
+msgid "Q1 %(year)s"
+msgstr "1er trimestre %(year)s"
+
+#. module: eurekam_maintenance
+#: code:addons/eurekam_maintenance/models/maintenance_contract.py:0
+msgid "Q2 %(year)s"
+msgstr "2ème trimestre %(year)s"
+
+#. module: eurekam_maintenance
+#: code:addons/eurekam_maintenance/models/maintenance_contract.py:0
+msgid "Q3 %(year)s"
+msgstr "3ème trimestre %(year)s"
+
+#. module: eurekam_maintenance
+#: code:addons/eurekam_maintenance/models/maintenance_contract.py:0
+msgid "Q4 %(year)s"
+msgstr "4ème trimestre %(year)s"
+
+#. module: eurekam_maintenance
+#: code:addons/eurekam_maintenance/models/maintenance_contract.py:0
+msgid "H1 %(year)s"
+msgstr "1er semestre %(year)s"
+
+#. module: eurekam_maintenance
+#: code:addons/eurekam_maintenance/models/maintenance_contract.py:0
+msgid "H2 %(year)s"
+msgstr "2ème semestre %(year)s"
+
+#. module: eurekam_maintenance
+#: code:addons/eurekam_maintenance/models/maintenance_contract.py:0
+msgid "Year %(year)s"
+msgstr "Année %(year)s"
+
+#. module: eurekam_maintenance
+#: code:addons/eurekam_maintenance/models/maintenance_contract.py:0
+msgid "%(n)s workstation"
+msgstr "%(n)s poste"
+
+#. module: eurekam_maintenance
+#: code:addons/eurekam_maintenance/models/maintenance_contract.py:0
+msgid "%(n)s workstations"
+msgstr "%(n)s postes"
+
+#. module: eurekam_maintenance
+#: code:addons/eurekam_maintenance/models/maintenance_contract.py:0
+msgid "Full period (%(start)s to %(end)s)"
+msgstr "Période complète (du %(start)s au %(end)s)"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_order_wizard__syntec_revision
+msgid "Contract Under Syntec Revision"
+msgstr "Contrat en révision Syntec"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_order_wizard__base_amount
+msgid "Contract Amount for the Year"
+msgstr "Montant du contrat pour l'année"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_order_wizard__revised_amount
+msgid "Revised Amount"
+msgstr "Montant révisé"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_order_wizard__syntec_delta
+msgid "Revision Delta"
+msgstr "Écart de révision"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_order_wizard__base_amount
+msgid "Amount currently recorded on the contract's yearly line."
+msgstr "Montant actuellement enregistré sur la ligne annuelle du contrat."
+
+#. module: eurekam_maintenance
+#: code:addons/eurekam_maintenance/wizard/maintenance_order_wizard.py:0
+msgid "The revised amount must be greater than zero."
+msgstr "Le montant révisé doit être supérieur à zéro."

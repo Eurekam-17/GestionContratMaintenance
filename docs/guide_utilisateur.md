@@ -141,7 +141,10 @@ Le scénario type Eurekam est le suivant :
    **Identification**
    - **Établissement** : le client (toutes vos sociétés clientes ; il est automatiquement marqué « Établissement de maintenance » à la création du contrat)
    - **Produit** : le produit Drugcam de la base articles (ex: "Assistance DRUGCAM GEN2 Oncology FR")
-   - **Libellé produit** (optionnel) : texte libre si tu veux préciser
+   - **Libellé produit** : **rempli automatiquement** dès que tu choisis un
+     produit, à partir du « Descriptif du devis » de la fiche article (onglet
+     Vente). C'est ce texte qui sera repris sur les lignes de devis et de
+     facture. Modifiable à la main si besoin.
    - **Commercial** : pré-rempli sur toi
    - **Pays** : pré-rempli depuis l'établissement
 
@@ -161,9 +164,6 @@ Le scénario type Eurekam est le suivant :
    - **Montant de maintenance** (€/an)
    - **Niveau de facturation** : 100 %, 75 %, 50 %, 25 %, 0 %
    - **Révision Syntec** : Oui / Non
-   - **Nécessite une commande client** : ✅ par défaut. Décocher uniquement pour
-     les rares cas (privés sans BC) où on facture directement sans passer par
-     une commande.
    - **Cadences de facturation** (Many2many) :
      - Choisir UNE cadence "période" : **Annuelle**, **Semestrielle**,
        **Trimestrielle** ou **Période intégrale**
@@ -228,6 +228,19 @@ lignes selon la cadence), tu crées la commande dans Odoo :
      - **Intégralité du contrat** = cas rare. Le BC couvre toutes les années
        restantes du contrat en une seule fois (paiement d'avance).
 
+   - **Révision Syntec** (visible uniquement si le contrat porte
+     `Révision Syntec = Oui` et sur le périmètre « Année ») :
+     - **Appliquer la révision Syntec** : à cocher si le BC de l'année intègre
+       la revalorisation
+     - **Taux Syntec** : 3 % par défaut, modifiable
+     - **Montant révisé** : proposé automatiquement (montant du contrat × 1,03),
+       **modifiable** pour coller au centime près au montant du BC client
+     - ⚠️ Le montant révisé est **aussi reporté sur la ligne annuelle du
+       contrat**, avec une trace dans le fil de discussion : contrat, commande
+       et tableau de bord restent cohérents.
+     - Pour revaloriser **toutes** les années d'un coup, utiliser plutôt le
+       wizard de renouvellement (§ 5.1).
+
    - **Aperçu** affiche le nombre de lignes et le montant total qui seront
      créés. Vérifie avant de valider.
 
@@ -240,8 +253,16 @@ La page de la commande s'ouvre directement.
 
 Sur la commande qui vient d'être créée :
 
-1. Vérifier les lignes (produit, montant, période — ex: "Assistance DRUGCAM
-   GEN2 Oncology FR — Q1 2026" à 3 637,50 €)
+1. Vérifier les lignes (produit, montant, période). Le libellé de chaque ligne
+   est construit automatiquement selon le format
+   **`Libellé produit - N postes - période`**, par exemple :
+
+   > `Assistance DRUGCAM Oncology GEN2 - 4 postes - 1er trimestre 2026`
+
+   où le libellé vient du contrat (lui-même repris du « Descriptif du devis »
+   de l'article), `N` du champ **Nombre de produits** et la période de la
+   cadence de facturation (`1er/2ème/3ème/4ème trimestre`, `1er/2ème semestre`,
+   `Année AAAA`). Ce libellé est repris tel quel sur la facture.
 2. Cliquer **Confirmer la commande** (bouton standard Odoo Sales)
 
 → La commande passe de **Brouillon (devis)** à **Bon de commande**.
@@ -296,16 +317,19 @@ les valeurs pré-remplies. L'ancien contrat passe en **Renouvelé**. Les deux
 sont liés via les smart-buttons **Renouvelé depuis** et **Renouvelé vers** sur
 chaque fiche.
 
-### 5.2 Contrat sans BC (très rare, établissements privés)
+### 5.2 Facturation directe sans commande (exception, managers uniquement)
 
-Certains clients privés ne fonctionnent pas avec des BC. Dans ce cas :
+**Toute facture doit normalement naître d'une commande client.** Le bouton
+**Créer les factures du contrat** reste néanmoins visible pour les membres du
+groupe **Manager Maintenance**, en secours pour un cas exceptionnel.
 
-1. Sur la fiche du contrat, dans l'onglet **Facturation**,
-   **décocher la case "Nécessite une commande client"**
-2. Le bouton **Créer une commande client** disparaît du bandeau, remplacé par
+1. Sur la fiche du contrat (état Actif ou Expire bientôt), cliquer
    **Créer les factures du contrat**
-3. Cliquer ce bouton → génère directement toutes les factures brouillon
-   couvrant la durée restante du contrat (selon la cadence)
+2. → génère directement toutes les factures brouillon couvrant la durée
+   restante du contrat (selon la cadence), sans devis ni commande
+
+⚠️ À n'utiliser que si le circuit commande est réellement impossible : la
+facture n'est alors rattachée à aucune vente.
 
 ### 5.3 Période intégrale (cas rare : paiement d'avance global)
 
@@ -508,9 +532,8 @@ d'accès".
 est renseigné (champ "Produit", pas juste "Libellé produit").
 
 ### Le bouton "Créer les factures du contrat" n'apparaît pas
-→ Le contrat a `Nécessite une commande client` coché (cas par défaut). Utilise
-**"Créer une commande client"** à la place. Si tu veux vraiment facturer sans
-BC, décoche la case dans l'onglet Facturation.
+→ Ce bouton de secours est réservé au groupe **Manager Maintenance**. Le circuit
+normal est **"Créer une commande client"**, qui reste accessible à tous.
 
 ### Le bouton "Créer une commande client" est grisé
 → Vérifier que le contrat est dans l'état **Actif** ou **Expire bientôt** (pas
@@ -558,7 +581,7 @@ montant via le wizard.
 | Numéro | `sequence_number` | "MAINT/AAAA/NNNN" |
 | Établissement | `partner_id` | Lien vers le contact client |
 | Produit | `product_id` | Lien vers la base articles |
-| Libellé produit | `product_name` | Texte libre, optionnel |
+| Libellé produit | `product_name` | Pré-rempli depuis le « Descriptif du devis » de l'article ; repris sur les lignes de devis/facture |
 | Commercial | `commercial_id` | Utilisateur Odoo en charge |
 | Génération | `gen` | GEN1, GEN2, Upgrade GEN2 |
 | Marché | `market_type_ids` | Liste éditable, **multi-valeurs** (UniHA, AGEPS, RESAH, Privé, etc.) |
@@ -570,7 +593,6 @@ montant via le wizard.
 | Niveau de facturation | `billing_level` | 0/25/50/75/100 % |
 | Révision Syntec | `syntec_revision` | Oui / Non |
 | Cadences de facturation | `billing_frequency_ids` | Many2many vers les cadences |
-| Nécessite une commande client | `requires_customer_order` | True = workflow BC, False = facture directe |
 | Modules facturables | `contract_module_line_ids` | Modules facturés en plus de la maintenance (montant annuel + année de début/fin) |
 | État | `state` | Brouillon / Actif / Expire bientôt / Expiré / Renouvelé / Annulé |
 
