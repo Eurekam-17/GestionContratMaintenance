@@ -1877,56 +1877,6 @@ msgid "expired contract(s))"
 msgstr "contrat(s) expiré(s))"
 
 #. module: eurekam_maintenance
-#: code:addons/eurekam_maintenance/models/maintenance_contract.py:0
-msgid "Q1 %(year)s"
-msgstr "1er trimestre %(year)s"
-
-#. module: eurekam_maintenance
-#: code:addons/eurekam_maintenance/models/maintenance_contract.py:0
-msgid "Q2 %(year)s"
-msgstr "2ème trimestre %(year)s"
-
-#. module: eurekam_maintenance
-#: code:addons/eurekam_maintenance/models/maintenance_contract.py:0
-msgid "Q3 %(year)s"
-msgstr "3ème trimestre %(year)s"
-
-#. module: eurekam_maintenance
-#: code:addons/eurekam_maintenance/models/maintenance_contract.py:0
-msgid "Q4 %(year)s"
-msgstr "4ème trimestre %(year)s"
-
-#. module: eurekam_maintenance
-#: code:addons/eurekam_maintenance/models/maintenance_contract.py:0
-msgid "H1 %(year)s"
-msgstr "1er semestre %(year)s"
-
-#. module: eurekam_maintenance
-#: code:addons/eurekam_maintenance/models/maintenance_contract.py:0
-msgid "H2 %(year)s"
-msgstr "2ème semestre %(year)s"
-
-#. module: eurekam_maintenance
-#: code:addons/eurekam_maintenance/models/maintenance_contract.py:0
-msgid "Year %(year)s"
-msgstr "Année %(year)s"
-
-#. module: eurekam_maintenance
-#: code:addons/eurekam_maintenance/models/maintenance_contract.py:0
-msgid "%(n)s workstation"
-msgstr "%(n)s poste"
-
-#. module: eurekam_maintenance
-#: code:addons/eurekam_maintenance/models/maintenance_contract.py:0
-msgid "%(n)s workstations"
-msgstr "%(n)s postes"
-
-#. module: eurekam_maintenance
-#: code:addons/eurekam_maintenance/models/maintenance_contract.py:0
-msgid "Full period (%(start)s to %(end)s)"
-msgstr "Période complète (du %(start)s au %(end)s)"
-
-#. module: eurekam_maintenance
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_order_wizard__syntec_revision
 msgid "Contract Under Syntec Revision"
 msgstr "Contrat en révision Syntec"

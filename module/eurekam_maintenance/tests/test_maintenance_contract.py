@@ -653,7 +653,7 @@ class TestMaintenanceContract(TransactionCase):
         self.assertEqual(contract.product_name, 'Bare Maintenance (test)')
 
     # ======================================================================
-    # 15. Order line wording: "<label> - N workstations - <period>"
+    # 15. Order line wording: "<label> - N postes - <periode>"
     # ======================================================================
     def test_order_line_description_format(self):
         freq_quarterly = self.env.ref('eurekam_maintenance.freq_quarterly')
@@ -684,7 +684,8 @@ class TestMaintenanceContract(TransactionCase):
             key=lambda l: l.maintenance_period_label)[0]
         self.assertEqual(
             first.name,
-            'Assistance DRUGCAM Oncology GEN2 - 4 workstations - Q1 %s' % today_year,
+            'Assistance DRUGCAM Oncology GEN2 - 4 postes - 1er trimestre %s'
+            % today_year,
         )
         # The stored period key stays the untranslated technical code, so the
         # anti-duplicate checks keep matching whatever the user's language.
@@ -693,15 +694,16 @@ class TestMaintenanceContract(TransactionCase):
         # A single workstation is worded in the singular, and a contract
         # without a count degrades to "<label> - <period>".
         self.assertEqual(
-            contract._billing_line_description('Q1 2026'),
-            'Assistance DRUGCAM Oncology GEN2 - 4 workstations - Q1 2026',
+            contract._billing_line_description('1er trimestre 2026'),
+            'Assistance DRUGCAM Oncology GEN2 - 4 postes - 1er trimestre 2026',
         )
         contract.nb_products = 1
-        self.assertIn('1 workstation -', contract._billing_line_description('Q1 2026'))
+        self.assertIn(
+            '1 poste -', contract._billing_line_description('1er trimestre 2026'))
         contract.nb_products = 0
         self.assertEqual(
-            contract._billing_line_description('Q1 2026'),
-            'Assistance DRUGCAM Oncology GEN2 - Q1 2026',
+            contract._billing_line_description('1er trimestre 2026'),
+            'Assistance DRUGCAM Oncology GEN2 - 1er trimestre 2026',
         )
 
     # ======================================================================
@@ -767,3 +769,47 @@ class TestMaintenanceContract(TransactionCase):
         })
         with self.assertRaises(UserError):
             wizard.action_create_sale_order()
+
+    # ======================================================================
+    # 17. Customer-facing period wording (French, see PERIOD_LABELS)
+    # ======================================================================
+    def test_period_labels_are_french(self):
+        """The wording printed on quotations and invoices is the exact French
+        form the sales team specified. Guarded by a test because it is written
+        as literals: Odoo does not extract this module's _() terms, so a
+        regression here would not be caught by any translation check."""
+        Contract = self.env['eurekam.maintenance.contract']
+
+        quarterly = Contract._periods_for_year(2026, 20000.0, 'quarterly')
+        self.assertEqual(
+            [p[1] for p in quarterly],
+            ['1er trimestre 2026', '2ème trimestre 2026',
+             '3ème trimestre 2026', '4ème trimestre 2026'],
+        )
+        # The stored technical keys stay English and stable: the anti-duplicate
+        # checks and the orders already created depend on them.
+        self.assertEqual(
+            [p[0] for p in quarterly],
+            ['Q1 2026', 'Q2 2026', 'Q3 2026', 'Q4 2026'],
+        )
+
+        semi = Contract._periods_for_year(2026, 10000.0, 'semi_annual')
+        self.assertEqual([p[1] for p in semi],
+                         ['1er semestre 2026', '2ème semestre 2026'])
+        self.assertEqual([p[0] for p in semi], ['H1 2026', 'H2 2026'])
+
+        annual = Contract._periods_for_year(2026, 5000.0, 'annual')
+        self.assertEqual([p[1] for p in annual], ['Année 2026'])
+        self.assertEqual([p[0] for p in annual], ['Year 2026'])
+
+        contract = self._make_contract(nb_products=4)
+        self.assertEqual(contract._format_workstations(), '4 postes')
+        contract.nb_products = 1
+        self.assertEqual(contract._format_workstations(), '1 poste')
+        contract.nb_products = 0
+        self.assertEqual(contract._format_workstations(), '')
+
+        contract.write({'date_start': date(2026, 1, 1),
+                        'date_end': date(2026, 12, 31)})
+        self.assertEqual(contract._full_period_label(),
+                         'Période complète (du 2026-01-01 au 2026-12-31)')

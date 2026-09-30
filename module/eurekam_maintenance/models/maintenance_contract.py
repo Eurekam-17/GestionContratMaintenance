@@ -11,6 +11,36 @@ PERIOD_CODES = ('annual', 'semi_annual', 'quarterly', 'full_period')
 # "Timing" billing codes (mutually exclusive on a given contract)
 TIMING_CODES = ('overdue', 'upcoming')
 
+# ----------------------------------------------------------------------------
+# Customer-facing wording, written in French on purpose.
+#
+# These strings end up verbatim on the quotation, the customer order and the
+# invoice the hospital receives, so the sales team specified their exact French
+# form ("4 postes - 1er trimestre 2026").
+#
+# They are NOT wrapped in _(): Odoo does not extract this module's Python
+# translatable terms on the odoo.sh deployment -- exporting `sale` in fr_FR
+# yields 140 `code:` entries, exporting this module yields 0 -- so every _()
+# string here renders in English whatever the user's language. Writing the
+# French directly is the only way to honour the specification today.
+#
+# Everything else in the module keeps the English-source + fr.po convention;
+# model, field, view and data translations work normally. If the extraction
+# problem is ever solved, only this block has to move back to _().
+# ----------------------------------------------------------------------------
+PERIOD_LABELS = {
+    'Q1': "1er trimestre %(year)s",
+    'Q2': "2ème trimestre %(year)s",
+    'Q3': "3ème trimestre %(year)s",
+    'Q4': "4ème trimestre %(year)s",
+    'H1': "1er semestre %(year)s",
+    'H2': "2ème semestre %(year)s",
+    'Y': "Année %(year)s",
+}
+WORKSTATION_LABEL = {'one': "%(n)s poste", 'many': "%(n)s postes"}
+FULL_PERIOD_LABEL = "Période complète (du %(start)s au %(end)s)"
+MODULE_FULL_PERIOD_LABEL = "%(module)s - Période complète (%(n)d an(s))"
+
 
 def _split_amount(amount, n):
     """Split an amount into n fractions rounded to 2 decimals.
@@ -724,57 +754,53 @@ class EurekamMaintenanceContract(models.Model):
 
         `code` is a stable, never-translated technical key ("Q1 2026"). It is
         what gets stored in invoice_origin and maintenance_period_label, so the
-        idempotency checks keep working whatever the user's language -- and the
-        orders/invoices created before the labels were reworded still match.
-        `label` is the customer-facing wording ("1er trimestre 2026" in French),
-        translated at runtime, and only ever used inside line descriptions.
+        idempotency checks keep working -- and the orders/invoices created
+        before the labels were reworded still match. `label` is the
+        customer-facing wording ("1er trimestre 2026"), only ever used inside
+        line descriptions. See PERIOD_LABELS for why it is written in French.
         """
+        def lab(key):
+            return PERIOD_LABELS[key] % {'year': year}
+
         if period_code == 'quarterly':
             f = _split_amount(amount, 4)
             return [
-                ("Q1 %s" % year, _("Q1 %(year)s", year=year),
-                 f[0], date(year, 1, 1), date(year, 3, 31)),
-                ("Q2 %s" % year, _("Q2 %(year)s", year=year),
-                 f[1], date(year, 4, 1), date(year, 6, 30)),
-                ("Q3 %s" % year, _("Q3 %(year)s", year=year),
-                 f[2], date(year, 7, 1), date(year, 9, 30)),
-                ("Q4 %s" % year, _("Q4 %(year)s", year=year),
-                 f[3], date(year, 10, 1), date(year, 12, 31)),
+                ("Q1 %s" % year, lab('Q1'), f[0], date(year, 1, 1), date(year, 3, 31)),
+                ("Q2 %s" % year, lab('Q2'), f[1], date(year, 4, 1), date(year, 6, 30)),
+                ("Q3 %s" % year, lab('Q3'), f[2], date(year, 7, 1), date(year, 9, 30)),
+                ("Q4 %s" % year, lab('Q4'), f[3], date(year, 10, 1), date(year, 12, 31)),
             ]
         if period_code == 'semi_annual':
             f = _split_amount(amount, 2)
             return [
-                ("H1 %s" % year, _("H1 %(year)s", year=year),
-                 f[0], date(year, 1, 1), date(year, 6, 30)),
-                ("H2 %s" % year, _("H2 %(year)s", year=year),
-                 f[1], date(year, 7, 1), date(year, 12, 31)),
+                ("H1 %s" % year, lab('H1'), f[0], date(year, 1, 1), date(year, 6, 30)),
+                ("H2 %s" % year, lab('H2'), f[1], date(year, 7, 1), date(year, 12, 31)),
             ]
         # 'annual' by default
         return [
-            ("Year %s" % year, _("Year %(year)s", year=year),
-             amount, date(year, 1, 1), date(year, 12, 31)),
+            ("Year %s" % year, lab('Y'), amount,
+             date(year, 1, 1), date(year, 12, 31)),
         ]
 
     def _format_workstations(self):
-        """'4 workstations' fragment inserted in the billing line descriptions.
+        """'4 postes' fragment inserted in the billing line descriptions.
 
         Empty string when the contract does not carry a meaningful count, so
         the description degrades to "<label> - <period>" instead of showing a
-        misleading "0 workstations".
+        misleading "0 postes". See PERIOD_LABELS for why the wording is French.
         """
         self.ensure_one()
         count = self.nb_products or 0
         if count <= 0:
             return ''
-        if count == 1:
-            return _("%(n)s workstation", n=count)
-        return _("%(n)s workstations", n=count)
+        key = 'one' if count == 1 else 'many'
+        return WORKSTATION_LABEL[key] % {'n': count}
 
     def _billing_line_description(self, period_label):
         """Description of a maintenance billing line (customer order / invoice).
 
         Format asked for by the sales team:
-            "<Product Label> - <N> workstations - <period>"
+            "<Libellé produit> - <N> postes - <période>"
         e.g. "Assistance DRUGCAM Oncology GEN2 - 4 postes - 1er trimestre 2026".
 
         The product label falls back to the product name when the contract has
@@ -787,13 +813,15 @@ class EurekamMaintenanceContract(models.Model):
         return ' - '.join(parts)
 
     def _full_period_label(self):
-        """Customer-facing wording of the 'whole contract' period."""
+        """Customer-facing wording of the 'whole contract' period.
+
+        French for the same reason as PERIOD_LABELS.
+        """
         self.ensure_one()
-        return _(
-            "Full period (%(start)s to %(end)s)",
-            start=self.date_start or '?',
-            end=self.date_end or '?',
-        )
+        return FULL_PERIOD_LABEL % {
+            'start': self.date_start or '?',
+            'end': self.date_end or '?',
+        }
 
     @staticmethod
     def _invoice_date_for_period(period_start, period_end, timing_code):
@@ -1024,11 +1052,10 @@ class EurekamMaintenanceContract(models.Model):
                 continue
             module_product = module_line._get_invoice_product()
             invoice_lines.append((0, 0, {
-                'name': _(
-                    "%(module)s — Full period (%(n)d year(s))",
-                    module=module_line.module_billing_id.name or _("Module"),
-                    n=len(covered),
-                ),
+                'name': MODULE_FULL_PERIOD_LABEL % {
+                    'module': module_line.module_billing_id.name or "Module",
+                    'n': len(covered),
+                },
                 'product_id': module_product.id if module_product else False,
                 'quantity': 1.0,
                 'price_unit': round(module_line.amount * len(covered), 2),

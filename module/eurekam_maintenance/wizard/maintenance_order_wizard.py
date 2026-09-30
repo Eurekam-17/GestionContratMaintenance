@@ -15,6 +15,10 @@ then Q2 three months later, etc.) via the native 'Create Invoice' button.
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
+from odoo.addons.eurekam_maintenance.models.maintenance_contract import (
+    MODULE_FULL_PERIOD_LABEL,
+)
+
 # Default Syntec coefficient proposed when the user applies the revision.
 # Kept aligned with the renewal wizard so both entry points suggest the same
 # rate; the user remains free to override it.
@@ -381,7 +385,8 @@ class EurekamMaintenanceOrderWizard(models.TransientModel):
                 ),
                 'product_uom_qty': 1.0,
                 'price_unit': total,
-                'maintenance_period_label': _("Full period"),
+                # Technical key, never translated (see _periods_for_year).
+                'maintenance_period_label': "Full period",
             }))
             # ---- Billable modules over the whole contract ----
             contract_years = sorted(contract.line_ids.mapped('year'))
@@ -392,14 +397,14 @@ class EurekamMaintenanceOrderWizard(models.TransientModel):
                 ml_product = ml._get_invoice_product() or product_variant
                 order_lines.append((0, 0, {
                     'product_id': ml_product.id,
-                    'name': _(
-                        "%(module)s — Full period (%(n)d year(s))",
-                        module=ml.module_billing_id.name or _("Module"),
-                        n=len(covered),
-                    ),
+                    'name': MODULE_FULL_PERIOD_LABEL % {
+                        'module': ml.module_billing_id.name or "Module",
+                        'n': len(covered),
+                    },
                     'product_uom_qty': 1.0,
                     'price_unit': round(ml.amount * len(covered), 2),
-                    'maintenance_period_label': _("Full period"),
+                    # Technical key, never translated (see _periods_for_year).
+                    'maintenance_period_label': "Full period",
                 }))
         else:
             # ---- Main case: 1 SO per year, N lines by frequency ----
