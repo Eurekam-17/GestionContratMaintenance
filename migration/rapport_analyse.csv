@@ -1,0 +1,148 @@
+﻿ligne;etablissement;pays;partner_id;produit;debut;fin;annees;total;bloquants;avertissements
+1;17 - La Rochelle - CH St Louis;France;479;Maintenance;2024-05-01;2028-04-30;2023=5794 2024=16793 2025=18430 2026=18799 2027=19175;78989.84;;
+2;63 - Clermont-Ferrand - CHU Gabriel Montpied;France;177;Maintenance;2025-01-01;2025-12-31;2023=6134 2024=6536 2025=6930 2026=6930 2027=10080 2028=10080;46690.35;;
+3;75 - Paris 13 - APHP - Pitié Salpêtrière;France;48;Maintenance;2021-01-01;2024-12-31;2023=7600 2024=7600 2025=9880 2026=11400;36480.0;;
+4;13 - Marseille - CLCC Paoli-Calmettes;France;583;Maintenance;2024-01-01;2028-12-31;2023=16717 2024=11860 2025=18038 2026=26635 2027=36213 2028=37365 2029=38365;185192.8;;
+5;72 - Le Mans - Centre de Cancerologie de la Sarthe (CCS);France;1961;Maintenance;2026-09-01;2030-12-31;2023=11738 2024=11738 2025=14018 2026=16597 2027=20744 2028=20744 2029=20744 2030=20744;137066.36;;
+6;14 - Caen - PCL du Parc;France;677;Maintenance;2026-02-01;2030-12-31;2023=4733 2024=4975 2025=5059 2026=7924 2027=8660 2028=12622 2029=12990;56963.59;;
+7;40 - Dax - CH Cote d’Argent;France;271;Maintenance;2026-01-01;2029-12-31;2023=7600 2024=7600 2025=7600 2026=10390 2027=10390 2028=10390 2029=10390;64360.0;;
+8;29 - Quimper - CH de Cornouaille;France;261;Maintenance;2025-01-01;2029-12-31;2023=14550 2024=15200 2025=16944 2026=24240 2027=25115 2028=25975;122024.0;;
+9;76 - Rouen - CLCC Henri Becquerel;France;118;Maintenance;2022-06-01;2026-12-31;;0;aucun montant annuel;
+10;30 - Nîmes - CHRU Caremeau;France;202;Maintenance;2024-01-01;2029-12-31;2023=10915 2024=20160 2025=20160 2026=30240 2027=30240 2028=30240;141955.0;;
+11;56 - Vannes - CHBA;France;1126;Maintenance;2019-12-12;2025-12-31;2023=5580 2024=5866 2025=6193 2026=6281;23919.44;;
+12;35 - Rennes - CLCC Eugène Marquis;France;107;Maintenance;2026-04-13;2031-12-31;2023=3025 2024=12035 2025=10515 2026=10269;35844.0;;
+13;64 - Bayonne - CH Côte Basque;France;336;Maintenance;2020-04-01;2027-03-31;2023=10597 2024=10756 2025=10917 2026=11081 2027=10440;53789.63;;
+14;06 - Nice - CHU;France;952;Maintenance;2024-05-01;2026-12-31;2023=10440 2024=13477 2025=20160 2026=21160 2027=20160;85397.0;;
+15;31 - Toulouse - Oncopôle;France;520;Maintenance;2020-01-01;2024-12-31;2023=26118 2024=29185 2025=27455 2026=27500;110259.2;;
+16;32 - Auch - CH;France;1058;Maintenance;2020-01-01;2024-12-31;2023=2913 2024=2913 2025=3800 2026=3800;13425.4;;
+17;77 - Melun - GH Sud Île-de-France;France;498;Maintenance;2025-01-01;2029-12-31;2023=11181 2024=11753 2025=13860 2026=13252 2027=20780 2028=20780;91606.28;;
+18;43 - Le Puy en Velay - CH Emile Roux;France;139;Maintenance;2024-01-01;2028-12-31;2023=6080 2024=10080 2025=12096 2026=10390 2027=10080;48726.0;;
+19;47 - Agen-Nerac - CH;France;1091;Maintenance;2024-02-01;2028-12-31;2023=5490 2024=13440 2025=13440 2026=14977 2027=15120 2028=15120;77587.0;;
+20;75 - Paris 19 - APHP - Robert Debré;France;962;Maintenance;2020-07-16;2026-12-31;2023=7600 2024=7600 2025=7600 2026=10080;32880.0;;
+21;77 - Marne la vallée - GHEF GH Est Parisien;France;1171;Maintenance;2026-02-09;2030-12-31;2023=3778 2024=5771 2025=6127 2026=13252 2027=14855 2028=16585 2029=16585;76953.0;;
+22;08 - Charleville-Mezieres -CH;France;1223;Maintenance;2020-06-25;2025-12-31;2023=10440 2024=10440 2025=11659 2026=11845;44384.0;;
+23;63 - Clermont-Ferrand - CRLCC Jean PERRIN;France;1294;Maintenance;2020-10-06;2025-12-31;2023=6371 2024=6697 2025=1702;14769.72;;
+24;37 - Tours - Chamblay - Pole Santé Léonard de Vinci;France;1268;Maintenance;2020-10-02;2025-12-31;2023=3500 2024=3500 2025=3842 2026=3970;14812.36;;
+25;92 - Boulogne-Billancourt - APHP - Ambroise-Paré;France;1335;Maintenance;2023-01-01;2027-12-31;2023=6667 2024=7600 2025=15200 2026=15200;44667.0;;
+26;56 - Lorient - GH Bretagne Sud;France;1284;Maintenance;2020-11-18;2025-12-31;2023=10911 2024=11469 2025=11663 2026=11849;45892.79;;
+27;69 - Villefranche sur Saone - CH;France;1415;Maintenance;2024-01-01;2028-12-31;2024=12600 2025=12600 2026=12600 2027=14600 2028=14600;67000.0;;
+28;974 - La Reunion - CHU St-Pierre;France;1029;Maintenance;2022-01-01;2026-12-31;2024=10800 2025=13332 2026=13332;37464.0;;
+29;78 - Poissy St Germain - CHI;France;773;Maintenance;2022-02-17;2025-12-31;2024=6476 2025=6573 2026=6573;19621.37;;
+30;77 - Férolles Attilly - Hop Forcilles - fondation Cognacq Jay;France;1483;Maintenance;2022-03-17;2027-12-31;2024=7923 2025=9217 2026=9556 2027=8400;35095.15;;
+31;80 - Amiens - CHU;France;1481;Maintenance;2025-10-10;2029-12-31;2024=7785 2025=9790;17575.17;;
+32;71 - Chalon sur Saone - CH;France;1521;Maintenance;;2026-12-31;2024=3000 2025=3000 2026=3000;9000.0;;sans date de debut
+33;79 - Niort - CH;France;1545;Maintenance;2022-01-01;2025-12-31;2024=15200 2025=15200 2026=15200;45600.0;;
+34;83 - Toulon - CHI Toulon-La Seyne sur Mer;France;1583;Maintenance;2021-07-01;2027-12-31;2024=8239 2025=10500 2026=11400 2027=10500;40639.0;;
+35;02 - Saint Quentin - CH;France;1593;Maintenance;2022-12-17;2026-12-31;2024=7600 2025=7600 2026=7600;22800.0;;
+36;17 - Saintes - CH Saintonge;France;1592;Maintenance;2022-05-03;;2024=3397 2025=3800 2026=3800 2027=3800;14796.63;;sans date de fin
+37;57 - Metz - HP Metz - Uneos;France;1597;Maintenance;2024-07-01;2028-12-31;2024=19168 2025=32600 2026=33120 2027=37800 2028=37800;160488.0;;
+38;30 - Bagnols sur Cèze - CH;France;1660;Maintenance;2023-02-01;2027-12-31;2024=2280 2025=5040 2026=5040 2027=5040 2028=5040;22440.0;;
+39;86 - Site Poitiers - CHU Poitiers;France;1611;Maintenance;2022-05-11;2027-05-10;2024=22800 2025=22800 2026=31116;76716.0;;
+40;55 - Verdun - CH;France;1614;Maintenance;2023-04-01;2027-12-31;2024=4560 2025=7060 2026=7957 2027=7600;27176.55;;
+41;81 - Albi - CL Claude Bernard;France;1639;Maintenance;2022-06-15;2027-12-31;2024=3529 2025=4560 2026=4560;12649.0;;
+42;84 - Avignon - CL Institut Sainte Catherine;France;1785;Maintenance;2023-05-01;2028-04-30;;0;aucun montant annuel;
+43;56 - Pontivy - CH du Centre-Bretagne;France;1678;Maintenance;2025-01-01;2028-12-31;2024=2626 2025=5040 2026=5040 2027=5040 2028=5040;22785.83;;
+44;69 - Lyon - GHC - Hôpital Edouard Herriot;France;1682;Maintenance;2023-02-23;2027-12-31;2024=4560 2025=7161 2026=7600 2027=7600;26920.88;;
+45;69 - Lyon - GHS - Hôpital Lyon SUD;France;1845;Maintenance;2023-02-23;2027-12-31;2024=9120 2025=14322 2026=15200 2027=15200;53841.76;;
+46;40 - Mont-de-Marsan - CH;France;1654;Maintenance;2026-09-02;2030-12-31;2024=3800 2025=7600 2026=7600 2027=10430 2028=10430 2029=10430 2030=10430;60720.0;;
+47;51 - Reims - CHU;France;1776;Maintenance;2024-11-21;2028-12-31;2024=12262 2025=28560 2026=28560 2027=28560 2028=30240;128182.4;;
+48;50 - CHU Namur - Site de Godinne;Belgique;;Maintenance;2021-04-01;2025-12-31;2024=13420 2025=13420 2026=13420;40260.0;hors France (Belgique);
+49;76 - Rouen - CHU Charles Nicolle;France;1686;Maintenance;2022-10-01;2027-12-31;2023=10432 2024=11400 2025=18355 2026=19000 2027=19000 2028=19000;97187.0;;
+50;20 - Corte - CH de Corte Tattone;France;1812;Maintenance;2023-05-01;2028-12-31;2024=3360 2025=5195 2026=5195 2027=5195;18945.0;;
+51;76 - Le Havre - CH Jacques Monod - GHH;France;506;;2024-01-01;2028-12-31;2023=8654 2024=15120 2025=15120 2026=15120 2027=15120;69133.6;;sans produit -> restera en brouillon
+52;41 - Blois - CH;France;244;;2023-01-01;2028-12-31;2023=8280 2024=123440;131720.0;;sans produit -> restera en brouillon
+53;85 - La Roche sur Yon - CHD de Vendée;France;130;;2026-01-01;2030-12-31;2023=7108 2024=7108 2025=15200 2026=20420 2027=31715 2028=32456 2029=33212 2030=39334;186553.0;;sans produit -> restera en brouillon
+54;59 - Douai Dechy - CL Léonard de Vinci;France;368;;2026-01-01;2030-12-31;2023=7151 2024=7517 2025=9120 2026=12990;36778.02;;sans produit -> restera en brouillon
+55;78 - Mantes la Jolie - CH François Quesnay;France;142;Maintenance;2022-01-01;2025-12-31;2023=6380 2024=6476 2025=6573 2026=6573;26001.37;;
+56;78 - Versailles Le Chesnay - CH Mignot;France;325;;2023-08-01;2027-12-31;2023=10909 2024=20160 2025=20160 2026=20780 2027=20160;92169.0;;sans produit -> restera en brouillon
+57;64 - Pau - CH François Mitterrand;France;287;;2021-07-01;2027-12-31;2023=3660 2024=15200 2025=15200 2026=15200 2027=15200;64460.0;;sans produit -> restera en brouillon
+58;67 - Strasbourg - GCS ICANS - Paul Strauss;France;348;;2019-10-01;2024-09-30;2023=5990 2025=7600 2026=7600;21190.0;;sans produit -> restera en brouillon
+59;56 - Vannes - CHBA;France;1126;Maintenance;2021-12-03;2026-12-31;2023=5746 2024=7989 2025=8573 2026=8696;31003.04;;
+60;87 - Limoges - CL Chenieux;France;1061;;2023-09-07;2027-12-31;2023=4305 2024=7170 2025=11167 2026=12600 2027=12600;47842.0;;sans produit -> restera en brouillon
+61;44 - ICO Saint Herblain  (https://app.notion.com/p/44-ICO-Saint-Herblain-c35f3e7654c748d1ac3254d0dab3150b?pvs=21), 44 - ICO (Angers);France,France;;Maintenance;2025-01-01;2028-12-31;2023=17090 2024=21610 2025=33600 2026=33600 2027=37800 2028=37800;181500.0;hors France (France,France);
+62;92 - Clichy - APHP - Beaujon;France;1332;;2026-09-22;2030-12-31;2026=5634 2027=20160 2028=20160 2029=20160 2030=20160;86273.76;;sans produit -> restera en brouillon
+63;75 - Paris 10 - APHP - Saint Louis;France;1354;;2026-03-31;2030-12-31;2023=11921 2024=19000 2025=19000 2026=25200 2027=25200;100321.0;;sans produit -> restera en brouillon
+64;75 - Institut Curie - Site de Paris;France;1863;Maintenance;2024-01-01;2028-12-31;2024=11530 2025=12600 2026=12600 2027=12600 2028=12600 2029=12600;74530.0;;
+65;92 - Institut Curie - Site de Saint-Cloud;France;573;Maintenance;2024-01-01;2028-12-31;2024=23100 2025=23399 2026=29530 2027=29530 2028=31700 2029=31700;168959.0;;
+66;80 - Amiens - CHU;France;1481;;2025-10-10;2029-12-31;2024=8100 2025=9790 2026=31170 2027=31170 2028=31170 2029=31170;142570.17;;sans produit -> restera en brouillon
+67;54 - Nancy - Hôpital Privé Nancy Lorraine;France;2101;Maintenance;2020-12-15;2025-12-14;2024=3300 2025=3300 2026=3300;9900.0;;
+68;44 - Saint Nazaire - GCS PUI Cite Sanitaire;France;1596;;2021-11-18;2026-12-31;2024=8400 2025=8400 2026=8400;25200.0;;sans produit -> restera en brouillon
+69;10 - Troyes - CH;France;1594;Maintenance;2025-05-01;2029-12-31;2024=7989 2025=14117 2026=17310 2027=19639 2028=20780;79835.0;;
+70;92 - Neuilly - CC Ambroise Paré - Hartmann;France;44873;;;;;0;aucun montant annuel;sans date de debut | sans date de fin | sans produit -> restera en brouillon | sans cadence
+71;83 - Frejus - CHI Frejus Saint Raphael;France;1600;;2025-06-02;2029-12-31;2025=8088 2026=13860 2027=17898 2028=20780;60626.0;;sans produit -> restera en brouillon
+72;55 - Bar le duc - CH;France;1617;Maintenance;2022-12-01;2027-12-31;2024=4818 2025=7812 2026=7986 2027=7600;28215.94;;
+73;52 - Saint Dizier - CH Geneviève de Gaulle Anthonioz;France;2158;;2022-05-01;2027-12-31;2024=6601 2025=7832 2026=7990 2027=7600;30023.5;;sans produit -> restera en brouillon
+74;75 - Paris 15 - APHP - Necker;France;1691;;2022-09-23;2027-12-31;2024=5393 2025=7600 2026=7600;20593.0;;sans produit -> restera en brouillon
+75;94 - Le Kremlin Bicetre - APHP - Hopital Bicêtre;France;1782;;2023-12-01;2028-12-31;2024=9120 2025=9636 2026=20160 2027=15200 2028=15200;69316.0;;sans produit -> restera en brouillon
+76;60 - Creil - GH Public du Sud de l'Oise;France;1769;;2025-07-10;2029-12-31;2025=4984 2026=10395 2027=12883 2028=15585 2029=15585;59432.0;;sans produit -> restera en brouillon
+77;01 - Bourg en Bresse - CH;France;1779;;2025-07-16;2030-07-15;2024=2380 2025=7211 2026=16575 2027=18199 2028=20780 2029=20780;85925.0;;sans produit -> restera en brouillon
+78;93 - Bobigny - APHP - Avicenne;France;1790;;;;2024=4560 2025=4560 2026=4560;13680.0;;sans date de debut | sans date de fin | sans produit -> restera en brouillon
+79;33 - Bordeaux - Cli Tivoli-Ducos;France;1960;;2023-05-01;2028-12-31;2024=4560 2025=7810 2026=9496;21866.46;;sans produit -> restera en brouillon
+80;16 - Angouleme - CH;France;1854;;2023-06-01;2028-12-31;2024=9120 2025=12988 2026=15811 2027=15200 2028=15200;68318.61;;sans produit -> restera en brouillon
+81;86 - Site Chatellerault - CH Camille Guerin - CHU Poitiers;France;9811;;2023-10-20;2026-10-19;2025=7600 2026=7600 2027=7600;22800.0;;sans produit -> restera en brouillon
+82;57 - Metz - Clinique Claude Bernard;France;6383;Maintenance;2025-01-01;2029-12-31;2025=8660 2026=8660 2027=12990 2028=12990;43300.0;;
+83;76 - Saint-Aubin-lès-Elbeuf - CHI Elbeuf - Louviers;France;2090;;2023-12-13;2029-12-31;2024=3360 2025=3443 2026=5040 2027=5040 2028=5040;21923.0;;sans produit -> restera en brouillon
+84;67 - Strasbourg - HUS site Hautepierre;France;2006;;2023-09-13;2028-12-31;2024=5640 2025=6604 2026=8933 2027=8840 2028=8840;38857.0;;sans produit -> restera en brouillon
+85;68 - Colmar - CH;France;1848;;2023-11-08;2028-12-31;2024=13440 2025=14884 2026=20780 2027=20160 2028=20160;89423.78;;sans produit -> restera en brouillon
+86;81 - Albi - CH;France;2058;;2023-11-15;2028-12-31;2024=6720 2025=6720 2026=10390 2027=10080 2028=10080;43990.0;;sans produit -> restera en brouillon
+87;59 - GHICL - Lille - HP Saint Vincent de Paul;France;1795;;2024-01-19;2029-12-31;2024=12777 2025=13440 2026=19829 2027=20160 2028=20160;86366.0;;sans produit -> restera en brouillon
+88;06 - Mougins - CL - Institut Arnaud Tzanck;France;2667;;2024-02-07;2029-12-31;2024=11323 2025=12600 2026=18261 2027=18900 2028=18900;79984.0;;sans produit -> restera en brouillon
+89;50 - Namur - Clinique Saint-Luc Bouge;Belgique;;;2025-01-01;2029-12-31;2024=3355 2025=3040 2026=3040 2027=4040 2028=5040;18515.0;hors France (Belgique);sans produit -> restera en brouillon
+90;50 - Anvers - UZA;Belgique;;;2025-01-01;2029-12-31;2024=3850 2025=3850 2026=3540 2027=4040 2028=5040;20320.0;hors France (Belgique);sans produit -> restera en brouillon
+91;40 - Liège - CHR de la Citadelle;Belgique;;;2027-01-01;2028-12-31;2024=7942 2025=7942 2027=12600 2028=12600;41084.0;hors France (Belgique);sans produit -> restera en brouillon
+92;50 - CHR Namur (sites Sambre / Meuse);Belgique;;;;;;0;hors France (Belgique) | aucun montant annuel;sans date de debut | sans date de fin | sans produit -> restera en brouillon | sans cadence
+93;46 - Valence - CHU de La Fe (Pilote Sanustech);Espagne;;;2022-10-01;;2024=2000 2025=2000 2026=2000;6000.0;hors France (Espagne);sans date de fin | sans produit -> restera en brouillon
+94;46 - Valence - Arnau de Vilanova (Sanustech);Espagne;;;2024-02-01;;2024=2000 2025=2000 2026=2000;6000.0;hors France (Espagne);sans date de fin | sans produit -> restera en brouillon
+95;78 - Rambouillet - CH;France;307;Maintenace;2024-06-05;;2024=3848 2025=6720 2026=8644 2027=2265;21477.0;;sans date de fin
+96;06 - Grand Hôpital de Charleroi;Belgique;;;;;;0;hors France (Belgique) | aucun montant annuel;sans date de debut | sans date de fin | sans produit -> restera en brouillon | sans cadence
+97;30 - Nîmes - PCL Kenval;France;1970;;2025-01-23;2029-12-31;2025=2280 2026=2280 2027=4560 2028=4560;13680.0;;sans produit -> restera en brouillon
+98;91 - Longjumeau - CH - GHNE;France;2053;;2024-07-01;2029-12-31;2025=10089 2026=8405 2027=10080 2028=10080;38654.2;;sans produit -> restera en brouillon | sans cadence
+99;94 - Creteil - APHP - Henri Mondor;France;1967;;2024-11-17;2029-12-31;2025=13440 2026=13440 2027=20160 2028=20160 2029=20160;87360.0;;sans produit -> restera en brouillon
+100;69 - Lyon - GHS - Hôpital Lyon SUD;France;1845;;2024-07-02;2028-12-31;2024=3348 2025=3465 2026=4340 2027=5040 2028=5040;21232.94;;sans produit -> restera en brouillon
+101;69 - Lyon - GHN - Hôpital de la Croix Rousse;France;2598;;2024-09-29;2028-12-31;2024=1755 2025=6930 2026=7853 2027=10080 2028=10080;36697.38;;sans produit -> restera en brouillon
+102;66 - Perpignan - Clinique Saint Pierre;France;2602;;2025-06-01;2029-12-31;2025=2228 2026=3800 2027=5031 2028=5900 2029=5900;22859.0;;sans produit -> restera en brouillon
+103;27 - Evreux - CHI Eure-Seine;France;358;;2024-10-20;2026-12-31;2024=3800 2025=3800 2026=3800;11400.0;;sans produit -> restera en brouillon
+104;17 - Rochefort - CH;France;2761;;2025-08-05;2029-12-31;2025=1412 2026=3460 2027=4168 2028=5195 2029=5195;19430.0;;sans produit -> restera en brouillon
+105;20 - Ajaccio - Notre Dame de la Miséricorde - CH;France;2641;;2025-01-01;2029-12-31;2025=13440 2026=13440 2027=15120 2028=15120;57120.0;;sans produit -> restera en brouillon
+106;45 - Orléans - CHU;France;165;;2025-01-23;2029-12-31;2025=18945 2026=20160 2027=29632 2028=30240;98977.0;;sans produit -> restera en brouillon
+107;14 - Caen - CLCC François Baclesse;France;2682;;2025-03-13;2029-12-31;2025=3395 2026=4200 2027=5897 2028=6300;19792.0;;sans produit -> restera en brouillon
+108;28 - Le Coudray - Chartres - CH;France;2672;;2025-06-06;2029-12-31;2025=5772 2026=10080 2027=12966 2028=15120;43937.66;;sans produit -> restera en brouillon
+109;46 - Alcoy - Verge dels Lliris (Sanustech);Espagne;;;2024-01-01;;2025=2000 2026=2000;4000.0;hors France (Espagne);sans date de fin | sans produit -> restera en brouillon
+110;87 - Limoges - CHU;France;2651;;2025-04-01;;2025=13440 2026=13440 2027=20160 2028=20160;67200.0;;sans date de fin | sans produit -> restera en brouillon
+111;62 - Boulogne-sur-mer - CH;France;2840;;2025-06-11;;2025=7735 2026=13840 2027=17719 2028=20780 2029=20780;80854.0;;sans date de fin | sans produit -> restera en brouillon
+112;76 - Dieppe - CH;France;2795;;2025-06-11;2029-12-31;2025=3873 2026=6930 2027=8598 2028=10080;29481.21;;sans produit -> restera en brouillon
+113;79 - Bressuire - Nord Deux-Sèvres - CH;France;2808;;2025-06-11;2029-12-31;2025=3756 2026=6720 2027=8598 2028=10080;29154.0;;sans produit -> restera en brouillon
+114;43 - Le Puy en Velay - CH Emile Roux;France;139;;2025-07-01;2029-12-31;2025=1747 2026=3465 2027=6708 2028=9900 2029=9900;31720.0;;sans produit -> restera en brouillon
+115;90 - Trevenans - Hôpital Nord Franche Comté;France;17492;;2025-09-28;;2025=6000 2026=6000 2027=9000 2028=9000 2029=9000;39000.0;;sans date de fin | sans produit -> restera en brouillon
+116;67 - Strasbourg - Saint Vincent Saint Anne - CL;France;2864;;2025-12-05;2029-12-31;2025=932 2026=12600 2027=13066 2028=18900 2029=18900;64398.0;;sans produit -> restera en brouillon
+117;24 - Périgueux - CH;France;17537;;2026-03-05;2030-12-31;2026=8636 2027=10437 2028=14746 2029=15645 2030=15645;65109.0;;sans produit -> restera en brouillon | sans cadence
+118;16 - Soyaux - Centre Clinical - CL;France;2916;;2026-03-01;2030-12-31;2026=6550 2027=12993 2028=16268 2029=19490 2030=19490;74791.0;;sans produit -> restera en brouillon | sans cadence
+119;64 - Bayonne - CL Belharra;France;2936;;2025-07-16;2029-12-31;2025=1376 2026=8660 2027=10665 2028=12990 2029=12990;46681.0;;sans produit -> restera en brouillon
+120;69 - Lyon - GHE - Hôpital Mère-Enfant;France;17770;;2025-10-08;2029-12-31;2025=789 2026=3465 2027=5195 2028=5195;14644.25;;sans produit -> restera en brouillon
+121;31 - Toulouse - Oncopôle;France;520;;;;2025=1375 2026=2750;4125.0;;sans date de debut | sans date de fin | sans produit -> restera en brouillon
+122;94 - Creteil - APHP - Henri Mondor;France;1967;;2025-12-09;2030-12-31;2026=3360 2027=3060 2028=5040 2029=5040;16500.0;;sans produit -> restera en brouillon
+123;98 - Monaco - Nouveau Centre Hospitalier Princesse Grace;France;22294;;;;;0;aucun montant annuel;sans date de debut | sans date de fin | sans produit -> restera en brouillon | sans cadence
+124;56 - Vannes - Hôpital Privé Océane;France;17704;;2026-03-18;2030-12-31;2026=3492 2027=4410 2028=6163 2029=6620 2030=6620;27305.0;;sans produit -> restera en brouillon | sans cadence
+125;38 - Grenoble - CHU Grenoble Alpes;France;189;;;;;0;aucun montant annuel;sans date de debut | sans date de fin | sans produit -> restera en brouillon | sans cadence
+126;29 - Quimper - Clinique Mutualiste Bretagne HGO;France;44760;;2026-01-01;2029-12-31;2026=3389 2027=3460 2028=5159 2029=5195;17203.0;;sans produit -> restera en brouillon | sans cadence
+127;73 - Hornu - CH Epicura;Belgique;;;;;;0;hors France (Belgique) | aucun montant annuel;sans date de debut | sans date de fin | sans produit -> restera en brouillon | sans cadence
+128;22 - Plérin - Hôpital Privé des Côtes d'Armor - HP;France;17651;;2026-07-05;2031-12-31;2026=3412 2027=6958 2028=8661 2029=10430 2030=10430;39891.0;;sans produit -> restera en brouillon | sans cadence
+129;75 - Paris - Institut Medico-chirurgical Montsouris IMM;France;579;;;;;0;aucun montant annuel;sans date de debut | sans date de fin | sans produit -> restera en brouillon | sans cadence
+130;13 - Marseille - Hôpital Saint-Joseph - CL;France;17573;;2026-03-10;2030-12-31;2026=7021 2027=8660 2028=12169 2029=12990 2030=12990;53830.0;;sans produit -> restera en brouillon | sans cadence
+131;94 - Creteil - APHP - Henri Mondor;France;1967;;2026-04-01;2031-12-31;2026=2532 2027=3360 2028=4616 2029=5040 2030=5040;20588.0;;sans produit -> restera en brouillon
+132;BA - Klinikum der Universität München Campus Großhadern;Allemagne;;;2026-01-01;2030-12-31;2026=12600 2027=12600 2028=25200 2029=25200;75600.0;hors France (Allemagne);sans produit -> restera en brouillon
+133;;;;;;;;0;aucun etablissement | aucun montant annuel;sans date de debut | sans date de fin | sans produit -> restera en brouillon | sans cadence
+134;69 - Lyon - GHS - Hôpital Lyon SUD;France;1845;;2026-06-18;2030-12-31;2026=1848 2027=3465 2028=5195 2029=5195;15703.0;;sans produit -> restera en brouillon
+135;69 - Lyon - GHE - Hôpital Mère-Enfant;France;17770;;2026-06-17;2030-12-31;2026=1858 2027=3465 2028=5195 2029=5195;15712.63;;sans produit -> restera en brouillon
+136;56 - Vannes - Hôpital Privé Océane;France;17704;;2026-07-17;2030-12-31;2026=2030 2027=4410 2028=5427 2029=6620 2030=6620;25107.0;;sans produit -> restera en brouillon
+137;50 - Hôpital Erasme;Belgique;;;;;;0;hors France (Belgique) | aucun montant annuel;sans date de debut | sans date de fin | sans produit -> restera en brouillon | sans cadence
+138;10 - Bruxelles - Cliniques Universitaires St Luc (UCLouvain);Belgique;;;;;;0;hors France (Belgique) | aucun montant annuel;sans date de debut | sans date de fin | sans produit -> restera en brouillon | sans cadence
+139;75 - Tournai - CHwapi;Belgique;;;;;;0;hors France (Belgique) | aucun montant annuel;sans date de debut | sans date de fin | sans produit -> restera en brouillon | sans cadence
+140;SA - Universitätsklinikum Magdeburg A.ö.R.;Allemagne;;;;;;0;hors France (Allemagne) | aucun montant annuel;sans date de debut | sans date de fin | sans produit -> restera en brouillon | sans cadence
+141;69 - Lyon - GHC - Hôpital Edouard Herriot;France;1682;;;;;0;aucun montant annuel;sans date de debut | sans date de fin | sans produit -> restera en brouillon | sans cadence
+142;56 - Vannes - CHBA;France;1126;;;;;0;aucun montant annuel;sans date de debut | sans date de fin | sans produit -> restera en brouillon | sans cadence
+143;40 - Dax - CH Cote d’Argent;France;271;;;;;0;aucun montant annuel;sans date de debut | sans date de fin | sans produit -> restera en brouillon | sans cadence
+144;40 - Mont-de-Marsan - CH;France;1654;;2026-09-02;2030-12-31;2026=1153 2027=3479 2028=4053 2029=5215 2030=5215;19115.0;;sans produit -> restera en brouillon | sans cadence
+145;IT Health Fusion;Italie;;;;;;0;hors France (Italie) | aucun montant annuel;sans date de debut | sans date de fin | sans produit -> restera en brouillon | sans cadence
+146;75 - Institut Curie - Site de Paris;France;1863;;;;;0;aucun montant annuel;sans date de debut | sans date de fin | sans produit -> restera en brouillon | sans cadence
+147;59 - Roubaix - CH;France;308;;;;;0;aucun montant annuel;sans date de debut | sans date de fin | sans produit -> restera en brouillon | sans cadence

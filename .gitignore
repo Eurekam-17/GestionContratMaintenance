@@ -32,3 +32,9 @@ env/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Exports bruts Notion : donnees financieres clients, re-exportables a la
+# demande depuis Notion. On versionne les scripts et les tables derivees,
+# pas la source brute.
+migration/Assistance DO *.csv
+migration/BD Etablissements *.csv
