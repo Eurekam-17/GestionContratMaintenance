@@ -145,15 +145,6 @@ msgid "<strong>Salesperson:</strong>"
 msgstr "<strong>Commercial :</strong>"
 
 #. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_order_wizard_form
-msgid ""
-"A <b>sale.order quotation</b> will be created as a draft with\n"
-"                        the lines above. You will then be able to:"
-msgstr ""
-"Un <b>devis (sale.order)</b> sera créé en brouillon avec les lignes ci-"
-"dessus. Vous pourrez ensuite :"
-
-#. module: eurekam_maintenance
 #: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_contract__billing_frequency_ids
 msgid ""
 "A single contract may combine several frequencies (e.g. Annual + Overdue)."
@@ -1382,11 +1373,6 @@ msgid "Product Label"
 msgstr "Libellé produit"
 
 #. module: eurekam_maintenance
-#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_order_wizard__customer_po_reference
-msgid "Purchase order number sent by the customer."
-msgstr "Numéro du bon de commande envoyé par le client."
-
-#. module: eurekam_maintenance
 #: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__order_status__quote_sent
 msgid "Quote Sent"
 msgstr "Devis envoyé"
@@ -1401,17 +1387,6 @@ msgstr "RESAH"
 #: model:eurekam.central.purchasing,name:eurekam_maintenance.cp_ramsay
 msgid "Ramsay Santé"
 msgstr "Ramsay Santé"
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
-msgid ""
-"Rare case: direct billing without a purchase order (private establishments)."
-" Generates the draft invoices covering the remaining contract duration "
-"according to the frequency."
-msgstr ""
-"Cas rare : facturation directe sans bon de commande (établissements privés)."
-" Génère les factures brouillon couvrant la durée restante du contrat selon "
-"la cadence."
 
 #. module: eurekam_maintenance
 #: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
@@ -1914,18 +1889,6 @@ msgid ""
 msgstr ""
 "Libellé repris sur les lignes de devis, de commande et de facture, avant le nombre de postes et la période facturée.\n"
 "Pré-rempli depuis le « Descriptif du devis » de l'article (onglet Vente) ; modifiable à la main."
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
-msgid ""
-"Standard route: upon receipt of a customer purchase order, creates a "
-"sale.order with N lines according to the frequency (1 for Annual, 2 for "
-"Semi-annual, 4 for Quarterly). Each SO line can be invoiced independently."
-msgstr ""
-"Circuit normal : à réception d'un bon de commande client, crée un sale.order"
-" avec N lignes selon la cadence (1 pour Annuelle, 2 pour Semestrielle, 4 "
-"pour Trimestrielle). Chaque ligne du devis peut être facturée "
-"indépendamment."
 
 #. module: eurekam_maintenance
 #: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
@@ -2523,6 +2486,7 @@ msgid "[ALERT] Maintenance contract EXPIRED: {{ object.sequence_number }}"
 msgstr "[ALERTE] Contrat de maintenance ÉCHU : {{ object.sequence_number }}"
 
 #. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_order_wizard__customer_po_reference
 msgid ""
 "Purchase order number sent by the customer. Leave empty at the quotation "
 "stage and fill it in on the order once received."
@@ -2531,13 +2495,30 @@ msgstr ""
 "devis et à renseigner sur la commande une fois reçu."
 
 #. module: eurekam_maintenance
-msgid "not received yet"
-msgstr "pas encore reçu"
-
-#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_contract__maintenance_amount
 msgid ""
 "Reference amount per year, used to pre-fill the yearly lines on the first 'Generate Yearly Lines'.\n"
 "It is NOT what gets billed: the contract value and the invoices are built from the 'Yearly Amounts' tab, which is where an amount that changes from year to year must be entered."
 msgstr ""
 "Montant de référence par an, qui sert à pré-remplir les lignes au premier clic sur « Générer les lignes annuelles ».\n"
 "Ce n'est PAS lui qui est facturé : la valeur du contrat et les factures sont construites à partir de l'onglet « Montants annuels », où doit être saisi un montant qui évolue d'une année sur l'autre."
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_order_wizard_form
+msgid ""
+"A <b>quotation</b> will be created as a draft with the lines\n"
+"                        above. You will then be able to:"
+msgstr ""
+"Un <b>devis (sale.order)</b> sera créé en brouillon avec les lignes ci-"
+"dessus. Vous pourrez ensuite :"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
+msgid ""
+"Standard route: creates the quotation (a draft sale.order) with N lines "
+"according to the frequency (1 for Annual, 2 for Semi-annual, 4 for "
+"Quarterly). Each SO line can be invoiced independently."
+msgstr ""
+"Circuit normal : crée le devis (un sale.order en brouillon) avec N lignes "
+"selon la cadence (1 pour Annuelle, 2 pour Semestrielle, 4 pour "
+"Trimestrielle). Chaque ligne du devis peut être facturée indépendamment."
