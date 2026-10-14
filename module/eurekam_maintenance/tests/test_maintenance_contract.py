@@ -813,3 +813,70 @@ class TestMaintenanceContract(TransactionCase):
                         'date_end': date(2026, 12, 31)})
         self.assertEqual(contract._full_period_label(),
                          'Période complète (du 2026-01-01 au 2026-12-31)')
+
+    # ======================================================================
+    # 18. Partial first/last year: only the covered periods are billed
+    # ======================================================================
+    def test_periods_limited_to_contract_dates(self):
+        """A contract starting mid-year must not bill the quarters that
+        precede it. Reported by the sales team on CHU Grenoble: a contract
+        starting 2026-10-01, billed quarterly in arrears, was proposing four
+        quarters for 2026 -- three of them before the contract existed."""
+        Contract = self.env['eurekam.maintenance.contract']
+
+        # First year, starting 1 October: Q4 only, carrying the whole amount.
+        periods = Contract._periods_for_year(
+            2026, 3488.0, 'quarterly',
+            date(2026, 10, 1), date(2030, 12, 31))
+        self.assertEqual([p[0] for p in periods], ['Q4 2026'])
+        self.assertAlmostEqual(periods[0][2], 3488.0, places=2)
+
+        # Following years are untouched: four quarters, amount split evenly.
+        periods = Contract._periods_for_year(
+            2027, 13840.0, 'quarterly',
+            date(2026, 10, 1), date(2030, 12, 31))
+        self.assertEqual([p[0] for p in periods],
+                         ['Q1 2027', 'Q2 2027', 'Q3 2027', 'Q4 2027'])
+        self.assertAlmostEqual(sum(p[2] for p in periods), 13840.0, places=2)
+
+        # Last year, ending 30 June: H1 only on a half-yearly contract.
+        periods = Contract._periods_for_year(
+            2030, 5000.0, 'semi_annual',
+            date(2026, 1, 1), date(2030, 6, 30))
+        self.assertEqual([p[0] for p in periods], ['H1 2030'])
+        self.assertAlmostEqual(periods[0][2], 5000.0, places=2)
+
+        # A year starting mid-May keeps Q2 (it overlaps) through Q4.
+        periods = Contract._periods_for_year(
+            2026, 9000.0, 'quarterly',
+            date(2026, 5, 15), date(2027, 12, 31))
+        self.assertEqual([p[0] for p in periods],
+                         ['Q2 2026', 'Q3 2026', 'Q4 2026'])
+        self.assertAlmostEqual(sum(p[2] for p in periods), 9000.0, places=2)
+
+        # Without dates, nothing changes: the full calendar year.
+        self.assertEqual(
+            [p[0] for p in Contract._periods_for_year(2026, 100.0, 'quarterly')],
+            ['Q1 2026', 'Q2 2026', 'Q3 2026', 'Q4 2026'])
+
+    def test_quotation_without_customer_po(self):
+        """The PO reference is optional: the quotation must be issuable before
+        the customer has sent their purchase order."""
+        freq_quarterly = self.env.ref('eurekam_maintenance.freq_quarterly')
+        today_year = ofields.Date.context_today(self.env['res.partner']).year
+        contract = self._make_contract(
+            date_start=date(today_year, 1, 1),
+            date_end=date(today_year, 12, 31),
+            maintenance_amount=20000.0,
+            billing_frequency_ids=[(6, 0, [freq_quarterly.id])],
+        )
+        contract.action_activate()
+        contract.action_generate_lines()
+        wizard = self.env['eurekam.maintenance.order.wizard'].with_context(
+            default_contract_id=contract.id,
+        ).create({'year': today_year})
+        sale_order = self.env['sale.order'].browse(
+            wizard.action_create_sale_order()['res_id'])
+        self.assertEqual(sale_order.state, 'draft')
+        self.assertFalse(sale_order.client_order_ref)
+        self.assertEqual(len(sale_order.order_line), 4)

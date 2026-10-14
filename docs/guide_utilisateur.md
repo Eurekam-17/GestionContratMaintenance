@@ -161,7 +161,13 @@ Le scénario type Eurekam est le suivant :
    - **Durée commandée** : 6 mois, 1 an, 2 ans, 3 ans, 4 ans, 5 ans
 
    **Onglet Facturation**
-   - **Montant de maintenance** (€/an)
+   - **Montant de maintenance** (€/an) : montant **de référence**, qui sert
+     uniquement à pré-remplir les lignes au premier clic sur « Générer les
+     lignes annuelles ». ⚠️ **Ce n'est pas lui qui est facturé.** La valeur du
+     contrat et les factures sont construites à partir de l'onglet **Montants
+     annuels**. Si le montant évolue d'une année sur l'autre — cas le plus
+     fréquent — c'est là qu'il faut le saisir, année par année, sans oublier
+     l'année en cours.
    - **Niveau de facturation** : 100 %, 75 %, 50 %, 25 %, 0 %
    - **Révision Syntec** : Oui / Non
    - **Cadences de facturation** (Many2many) :
@@ -213,14 +219,16 @@ automatiquement (visibles dans l'onglet **Facturation**, bloc "Totaux").
 Quand le client envoie son Bon de Commande (en général 1 BC par année avec N
 lignes selon la cadence), tu crées la commande dans Odoo :
 
-1. Sur la fiche du contrat, cliquer **Créer une commande client** dans le bandeau
+1. Sur la fiche du contrat, cliquer **Créer le devis** dans le bandeau
 2. Le wizard s'ouvre :
 
    - **Année couverte** : pré-rempli sur la première année future non couverte
      (ex: 2026). Tu peux modifier (ex: 2024 si tu rattrapes une année passée).
-   - **Référence BC client** (obligatoire) : le numéro du BC envoyé par le
-     client (ex: `BC-CHSTLOUIS-2026-T1234`)
-   - **Date de réception du BC** : aujourd'hui par défaut
+   - **Référence BC client** (facultatif) : le numéro du BC envoyé par le
+     client (ex: `BC-CHSTLOUIS-2026-T1234`). **À laisser vide tant que le BC
+     n'est pas arrivé** : on crée d'abord le devis, on le renseigne sur la
+     commande ensuite.
+   - **Date de réception du BC** (facultatif) : à renseigner avec la référence
    - **Périmètre de la commande** :
      - **Année (découpée selon cadence)** = cas standard. Le BC comporte N
        lignes selon la cadence (1 pour annuelle, 2 pour semestrielle, 4 pour
@@ -240,6 +248,12 @@ lignes selon la cadence), tu crées la commande dans Odoo :
        et tableau de bord restent cohérents.
      - Pour revaloriser **toutes** les années d'un coup, utiliser plutôt le
        wizard de renouvellement (§ 5.1).
+
+   - **Première et dernière année** : seules les périodes réellement
+     couvertes par le contrat sont proposées. Un contrat qui démarre le
+     01/10 en trimestriel ne génère **qu'une ligne** pour le 4e trimestre,
+     portant l'intégralité du montant de cette année-là — et non quatre
+     trimestres dont trois antérieurs au contrat. Idem pour l'année de fin.
 
    - **Aperçu** affiche le nombre de lignes et le montant total qui seront
      créés. Vérifie avant de valider.
@@ -589,7 +603,7 @@ montant via le wizard.
 | Début / Fin | `date_start` / `date_end` | Dates du contrat |
 | Durée commandée | `duration` | 6m, 1y, 2y, 3y, 4y, 5y |
 | Jours avant expiration | `days_to_expiry` | Calculé en temps réel |
-| Montant de maintenance | `maintenance_amount` | €/an de référence |
+| Montant de maintenance | `maintenance_amount` | €/an de référence, pré-remplit les lignes ; **non facturé** |
 | Niveau de facturation | `billing_level` | 0/25/50/75/100 % |
 | Révision Syntec | `syntec_revision` | Oui / Non |
 | Cadences de facturation | `billing_frequency_ids` | Many2many vers les cadences |

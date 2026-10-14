@@ -212,6 +212,11 @@ class EurekamMaintenanceContract(models.Model):
         string='Maintenance Amount',
         currency_field='currency_id',
         tracking=True,
+        help="Reference amount per year, used to pre-fill the yearly lines on "
+             "the first 'Generate Yearly Lines'.\n"
+             "It is NOT what gets billed: the contract value and the invoices "
+             "are built from the 'Yearly Amounts' tab, which is where an "
+             "amount that changes from year to year must be entered.",
     )
     syntec_revision = fields.Selection(
         [('yes', 'Yes'), ('no', 'No')],
@@ -743,14 +748,25 @@ class EurekamMaintenanceContract(models.Model):
         return 'upcoming'
 
     @staticmethod
-    def _periods_for_year(year, amount, period_code):
+    def _periods_for_year(year, amount, period_code,
+                          date_start=None, date_end=None):
         """Return the list of sub-periods of a year:
         [(code, label, fraction_amount, period_start, period_end), ...]
 
         - 'annual'      -> 1 period (full year)
-        - 'semi_annual' -> 2 periods (H1, H2), fraction = amount/2
-        - 'quarterly'   -> 4 periods (Q1..Q4), fraction = amount/4
+        - 'semi_annual' -> 2 periods (H1, H2)
+        - 'quarterly'   -> 4 periods (Q1..Q4)
         - 'full_period' -> handled separately (action_create_invoices_for_contract)
+
+        `date_start` / `date_end` are the contract's own dates. Only the periods
+        that actually overlap them are returned, and `amount` -- which is the
+        yearly line, i.e. what that contract year is worth -- is split across
+        the periods kept, not across the four calendar quarters. A contract
+        starting on 1 October and billed quarterly in arrears therefore yields a
+        single Q4 line carrying the whole yearly amount, instead of four lines
+        of a quarter each, three of which would bill periods predating the
+        contract (reported by the sales team on CHU Grenoble, 2026-10-14).
+        Omitting both dates keeps the full calendar year.
 
         `code` is a stable, never-translated technical key ("Q1 2026"). It is
         what gets stored in invoice_origin and maintenance_period_label, so the
@@ -763,24 +779,29 @@ class EurekamMaintenanceContract(models.Model):
             return PERIOD_LABELS[key] % {'year': year}
 
         if period_code == 'quarterly':
-            f = _split_amount(amount, 4)
-            return [
-                ("Q1 %s" % year, lab('Q1'), f[0], date(year, 1, 1), date(year, 3, 31)),
-                ("Q2 %s" % year, lab('Q2'), f[1], date(year, 4, 1), date(year, 6, 30)),
-                ("Q3 %s" % year, lab('Q3'), f[2], date(year, 7, 1), date(year, 9, 30)),
-                ("Q4 %s" % year, lab('Q4'), f[3], date(year, 10, 1), date(year, 12, 31)),
-            ]
-        if period_code == 'semi_annual':
-            f = _split_amount(amount, 2)
-            return [
-                ("H1 %s" % year, lab('H1'), f[0], date(year, 1, 1), date(year, 6, 30)),
-                ("H2 %s" % year, lab('H2'), f[1], date(year, 7, 1), date(year, 12, 31)),
-            ]
-        # 'annual' by default
-        return [
-            ("Year %s" % year, lab('Y'), amount,
-             date(year, 1, 1), date(year, 12, 31)),
-        ]
+            bornes = [('Q1', date(year, 1, 1), date(year, 3, 31)),
+                      ('Q2', date(year, 4, 1), date(year, 6, 30)),
+                      ('Q3', date(year, 7, 1), date(year, 9, 30)),
+                      ('Q4', date(year, 10, 1), date(year, 12, 31))]
+            cles = {'Q1': 'Q1 %s', 'Q2': 'Q2 %s', 'Q3': 'Q3 %s', 'Q4': 'Q4 %s'}
+        elif period_code == 'semi_annual':
+            bornes = [('H1', date(year, 1, 1), date(year, 6, 30)),
+                      ('H2', date(year, 7, 1), date(year, 12, 31))]
+            cles = {'H1': 'H1 %s', 'H2': 'H2 %s'}
+        else:  # 'annual' by default
+            bornes = [('Y', date(year, 1, 1), date(year, 12, 31))]
+            cles = {'Y': 'Year %s'}
+
+        # Keep only the periods the contract actually covers.
+        retenues = [b for b in bornes
+                    if not (date_end and b[1] > date_end)
+                    and not (date_start and b[2] < date_start)]
+        if not retenues:
+            return []
+
+        parts = _split_amount(amount, len(retenues))
+        return [(cles[cle] % year, lab(cle), parts[i], debut, fin)
+                for i, (cle, debut, fin) in enumerate(retenues)]
 
     def _format_workstations(self):
         """'4 postes' fragment inserted in the billing line descriptions.
@@ -901,6 +922,7 @@ class EurekamMaintenanceContract(models.Model):
             for line in future_lines.sorted(key=lambda l: l.year):
                 periods = contract._periods_for_year(
                     line.year, line.amount, period_code,
+                    contract.date_start, contract.date_end,
                 )
                 # Already invoiced periods: read the suffix after " / " in the
                 # invoice_origin of the invoices already linked to the line.
@@ -928,6 +950,7 @@ class EurekamMaintenanceContract(models.Model):
                     module_name = module_line.module_billing_id.name or _("Module")
                     m_periods = contract._periods_for_year(
                         line.year, module_line.amount, period_code,
+                        contract.date_start, contract.date_end,
                     )
                     for base_code, base_label, fraction, p_start, p_end in m_periods:
                         full_code = "%s — %s" % (module_name, base_code)

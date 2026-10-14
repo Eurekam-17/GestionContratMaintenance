@@ -20,9 +20,9 @@
                             string="Renew" class="btn-primary"
                             invisible="state in ('draft','renewed','cancelled')"/>
                     <button name="action_open_create_order_wizard" type="object"
-                            string="Create Customer Order" class="btn-primary"
+                            string="Create Quotation" class="btn-primary"
                             invisible="state not in ('active','expiring')"
-                            help="Standard route: upon receipt of a customer purchase order, creates a sale.order with N lines according to the frequency (1 for Annual, 2 for Semi-annual, 4 for Quarterly). Each SO line can be invoiced independently."/>
+                            help="Standard route: creates the quotation (a draft sale.order) with N lines according to the frequency (1 for Annual, 2 for Semi-annual, 4 for Quarterly). Each SO line can be invoiced independently."/>
                     <!-- Fallback kept for managers only: every invoice is
                          normally born from a customer order. -->
                     <button name="action_create_invoices_for_contract" type="object"

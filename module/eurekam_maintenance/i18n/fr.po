@@ -537,8 +537,8 @@ msgstr "Créer les factures du contrat"
 #: model:ir.actions.act_window,name:eurekam_maintenance.action_maintenance_order_wizard
 #: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
 #: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_order_wizard_form
-msgid "Create Customer Order"
-msgstr "Créer une commande client"
+msgid "Create Quotation"
+msgstr "Créer le devis"
 
 #. module: eurekam_maintenance
 #: model:ir.actions.server,name:eurekam_maintenance.action_server_create_contract_from_partner
@@ -552,8 +552,8 @@ msgstr "Créer le nouveau contrat"
 
 #. module: eurekam_maintenance
 #: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_order_wizard_form
-msgid "Create Order"
-msgstr "Créer la commande"
+msgid "Create Quotation"
+msgstr "Créer le devis"
 
 #. module: eurekam_maintenance
 #: model_terms:ir.actions.act_window,help:eurekam_maintenance.action_maintenance_contract
@@ -606,8 +606,8 @@ msgstr "Référence BC client"
 
 #. module: eurekam_maintenance
 #: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_order_wizard_form
-msgid "Customer Purchase Order"
-msgstr "Bon de commande client"
+msgid "Customer Purchase Order (if already received)"
+msgstr "Bon de commande client (si déjà reçu)"
 
 #. module: eurekam_maintenance
 #: model:ir.model.fields.selection,name:eurekam_maintenance.selection__res_partner__maintenance_status__client_no_contract
@@ -1174,8 +1174,8 @@ msgstr "Nouveau montant de maintenance"
 
 #. module: eurekam_maintenance
 #: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_order_wizard_form
-msgid "New Maintenance Customer Order"
-msgstr "Nouvelle commande client de maintenance"
+msgid "New Maintenance Quotation"
+msgstr "Nouveau devis de maintenance"
 
 #. module: eurekam_maintenance
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_contract_renewal_wizard__new_date_start
@@ -2521,3 +2521,23 @@ msgstr "Historique de communication du site web"
 #: model:mail.template,subject:eurekam_maintenance.mail_template_contract_expired
 msgid "[ALERT] Maintenance contract EXPIRED: {{ object.sequence_number }}"
 msgstr "[ALERTE] Contrat de maintenance ÉCHU : {{ object.sequence_number }}"
+
+#. module: eurekam_maintenance
+msgid ""
+"Purchase order number sent by the customer. Leave empty at the quotation "
+"stage and fill it in on the order once received."
+msgstr ""
+"Numéro du bon de commande envoyé par le client. À laisser vide au stade du "
+"devis et à renseigner sur la commande une fois reçu."
+
+#. module: eurekam_maintenance
+msgid "not received yet"
+msgstr "pas encore reçu"
+
+#. module: eurekam_maintenance
+msgid ""
+"Reference amount per year, used to pre-fill the yearly lines on the first 'Generate Yearly Lines'.\n"
+"It is NOT what gets billed: the contract value and the invoices are built from the 'Yearly Amounts' tab, which is where an amount that changes from year to year must be entered."
+msgstr ""
+"Montant de référence par an, qui sert à pré-remplir les lignes au premier clic sur « Générer les lignes annuelles ».\n"
+"Ce n'est PAS lui qui est facturé : la valeur du contrat et les factures sont construites à partir de l'onglet « Montants annuels », où doit être saisi un montant qui évolue d'une année sur l'autre."

@@ -70,15 +70,18 @@ class EurekamMaintenanceOrderWizard(models.TransientModel):
         help="Contract year covered by the order. "
              "Ignored if scope = Whole contract.",
     )
+    # Optional on purpose: the sale.order is created as a DRAFT, i.e. a
+    # quotation to be sent to the customer. At that point the purchase order
+    # has usually not been received yet -- requiring it here blocked the sales
+    # team from issuing the quotation at all (reported 2026-10-14). Both fields
+    # can be filled later, on the order itself, when the PO arrives.
     customer_po_reference = fields.Char(
         string='Customer PO Reference',
-        required=True,
-        help="Purchase order number sent by the customer.",
+        help="Purchase order number sent by the customer. Leave empty at the "
+             "quotation stage and fill it in on the order once received.",
     )
     customer_po_date = fields.Date(
         string='PO Receipt Date',
-        required=True,
-        default=fields.Date.context_today,
     )
 
     # ------------------------------------------------------------------
@@ -192,12 +195,15 @@ class EurekamMaintenanceOrderWizard(models.TransientModel):
             period_code = w.contract_id._get_billing_period_code()
             periods = w.contract_id._periods_for_year(
                 w.year, w._effective_year_amount(), period_code,
+                w.contract_id.date_start, w.contract_id.date_end,
             )
             count = len(periods)
             total = sum(p[2] for p in periods)
             # Billable modules active that year add their own lines.
             for ml in w.contract_id._active_module_lines_for_year(w.year):
-                m_periods = w.contract_id._periods_for_year(w.year, ml.amount, period_code)
+                m_periods = w.contract_id._periods_for_year(
+                    w.year, ml.amount, period_code,
+                    w.contract_id.date_start, w.contract_id.date_end)
                 count += len(m_periods)
                 total += sum(p[2] for p in m_periods)
             w.preview_period_count = count
@@ -352,8 +358,9 @@ class EurekamMaintenanceOrderWizard(models.TransientModel):
             'partner_id': contract.partner_id.id,
             'eurekam_maintenance_contract_id': contract.id,
             'eurekam_maintenance_year': self.year if self.coverage_mode == 'annual_split' else 0,
-            'client_order_ref': self.customer_po_reference,
-            'date_order': fields.Datetime.to_datetime(self.customer_po_date) or fields.Datetime.now(),
+            'client_order_ref': self.customer_po_reference or False,
+            'date_order': (fields.Datetime.to_datetime(self.customer_po_date)
+                           if self.customer_po_date else fields.Datetime.now()),
             'currency_id': contract.currency_id.id,
             'company_id': contract.company_id.id,
             'origin': contract.sequence_number,
@@ -426,7 +433,9 @@ class EurekamMaintenanceOrderWizard(models.TransientModel):
             year_amount = self._apply_syntec_on_line(line)
 
             period_code = contract._get_billing_period_code()
-            periods = contract._periods_for_year(self.year, year_amount, period_code)
+            periods = contract._periods_for_year(
+                self.year, year_amount, period_code,
+                contract.date_start, contract.date_end)
 
             for code, label, fraction, _start, _end in periods:
                 order_lines.append((0, 0, {
@@ -442,7 +451,9 @@ class EurekamMaintenanceOrderWizard(models.TransientModel):
             for ml in contract._active_module_lines_for_year(self.year):
                 ml_product = ml._get_invoice_product() or product_variant
                 module_name = ml.module_billing_id.name or _("Module")
-                m_periods = contract._periods_for_year(self.year, ml.amount, period_code)
+                m_periods = contract._periods_for_year(
+                    self.year, ml.amount, period_code,
+                    contract.date_start, contract.date_end)
                 for base_code, base_label, fraction, _s, _e in m_periods:
                     order_lines.append((0, 0, {
                         'product_id': ml_product.id,
@@ -459,9 +470,10 @@ class EurekamMaintenanceOrderWizard(models.TransientModel):
         sale_order = self.env['sale.order'].create(so_vals)
 
         contract.message_post(body=_(
-            "Customer order %(so)s created for PO %(po)s (%(n)d line(s), %(mode)s).",
+            "Quotation %(so)s created (%(n)d line(s), %(mode)s), customer PO: "
+            "%(po)s.",
             so=sale_order.name,
-            po=self.customer_po_reference,
+            po=self.customer_po_reference or _("not received yet"),
             n=len(order_lines),
             mode=dict(self._fields['coverage_mode'].selection).get(self.coverage_mode),
         ))
