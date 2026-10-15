@@ -159,22 +159,24 @@ class EurekamMaintenanceContractLine(models.Model):
                             {'price_unit': neuf})
                         touchees |= l
                 if touchees:
-                    contrat.message_post(body=_(
-                        "Year %(year)s set to %(amount).2f: quotation(s) "
-                        "%(orders)s updated (%(n)d line(s)).",
+                    contrat.message_post(body=(
+                        "Année %(year)s passée à %(amount).2f : devis "
+                        "%(orders)s mis à jour (%(n)d ligne(s))." % dict(
+                            year=rec.year, amount=rec.amount,
+                            orders=', '.join(sorted(set(
+                                touchees.mapped('order_id.name')))),
+                            n=len(touchees),
+                        )))
+            if figees:
+                contrat.message_post(body=(
+                    "Année %(year)s passée à %(amount).2f, mais la ou les "
+                    "commandes %(orders)s ont été laissées inchangées : déjà "
+                    "confirmées ou facturées. À ajuster à la main si "
+                    "nécessaire." % dict(
                         year=rec.year, amount=rec.amount,
                         orders=', '.join(sorted(set(
-                            touchees.mapped('order_id.name')))),
-                        n=len(touchees),
-                    ))
-            if figees:
-                contrat.message_post(body=_(
-                    "Year %(year)s set to %(amount).2f, but order(s) "
-                    "%(orders)s were left untouched: already confirmed or "
-                    "invoiced. Adjust them by hand if needed.",
-                    year=rec.year, amount=rec.amount,
-                    orders=', '.join(sorted(set(figees.mapped('order_id.name')))),
-                ))
+                            figees.mapped('order_id.name')))),
+                    )))
 
     def _factures_couvrantes(self):
         """Invoices covering the line: line -> order lines -> invoices.

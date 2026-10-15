@@ -593,14 +593,14 @@ class EurekamMaintenanceContract(models.Model):
             rec.state = 'active'
             new_state = rec._evaluate_lifecycle_state()
             if new_state != rec.state:
-                rec.message_post(body=_(
-                    "Activation followed by an immediate re-evaluation based on "
-                    "date_end (%(end)s, %(days)s days): status adjusted to "
-                    "\"%(state)s\".",
+                rec.message_post(body=(
+                    "Activation suivie d'une réévaluation immédiate sur la "
+                    "date de fin (%(end)s, %(days)s jours) : statut ajusté à "
+                    "« %(state)s »." % dict(
                     end=rec.date_end,
                     days=(rec.date_end - fields.Date.context_today(rec)).days,
                     state=dict(rec._fields['state'].selection).get(new_state),
-                ))
+                )))
                 rec.state = new_state
         return True
 
@@ -614,11 +614,11 @@ class EurekamMaintenanceContract(models.Model):
         for rec in self:
             new_state = rec._evaluate_lifecycle_state()
             if new_state != rec.state:
-                rec.message_post(body=_(
-                    "Manual state recompute: %(old)s -> %(new)s.",
-                    old=dict(rec._fields['state'].selection).get(rec.state),
-                    new=dict(rec._fields['state'].selection).get(new_state),
-                ))
+                rec.message_post(body=(
+                    "Recalcul manuel du statut : %(old)s → %(new)s." % dict(
+                        old=dict(rec._fields['state'].selection).get(rec.state),
+                        new=dict(rec._fields['state'].selection).get(new_state),
+                    )))
                 rec.state = new_state
         return True
 

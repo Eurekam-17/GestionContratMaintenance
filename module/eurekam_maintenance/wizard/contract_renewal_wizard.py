@@ -296,14 +296,11 @@ class EurekamContractRenewalWizard(models.TransientModel):
                 line.notes = (line.notes or '') + ('\n' if line.notes else '') + note
 
         # --- Switch the old one to 'renewed' -------------------------------
-        old.message_post(body=_(
-            "Contract renewed through the wizard. New contract: %s.",
-            new_contract.sequence_number,
-        ))
-        new_contract.message_post(body=_(
-            "Renewal of %s.",
-            old.sequence_number,
-        ))
+        old.message_post(body=(
+            "Contrat renouvelé via l'assistant. Nouveau contrat : %s."
+            % new_contract.sequence_number))
+        new_contract.message_post(body=(
+            "Renouvellement de %s." % old.sequence_number))
         old.write({'state': 'renewed'})
 
         # --- Open the new contract -----------------------------------------

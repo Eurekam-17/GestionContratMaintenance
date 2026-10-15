@@ -131,13 +131,13 @@ class SaleOrderLine(models.Model):
                 continue
             ancien = annuelle.amount
             annuelle.with_context(eurekam_sync=True).write({'amount': total})
-            annuelle.contract_id.message_post(body=_(
-                "Year %(year)s updated from order %(order)s: "
-                "%(old).2f -> %(new).2f.",
-                year=annuelle.year,
-                order=', '.join(lignes.mapped('order_id.name')),
-                old=ancien, new=total,
-            ))
+            annuelle.contract_id.message_post(body=(
+                "Année %(year)s mise à jour depuis la commande %(order)s : "
+                "%(old).2f → %(new).2f." % dict(
+                    year=annuelle.year,
+                    order=', '.join(sorted(set(lignes.mapped('order_id.name')))),
+                    old=ancien, new=total,
+                )))
 
     @api.model_create_multi
     def create(self, vals_list):

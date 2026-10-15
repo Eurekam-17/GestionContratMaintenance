@@ -294,16 +294,16 @@ class EurekamMaintenanceOrderWizard(models.TransientModel):
 
         old_amount = line.amount
         line.amount = self.revised_amount
-        self.contract_id.message_post(body=_(
-            "Syntec revision applied on year %(year)s when creating the "
-            "customer order: %(old).2f -> %(new).2f (%(rate).2f %%, delta "
-            "%(delta).2f). The contract yearly line has been updated.",
-            year=self.year,
-            old=old_amount,
-            new=self.revised_amount,
-            rate=self.syntec_rate,
-            delta=self.revised_amount - old_amount,
-        ))
+        self.contract_id.message_post(body=(
+            "Révision Syntec appliquée sur l'année %(year)s à la création du "
+            "devis : %(old).2f → %(new).2f (%(rate).2f %%, écart %(delta).2f). "
+            "La ligne annuelle du contrat a été mise à jour." % dict(
+                year=self.year,
+                old=old_amount,
+                new=self.revised_amount,
+                rate=self.syntec_rate,
+                delta=self.revised_amount - old_amount,
+            )))
         return self.revised_amount
 
     # ==================================================================
@@ -474,14 +474,15 @@ class EurekamMaintenanceOrderWizard(models.TransientModel):
         sale_order = self.env['sale.order'].with_context(
             eurekam_sync=True).create(so_vals)
 
-        contract.message_post(body=_(
-            "Quotation %(so)s created (%(n)d line(s), %(mode)s), customer PO: "
-            "%(po)s.",
-            so=sale_order.name,
-            po=self.customer_po_reference or _("not received yet"),
-            n=len(order_lines),
-            mode=dict(self._fields['coverage_mode'].selection).get(self.coverage_mode),
-        ))
+        contract.message_post(body=(
+            "Devis %(so)s créé (%(n)d ligne(s), %(mode)s), BC client : %(po)s."
+            % dict(
+                so=sale_order.name,
+                po=self.customer_po_reference or "pas encore reçu",
+                n=len(order_lines),
+                mode=dict(self._fields['coverage_mode'].selection).get(
+                    self.coverage_mode),
+            )))
 
         # Return the action to open the SO
         return {
