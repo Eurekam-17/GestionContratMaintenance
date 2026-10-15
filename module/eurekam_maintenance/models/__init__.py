@@ -1,5 +1,6 @@
 from . import establishment_aux
 from . import market_type
+from . import product_generation
 from . import central_purchasing
 from . import billing_frequency
 from . import module_billing

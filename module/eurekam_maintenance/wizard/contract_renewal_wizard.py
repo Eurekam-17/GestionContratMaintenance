@@ -252,7 +252,7 @@ class EurekamContractRenewalWizard(models.TransientModel):
             'product_name': old.product_name,
             'partner_id': old.partner_id.id,
             'commercial_id': old.commercial_id.id,
-            'gen': old.gen,
+            'gen_id': old.gen_id.id,
             'market_type_ids': [(6, 0, old.market_type_ids.ids)],
             'order_status': old.order_status,
             'date_start': self.new_date_start,

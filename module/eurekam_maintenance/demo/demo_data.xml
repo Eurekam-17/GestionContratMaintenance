@@ -51,7 +51,7 @@
     <record id="demo_contract_active_uniha2024" model="eurekam.maintenance.contract">
         <field name="partner_id" ref="demo_partner_chu_lyon"/>
         <field name="product_name">Drugcam Oncology FR Maintenance (DEMO)</field>
-        <field name="gen">gen2</field>
+        <field name="gen_id" ref="gen_gen2"/>
         <field name="market_type_ids" eval="[(6, 0, [ref('market_uniha_2024')])]"/>
         <field name="order_status">received</field>
         <field name="date_start">2024-01-01</field>
@@ -89,7 +89,7 @@
     <record id="demo_contract_expiring_ageps" model="eurekam.maintenance.contract">
         <field name="partner_id" ref="demo_partner_ch_brest"/>
         <field name="product_name">GEN1 Software Maintenance (DEMO)</field>
-        <field name="gen">gen1</field>
+        <field name="gen_id" ref="gen_gen1"/>
         <field name="market_type_ids" eval="[(6, 0, [ref('market_ageps')])]"/>
         <field name="order_status">received</field>
         <field name="date_start">2025-09-01</field>
@@ -120,7 +120,7 @@
     <record id="demo_contract_suspended_syntec" model="eurekam.maintenance.contract">
         <field name="partner_id" ref="demo_partner_clcc_paris"/>
         <field name="product_name">Statistics Module Maintenance (DEMO)</field>
-        <field name="gen">gen2</field>
+        <field name="gen_id" ref="gen_gen2"/>
         <field name="market_type_ids" eval="[(6, 0, [ref('market_private')])]"/>
         <field name="order_status">suspended</field>
         <field name="date_start">2024-06-01</field>
@@ -142,7 +142,7 @@
     <record id="demo_contract_deploying_internal" model="eurekam.maintenance.contract">
         <field name="partner_id" ref="demo_partner_chu_lyon"/>
         <field name="product_name">GEN2 Upgrade Maintenance (DEMO)</field>
-        <field name="gen">upgrade_gen2</field>
+        <field name="gen_id" ref="gen_upgrade_gen2"/>
         <field name="market_type_ids" eval="[(6, 0, [ref('market_internal')])]"/>
         <field name="order_status">deploying</field>
         <field name="date_start">2026-03-01</field>
@@ -163,7 +163,7 @@
     <record id="demo_contract_expired_history" model="eurekam.maintenance.contract">
         <field name="partner_id" ref="demo_partner_ch_brest"/>
         <field name="product_name">GEN1 Legacy Maintenance (DEMO)</field>
-        <field name="gen">gen1</field>
+        <field name="gen_id" ref="gen_gen1"/>
         <field name="market_type_ids" eval="[(6, 0, [ref('market_private')])]"/>
         <field name="order_status">received</field>
         <field name="date_start">2023-01-01</field>

@@ -49,7 +49,7 @@
                             </tr>
                             <tr>
                                 <th>Generation</th>
-                                <td><t t-out="dict(doc._fields['gen'].selection).get(doc.gen, '-')"/></td>
+                                <td><t t-out="doc.gen_id.name or '-'"/></td>
                             </tr>
                             <tr>
                                 <th>Market</th>

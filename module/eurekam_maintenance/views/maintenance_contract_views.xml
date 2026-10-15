@@ -85,7 +85,7 @@
                             <field name="country_id"/>
                         </group>
                         <group string="Characteristics">
-                            <field name="gen"/>
+                            <field name="gen_id"/>
                             <field name="market_type_ids" widget="many2many_tags"
                                    options="{'color_field': 'color'}"/>
                             <field name="order_status"/>
@@ -200,7 +200,7 @@
                 <field name="sequence_number"/>
                 <field name="partner_id"/>
                 <field name="product_id" optional="show"/>
-                <field name="gen" optional="show"/>
+                <field name="gen_id" optional="show"/>
                 <field name="market_type_ids" widget="many2many_tags" optional="show"/>
                 <field name="order_status" optional="show"/>
                 <field name="date_start" optional="hide"/>
@@ -291,7 +291,7 @@
                     <filter string="Order Status" name="group_status"
                             context="{'group_by':'order_status'}"/>
                     <filter string="Generation" name="group_gen"
-                            context="{'group_by':'gen'}"/>
+                            context="{'group_by':'gen_id'}"/>
                     <filter string="Market" name="group_market"
                             context="{'group_by':'market_type_ids'}"/>
                     <filter string="Establishment" name="group_partner"
@@ -314,7 +314,7 @@
         <field name="arch" type="xml">
             <pivot string="Contracts Analysis" sample="1">
                 <field name="partner_id" type="row"/>
-                <field name="gen" type="col"/>
+                <field name="gen_id" type="col"/>
                 <field name="maintenance_amount" type="measure"/>
                 <field name="total_contract_value" type="measure"/>
                 <!-- current_year_amount is not a measure because the field is a
@@ -389,7 +389,7 @@
         <field name="context">{
             'pivot_measures': ['maintenance_amount', 'total_contract_value'],
             'pivot_row_groupby': ['partner_id'],
-            'pivot_column_groupby': ['gen'],
+            'pivot_column_groupby': ['gen_id'],
             'graph_measure': 'maintenance_amount',
             'graph_groupbys': ['market_type_ids'],
         }</field>

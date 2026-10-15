@@ -900,3 +900,27 @@ class TestMaintenanceContract(TransactionCase):
         if ligne_module:
             ligne_module[0].price_unit = 9999.0
             self.assertAlmostEqual(line.amount, 20000.0, places=2)
+
+    # ======================================================================
+    # 22. Generation is an editable list, not a frozen selection
+    # ======================================================================
+    def test_generation_est_une_liste_editable(self):
+        """The team must be able to add a generation -- GEN3 and beyond --
+        without a code change, the way markets already work."""
+        Generation = self.env['eurekam.product.generation']
+        gen2 = self.env.ref('eurekam_maintenance.gen_gen2')
+        self.assertEqual(gen2.code, 'gen2')
+
+        contract = self._make_contract(gen_id=gen2.id)
+        self.assertEqual(contract.gen_id, gen2)
+
+        # A brand-new generation needs no deployment.
+        gen3 = Generation.create({'name': 'GEN3', 'code': 'gen3',
+                                  'sequence': 40})
+        contract.gen_id = gen3
+        self.assertEqual(contract.gen_id.name, 'GEN3')
+
+        # The code stays unique, so the mapping from the legacy values holds.
+        from odoo.exceptions import ValidationError
+        with self.assertRaises((ValidationError, Exception)):
+            Generation.create({'name': 'Doublon', 'code': 'gen3'})

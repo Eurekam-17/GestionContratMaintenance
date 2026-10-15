@@ -118,14 +118,24 @@ class EurekamMaintenanceContract(models.Model):
     # ------------------------------------------------------------------
     # Product / market characteristics
     # ------------------------------------------------------------------
+    gen_id = fields.Many2one(
+        'eurekam.product.generation',
+        string='Generation',
+        tracking=True,
+        help="Drugcam generation covered by the contract. Editable list: add "
+             "a generation from Maintenance > Configuration > Generations, no "
+             "code change needed.",
+    )
+    # DEPRECATED: replaced by gen_id (editable list), so the team can add GEN3
+    # without a deployment. Kept one release so the migration can copy values;
+    # removed in a later version. No longer shown in any view.
     gen = fields.Selection(
         [
             ('gen1', 'GEN1'),
             ('gen2', 'GEN2'),
             ('upgrade_gen2', 'Upgrade GEN2'),
         ],
-        string='Generation',
-        tracking=True,
+        string='Generation (legacy)',
     )
     # DEPRECATED: replaced by market_type_ids (editable, multi-valued list).
     # Kept one release so the migration can copy values; removed in a later

@@ -71,6 +71,29 @@
     </record>
 
     <!-- ============================================================== -->
+    <!-- eurekam.product.generation                                      -->
+    <!-- ============================================================== -->
+    <record id="view_product_generation_list" model="ir.ui.view">
+        <field name="name">eurekam.product.generation.list</field>
+        <field name="model">eurekam.product.generation</field>
+        <field name="arch" type="xml">
+            <list string="Generations" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code" optional="show"/>
+                <field name="description" optional="hide"/>
+                <field name="color" widget="color_picker"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+    <record id="action_product_generation" model="ir.actions.act_window">
+        <field name="name">Generations</field>
+        <field name="res_model">eurekam.product.generation</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <!-- ============================================================== -->
     <!-- eurekam.central.purchasing                                      -->
     <!-- ============================================================== -->
     <record id="view_central_purchasing_list" model="ir.ui.view">

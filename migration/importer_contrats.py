@@ -44,6 +44,7 @@ MODULE_MIGRATION = 'eurekam_migration_notion'
 ANNEES = [str(a) for a in range(2023, 2031)]
 
 # ------------------------------------------------------------------ mappings
+# Codes de la liste editable eurekam.product.generation.
 GEN = {'GEN1': 'gen1', 'GEN2': 'gen2', 'UpGrade GEN2': 'upgrade_gen2'}
 STATUT = {
     'Reçue': 'received',
@@ -162,6 +163,9 @@ def main():
     modfact = {r['name']: r['id'] for r in
                call('eurekam.module.billing', 'search_read', [],
                     fields=['name'])}
+    generations = {r['code']: r['id'] for r in
+                   call('eurekam.product.generation', 'search_read', [],
+                        fields=['code'])}
     users = {}
     for notion_nom, odoo_nom in COMMERCIAL.items():
         res = call('res.users', 'search', [('name', '=', odoo_nom)], limit=1)
@@ -245,7 +249,8 @@ def main():
         vals = {
             'partner_id': resolution[etab],
             'product_name': (c.get('Produit') or '').strip() or False,
-            'gen': GEN.get((c.get('GEN') or '').strip(), False),
+            'gen_id': generations.get(
+                GEN.get((c.get('GEN') or '').strip()), False),
             'order_status': STATUT.get((c.get('Status de Cde') or '').strip(), False),
             'date_start': debut or False,
             'date_end': fin or False,

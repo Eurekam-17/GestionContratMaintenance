@@ -149,7 +149,9 @@ Le scénario type Eurekam est le suivant :
    - **Pays** : pré-rempli depuis l'établissement
 
    **Caractéristiques**
-   - **Génération** : GEN1, GEN2 ou Upgrade GEN2
+   - **Génération** : GEN1, GEN2, Upgrade GEN2 — **liste librement
+     modifiable** (Configuration → Générations). Quand un GEN3 arrivera, vous
+     l'ajouterez vous-mêmes, sans intervention de développement.
    - **Marché** : UniHA 2024, AGEPS, RESAH, Privé, etc. — **plusieurs choix
      possibles**, liste librement modifiable (Configuration → Marchés)
    - **Statut commande** : Devis envoyé, Reçue, En attente, Facturation sans BC,
@@ -625,7 +627,7 @@ montant via le wizard.
 | Produit | `product_id` | Lien vers la base articles |
 | Libellé produit | `product_name` | Pré-rempli depuis le « Descriptif du devis » de l'article ; repris sur les lignes de devis/facture |
 | Commercial | `commercial_id` | Utilisateur Odoo en charge |
-| Génération | `gen` | GEN1, GEN2, Upgrade GEN2 |
+| Génération | `gen_id` | Liste éditable (Configuration → Générations) |
 | Marché | `market_type_ids` | Liste éditable, **multi-valeurs** (UniHA, AGEPS, RESAH, Privé, etc.) |
 | Statut commande | `order_status` | Devis envoyé, Reçue, En attente, Facturation sans BC, En déploiement, Suspendue |
 | Début / Fin | `date_start` / `date_end` | Dates du contrat |

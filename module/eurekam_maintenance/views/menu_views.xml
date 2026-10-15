@@ -77,6 +77,11 @@
               parent="menu_maintenance_config"
               action="action_market_type"
               sequence="70"/>
+    <menuitem id="menu_config_product_generation"
+              name="Generations"
+              parent="menu_maintenance_config"
+              action="action_product_generation"
+              sequence="75"/>
     <menuitem id="menu_config_central_purchasing"
               name="Central Purchasing"
               parent="menu_maintenance_config"

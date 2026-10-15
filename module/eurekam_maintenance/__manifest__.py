@@ -32,6 +32,7 @@ This module replaces the tracking currently done in Notion.
         'data/billing_frequency_data.xml',
         'data/module_billing_data.xml',
         'data/market_type_data.xml',
+        'data/product_generation_data.xml',
         'data/central_purchasing_data.xml',
         'data/mail_template_data.xml',
         'data/cron_data.xml',

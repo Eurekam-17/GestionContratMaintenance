@@ -2547,3 +2547,28 @@ msgstr "Module facturable"
 #. module: eurekam_maintenance
 msgid "Order Lines"
 msgstr "Lignes de commande"
+
+#. module: eurekam_maintenance
+msgid "Drugcam Generation"
+msgstr "Génération Drugcam"
+
+#. module: eurekam_maintenance
+msgid "Generations"
+msgstr "Générations"
+
+#. module: eurekam_maintenance
+msgid "Generation (legacy)"
+msgstr "Génération (ancien champ)"
+
+#. module: eurekam_maintenance
+msgid "The generation code must be unique."
+msgstr "Le code de génération doit être unique."
+
+#. module: eurekam_maintenance
+msgid ""
+"Drugcam generation covered by the contract. Editable list: add a generation "
+"from Maintenance > Configuration > Generations, no code change needed."
+msgstr ""
+"Génération Drugcam couverte par le contrat. Liste modifiable : ajoutez une "
+"génération depuis Maintenance > Configuration > Générations, sans "
+"modification de code."
