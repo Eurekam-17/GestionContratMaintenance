@@ -171,6 +171,7 @@ msgstr "Activer"
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_market_type__active
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_billing__active
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_status__active
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_product_generation__active
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_special_equipment__active
 #: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__state__active
 #: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_search
@@ -358,12 +359,6 @@ msgid "Check the lines and the customer"
 msgstr "Vérifier les lignes et le client"
 
 #. module: eurekam_maintenance
-#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_contract_line__is_invoiced
-msgid "Checked automatically when at least one invoice is linked to the line."
-msgstr ""
-"Coché automatiquement dès qu'au moins une facture est liée à la ligne."
-
-#. module: eurekam_maintenance
 #: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_res_partner_form_maintenance
 msgid "Classification"
 msgstr "Classification"
@@ -379,6 +374,7 @@ msgstr "Cliquer <b>Confirmer</b> pour le transformer en bon de commande"
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_market_type__code
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_billing__code
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_status__code
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_product_generation__code
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_special_equipment__code
 msgid "Code"
 msgstr "Code"
@@ -390,6 +386,7 @@ msgstr "Code"
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_market_type__color
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_billing__color
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_status__color
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_product_generation__color
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_special_equipment__color
 msgid "Color"
 msgstr "Couleur"
@@ -520,11 +517,6 @@ msgid "Covered Year"
 msgstr "Année couverte"
 
 #. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
-msgid "Create Contract Invoices"
-msgstr "Créer les factures du contrat"
-
-#. module: eurekam_maintenance
 #: model:ir.actions.act_window,name:eurekam_maintenance.action_maintenance_order_wizard
 #: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
 #: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_order_wizard_form
@@ -542,6 +534,8 @@ msgid "Create New Contract"
 msgstr "Créer le nouveau contrat"
 
 #. module: eurekam_maintenance
+#: model:ir.actions.act_window,name:eurekam_maintenance.action_maintenance_order_wizard
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
 #: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_order_wizard_form
 msgid "Create Quotation"
 msgstr "Créer le devis"
@@ -604,17 +598,6 @@ msgstr "Bon de commande client (si déjà reçu)"
 #: model:ir.model.fields.selection,name:eurekam_maintenance.selection__res_partner__maintenance_status__client_no_contract
 msgid "Customer WITHOUT maintenance contract"
 msgstr "Client SANS contrat de maintenance"
-
-#. module: eurekam_maintenance
-#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_contract_line__invoice_ids
-msgid ""
-"Customer invoices linked to this yearly line. A line may have several "
-"invoices depending on the frequency: 4 quarterly, 2 semi-annual, 1 annual. "
-"Set automatically by the 'Create Invoices' action of the contract."
-msgstr ""
-"Factures client liées à cette ligne annuelle. Une ligne peut avoir plusieurs"
-" factures selon la cadence : 4 trimestrielles, 2 semestrielles, 1 annuelle. "
-"Renseigné automatiquement par l'action « Créer les factures » du contrat."
 
 #. module: eurekam_maintenance
 #: model:ir.actions.act_window,name:eurekam_maintenance.action_maintenance_clients_without_contract
@@ -746,6 +729,7 @@ msgid "Eurekam Customer"
 msgstr "Client Eurekam"
 
 #. module: eurekam_maintenance
+#: model:ir.module.category,name:eurekam_maintenance.module_category_maintenance
 #: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_res_partner_form_maintenance
 msgid "Eurekam Maintenance"
 msgstr "Maintenance Eurekam"
@@ -829,11 +813,13 @@ msgid "Frequencies"
 msgstr "Cadences"
 
 #. module: eurekam_maintenance
+#: model:eurekam.product.generation,name:eurekam_maintenance.gen_gen1
 #: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__gen__gen1
 msgid "GEN1"
 msgstr "GEN1"
 
 #. module: eurekam_maintenance
+#: model:eurekam.product.generation,name:eurekam_maintenance.gen_gen2
 #: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__gen__gen2
 msgid "GEN2"
 msgstr "GEN2"
@@ -849,7 +835,7 @@ msgid "Generate the New Contract Yearly Lines"
 msgstr "Générer les lignes annuelles du nouveau contrat"
 
 #. module: eurekam_maintenance
-#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__gen
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__gen_id
 #: model_terms:ir.ui.view,arch_db:eurekam_maintenance.report_maintenance_contract
 #: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_search
 msgid "Generation"
@@ -1144,6 +1130,7 @@ msgstr "Mes contrats"
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_market_type__name
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_billing__name
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_status__name
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_product_generation__name
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_special_equipment__name
 msgid "Name"
 msgstr "Nom"
@@ -1499,6 +1486,7 @@ msgstr "Rechercher des contrats"
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_market_type__sequence
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_billing__sequence
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_status__sequence
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_product_generation__sequence
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_special_equipment__sequence
 msgid "Sequence"
 msgstr "Séquence"
@@ -1561,6 +1549,7 @@ msgstr "Taux Syntec (%)"
 #: model_terms:ir.ui.view,arch_db:eurekam_maintenance.report_maintenance_contract
 #: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_contract_renewal_wizard_form
 #: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_search
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_order_wizard_form
 msgid "Syntec Revision"
 msgstr "Révision Syntec"
 
@@ -1756,6 +1745,7 @@ msgid "Unicancer"
 msgstr "Unicancer"
 
 #. module: eurekam_maintenance
+#: model:eurekam.product.generation,name:eurekam_maintenance.gen_upgrade_gen2
 #: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__gen__upgrade_gen2
 msgid "Upgrade GEN2"
 msgstr "Upgrade GEN2"
@@ -1889,17 +1879,6 @@ msgid ""
 msgstr ""
 "Libellé repris sur les lignes de devis, de commande et de facture, avant le nombre de postes et la période facturée.\n"
 "Pré-rempli depuis le « Descriptif du devis » de l'article (onglet Vente) ; modifiable à la main."
-
-#. module: eurekam_maintenance
-#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
-msgid ""
-"Exceptional fallback, managers only: bills the contract directly, without "
-"going through a customer order. Generates the draft invoices covering the "
-"remaining contract duration according to the frequency."
-msgstr ""
-"Secours exceptionnel, managers uniquement : facture le contrat directement, "
-"sans passer par une commande client. Génère les factures brouillon couvrant "
-"la durée restante du contrat selon la cadence."
 
 #. module: eurekam_maintenance
 #: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_order_wizard_form
@@ -2153,6 +2132,7 @@ msgstr "Contact"
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_market_type__create_uid
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_billing__create_uid
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_status__create_uid
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_product_generation__create_uid
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_special_equipment__create_uid
 msgid "Created by"
 msgstr "Créé par"
@@ -2168,6 +2148,7 @@ msgstr "Créé par"
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_market_type__create_date
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_billing__create_date
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_status__create_date
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_product_generation__create_date
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_special_equipment__create_date
 msgid "Created on"
 msgstr "Créé le"
@@ -2177,6 +2158,7 @@ msgstr "Créé le"
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_central_purchasing__description
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_market_type__description
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_billing__description
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_product_generation__description
 msgid "Description"
 msgstr "Description"
 
@@ -2191,6 +2173,7 @@ msgstr "Description"
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_market_type__display_name
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_billing__display_name
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_status__display_name
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_product_generation__display_name
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_special_equipment__display_name
 msgid "Display Name"
 msgstr "Nom d'affichage"
@@ -2256,6 +2239,7 @@ msgstr "A un message"
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_market_type__id
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_billing__id
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_status__id
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_product_generation__id
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_special_equipment__id
 msgid "ID"
 msgstr "ID"
@@ -2297,6 +2281,7 @@ msgstr "Est un abonné"
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_market_type__write_uid
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_billing__write_uid
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_status__write_uid
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_product_generation__write_uid
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_special_equipment__write_uid
 msgid "Last Updated by"
 msgstr "Dernière mise à jour par"
@@ -2312,6 +2297,7 @@ msgstr "Dernière mise à jour par"
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_market_type__write_date
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_billing__write_date
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_module_status__write_date
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_product_generation__write_date
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_special_equipment__write_date
 msgid "Last Updated on"
 msgstr "Dernière mise à jour le"
@@ -2533,38 +2519,49 @@ msgstr ""
 "facturation découlent des dates de début et de fin, pas de ce champ."
 
 #. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_sale_order_line__maintenance_kind
 msgid "Maintenance Line Type"
 msgstr "Type de ligne de maintenance"
 
 #. module: eurekam_maintenance
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__sale_order_line__maintenance_kind__contract
 msgid "Contract Maintenance"
 msgstr "Maintenance du contrat"
 
 #. module: eurekam_maintenance
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__sale_order_line__maintenance_kind__module
 msgid "Billable Module"
 msgstr "Module facturable"
 
 #. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract_line__sale_line_ids
 msgid "Order Lines"
 msgstr "Lignes de commande"
 
 #. module: eurekam_maintenance
+#: model:ir.model,name:eurekam_maintenance.model_eurekam_product_generation
 msgid "Drugcam Generation"
 msgstr "Génération Drugcam"
 
 #. module: eurekam_maintenance
+#: model:ir.actions.act_window,name:eurekam_maintenance.action_product_generation
+#: model:ir.ui.menu,name:eurekam_maintenance.menu_config_product_generation
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_product_generation_list
 msgid "Generations"
 msgstr "Générations"
 
 #. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__gen
 msgid "Generation (legacy)"
 msgstr "Génération (ancien champ)"
 
 #. module: eurekam_maintenance
+#: model:ir.model.constraint,message:eurekam_maintenance.constraint_eurekam_product_generation_unique_code
 msgid "The generation code must be unique."
 msgstr "Le code de génération doit être unique."
 
 #. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_contract__gen_id
 msgid ""
 "Drugcam generation covered by the contract. Editable list: add a generation "
 "from Maintenance > Configuration > Generations, no code change needed."
@@ -2572,3 +2569,25 @@ msgstr ""
 "Génération Drugcam couverte par le contrat. Liste modifiable : ajoutez une "
 "génération depuis Maintenance > Configuration > Générations, sans "
 "modification de code."
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_contract_line__is_invoiced
+msgid "Checked as soon as at least one invoice covers the line."
+msgstr ""
+"Coché automatiquement dès qu'au moins une facture est liée à la ligne."
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_contract_line__invoice_ids
+msgid ""
+"Customer invoices covering this yearly line, through the customer orders "
+"issued for it. A line may have several invoices depending on the frequency: "
+"4 quarterly, 2 semi-annual, 1 annual."
+msgstr ""
+"Factures client liées à cette ligne annuelle. Une ligne peut avoir plusieurs"
+" factures selon la cadence : 4 trimestrielles, 2 semestrielles, 1 annuelle. "
+"Renseigné automatiquement par l'action « Créer les factures » du contrat."
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.report_maintenance_contract
+msgid "Ordered Duration"
+msgstr "Durée commandée"
