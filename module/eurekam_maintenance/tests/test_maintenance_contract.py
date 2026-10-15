@@ -275,128 +275,6 @@ class TestMaintenanceContract(TransactionCase):
 
     # ======================================================================
     # 9. Invoice creation from contract (by frequency)
-    # ======================================================================
-    def test_invoice_creation(self):
-        """Default annual frequency: 1 invoice for 1 yearly line."""
-        today_year = ofields.Date.context_today(self.env['res.partner']).year
-        contract = self._make_contract(
-            date_start=date(today_year, 1, 1),
-            date_end=date(today_year, 12, 31),
-            maintenance_amount=8000.0,
-        )
-        contract.action_activate()
-        contract.action_generate_lines()
-
-        # No frequency set -> default 'annual' -> 1 invoice for 8000 EUR
-        action = contract.action_create_invoices_for_contract()
-        self.assertEqual(action['res_model'], 'account.move')
-        # action['domain'] = [('id', 'in', [id1, id2, ...])]
-        invoice_ids = action['domain'][0][2]
-        self.assertEqual(len(invoice_ids), 1)
-        invoice = self.env['account.move'].browse(invoice_ids[0])
-        self.assertEqual(invoice.move_type, 'out_invoice')
-        self.assertEqual(invoice.partner_id, self.partner)
-        self.assertEqual(len(invoice.invoice_line_ids), 1)
-        self.assertEqual(invoice.invoice_line_ids.price_unit, 8000.0)
-
-        line = contract.line_ids.filtered(lambda l: l.year == today_year)
-        self.assertTrue(line.is_invoiced)
-        self.assertIn(invoice, line.invoice_ids)
-        self.assertEqual(contract.invoice_count, 1)
-
-        # Re-invoice -> error (all remaining periods already covered)
-        with self.assertRaises(UserError):
-            contract.action_create_invoices_for_contract()
-
-    def test_invoice_creation_quarterly(self):
-        """Quarterly frequency: 4 invoices of a quarter of the amount per year."""
-        freq_quarterly = self.env.ref('eurekam_maintenance.freq_quarterly')
-        freq_overdue = self.env.ref('eurekam_maintenance.freq_overdue')
-        today_year = ofields.Date.context_today(self.env['res.partner']).year
-        contract = self._make_contract(
-            date_start=date(today_year, 1, 1),
-            date_end=date(today_year, 12, 31),
-            maintenance_amount=10000.0,
-            billing_frequency_ids=[(6, 0, [freq_quarterly.id, freq_overdue.id])],
-        )
-        contract.action_activate()
-        contract.action_generate_lines()
-
-        action = contract.action_create_invoices_for_contract()
-        invoice_ids = action['domain'][0][2]
-        # 1 yearly line * 4 quarters = 4 invoices
-        self.assertEqual(len(invoice_ids), 4)
-        invoices = self.env['account.move'].browse(invoice_ids)
-        # Each invoice = 10000 / 4 = 2500 untaxed
-        for inv in invoices:
-            self.assertAlmostEqual(inv.invoice_line_ids.price_unit, 2500.0, places=2)
-        # The yearly line points to 4 invoices
-        line = contract.line_ids.filtered(lambda l: l.year == today_year)
-        self.assertEqual(line.invoice_count, 4)
-        self.assertTrue(line.is_invoiced)
-
-    def test_invoice_rounding_no_cent_lost(self):
-        """Amount not divisible by 4: the sum of the 4 quarterly invoices must
-        be EXACTLY equal to the yearly amount (no cent lost).
-
-        48314.25 / 4 = 12078.5625 -> 3 x 12078.56 + 1 x 12078.57 = 48314.25.
-        """
-        freq_quarterly = self.env.ref('eurekam_maintenance.freq_quarterly')
-        freq_overdue = self.env.ref('eurekam_maintenance.freq_overdue')
-        today_year = ofields.Date.context_today(self.env['res.partner']).year
-        contract = self._make_contract(
-            date_start=date(today_year, 1, 1),
-            date_end=date(today_year, 12, 31),
-            maintenance_amount=48314.25,
-            billing_frequency_ids=[(6, 0, [freq_quarterly.id, freq_overdue.id])],
-        )
-        contract.action_activate()
-        contract.action_generate_lines()
-        action = contract.action_create_invoices_for_contract()
-        invoice_ids = action['domain'][0][2]
-        self.assertEqual(len(invoice_ids), 4)
-        invoices = self.env['account.move'].browse(invoice_ids)
-        total = sum(invoices.mapped(lambda m: m.invoice_line_ids.price_unit))
-        self.assertAlmostEqual(total, 48314.25, places=2)
-        # 3 fractions of 12078.56 + 1 of 12078.57
-        prices = sorted(invoices.mapped(lambda m: m.invoice_line_ids.price_unit))
-        self.assertAlmostEqual(prices[0], 12078.56, places=2)
-        self.assertAlmostEqual(prices[-1], 12078.57, places=2)
-
-    def test_billable_module_invoices(self):
-        """A billable module produces its own invoice lines, only for the years
-        within its window, split by the contract cadence (annual here)."""
-        freq_annual = self.env.ref('eurekam_maintenance.freq_annual')
-        today_year = ofields.Date.context_today(self.env['res.partner']).year
-        contract = self._make_contract(
-            date_start=date(today_year, 1, 1),
-            date_end=date(today_year + 1, 12, 31),
-            duration='2y',
-            maintenance_amount=10000.0,
-            billing_frequency_ids=[(6, 0, [freq_annual.id])],
-        )
-        contract.action_activate()
-        contract.action_generate_lines()
-        # Module billed only from next year onward.
-        self.env['eurekam.contract.module.line'].create({
-            'contract_id': contract.id,
-            'module_billing_id': self.env.ref(
-                'eurekam_maintenance.mod_bill_stats_premium').id,
-            'amount': 4000.0,
-            'start_year': today_year + 1,
-        })
-        action = contract.action_create_invoices_for_contract()
-        invoices = self.env['account.move'].browse(action['domain'][0][2])
-        # 2 maintenance (1/year x 2 years) + 1 module (next year only) = 3
-        self.assertEqual(len(invoices), 3)
-        module_invoices = invoices.filtered(
-            lambda m: 'Premium Statistics' in (m.invoice_line_ids.name or '')
-        )
-        self.assertEqual(len(module_invoices), 1)
-        self.assertAlmostEqual(
-            module_invoices.invoice_line_ids.price_unit, 4000.0, places=2,
-        )
-
     def test_order_wizard_with_module(self):
         """The customer order wizard adds the billable module as its own SO line."""
         freq_annual = self.env.ref('eurekam_maintenance.freq_annual')
@@ -917,3 +795,46 @@ class TestMaintenanceContract(TransactionCase):
         vide.maintenance_amount = 8000.0
         vide.action_generate_lines()
         self.assertEqual(vide.line_ids.mapped('amount'), [0.0])
+
+    # ======================================================================
+    # 20. A yearly line knows its invoices through the customer orders
+    # ======================================================================
+    def test_line_invoices_come_from_the_orders(self):
+        """The contract's direct-invoicing action was removed, so a yearly
+        line now reports its invoices by walking the customer orders issued
+        against it. Without this the 'Invoiced' column would stay empty for
+        ever while still being displayed."""
+        freq_annual = self.env.ref('eurekam_maintenance.freq_annual')
+        today_year = ofields.Date.context_today(self.env['res.partner']).year
+        contract = self._make_contract(
+            date_start=date(today_year, 1, 1),
+            date_end=date(today_year, 12, 31),
+            maintenance_amount=10000.0,
+            billing_frequency_ids=[(6, 0, [freq_annual.id])],
+        )
+        contract.action_activate()
+        contract.action_generate_lines()
+        line = contract.line_ids.filtered(lambda l: l.year == today_year)
+        self.assertFalse(line.is_invoiced)
+        self.assertEqual(line.invoice_count, 0)
+
+        wizard = self.env['eurekam.maintenance.order.wizard'].with_context(
+            default_contract_id=contract.id,
+        ).create({'year': today_year})
+        sale_order = self.env['sale.order'].browse(
+            wizard.action_create_sale_order()['res_id'])
+        # A quotation alone invoices nothing.
+        line.invalidate_recordset(['invoice_ids', 'invoice_count', 'is_invoiced'])
+        self.assertFalse(line.is_invoiced)
+
+        sale_order.action_confirm()
+        invoice = sale_order._create_invoices()
+        line.invalidate_recordset(['invoice_ids', 'invoice_count', 'is_invoiced'])
+        self.assertTrue(line.is_invoiced)
+        self.assertEqual(line.invoice_count, 1)
+        self.assertIn(invoice, line.invoice_ids)
+
+        # A cancelled invoice covers nothing any more.
+        invoice.button_cancel()
+        line.invalidate_recordset(['invoice_ids', 'invoice_count', 'is_invoiced'])
+        self.assertFalse(line.is_invoiced)

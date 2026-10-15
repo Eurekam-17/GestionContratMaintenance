@@ -331,19 +331,20 @@ les valeurs pré-remplies. L'ancien contrat passe en **Renouvelé**. Les deux
 sont liés via les smart-buttons **Renouvelé depuis** et **Renouvelé vers** sur
 chaque fiche.
 
-### 5.2 Facturation directe sans commande (exception, managers uniquement)
+### 5.2 Il n'existe plus de facturation directe
 
-**Toute facture doit normalement naître d'une commande client.** Le bouton
-**Créer les factures du contrat** reste néanmoins visible pour les membres du
-groupe **Manager Maintenance**, en secours pour un cas exceptionnel.
+**Toute facture naît d'un devis**, sans exception. Le bouton « Créer les
+factures du contrat » a été retiré : il créait des factures brouillon en
+court-circuitant le devis, et celles-ci ne suivaient pas les modifications
+ultérieures des montants annuels — deux factures pour la même période
+pouvaient coexister sans que rien ne l'empêche.
 
-1. Sur la fiche du contrat (état Actif ou Expire bientôt), cliquer
-   **Créer les factures du contrat**
-2. → génère directement toutes les factures brouillon couvrant la durée
-   restante du contrat (selon la cadence), sans devis ni commande
+Le parcours est donc toujours le même : **Créer le devis** → confirmer →
+facturer chaque ligne à son échéance.
 
-⚠️ À n'utiliser que si le circuit commande est réellement impossible : la
-facture n'est alors rattachée à aucune vente.
+Pour un cas vraiment exceptionnel, un comptable garde la possibilité de créer
+une facture à la main dans l'application **Facturation** d'Odoo ; elle ne sera
+simplement rattachée à aucun contrat.
 
 ### 5.3 Période intégrale (cas rare : paiement d'avance global)
 
@@ -545,9 +546,9 @@ d'accès".
 → Vérifier que les **dates de début et fin** sont remplies + que le **produit**
 est renseigné (champ "Produit", pas juste "Libellé produit").
 
-### Le bouton "Créer les factures du contrat" n'apparaît pas
-→ Ce bouton de secours est réservé au groupe **Manager Maintenance**. Le circuit
-normal est **"Créer une commande client"**, qui reste accessible à tous.
+### Le bouton "Créer les factures du contrat" a disparu
+→ C'est voulu : il a été retiré. Toute facture passe désormais par
+**« Créer le devis »**, puis par la facturation de chaque ligne du devis.
 
 ### Le bouton "Créer une commande client" est grisé
 → Vérifier que le contrat est dans l'état **Actif** ou **Expire bientôt** (pas

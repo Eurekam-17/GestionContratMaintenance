@@ -23,13 +23,6 @@
                             string="Create Quotation" class="btn-primary"
                             invisible="state not in ('active','expiring')"
                             help="Standard route: creates the quotation (a draft sale.order) with N lines according to the frequency (1 for Annual, 2 for Semi-annual, 4 for Quarterly). Each SO line can be invoiced independently."/>
-                    <!-- Fallback kept for managers only: every invoice is
-                         normally born from a customer order. -->
-                    <button name="action_create_invoices_for_contract" type="object"
-                            string="Create Contract Invoices"
-                            groups="eurekam_maintenance.group_maintenance_manager"
-                            invisible="state not in ('active','expiring')"
-                            help="Exceptional fallback, managers only: bills the contract directly, without going through a customer order. Generates the draft invoices covering the remaining contract duration according to the frequency."/>
                     <button name="action_recompute_state" type="object"
                             string="Recompute Status"
                             invisible="state in ('draft','cancelled','renewed')"
