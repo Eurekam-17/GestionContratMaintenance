@@ -2531,3 +2531,42 @@ msgid ""
 msgstr ""
 "Durée pour laquelle le contrat a été commandé. Informatif : les périodes de "
 "facturation découlent des dates de début et de fin, pas de ce champ."
+
+#. module: eurekam_maintenance
+msgid "Maintenance Line Type"
+msgstr "Type de ligne de maintenance"
+
+#. module: eurekam_maintenance
+msgid "Contract Maintenance"
+msgstr "Maintenance du contrat"
+
+#. module: eurekam_maintenance
+msgid "Billable Module"
+msgstr "Module facturable"
+
+#. module: eurekam_maintenance
+msgid "Order Lines"
+msgstr "Lignes de commande"
+
+#. module: eurekam_maintenance
+msgid "Year %(year)s updated from order %(order)s: %(old).2f -> %(new).2f."
+msgstr ""
+"Année %(year)s mise à jour depuis la commande %(order)s : %(old).2f → "
+"%(new).2f."
+
+#. module: eurekam_maintenance
+msgid ""
+"Year %(year)s set to %(amount).2f: quotation(s) %(orders)s updated (%(n)d "
+"line(s))."
+msgstr ""
+"Année %(year)s passée à %(amount).2f : devis %(orders)s mis à jour (%(n)d "
+"ligne(s))."
+
+#. module: eurekam_maintenance
+msgid ""
+"Year %(year)s set to %(amount).2f, but order(s) %(orders)s were left "
+"untouched: already confirmed or invoiced. Adjust them by hand if needed."
+msgstr ""
+"Année %(year)s passée à %(amount).2f, mais la ou les commandes %(orders)s "
+"ont été laissées inchangées : déjà confirmées ou facturées. À ajuster à la "
+"main si nécessaire."

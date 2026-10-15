@@ -394,6 +394,7 @@ class EurekamMaintenanceOrderWizard(models.TransientModel):
                 'price_unit': total,
                 # Technical key, never translated (see _periods_for_year).
                 'maintenance_period_label': "Full period",
+                'maintenance_kind': 'contract',
             }))
             # ---- Billable modules over the whole contract ----
             contract_years = sorted(contract.line_ids.mapped('year'))
@@ -412,6 +413,7 @@ class EurekamMaintenanceOrderWizard(models.TransientModel):
                     'price_unit': round(ml.amount * len(covered), 2),
                     # Technical key, never translated (see _periods_for_year).
                     'maintenance_period_label': "Full period",
+                    'maintenance_kind': 'module',
                 }))
         else:
             # ---- Main case: 1 SO per year, N lines by frequency ----
@@ -445,6 +447,7 @@ class EurekamMaintenanceOrderWizard(models.TransientModel):
                     'price_unit': fraction,
                     'maintenance_line_id': line.id,
                     'maintenance_period_label': code,
+                    'maintenance_kind': 'contract',
                 }))
 
             # ---- Billable modules active that year ----
@@ -462,12 +465,14 @@ class EurekamMaintenanceOrderWizard(models.TransientModel):
                         'price_unit': fraction,
                         'maintenance_line_id': line.id,
                         'maintenance_period_label': "%s — %s" % (module_name, base_code),
+                        'maintenance_kind': 'module',
                     }))
 
         so_vals['order_line'] = order_lines
 
         # ---- Actual creation ----
-        sale_order = self.env['sale.order'].create(so_vals)
+        sale_order = self.env['sale.order'].with_context(
+            eurekam_sync=True).create(so_vals)
 
         contract.message_post(body=_(
             "Quotation %(so)s created (%(n)d line(s), %(mode)s), customer PO: "

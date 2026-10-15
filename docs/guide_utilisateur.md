@@ -346,7 +346,34 @@ Pour un cas vraiment exceptionnel, un comptable garde la possibilité de créer
 une facture à la main dans l'application **Facturation** d'Odoo ; elle ne sera
 simplement rattachée à aucun contrat.
 
-### 5.3 Période intégrale (cas rare : paiement d'avance global)
+### 5.3 Le contrat et les devis se synchronisent tout seuls
+
+Les montants annuels et les devis ne peuvent plus diverger : **la modification
+de l'un met l'autre à jour**, dans les deux sens, avec une trace dans le fil de
+discussion du contrat.
+
+**Tu modifies un montant annuel** → les devis de cette année sont recalculés et
+le montant redécoupé selon la cadence. Le fil indique par exemple :
+
+> *Année 2027 passée à 14 000,00 : devis 202610170 mis à jour (4 ligne(s)).*
+
+**Tu modifies une ligne de devis** (renégociation, remise) → le montant annuel
+du contrat devient le total du devis. Le fil indique :
+
+> *Année 2027 mise à jour depuis la commande 202610170 : 13 840,00 → 14 000,00.*
+
+⚠️ **Deux limites volontaires :**
+
+- Une **commande confirmée** n'est jamais réécrite : c'est un engagement
+  commercial. Si tu changes le montant annuel, le contrat te le signale dans le
+  fil et te laisse décider — *« commande 202610170 laissée inchangée :
+  déjà confirmée ou facturée »*.
+- Une ligne **déjà facturée** n'est pas touchée non plus.
+
+Les **modules facturables** ont leur propre montant : ils n'entrent jamais dans
+le calcul du montant annuel.
+
+### 5.4 Période intégrale (cas rare : paiement d'avance global)
 
 Pour facturer l'intégralité du contrat en une seule facture :
 
@@ -357,7 +384,7 @@ Pour facturer l'intégralité du contrat en une seule facture :
 4. → Le SO créé n'aura **qu'une seule ligne** pour le total du contrat
    (ex: 248 818 € HT pour 5 ans à 49 763 €/an)
 
-### 5.4 Forcer la mise à jour de l'état (sans attendre le cron)
+### 5.5 Forcer la mise à jour de l'état (sans attendre le cron)
 
 Le statut d'un contrat (Actif → Expire bientôt → Expiré) est recalculé
 automatiquement chaque nuit par un cron. Si tu veux forcer le recalcul
@@ -367,7 +394,7 @@ immédiatement (par exemple après avoir modifié `date_end`) :
 
 Pratique aussi en environnement de test où les crons peuvent être désactivés.
 
-### 5.5 Ajouter un module facturable (en plus de la maintenance)
+### 5.6 Ajouter un module facturable (en plus de la maintenance)
 
 Cas d'usage : facturer un module d'assistance (ex. **Module Statistique
 Premium**) en supplément de la maintenance, éventuellement **à partir d'une

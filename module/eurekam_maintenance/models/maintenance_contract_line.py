@@ -114,6 +114,68 @@ class EurekamMaintenanceContractLine(models.Model):
             seq = rec.contract_id.sequence_number or ''
             rec.display_name = f"{seq} - {rec.year}" if seq else str(rec.year)
 
+    # ------------------------------------------------------------------
+    # Synchronisation with the quotations
+    # ------------------------------------------------------------------
+    def write(self, vals):
+        res = super().write(vals)
+        if 'amount' in vals and not self.env.context.get('eurekam_sync'):
+            self._sync_vers_devis()
+        return res
+
+    def _sync_vers_devis(self):
+        """Re-split the yearly amount over the quotations already issued.
+
+        Only quotations are touched -- draft or sent. A confirmed order is a
+        commercial commitment, and one that is already invoiced cannot move at
+        all; those are reported in the chatter instead of being rewritten
+        behind the user's back.
+        """
+        for rec in self:
+            contrat = rec.contract_id
+            lignes = rec.sale_line_ids.filtered(
+                lambda l: l.maintenance_kind == 'contract'
+                and l.order_id.state != 'cancel'
+            )
+            if not lignes:
+                continue
+            modifiables = lignes.filtered(
+                lambda l: l.order_id.state in ('draft', 'sent')
+                and not l.invoice_lines
+            )
+            figees = lignes - modifiables
+            if modifiables:
+                periodes = contrat._periods_for_year(
+                    rec.year, rec.amount, contrat._get_billing_period_code(),
+                    contrat.date_start, contrat.date_end,
+                )
+                par_code = {code: fraction for code, _lab, fraction, _d, _f
+                            in periodes}
+                touchees = self.env['sale.order.line']
+                for l in modifiables:
+                    neuf = par_code.get(l.maintenance_period_label)
+                    if neuf is not None and abs(neuf - l.price_unit) >= 0.01:
+                        l.with_context(eurekam_sync=True).write(
+                            {'price_unit': neuf})
+                        touchees |= l
+                if touchees:
+                    contrat.message_post(body=_(
+                        "Year %(year)s set to %(amount).2f: quotation(s) "
+                        "%(orders)s updated (%(n)d line(s)).",
+                        year=rec.year, amount=rec.amount,
+                        orders=', '.join(sorted(set(
+                            touchees.mapped('order_id.name')))),
+                        n=len(touchees),
+                    ))
+            if figees:
+                contrat.message_post(body=_(
+                    "Year %(year)s set to %(amount).2f, but order(s) "
+                    "%(orders)s were left untouched: already confirmed or "
+                    "invoiced. Adjust them by hand if needed.",
+                    year=rec.year, amount=rec.amount,
+                    orders=', '.join(sorted(set(figees.mapped('order_id.name')))),
+                ))
+
     def _factures_couvrantes(self):
         """Invoices covering the line: line -> order lines -> invoices.
 

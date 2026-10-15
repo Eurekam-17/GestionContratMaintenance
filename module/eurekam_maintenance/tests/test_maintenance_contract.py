@@ -838,3 +838,65 @@ class TestMaintenanceContract(TransactionCase):
         invoice.button_cancel()
         line.invalidate_recordset(['invoice_ids', 'invoice_count', 'is_invoiced'])
         self.assertFalse(line.is_invoiced)
+
+    # ======================================================================
+    # 21. Two-way sync between the yearly line and the quotations
+    # ======================================================================
+    def _contrat_avec_devis(self, montant=20000.0):
+        freq = self.env.ref('eurekam_maintenance.freq_quarterly')
+        an = ofields.Date.context_today(self.env['res.partner']).year
+        contract = self._make_contract(
+            date_start=date(an, 1, 1), date_end=date(an, 12, 31),
+            maintenance_amount=montant,
+            billing_frequency_ids=[(6, 0, [freq.id])])
+        contract.action_activate()
+        contract.action_generate_lines()
+        wizard = self.env['eurekam.maintenance.order.wizard'].with_context(
+            default_contract_id=contract.id).create({'year': an})
+        order = self.env['sale.order'].browse(
+            wizard.action_create_sale_order()['res_id'])
+        return contract, contract.line_ids.filtered(lambda l: l.year == an), order
+
+    def test_sync_ligne_vers_devis(self):
+        """Changing the yearly amount re-splits the quotation already issued."""
+        contract, line, order = self._contrat_avec_devis(20000.0)
+        self.assertAlmostEqual(order.amount_untaxed, 20000.0, places=2)
+
+        line.amount = 24000.0
+        self.assertAlmostEqual(order.amount_untaxed, 24000.0, places=2)
+        for l in order.order_line:
+            self.assertAlmostEqual(l.price_unit, 6000.0, places=2)
+
+    def test_sync_devis_vers_ligne(self):
+        """Amending the quotation pushes the new total back onto the contract."""
+        contract, line, order = self._contrat_avec_devis(20000.0)
+        order.order_line[0].price_unit = 8000.0   # 5000 -> 8000
+        self.assertAlmostEqual(line.amount, 23000.0, places=2)
+
+    def test_sync_epargne_les_commandes_confirmees(self):
+        """A confirmed order is a commitment: it must not be rewritten."""
+        contract, line, order = self._contrat_avec_devis(20000.0)
+        order.action_confirm()
+        avant = order.amount_untaxed
+        line.amount = 30000.0
+        self.assertAlmostEqual(order.amount_untaxed, avant, places=2)
+        # ...and the contract says so in its chatter.
+        corps = ' '.join(contract.message_ids.mapped('body'))
+        self.assertIn(order.name, corps)
+
+    def test_sync_ignore_les_lignes_de_module(self):
+        """A billable module has its own amount and must not inflate the year."""
+        contract, line, order = self._contrat_avec_devis(20000.0)
+        module = self.env['eurekam.contract.module.line'].create({
+            'contract_id': contract.id,
+            'module_billing_id': self.env.ref(
+                'eurekam_maintenance.mod_bill_stats_premium').id,
+            'amount': 4000.0,
+            'start_year': line.year,
+        })
+        self.assertTrue(module)
+        ligne_module = order.order_line.filtered(
+            lambda l: l.maintenance_kind == 'module')
+        if ligne_module:
+            ligne_module[0].price_unit = 9999.0
+            self.assertAlmostEqual(line.amount, 20000.0, places=2)
