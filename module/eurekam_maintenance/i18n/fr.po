@@ -1283,8 +1283,8 @@ msgstr "Statut de commande"
 #. module: eurekam_maintenance
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__duration
 #: model_terms:ir.ui.view,arch_db:eurekam_maintenance.report_maintenance_contract
-msgid "Ordered Duration"
-msgstr "Durée commandée"
+msgid "Contract Duration"
+msgstr "Durée du contrat"
 
 #. module: eurekam_maintenance
 #: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form

@@ -165,7 +165,13 @@
                                 pre-creates one line for each year between the start
                                 and end dates.
                             </p>
-                            <field name="line_ids">
+                            <!-- default_amount : une ligne ajoutée à la main
+                                 part du montant de référence du contrat, comme
+                                 celles créées par "Générer les lignes
+                                 annuelles". Sans ce contexte, "Ajouter une
+                                 ligne" produisait toujours un montant à 0. -->
+                            <field name="line_ids"
+                                   context="{'default_amount': maintenance_amount}">
                                 <list editable="bottom"
                                       decoration-success="is_invoiced">
                                     <field name="year"/>

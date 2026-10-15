@@ -880,3 +880,40 @@ class TestMaintenanceContract(TransactionCase):
         self.assertEqual(sale_order.state, 'draft')
         self.assertFalse(sale_order.client_order_ref)
         self.assertEqual(len(sale_order.order_line), 4)
+
+    # ======================================================================
+    # 19. Yearly lines are pre-filled from the reference amount
+    # ======================================================================
+    def test_generate_lines_prefills_every_new_year(self):
+        """Extending a contract must pre-fill the added years, and existing
+        amounts must never be overwritten. The pre-fill used to apply only
+        when the contract had no line at all, so a contract generated before
+        the amount was entered -- or extended by a year -- got zeros."""
+        contract = self._make_contract(
+            date_start=date(2026, 1, 1), date_end=date(2027, 12, 31),
+            maintenance_amount=10000.0)
+        contract.action_generate_lines()
+        montants = {l.year: l.amount for l in contract.line_ids}
+        self.assertEqual(montants, {2026: 10000.0, 2027: 10000.0})
+
+        # A year priced by hand stays untouched...
+        contract.line_ids.filtered(lambda l: l.year == 2027).amount = 12500.0
+        # ...and extending the contract pre-fills the years that appear.
+        contract.date_end = date(2029, 12, 31)
+        contract.action_generate_lines()
+        montants = {l.year: l.amount for l in contract.line_ids}
+        self.assertEqual(montants, {2026: 10000.0, 2027: 12500.0,
+                                    2028: 10000.0, 2029: 10000.0})
+
+        # Lines generated before any amount was entered: regenerating does not
+        # resurrect them (the years exist), which is why the amount must also
+        # be reachable when adding a line by hand -- see the default_amount
+        # context on line_ids in the form view.
+        vide = self._make_contract(
+            date_start=date(2026, 1, 1), date_end=date(2026, 12, 31),
+            maintenance_amount=0.0)
+        vide.action_generate_lines()
+        self.assertEqual(vide.line_ids.mapped('amount'), [0.0])
+        vide.maintenance_amount = 8000.0
+        vide.action_generate_lines()
+        self.assertEqual(vide.line_ids.mapped('amount'), [0.0])

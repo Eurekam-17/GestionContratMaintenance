@@ -179,7 +179,10 @@ class EurekamMaintenanceContract(models.Model):
             ('4y', '4 years'),
             ('5y', '5 years'),
         ],
-        string='Ordered Duration',
+        string='Contract Duration',
+        help="Duration the contract was ordered for. Informational: the "
+             "billing periods are derived from the start and end dates, "
+             "not from this field.",
         tracking=True,
     )
     days_to_expiry = fields.Integer(
@@ -635,12 +638,17 @@ class EurekamMaintenanceContract(models.Model):
         return True
 
     def action_generate_lines(self):
-        """Generate the empty yearly lines between date_start and date_end.
+        """Generate the missing yearly lines between date_start and date_end.
 
         Creates one line per year (year = date_start.year ... date_end.year),
-        with amount=0 by default. Existing lines are not overwritten.
-        If maintenance_amount > 0 and no line exists yet, each line is
-        pre-filled with that amount as a starting value.
+        pre-filled with `maintenance_amount`. Existing years are left alone --
+        only the missing ones are created, so nothing already priced is ever
+        overwritten.
+
+        The pre-fill used to apply only when the contract had no line at all,
+        which made it useless in practice: generating the lines before entering
+        the amount, or extending the contract by a year, produced lines at zero
+        with no way to get the pre-fill back (reported 2026-10-15).
         """
         Line = self.env['eurekam.maintenance.contract.line']
         for rec in self:
@@ -649,14 +657,13 @@ class EurekamMaintenanceContract(models.Model):
                     "Set the start and end dates before generating the yearly lines."
                 ))
             existing_years = set(rec.line_ids.mapped('year'))
-            default_amount = rec.maintenance_amount if not existing_years else 0.0
             new_vals = []
             for year in range(rec.date_start.year, rec.date_end.year + 1):
                 if year not in existing_years:
                     new_vals.append({
                         'contract_id': rec.id,
                         'year': year,
-                        'amount': default_amount,
+                        'amount': rec.maintenance_amount,
                     })
             if new_vals:
                 Line.create(new_vals)
