@@ -2522,3 +2522,12 @@ msgstr ""
 "Circuit normal : crée le devis (un sale.order en brouillon) avec N lignes "
 "selon la cadence (1 pour Annuelle, 2 pour Semestrielle, 4 pour "
 "Trimestrielle). Chaque ligne du devis peut être facturée indépendamment."
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_contract__duration
+msgid ""
+"Duration the contract was ordered for. Informational: the billing periods "
+"are derived from the start and end dates, not from this field."
+msgstr ""
+"Durée pour laquelle le contrat a été commandé. Informatif : les périodes de "
+"facturation découlent des dates de début et de fin, pas de ce champ."
