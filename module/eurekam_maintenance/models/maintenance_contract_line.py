@@ -29,27 +29,41 @@ class EurekamMaintenanceContractLine(models.Model):
         required=True,
         default=0.0,
     )
-    # Computed from the customer orders rather than stored: every invoice now
-    # comes from a quotation, so the link runs line -> sale.order.line
-    # (maintenance_line_id) -> invoice. The field used to be filled only by the
-    # contract's direct-invoicing action, which was removed; left stored it
-    # would have stayed empty for ever while still showing on screen.
+    # Order lines issued against this yearly line. Declared explicitly so the
+    # invoicing status below has a real dependency path Odoo can track; it also
+    # makes the orders reachable from the line.
+    sale_line_ids = fields.One2many(
+        'sale.order.line',
+        'maintenance_line_id',
+        string='Order Lines',
+    )
+    # Derived from the customer orders rather than stored on the line: every
+    # invoice now comes from a quotation, so the link runs line -> order line
+    # -> invoice. These used to be filled only by the contract's
+    # direct-invoicing action, which was removed; left as they were they would
+    # have stayed empty for ever while still showing on screen.
     invoice_ids = fields.Many2many(
         'account.move',
         string='Invoices',
-        compute='_compute_invoice_status',
+        compute='_compute_invoice_ids',
         help="Customer invoices covering this yearly line, through the "
              "customer orders issued for it. A line may have several invoices "
              "depending on the frequency: 4 quarterly, 2 semi-annual, "
              "1 annual.",
     )
+    # Stored, unlike invoice_ids: the Yearly Lines search view filters on them
+    # ("Invoiced", "Not Invoiced", "Partially Invoiced"), and Odoo refuses to
+    # validate a filter whose field cannot be searched -- which broke the whole
+    # module update on 2026-10-15.
     invoice_count = fields.Integer(
         string='Invoices Count',
         compute='_compute_invoice_status',
+        store=True,
     )
     is_invoiced = fields.Boolean(
         string='Invoiced',
         compute='_compute_invoice_status',
+        store=True,
         help="Checked as soon as at least one invoice covers the line.",
     )
     notes = fields.Text(string='Notes')
@@ -100,22 +114,32 @@ class EurekamMaintenanceContractLine(models.Model):
             seq = rec.contract_id.sequence_number or ''
             rec.display_name = f"{seq} - {rec.year}" if seq else str(rec.year)
 
-    def _compute_invoice_status(self):
-        """Walk line -> order lines -> invoices.
+    def _factures_couvrantes(self):
+        """Invoices covering the line: line -> order lines -> invoices.
 
-        sale.order.line.maintenance_line_id is set by the order wizard, so a
-        yearly line knows every invoice issued against it without any stored
-        link of its own. Cancelled invoices are ignored: they cover nothing.
+        maintenance_line_id is set by the order wizard, so a yearly line knows
+        every invoice issued against it. Cancelled invoices are ignored: they
+        cover nothing.
         """
-        SaleLine = self.env['sale.order.line']
+        self.ensure_one()
+        return self.sale_line_ids.invoice_lines.move_id.filtered(
+            lambda m: m.move_type == 'out_invoice' and m.state != 'cancel'
+        )
+
+    @api.depends('sale_line_ids.invoice_lines.move_id.state',
+                 'sale_line_ids.invoice_lines.move_id.move_type')
+    def _compute_invoice_ids(self):
         for rec in self:
-            factures = self.env['account.move']
-            if rec.id:
-                lignes = SaleLine.search([('maintenance_line_id', '=', rec.id)])
-                factures = lignes.invoice_lines.move_id.filtered(
-                    lambda m: m.move_type == 'out_invoice' and m.state != 'cancel'
-                )
-            rec.invoice_ids = factures
+            rec.invoice_ids = rec._factures_couvrantes()
+
+    # Kept apart from _compute_invoice_ids: these two are stored and that one
+    # is not, and Odoo 18 warns about an "inconsistent 'store'" when a single
+    # compute serves both.
+    @api.depends('sale_line_ids.invoice_lines.move_id.state',
+                 'sale_line_ids.invoice_lines.move_id.move_type')
+    def _compute_invoice_status(self):
+        for rec in self:
+            factures = rec._factures_couvrantes()
             rec.invoice_count = len(factures)
             rec.is_invoiced = bool(factures)
 
