@@ -21,6 +21,12 @@ Usage :
     python migration/importer_contrats.py --limit 5      # echantillon
     python migration/importer_contrats.py                # tout
     python migration/importer_contrats.py --purge        # efface puis reimporte
+    python migration/importer_contrats.py --url https://eurekam-recette.odoo.com
+
+L'option --url vise une AUTRE instance de test que celle du fichier de config,
+sans recopier les credentials ailleurs : seuls l'URL et la base changent, le
+compte reste celui de config/odoo_test.json. Les memes controles que
+scripts/00_check_environment.py sont rejoues sur la cible.
 """
 
 import argparse
@@ -30,6 +36,7 @@ import json
 import os
 import re
 import sys
+import urllib.request
 import xmlrpc.client
 
 BASE = os.path.dirname(os.path.abspath(__file__))
@@ -114,20 +121,79 @@ def premier(txt):
     return (txt or '').split(',')[0].strip()
 
 
+# ------------------------------------------------------------------ garde-fou
+MOTS_TEST = ('test', 'staging', 'dev', 'preprod', 'recette', 'sandbox')
+MOTIF_BASE_DEFAUT = r'^eurekam-(sandbox|staging|recette|test|dev|preprod)(-\d+)?$'
+
+
+def resoudre_base(url):
+    """Resout la base a chaud : sur odoo.sh elle est renommee a chaque build."""
+    req = urllib.request.Request(
+        url + '/web/database/list',
+        data=json.dumps({'jsonrpc': '2.0', 'method': 'call',
+                         'params': {}}).encode(),
+        headers={'Content-Type': 'application/json'})
+    try:
+        bases = json.load(urllib.request.urlopen(req, timeout=30))['result']
+    except Exception as exc:
+        sys.exit('STOP : impossible de lister les bases sur %s (%s). '
+                 'Verifier l\'URL et la connectivite.'
+                 % (url, type(exc).__name__))
+    if len(bases) != 1:
+        sys.exit('STOP : %d bases visibles sur %s, cible ambigue : %s'
+                 % (len(bases), url, bases))
+    return bases[0]
+
+
+def verifier_url(url, cfg):
+    """Controle l'URL AVANT tout contact reseau.
+
+    L'ordre compte : resoudre_base() interroge le serveur, donc une URL de
+    production doit etre refusee avant qu'on lui adresse la moindre requete.
+    """
+    if cfg.get('environment') != 'TEST':
+        sys.exit("STOP : la configuration ne declare pas environment='TEST'")
+    u = url.lower()
+    if not any(mot in u for mot in MOTS_TEST):
+        sys.exit("STOP : l'URL %s ne contient aucun mot-cle de test (%s). "
+                 "Aucune requete n'a ete envoyee."
+                 % (url, ', '.join(MOTS_TEST)))
+    interdits = (cfg.get('safety_check', {}) or {}).get(
+        'forbidden_url_keywords', ('prod', 'production', 'main'))
+    for mot in interdits:
+        if mot.lower() in u and not (mot.lower() == 'prod' and 'preprod' in u):
+            sys.exit("STOP : l'URL %s contient le mot-cle interdit '%s'. "
+                     "Aucune requete n'a ete envoyee." % (url, mot))
+
+
+def verifier_base(db, cfg):
+    """Controle le nom de la base une fois celle-ci resolue."""
+    motif = cfg.get('database_pattern') or MOTIF_BASE_DEFAUT
+    if not re.match(motif, db):
+        sys.exit("STOP : la base %r ne correspond pas au motif de test %r"
+                 % (db, motif))
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--dry-run', action='store_true')
     ap.add_argument('--limit', type=int)
     ap.add_argument('--purge', action='store_true')
+    ap.add_argument('--url', help='Autre instance de TEST a viser '
+                                  '(ex: https://eurekam-recette.odoo.com). '
+                                  'La base est resolue a chaud.')
     args = ap.parse_args()
 
     cfg = json.load(io.open(CONFIG, encoding='utf-8'))
-    url, db, user = cfg['url'], cfg['database'], cfg['username']
+    user = cfg['username']
     pwd = cfg.get('password') or cfg.get('api_key')
-    if cfg.get('environment') != 'TEST' or 'sandbox' not in db:
-        sys.exit('STOP : base cible inattendue (%s)' % db)
+    url = args.url.rstrip('/') if args.url else cfg['url']
+    verifier_url(url, cfg)              # avant tout contact reseau
+    db = resoudre_base(url) if args.url else cfg['database']
+    verifier_base(db, cfg)
     print('>> ENVIRONNEMENT : TEST -- Base : %s%s'
           % (db, '  [DRY-RUN, aucune ecriture]' if args.dry_run else ''))
+    print('>> URL           : %s' % url)
 
     uid = xmlrpc.client.ServerProxy(url + '/xmlrpc/2/common').authenticate(
         db, user, pwd, {})
