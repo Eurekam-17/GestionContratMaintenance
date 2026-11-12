@@ -149,16 +149,28 @@ class ResPartner(models.Model):
 
     @api.depends('maintenance_contract_ids', 'maintenance_contract_ids.state')
     def _compute_maintenance_contract_count(self):
+        """Count the partner's maintenance contracts, in sudo().
+
+        These counters sit on the contact form, which the whole company opens
+        -- accounting, support, purchasing -- while the maintenance models are
+        restricted to the Eurekam Maintenance groups. Without sudo() a user
+        outside those groups hits an AccessError and cannot open the contact of
+        any customer under contract at all (reported by the prestataire's code
+        review before going live). Reading a count exposes nothing: the records
+        themselves stay behind the smart button, which is protected by its own
+        access rights.
+        """
         for rec in self:
-            rec.maintenance_contract_count = len(rec.maintenance_contract_ids)
+            contrats = rec.sudo().maintenance_contract_ids
+            rec.maintenance_contract_count = len(contrats)
             rec.active_maintenance_contract_count = len(
-                rec.maintenance_contract_ids.filtered(lambda c: c.state == 'active')
+                contrats.filtered(lambda c: c.state == 'active')
             )
             rec.expiring_maintenance_contract_count = len(
-                rec.maintenance_contract_ids.filtered(lambda c: c.state == 'expiring')
+                contrats.filtered(lambda c: c.state == 'expiring')
             )
             rec.expired_maintenance_contract_count = len(
-                rec.maintenance_contract_ids.filtered(lambda c: c.state == 'expired')
+                contrats.filtered(lambda c: c.state == 'expired')
             )
 
     @api.depends(

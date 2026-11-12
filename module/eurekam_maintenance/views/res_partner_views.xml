@@ -25,8 +25,14 @@
             <xpath expr="//div[@name='button_box']" position="inside">
                 <field name="maintenance_status" invisible="1"/>
                 <field name="is_maintenance_establishment" invisible="1"/>
+                <!-- groups=: the button opens the contract list, which is
+                     readable by the Maintenance groups only. Left ungrouped it
+                     showed to the whole company and raised an AccessError on
+                     click. The colored banners below keep informing support of
+                     the maintenance status without opening the records. -->
                 <button name="action_view_maintenance_contracts" type="object"
                         class="oe_stat_button" icon="fa-wrench"
+                        groups="eurekam_maintenance.group_maintenance_user"
                         invisible="not is_maintenance_establishment">
                     <field name="maintenance_contract_count" widget="statinfo"
                            string="Contracts"/>

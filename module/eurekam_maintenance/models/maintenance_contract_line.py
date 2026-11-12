@@ -6,7 +6,10 @@ class EurekamMaintenanceContractLine(models.Model):
     _name = 'eurekam.maintenance.contract.line'
     _description = "Eurekam Maintenance Contract Yearly Line"
     _order = 'contract_id, year'
-    _rec_name = 'display_name'
+    # No _rec_name: the model has no `name` field and _compute_display_name is
+    # overridden below. Pointing _rec_name at display_name would make the core
+    # _search_display_name search display_name itself -- infinite recursion once
+    # the field is no longer stored.
 
     # ------------------------------------------------------------------
     # Identification
@@ -103,11 +106,10 @@ class EurekamMaintenanceContractLine(models.Model):
     # ------------------------------------------------------------------
     # Display
     # ------------------------------------------------------------------
-    display_name = fields.Char(
-        compute='_compute_display_name',
-        store=True,
-    )
-
+    # display_name is NOT redeclared here: it already exists on every model and
+    # overriding its compute is enough. Redeclaring it as a stored Char (which
+    # this model used to do) duplicates a core field and takes it out of the
+    # standard mechanism -- flagged by the prestataire's code review.
     @api.depends('contract_id.sequence_number', 'year')
     def _compute_display_name(self):
         for rec in self:

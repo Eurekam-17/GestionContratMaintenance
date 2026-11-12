@@ -78,13 +78,23 @@ class TestMaintenanceContract(TransactionCase):
     # Helper
     # ----------------------------------------------------------------------
     def _make_contract(self, **vals):
-        """Create a contract with overridable default values."""
+        """Create a contract with overridable default values.
+
+        The default dates are anchored on today, NOT on literal years. A
+        contract ending on a fixed 31 December eventually slides into the
+        90-day expiring window, and action_activate() then yields 'expiring'
+        instead of 'active' -- which is exactly how test_workflow_transitions
+        started failing once the clock reached November 2026. A full year of
+        runway keeps the default contract plainly active whenever the suite is
+        run. Tests that care about specific years still pass their own dates.
+        """
+        today = ofields.Date.context_today(self.env['res.partner'])
         defaults = {
             'partner_id': self.partner.id,
             'product_id': self.product.id,
             'commercial_id': self.user_commercial.id,
-            'date_start': date(2026, 1, 1),
-            'date_end': date(2026, 12, 31),
+            'date_start': today - timedelta(days=30),
+            'date_end': today + timedelta(days=365),
             'duration': '1y',
             'maintenance_amount': 10000.0,
         }
@@ -250,9 +260,16 @@ class TestMaintenanceContract(TransactionCase):
     # 8. Renewal wizard: Syntec application + creation
     # ======================================================================
     def test_renewal_syntec_revision(self):
+        # Dates anchored on today: the contract being renewed expires in 30
+        # days (the realistic case), so the contract the wizard creates starts
+        # next month and runs a full year -- plainly 'active'. With the fixed
+        # 2025 -> 2026 dates this test used to carry, the new contract ended on
+        # a 31 December that the clock eventually came within 90 days of, and
+        # the assertion below flipped to 'expiring' on its own.
+        today = ofields.Date.context_today(self.env['res.partner'])
         contract = self._make_contract(
-            date_start=date(2025, 1, 1),
-            date_end=date(2025, 12, 31),
+            date_start=today - timedelta(days=335),
+            date_end=today + timedelta(days=30),
             duration='1y',
             maintenance_amount=10000.0,
             syntec_revision='yes',
@@ -921,6 +938,7 @@ class TestMaintenanceContract(TransactionCase):
         self.assertEqual(contract.gen_id.name, 'GEN3')
 
         # The code stays unique, so the mapping from the legacy values holds.
-        from odoo.exceptions import ValidationError
-        with self.assertRaises((ValidationError, Exception)):
+        # assertRaises takes a single class here, like the other constraint
+        # tests in this file: Odoo 18 refuses a tuple of exception classes.
+        with self.assertRaises(Exception):
             Generation.create({'name': 'Doublon', 'code': 'gen3'})
