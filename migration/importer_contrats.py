@@ -172,6 +172,29 @@ def resoudre_base(url):
     return bases[0]
 
 
+# Jeton litteral exige pour viser la production. Il n'est accepte que sur la
+# ligne de commande : ni la config, ni une variable d'environnement, ni un
+# fichier ne peuvent l'activer. Une faute de frappe = refus.
+JETON_PRODUCTION = 'OUI-JE-VALIDE-LA-PRODUCTION'
+URL_PRODUCTION = 'https://eurekam.odoo.com'
+MOTIF_BASE_PRODUCTION = r'^tecliberp-eurekam-main-\d+$'
+
+
+def verifier_production(url, jeton):
+    """Ouvre la seule porte vers la production, et la referme derriere.
+
+    Volontairement inflexible : le jeton doit etre exact, et l'URL doit etre
+    exactement celle de la production d'Eurekam. On n'autorise pas "une URL
+    de production quelconque" -- seulement celle que Loic a validee.
+    """
+    if jeton != JETON_PRODUCTION:
+        sys.exit("STOP : --production attend le jeton exact %r. "
+                 "Aucune requete n'a ete envoyee." % JETON_PRODUCTION)
+    if url.rstrip('/').lower() != URL_PRODUCTION:
+        sys.exit("STOP : --production n'autorise que %s, pas %s. "
+                 "Aucune requete n'a ete envoyee." % (URL_PRODUCTION, url))
+
+
 def verifier_url(url, cfg):
     """Controle l'URL AVANT tout contact reseau.
 
@@ -209,17 +232,34 @@ def main():
     ap.add_argument('--url', help='Autre instance de TEST a viser '
                                   '(ex: https://eurekam-recette.odoo.com). '
                                   'La base est resolue a chaud.')
+    ap.add_argument('--production', metavar='JETON',
+                    help='Vise la PRODUCTION. Exige le jeton exact %r et '
+                         '--url %s. Par defaut la production est refusee '
+                         'avant meme tout contact reseau.'
+                         % (JETON_PRODUCTION, URL_PRODUCTION))
     args = ap.parse_args()
 
     cfg = json.load(io.open(CONFIG, encoding='utf-8'))
     user = cfg['username']
     pwd = cfg.get('password') or cfg.get('api_key')
     url = args.url.rstrip('/') if args.url else cfg['url']
-    verifier_url(url, cfg)              # avant tout contact reseau
-    db = resoudre_base(url) if args.url else cfg['database']
-    verifier_base(db, cfg)
-    print('>> ENVIRONNEMENT : TEST -- Base : %s%s'
-          % (db, '  [DRY-RUN, aucune ecriture]' if args.dry_run else ''))
+
+    if args.production:
+        # Chemin explicitement valide par Loic. Le garde-fou de test est
+        # contourne, mais remplace par un controle plus strict, pas par rien.
+        verifier_production(url, args.production)
+        db = resoudre_base(url)
+        if not re.match(MOTIF_BASE_PRODUCTION, db):
+            sys.exit('STOP : base %r inattendue pour la production '
+                     '(motif %r).' % (db, MOTIF_BASE_PRODUCTION))
+        print('>> ENVIRONNEMENT : *** PRODUCTION *** -- Base : %s%s'
+              % (db, '  [DRY-RUN, aucune ecriture]' if args.dry_run else ''))
+    else:
+        verifier_url(url, cfg)          # avant tout contact reseau
+        db = resoudre_base(url) if args.url else cfg['database']
+        verifier_base(db, cfg)
+        print('>> ENVIRONNEMENT : TEST -- Base : %s%s'
+              % (db, '  [DRY-RUN, aucune ecriture]' if args.dry_run else ''))
     print('>> URL           : %s' % url)
 
     uid = xmlrpc.client.ServerProxy(url + '/xmlrpc/2/common').authenticate(

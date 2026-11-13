@@ -1,140 +1,140 @@
 ﻿ligne;etablissement;action;motif;contrat;total
-1;17 - La Rochelle - CH St Louis;A CREER;;(dry-run);78989.84
-2;63 - Clermont-Ferrand - CHU Gabriel Montpied;A CREER;;(dry-run);46690.35
-3;75 - Paris 13 - APHP - Pitié Salpêtrière;A CREER;;(dry-run);36480.0
-4;13 - Marseille - CLCC Paoli-Calmettes;A CREER;;(dry-run);185192.8
-5;72 - Le Mans - Centre de Cancerologie de la Sarthe (CCS);A CREER;;(dry-run);137066.36
-6;14 - Caen - PCL du Parc;A CREER;;(dry-run);56963.59
-7;40 - Dax - CH Cote d’Argent;A CREER;;(dry-run);64360.0
-8;29 - Quimper - CH de Cornouaille;A CREER;;(dry-run);122024.0
-9;76 - Rouen - CLCC Henri Becquerel;A CREER;;(dry-run);73660.0
-10;30 - Nîmes - CHRU Caremeau;A CREER;;(dry-run);141955.0
-11;56 - Vannes - CHBA;A CREER;;(dry-run);23919.44
-12;35 - Rennes - CLCC Eugène Marquis;A CREER;;(dry-run);35844.0
-13;64 - Bayonne - CH Côte Basque;A CREER;;(dry-run);53789.63
-14;06 - Nice - CHU;A CREER;;(dry-run);85397.0
-15;31 - Toulouse - Oncopôle;A CREER;;(dry-run);110259.2
-16;32 - Auch - CH;A CREER;;(dry-run);13425.4
-17;77 - Melun - GH Sud Île-de-France;A CREER;;(dry-run);91606.28
-18;43 - Le Puy en Velay - CH Emile Roux;A CREER;;(dry-run);48726.0
-19;47 - Agen-Nerac - CH;A CREER;;(dry-run);77587.0
-20;75 - Paris 19 - APHP - Robert Debré;A CREER;;(dry-run);32880.0
-21;77 - Marne la vallée - GHEF GH Est Parisien;A CREER;;(dry-run);76953.0
-22;08 - Charleville-Mezieres -CH;A CREER;;(dry-run);44384.0
-23;63 - Clermont-Ferrand - CRLCC Jean PERRIN;A CREER;;(dry-run);14769.72
-24;37 - Tours - Chamblay - Pole Santé Léonard de Vinci;A CREER;;(dry-run);14812.36
-25;92 - Boulogne-Billancourt - APHP - Ambroise-Paré;A CREER;;(dry-run);44667.0
-26;56 - Lorient - GH Bretagne Sud;A CREER;;(dry-run);45892.79
-27;69 - Villefranche sur Saone - CH;A CREER;;(dry-run);67000.0
-28;974 - La Reunion - CHU St-Pierre;A CREER;;(dry-run);37464.0
-29;78 - Poissy St Germain - CHI;A CREER;;(dry-run);19621.37
-30;77 - Férolles Attilly - Hop Forcilles - fondation Cognacq Jay;A CREER;;(dry-run);35095.15
-31;80 - Amiens - CHU;A CREER;;(dry-run);17575.17
-32;71 - Chalon sur Saone - CH;A CREER;;(dry-run);9000.0
-33;79 - Niort - CH;A CREER;;(dry-run);45600.0
-34;83 - Toulon - CHI Toulon-La Seyne sur Mer;A CREER;;(dry-run);40639.0
-35;02 - Saint Quentin - CH;A CREER;;(dry-run);22800.0
-36;17 - Saintes - CH Saintonge;A CREER;;(dry-run);14796.63
-37;57 - Metz - HP Metz - Uneos;A CREER;;(dry-run);160488.0
-38;30 - Bagnols sur Cèze - CH;A CREER;;(dry-run);22440.0
-39;86 - Site Poitiers - CHU Poitiers;A CREER;;(dry-run);76716.0
-40;55 - Verdun - CH;A CREER;;(dry-run);27176.55
-41;81 - Albi - CL Claude Bernard;A CREER;;(dry-run);12649.0
-42;84 - Avignon - CL Institut Sainte Catherine;A CREER;;(dry-run);63840.0
-43;56 - Pontivy - CH du Centre-Bretagne;A CREER;;(dry-run);22785.83
-44;69 - Lyon - GHC - Hôpital Edouard Herriot;A CREER;;(dry-run);26920.88
-45;69 - Lyon - GHS - Hôpital Lyon SUD;A CREER;;(dry-run);53841.76
-46;40 - Mont-de-Marsan - CH;A CREER;;(dry-run);60720.0
-47;51 - Reims - CHU;A CREER;;(dry-run);128182.4
+1;17 - La Rochelle - CH St Louis;CREE;;MAINT/2026/0001;78989.84
+2;63 - Clermont-Ferrand - CHU Gabriel Montpied;CREE;;MAINT/2026/0002;46690.35
+3;75 - Paris 13 - APHP - Pitié Salpêtrière;CREE;;MAINT/2026/0003;36480.0
+4;13 - Marseille - CLCC Paoli-Calmettes;CREE;;MAINT/2026/0004;185192.8
+5;72 - Le Mans - Centre de Cancerologie de la Sarthe (CCS);CREE;;MAINT/2026/0005;137066.36
+6;14 - Caen - PCL du Parc;CREE;;MAINT/2026/0006;56963.59
+7;40 - Dax - CH Cote d’Argent;CREE;;MAINT/2026/0007;64360.0
+8;29 - Quimper - CH de Cornouaille;CREE;;MAINT/2026/0008;122024.0
+9;76 - Rouen - CLCC Henri Becquerel;CREE;contrat paiement intégral. En cours de renouvellement.;MAINT/2026/0009;73660.0
+10;30 - Nîmes - CHRU Caremeau;CREE;;MAINT/2026/0010;141955.0
+11;56 - Vannes - CHBA;CREE;;MAINT/2026/0011;23919.44
+12;35 - Rennes - CLCC Eugène Marquis;CREE;;MAINT/2026/0012;35844.0
+13;64 - Bayonne - CH Côte Basque;CREE;;MAINT/2026/0013;53789.63
+14;06 - Nice - CHU;CREE;;MAINT/2026/0014;85397.0
+15;31 - Toulouse - Oncopôle;CREE;;MAINT/2026/0015;110259.2
+16;32 - Auch - CH;CREE;;MAINT/2026/0016;13425.4
+17;77 - Melun - GH Sud Île-de-France;CREE;;MAINT/2026/0017;91606.28
+18;43 - Le Puy en Velay - CH Emile Roux;CREE;;MAINT/2026/0018;48726.0
+19;47 - Agen-Nerac - CH;CREE;;MAINT/2026/0019;77587.0
+20;75 - Paris 19 - APHP - Robert Debré;CREE;;MAINT/2026/0020;32880.0
+21;77 - Marne la vallée - GHEF GH Est Parisien;CREE;;MAINT/2026/0021;76953.0
+22;08 - Charleville-Mezieres -CH;CREE;;MAINT/2026/0022;44384.0
+23;63 - Clermont-Ferrand - CRLCC Jean PERRIN;CREE INACTIF;Equipement transfere au CH de Vichy (Jacques Lacarin). Contrat inactif.;MAINT/2026/0023;14769.72
+24;37 - Tours - Chamblay - Pole Santé Léonard de Vinci;CREE;;MAINT/2026/0024;14812.36
+25;92 - Boulogne-Billancourt - APHP - Ambroise-Paré;CREE;;MAINT/2026/0025;44667.0
+26;56 - Lorient - GH Bretagne Sud;CREE;;MAINT/2026/0026;45892.79
+27;69 - Villefranche sur Saone - CH;CREE;;MAINT/2026/0027;67000.0
+28;974 - La Reunion - CHU St-Pierre;CREE;;MAINT/2026/0028;37464.0
+29;78 - Poissy St Germain - CHI;CREE;;MAINT/2026/0029;19621.37
+30;77 - Férolles Attilly - Hop Forcilles - fondation Cognacq Jay;CREE;;MAINT/2026/0030;35095.15
+31;80 - Amiens - CHU;CREE;;MAINT/2026/0031;17575.17
+32;71 - Chalon sur Saone - CH;CREE;;MAINT/2026/0032;9000.0
+33;79 - Niort - CH;CREE;;MAINT/2026/0033;45600.0
+34;83 - Toulon - CHI Toulon-La Seyne sur Mer;CREE;;MAINT/2026/0034;40639.0
+35;02 - Saint Quentin - CH;CREE;;MAINT/2026/0035;22800.0
+36;17 - Saintes - CH Saintonge;CREE;;MAINT/2026/0036;14796.63
+37;57 - Metz - HP Metz - Uneos;CREE;;MAINT/2026/0037;160488.0
+38;30 - Bagnols sur Cèze - CH;CREE;;MAINT/2026/0038;22440.0
+39;86 - Site Poitiers - CHU Poitiers;CREE;;MAINT/2026/0039;76716.0
+40;55 - Verdun - CH;CREE;;MAINT/2026/0040;27176.55
+41;81 - Albi - CL Claude Bernard;CREE;;MAINT/2026/0041;12649.0
+42;84 - Avignon - CL Institut Sainte Catherine;CREE;paiement intégral jusqu'au 2028.;MAINT/2026/0042;63840.0
+43;56 - Pontivy - CH du Centre-Bretagne;CREE;;MAINT/2026/0043;22785.83
+44;69 - Lyon - GHC - Hôpital Edouard Herriot;CREE;;MAINT/2026/0044;26920.88
+45;69 - Lyon - GHS - Hôpital Lyon SUD;CREE;;MAINT/2026/0045;53841.76
+46;40 - Mont-de-Marsan - CH;CREE;;MAINT/2026/0046;60720.0
+47;51 - Reims - CHU;CREE;;MAINT/2026/0047;128182.4
 48;50 - CHU Namur - Site de Godinne;ECARTE;hors France (Belgique);;
-49;76 - Rouen - CHU Charles Nicolle;A CREER;;(dry-run);97187.0
-50;20 - Corte - CH de Corte Tattone;A CREER;;(dry-run);18945.0
-51;76 - Le Havre - CH Jacques Monod - GHH;A CREER;;(dry-run);69133.6
-52;41 - Blois - CH;A CREER;;(dry-run);131720.0
-53;85 - La Roche sur Yon - CHD de Vendée;A CREER;;(dry-run);186553.0
-54;59 - Douai Dechy - CL Léonard de Vinci;A CREER;;(dry-run);36778.02
-55;78 - Mantes la Jolie - CH François Quesnay;A CREER;;(dry-run);26001.37
-56;78 - Versailles Le Chesnay - CH Mignot;A CREER;;(dry-run);92169.0
-57;64 - Pau - CH François Mitterrand;A CREER;;(dry-run);64460.0
-58;67 - Strasbourg - GCS ICANS - Paul Strauss;A CREER;;(dry-run);21190.0
-59;56 - Vannes - CHBA;A CREER;;(dry-run);31003.04
-60;87 - Limoges - CL Chenieux;A CREER;;(dry-run);47842.0
-61;44 - ICO Saint Herblain;A CREER;;(dry-run);181500.0
-62;92 - Clichy - APHP - Beaujon;A CREER;;(dry-run);86273.76
-63;75 - Paris 10 - APHP - Saint Louis;A CREER;;(dry-run);100321.0
-64;75 - Institut Curie - Site de Paris;A CREER;;(dry-run);74530.0
-65;92 - Institut Curie - Site de Saint-Cloud;A CREER;;(dry-run);168959.0
-66;80 - Amiens - CHU;A CREER;;(dry-run);142570.17
-67;54 - Nancy - Hôpital Privé Nancy Lorraine;A CREER;;(dry-run);9900.0
-68;44 - Saint Nazaire - GCS PUI Cite Sanitaire;A CREER;;(dry-run);25200.0
-69;10 - Troyes - CH;A CREER;;(dry-run);79835.0
+49;76 - Rouen - CHU Charles Nicolle;CREE;;MAINT/2026/0048;97187.0
+50;20 - Corte - CH de Corte Tattone;CREE;;MAINT/2026/0049;18945.0
+51;76 - Le Havre - CH Jacques Monod - GHH;CREE;;MAINT/2026/0050;69133.6
+52;41 - Blois - CH;CREE;;MAINT/2026/0051;131720.0
+53;85 - La Roche sur Yon - CHD de Vendée;CREE;;MAINT/2026/0052;186553.0
+54;59 - Douai Dechy - CL Léonard de Vinci;CREE;;MAINT/2026/0053;36778.02
+55;78 - Mantes la Jolie - CH François Quesnay;CREE;;MAINT/2026/0054;26001.37
+56;78 - Versailles Le Chesnay - CH Mignot;CREE;;MAINT/2026/0055;92169.0
+57;64 - Pau - CH François Mitterrand;CREE;;MAINT/2026/0056;64460.0
+58;67 - Strasbourg - GCS ICANS - Paul Strauss;CREE;;MAINT/2026/0057;21190.0
+59;56 - Vannes - CHBA;CREE;;MAINT/2026/0058;31003.04
+60;87 - Limoges - CL Chenieux;CREE;;MAINT/2026/0059;47842.0
+61;44 - ICO Saint Herblain;CREE;;MAINT/2026/0060;181500.0
+62;92 - Clichy - APHP - Beaujon;CREE;;MAINT/2026/0061;86273.76
+63;75 - Paris 10 - APHP - Saint Louis;CREE;;MAINT/2026/0062;100321.0
+64;75 - Institut Curie - Site de Paris;CREE;;MAINT/2026/0063;74530.0
+65;92 - Institut Curie - Site de Saint-Cloud;CREE;;MAINT/2026/0064;168959.0
+66;80 - Amiens - CHU;CREE;;MAINT/2026/0065;142570.17
+67;54 - Nancy - Hôpital Privé Nancy Lorraine;CREE;;MAINT/2026/0066;9900.0
+68;44 - Saint Nazaire - GCS PUI Cite Sanitaire;CREE;;MAINT/2026/0067;25200.0
+69;10 - Troyes - CH;CREE;;MAINT/2026/0068;79835.0
 70;92 - Neuilly - CC Ambroise Paré - Hartmann;ECARTE;aucun montant annuel;;
-71;83 - Frejus - CHI Frejus Saint Raphael;A CREER;;(dry-run);60626.0
-72;55 - Bar le duc - CH;A CREER;;(dry-run);28215.94
-73;52 - Saint Dizier - CH Geneviève de Gaulle Anthonioz;A CREER;;(dry-run);30023.5
-74;75 - Paris 15 - APHP - Necker;A CREER;;(dry-run);20593.0
-75;94 - Le Kremlin Bicetre - APHP - Hopital Bicêtre;A CREER;;(dry-run);69316.0
-76;60 - Creil - GH Public du Sud de l'Oise;A CREER;;(dry-run);59432.0
-77;01 - Bourg en Bresse - CH;A CREER;;(dry-run);85925.0
-78;93 - Bobigny - APHP - Avicenne;A CREER;;(dry-run);13680.0
-79;33 - Bordeaux - Cli Tivoli-Ducos;A CREER;;(dry-run);21866.46
-80;16 - Angouleme - CH;A CREER;;(dry-run);68318.61
-81;86 - Site Chatellerault - CH Camille Guerin - CHU Poitiers;A CREER;;(dry-run);22800.0
-82;57 - Metz - Clinique Claude Bernard;A CREER;;(dry-run);43300.0
-83;76 - Saint-Aubin-lès-Elbeuf - CHI Elbeuf - Louviers;A CREER;;(dry-run);21923.0
-84;67 - Strasbourg - HUS site Hautepierre;A CREER;;(dry-run);38857.0
-85;68 - Colmar - CH;A CREER;;(dry-run);89423.78
-86;81 - Albi - CH;A CREER;;(dry-run);43990.0
-87;59 - GHICL - Lille - HP Saint Vincent de Paul;A CREER;;(dry-run);86366.0
-88;06 - Mougins - CL - Institut Arnaud Tzanck;A CREER;;(dry-run);79984.0
+71;83 - Frejus - CHI Frejus Saint Raphael;CREE;;MAINT/2026/0069;60626.0
+72;55 - Bar le duc - CH;CREE;;MAINT/2026/0070;28215.94
+73;52 - Saint Dizier - CH Geneviève de Gaulle Anthonioz;CREE;;MAINT/2026/0071;30023.5
+74;75 - Paris 15 - APHP - Necker;CREE;;MAINT/2026/0072;20593.0
+75;94 - Le Kremlin Bicetre - APHP - Hopital Bicêtre;CREE;;MAINT/2026/0073;69316.0
+76;60 - Creil - GH Public du Sud de l'Oise;CREE;;MAINT/2026/0074;59432.0
+77;01 - Bourg en Bresse - CH;CREE;;MAINT/2026/0075;85925.0
+78;93 - Bobigny - APHP - Avicenne;CREE;;MAINT/2026/0076;13680.0
+79;33 - Bordeaux - Cli Tivoli-Ducos;CREE;;MAINT/2026/0077;21866.46
+80;16 - Angouleme - CH;CREE;;MAINT/2026/0078;68318.61
+81;86 - Site Chatellerault - CH Camille Guerin - CHU Poitiers;CREE;;MAINT/2026/0079;22800.0
+82;57 - Metz - Clinique Claude Bernard;CREE;;MAINT/2026/0080;43300.0
+83;76 - Saint-Aubin-lès-Elbeuf - CHI Elbeuf - Louviers;CREE;;MAINT/2026/0081;21923.0
+84;67 - Strasbourg - HUS site Hautepierre;CREE;;MAINT/2026/0082;38857.0
+85;68 - Colmar - CH;CREE;;MAINT/2026/0083;89423.78
+86;81 - Albi - CH;CREE;;MAINT/2026/0084;43990.0
+87;59 - GHICL - Lille - HP Saint Vincent de Paul;CREE;;MAINT/2026/0085;86366.0
+88;06 - Mougins - CL - Institut Arnaud Tzanck;CREE;;MAINT/2026/0086;79984.0
 89;50 - Namur - Clinique Saint-Luc Bouge;ECARTE;hors France (Belgique);;
 90;50 - Anvers - UZA;ECARTE;hors France (Belgique);;
 91;40 - Liège - CHR de la Citadelle;ECARTE;hors France (Belgique);;
 92;50 - CHR Namur (sites Sambre / Meuse);ECARTE;hors France (Belgique);;
 93;46 - Valence - CHU de La Fe (Pilote Sanustech);ECARTE;hors France (Espagne);;
 94;46 - Valence - Arnau de Vilanova (Sanustech);ECARTE;hors France (Espagne);;
-95;78 - Rambouillet - CH;A CREER;;(dry-run);21477.0
+95;78 - Rambouillet - CH;CREE;;MAINT/2026/0087;21477.0
 96;06 - Grand Hôpital de Charleroi;ECARTE;hors France (Belgique);;
-97;30 - Nîmes - PCL Kenval;A CREER;;(dry-run);13680.0
-98;91 - Longjumeau - CH - GHNE;A CREER;;(dry-run);38654.2
-99;94 - Creteil - APHP - Henri Mondor;A CREER;;(dry-run);87360.0
-100;69 - Lyon - GHS - Hôpital Lyon SUD;A CREER;;(dry-run);21232.94
-101;69 - Lyon - GHN - Hôpital de la Croix Rousse;A CREER;;(dry-run);36697.38
-102;66 - Perpignan - Clinique Saint Pierre;A CREER;;(dry-run);22859.0
-103;27 - Evreux - CHI Eure-Seine;A CREER;;(dry-run);11400.0
-104;17 - Rochefort - CH;A CREER;;(dry-run);19430.0
-105;20 - Ajaccio - Notre Dame de la Miséricorde - CH;A CREER;;(dry-run);57120.0
-106;45 - Orléans - CHU;A CREER;;(dry-run);98977.0
-107;14 - Caen - CLCC François Baclesse;A CREER;;(dry-run);19792.0
-108;28 - Le Coudray - Chartres - CH;A CREER;;(dry-run);43937.66
+97;30 - Nîmes - PCL Kenval;CREE;;MAINT/2026/0088;13680.0
+98;91 - Longjumeau - CH - GHNE;CREE;;MAINT/2026/0089;38654.2
+99;94 - Creteil - APHP - Henri Mondor;CREE;;MAINT/2026/0090;87360.0
+100;69 - Lyon - GHS - Hôpital Lyon SUD;CREE;;MAINT/2026/0091;21232.94
+101;69 - Lyon - GHN - Hôpital de la Croix Rousse;CREE;;MAINT/2026/0092;36697.38
+102;66 - Perpignan - Clinique Saint Pierre;CREE;;MAINT/2026/0093;22859.0
+103;27 - Evreux - CHI Eure-Seine;CREE;;MAINT/2026/0094;11400.0
+104;17 - Rochefort - CH;CREE;;MAINT/2026/0095;19430.0
+105;20 - Ajaccio - Notre Dame de la Miséricorde - CH;CREE;;MAINT/2026/0096;57120.0
+106;45 - Orléans - CHU;CREE;;MAINT/2026/0097;98977.0
+107;14 - Caen - CLCC François Baclesse;CREE;;MAINT/2026/0098;19792.0
+108;28 - Le Coudray - Chartres - CH;CREE;;MAINT/2026/0099;43937.66
 109;46 - Alcoy - Verge dels Lliris (Sanustech);ECARTE;hors France (Espagne);;
-110;87 - Limoges - CHU;A CREER;;(dry-run);67200.0
-111;62 - Boulogne-sur-mer - CH;A CREER;;(dry-run);80854.0
-112;76 - Dieppe - CH;A CREER;;(dry-run);29481.21
-113;79 - Bressuire - Nord Deux-Sèvres - CH;A CREER;;(dry-run);29154.0
-114;43 - Le Puy en Velay - CH Emile Roux;A CREER;;(dry-run);31720.0
-115;90 - Trevenans - Hôpital Nord Franche Comté;A CREER;;(dry-run);39000.0
-116;67 - Strasbourg - Saint Vincent Saint Anne - CL;A CREER;;(dry-run);64398.0
-117;24 - Périgueux - CH;A CREER;;(dry-run);65109.0
-118;16 - Soyaux - Centre Clinical - CL;A CREER;;(dry-run);74791.0
-119;64 - Bayonne - CL Belharra;A CREER;;(dry-run);46681.0
-120;69 - Lyon - GHE - Hôpital Mère-Enfant;A CREER;;(dry-run);14644.25
-121;31 - Toulouse - Oncopôle;A CREER;;(dry-run);4125.0
-122;94 - Creteil - APHP - Henri Mondor;A CREER;;(dry-run);16500.0
+110;87 - Limoges - CHU;CREE;;MAINT/2026/0100;67200.0
+111;62 - Boulogne-sur-mer - CH;CREE;;MAINT/2026/0101;80854.0
+112;76 - Dieppe - CH;CREE;;MAINT/2026/0102;29481.21
+113;79 - Bressuire - Nord Deux-Sèvres - CH;CREE;;MAINT/2026/0103;29154.0
+114;43 - Le Puy en Velay - CH Emile Roux;CREE;;MAINT/2026/0104;31720.0
+115;90 - Trevenans - Hôpital Nord Franche Comté;CREE;;MAINT/2026/0105;39000.0
+116;67 - Strasbourg - Saint Vincent Saint Anne - CL;CREE;;MAINT/2026/0106;64398.0
+117;24 - Périgueux - CH;CREE;;MAINT/2026/0107;65109.0
+118;16 - Soyaux - Centre Clinical - CL;CREE;;MAINT/2026/0108;74791.0
+119;64 - Bayonne - CL Belharra;CREE;;MAINT/2026/0109;46681.0
+120;69 - Lyon - GHE - Hôpital Mère-Enfant;CREE;;MAINT/2026/0110;14644.25
+121;31 - Toulouse - Oncopôle;CREE;;MAINT/2026/0111;4125.0
+122;94 - Creteil - APHP - Henri Mondor;CREE;;MAINT/2026/0112;16500.0
 123;98 - Monaco - Nouveau Centre Hospitalier Princesse Grace;ECARTE;aucun montant annuel;;
-124;56 - Vannes - Hôpital Privé Océane;A CREER;;(dry-run);27305.0
+124;56 - Vannes - Hôpital Privé Océane;CREE;;MAINT/2026/0113;27305.0
 125;38 - Grenoble - CHU Grenoble Alpes;ECARTE;aucun montant annuel;;
-126;29 - Quimper - Clinique Mutualiste Bretagne HGO;A CREER;;(dry-run);17203.0
+126;29 - Quimper - Clinique Mutualiste Bretagne HGO;CREE;;MAINT/2026/0114;17203.0
 127;73 - Hornu - CH Epicura;ECARTE;hors France (Belgique);;
-128;22 - Plérin - Hôpital Privé des Côtes d'Armor - HP;A CREER;;(dry-run);39891.0
+128;22 - Plérin - Hôpital Privé des Côtes d'Armor - HP;CREE;;MAINT/2026/0115;39891.0
 129;75 - Paris - Institut Medico-chirurgical Montsouris IMM;ECARTE;aucun montant annuel;;
-130;13 - Marseille - Hôpital Saint-Joseph - CL;A CREER;;(dry-run);53830.0
-131;94 - Creteil - APHP - Henri Mondor;A CREER;;(dry-run);20588.0
+130;13 - Marseille - Hôpital Saint-Joseph - CL;CREE;;MAINT/2026/0116;53830.0
+131;94 - Creteil - APHP - Henri Mondor;CREE;;MAINT/2026/0117;20588.0
 132;BA - Klinikum der Universität München Campus Großhadern;ECARTE;hors France (Allemagne);;
 133;;ECARTE;aucun etablissement;;
-134;69 - Lyon - GHS - Hôpital Lyon SUD;A CREER;;(dry-run);15703.0
-135;69 - Lyon - GHE - Hôpital Mère-Enfant;A CREER;;(dry-run);15712.63
-136;56 - Vannes - Hôpital Privé Océane;A CREER;;(dry-run);25107.0
+134;69 - Lyon - GHS - Hôpital Lyon SUD;CREE;;MAINT/2026/0118;15703.0
+135;69 - Lyon - GHE - Hôpital Mère-Enfant;CREE;;MAINT/2026/0119;15712.63
+136;56 - Vannes - Hôpital Privé Océane;CREE;;MAINT/2026/0120;25107.0
 137;50 - Hôpital Erasme;ECARTE;hors France (Belgique);;
 138;10 - Bruxelles - Cliniques Universitaires St Luc (UCLouvain);ECARTE;hors France (Belgique);;
 139;75 - Tournai - CHwapi;ECARTE;hors France (Belgique);;
@@ -142,7 +142,7 @@
 141;69 - Lyon - GHC - Hôpital Edouard Herriot;ECARTE;aucun montant annuel;;
 142;56 - Vannes - CHBA;ECARTE;aucun montant annuel;;
 143;40 - Dax - CH Cote d’Argent;ECARTE;aucun montant annuel;;
-144;40 - Mont-de-Marsan - CH;A CREER;;(dry-run);19115.0
+144;40 - Mont-de-Marsan - CH;CREE;;MAINT/2026/0121;19115.0
 145;IT Health Fusion;ECARTE;hors France (Italie);;
 146;75 - Institut Curie - Site de Paris;ECARTE;aucun montant annuel;;
 147;59 - Roubaix - CH;ECARTE;aucun montant annuel;;

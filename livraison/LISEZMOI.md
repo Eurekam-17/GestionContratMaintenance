@@ -1,8 +1,29 @@
-# Relecture avant intégration des contrats de maintenance
+# Intégration des contrats de maintenance
 
-**Version 2** — intègre les corrections de la relecture du 13 novembre.
+**Version 3** — ⚠️ **l'import a été exécuté en production le 13 novembre 2026**,
+sur validation explicite de Loïc.
 
-Aucun de ces fichiers n'a été appliqué : **rien n'a été écrit en production.**
+| | |
+|---|---|
+| Base | `tecliberp-eurekam-main-7835310` (https://eurekam.odoo.com) |
+| Contrats créés | **121** — dont 120 en brouillon et 1 annulé (Jean Perrin) |
+| Lignes annuelles | 544 |
+| Valeur cumulée | **6 591 087,02 €** — écart nul avec le fichier relu |
+| Établissements marqués « établissement de maintenance » | 110 |
+
+Le contenu créé correspond exactement à `contrats_a_importer.csv` tel que votre
+équipe l'a relu, décisions de `decisions_equipe.csv` comprises.
+
+**L'import reste réversible** tant que personne n'a modifié ces contrats : ils
+portent tous une ancre `eurekam_migration_notion`, et
+
+```bash
+python migration/importer_contrats.py --url https://eurekam.odoo.com --production OUI-JE-VALIDE-LA-PRODUCTION --purge
+```
+
+les supprime puis les recrée. Cette fenêtre se referme dès que l'équipe
+commence à travailler dans ces fiches : le `--purge` détruirait alors du
+travail réel.
 
 | Fichier | Contenu |
 |---|---|
@@ -105,12 +126,23 @@ python migration/preparer_fichier_import.py --url https://eurekam-recette.odoo.c
 
 ## Ce qui reste à décider
 
-### 1. Les 62 contrats sans produit
+### 1. Le produit : les 121 contrats sont concernés, pas 62
 
-Notion ne porte aucune référence article. Ces contrats seront créés en
-**brouillon** et ne pourront pas être activés tant qu'un produit ne leur est pas
-affecté. C'est le principal chantier d'après-intégration : plus de la moitié du
-lot.
+Correction par rapport à la version 2. Notion ne porte **aucune référence
+article**, seulement un libellé libre. En production :
+
+| | |
+|---|---|
+| contrats avec un libellé produit | 59 (« Maintenance » ×58, « Maintenace » ×1) |
+| contrats sans aucun libellé | 62 |
+| contrats avec un **article Odoo** rattaché | **0** |
+
+Or l'activation exige l'article Odoo, pas le libellé — la facture en a besoin
+pour résoudre le compte de produits et la TVA. **Les 121 contrats restent donc
+en brouillon** tant qu'un article ne leur est pas affecté. C'est le chantier
+d'après-intégration, et il porte sur tout le lot.
+
+Au passage : « Maintenace » est une faute de frappe à corriger dans Notion.
 
 ### 2. Les 15 correspondances d'établissement à confirmer
 
