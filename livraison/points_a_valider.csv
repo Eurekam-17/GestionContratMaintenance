@@ -1,0 +1,138 @@
+﻿ligne_notion;etablissement;point;detail
+1;Groupe Hospitalier La Rochelle - Ré - Aunis;Montant hors periode;Montants sur 2023 alors que le contrat court du 2024-05-01 au 2028-04-30. Ils seront importes tels quels.
+2;Centre Hospitalier Universitaire de Clermont-Ferrand;Montant hors periode;Montants sur 2023, 2024, 2026, 2027, 2028 alors que le contrat court du 2025-01-01 au 2025-12-31. Ils seront importes tels quels.
+3;Assistance Publique des Hôpitaux de Paris - La Pitié-Salpêtrière - Charles Foix;Montant hors periode;Montants sur 2025, 2026 alors que le contrat court du 2021-01-01 au 2024-12-31. Ils seront importes tels quels.
+4;Institut Paoli-Calmettes;Montant hors periode;Montants sur 2023, 2029 alors que le contrat court du 2024-01-01 au 2028-12-31. Ils seront importes tels quels.
+5;Centre de Cancerologie de la Sarthe (CCS);Montant hors periode;Montants sur 2023, 2024, 2025 alors que le contrat court du 2026-09-01 au 2030-12-31. Ils seront importes tels quels.
+5;Centre de Cancerologie de la Sarthe (CCS);Correspondance etablissement a confirmer;Notion : 72 - Le Mans - Centre de Cancerologie de la Sarthe (CCS) -> Odoo : Centre de Cancerologie de la Sarthe (CCS) (VALIDE A LA MAIN)
+6;Polyclinique du Parc;Montant hors periode;Montants sur 2023, 2024, 2025 alors que le contrat court du 2026-02-01 au 2030-12-31. Ils seront importes tels quels.
+7;Centre Hospitalier de Dax-Côte d'Argent;Montant hors periode;Montants sur 2023, 2024, 2025 alors que le contrat court du 2026-01-01 au 2029-12-31. Ils seront importes tels quels.
+7;Centre Hospitalier de Dax-Côte d'Argent;Correspondance etablissement a confirmer;Notion : 40 - Dax - CH Cote d’Argent -> Odoo : Centre Hospitalier de Dax-Côte d'Argent (VALIDE A LA MAIN)
+8;Centre Hospitalier de Cornouaille;Montant hors periode;Montants sur 2023, 2024 alors que le contrat court du 2025-01-01 au 2029-12-31. Ils seront importes tels quels.
+10;Centre Hospitalier Universitaire de Nîmes;Montant hors periode;Montants sur 2023 alors que le contrat court du 2024-01-01 au 2029-12-31. Ils seront importes tels quels.
+11;Centre Hospitalier Bretagne Atlantique;Montant hors periode;Montants sur 2026 alors que le contrat court du 2019-12-12 au 2025-12-31. Ils seront importes tels quels.
+12;Centre Eugène Marquis;Montant hors periode;Montants sur 2023, 2024, 2025 alors que le contrat court du 2026-04-13 au 2031-12-31. Ils seront importes tels quels.
+14;CHU DE NICE;Montant hors periode;Montants sur 2023, 2027 alors que le contrat court du 2024-05-01 au 2026-12-31. Ils seront importes tels quels.
+15;GCS Institut Universitaire du Cancer Toulouse Oncopole (IUCT-O);Montant hors periode;Montants sur 2025, 2026 alors que le contrat court du 2020-01-01 au 2024-12-31. Ils seront importes tels quels.
+16;Centre Hospitalier d'Auch;Montant hors periode;Montants sur 2025, 2026 alors que le contrat court du 2020-01-01 au 2024-12-31. Ils seront importes tels quels.
+17;Groupe Hospitalier Sud Île-de-France;Montant hors periode;Montants sur 2023, 2024 alors que le contrat court du 2025-01-01 au 2029-12-31. Ils seront importes tels quels.
+18;Centre Hospitalier Emile Roux le Puy en Velay;Montant hors periode;Montants sur 2023 alors que le contrat court du 2024-01-01 au 2028-12-31. Ils seront importes tels quels.
+19;Centre Hospitalier Agen - Nerac;Montant hors periode;Montants sur 2023 alors que le contrat court du 2024-02-01 au 2028-12-31. Ils seront importes tels quels.
+21;Grand Hôpital de l'Est Francilien;Montant hors periode;Montants sur 2023, 2024, 2025 alors que le contrat court du 2026-02-09 au 2030-12-31. Ils seront importes tels quels.
+21;Grand Hôpital de l'Est Francilien;Correspondance etablissement a confirmer;Notion : 77 - Marne la vallée - GHEF GH Est Parisien -> Odoo : Grand Hôpital de l'Est Francilien (VALIDE A LA MAIN)
+22;Centre Hospitalier Intercommunal Nord-Ardennes;Montant hors periode;Montants sur 2026 alors que le contrat court du 2020-06-25 au 2025-12-31. Ils seront importes tels quels.
+24;Pôle Santé Tours Sud;Montant hors periode;Montants sur 2026 alors que le contrat court du 2020-10-02 au 2025-12-31. Ils seront importes tels quels.
+26;Groupe Hospitalier Bretagne Sud;Montant hors periode;Montants sur 2026 alors que le contrat court du 2020-11-18 au 2025-12-31. Ils seront importes tels quels.
+29;Centre Hospitalier Intercommunal de Poissy-St Germain en Laye;Montant hors periode;Montants sur 2026 alors que le contrat court du 2022-02-17 au 2025-12-31. Ils seront importes tels quels.
+31;CHU AMIENS PICARDIE;Montant hors periode;Montants sur 2024 alors que le contrat court du 2025-10-10 au 2029-12-31. Ils seront importes tels quels.
+32;Centre Hospitalier CHALON sur SAONE;Date manquante;debut=VIDE fin=2026-12-31
+33;Centre Hospitalier de NIORT;Montant hors periode;Montants sur 2026 alors que le contrat court du 2022-01-01 au 2025-12-31. Ils seront importes tels quels.
+36;Groupe Hospitalier Saintes - Saint-Jean-D'Angély;Date manquante;debut=2022-05-03 fin=VIDE
+37;Hôpitaux Privés de Metz;Correspondance etablissement a confirmer;Notion : 57 - Metz - HP Metz - Uneos -> Odoo : Hôpitaux Privés de Metz (VALIDE A LA MAIN)
+38;CENTRE HOSPITALIER BAGNOLS SUR CEZE;Montant hors periode;Montants sur 2028 alors que le contrat court du 2023-02-01 au 2027-12-31. Ils seront importes tels quels.
+43;Groupe Hospitalier Centre Bretagne;Montant hors periode;Montants sur 2024 alors que le contrat court du 2025-01-01 au 2028-12-31. Ils seront importes tels quels.
+44;HCL HOPITAL E. HERRIOT;Correspondance etablissement a confirmer;Notion : 69 - Lyon - GHC - Hôpital Edouard Herriot -> Odoo : HCL HOPITAL E. HERRIOT (VALIDE A LA MAIN)
+46;CH MONT DE MARSAN;Montant hors periode;Montants sur 2024, 2025 alors que le contrat court du 2026-09-02 au 2030-12-31. Ils seront importes tels quels.
+49;CHU Rouen - Charles Nicolle;Montant hors periode;Montants sur 2028 alors que le contrat court du 2022-10-01 au 2027-12-31. Ils seront importes tels quels.
+51;Groupe Hospitalier du Havre;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+51;Groupe Hospitalier du Havre;Montant hors periode;Montants sur 2023 alors que le contrat court du 2024-01-01 au 2028-12-31. Ils seront importes tels quels.
+52;Centre Hospitalier de Blois;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+53;Centre Hospitalier Départemental de Vendée;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+53;Centre Hospitalier Départemental de Vendée;Montant hors periode;Montants sur 2023, 2024, 2025 alors que le contrat court du 2026-01-01 au 2030-12-31. Ils seront importes tels quels.
+54;SAS Clinique du Pont Saint-Vaast;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+54;SAS Clinique du Pont Saint-Vaast;Montant hors periode;Montants sur 2023, 2024, 2025 alors que le contrat court du 2026-01-01 au 2030-12-31. Ils seront importes tels quels.
+55;Centre Hospitalier François Quesnay;Montant hors periode;Montants sur 2026 alors que le contrat court du 2022-01-01 au 2025-12-31. Ils seront importes tels quels.
+56;Centre Hospitalier de Versailles - Hôpital André Mignot;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+57;Centre Hospitalier de Pau;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+58;Institut Strauss;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+58;Institut Strauss;Montant hors periode;Montants sur 2025, 2026 alors que le contrat court du 2019-10-01 au 2024-09-30. Ils seront importes tels quels.
+58;Institut Strauss;Correspondance etablissement a confirmer;Notion : 67 - Strasbourg - GCS ICANS - Paul Strauss -> Odoo : Institut Strauss (VALIDE A LA MAIN)
+60;Clinique François Chénieux, Limoges;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+61;Institut de Cancerologie de l'Ouest - Saint Herblain;Montant hors periode;Montants sur 2023, 2024 alors que le contrat court du 2025-01-01 au 2028-12-31. Ils seront importes tels quels.
+61;Institut de Cancerologie de l'Ouest - Saint Herblain;Plusieurs etablissements;Notion rattache ce contrat a : 44 - ICO Saint Herblain / , 44 - ICO (Angers). Un seul est retenu : 44 - ICO Saint Herblain.
+62;Assistance Publique des Hôpitaux de Paris - Hôpital Beaujon;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+63;Assistance Publique des Hôpitaux de Paris - Hôpital Saint Louis;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+63;Assistance Publique des Hôpitaux de Paris - Hôpital Saint Louis;Montant hors periode;Montants sur 2023, 2024, 2025 alors que le contrat court du 2026-03-31 au 2030-12-31. Ils seront importes tels quels.
+64;Institut Curie Paris - Hôpital Paris;Montant hors periode;Montants sur 2029 alors que le contrat court du 2024-01-01 au 2028-12-31. Ils seront importes tels quels.
+65;Institut Curie Saint Cloud - Hôpital René Huguenin;Montant hors periode;Montants sur 2029 alors que le contrat court du 2024-01-01 au 2028-12-31. Ils seront importes tels quels.
+66;CHU AMIENS PICARDIE;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+66;CHU AMIENS PICARDIE;Montant hors periode;Montants sur 2024 alors que le contrat court du 2025-10-10 au 2029-12-31. Ils seront importes tels quels.
+67;Hôpital Privé Nancy Lorraine;Montant hors periode;Montants sur 2026 alors que le contrat court du 2020-12-15 au 2025-12-14. Ils seront importes tels quels.
+67;Hôpital Privé Nancy Lorraine;Correspondance etablissement a confirmer;Notion : 54 - Nancy - Hôpital Privé Nancy Lorraine -> Odoo : Hôpital Privé Nancy Lorraine (VALIDE A LA MAIN)
+68;HGO Clinique Mutualiste de l'Estuaire;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+69;CENTRE HOSPITALIER TROYES;Montant hors periode;Montants sur 2024 alors que le contrat court du 2025-05-01 au 2029-12-31. Ils seront importes tels quels.
+71;CHI de Fréjus Saint Raphaël;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+73;GCS Nord Haute-Marne;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+74;Assistance Publique des Hôpitaux de Paris - Necker;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+75;Assistance Publique des Hôpitaux de Paris - Hôpital de Bicêtre;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+76;GHPSO Groupe Hospitalier Public Sud de l'Oise;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+77;Hôpital Fleyriat;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+77;Hôpital Fleyriat;Montant hors periode;Montants sur 2024 alors que le contrat court du 2025-07-16 au 2030-07-15. Ils seront importes tels quels.
+78;Assistance Publique des Hôpitaux de Paris - Hôpital Avicenne;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+78;Assistance Publique des Hôpitaux de Paris - Hôpital Avicenne;Date manquante;debut=VIDE fin=VIDE
+79;Clinique Tivoli Ducos;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+80;Centre Hospitalier Angoulême;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+81;CHU de Poitiers - Châtellerault;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+81;CHU de Poitiers - Châtellerault;Montant hors periode;Montants sur 2027 alors que le contrat court du 2023-10-20 au 2026-10-19. Ils seront importes tels quels.
+83;CHI Elbeuf Louviers Val de Reuil;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+84;Hôpitaux Universitaires Strasbourg Hôpital Civil - CRIH;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+85;Hôpitaux Civils de Colmar;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+86;Centre Hospitalier Albi;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+87;Groupement des Hôpitaux de l'Institut Catholique de Lille GHICL;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+88;Hôpital Privé ARNAULT TZANCK;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+95;Centre Hospitalier de Rambouillet;Date manquante;debut=2024-06-05 fin=VIDE
+97;Polyclinique Kenval-Valdegour;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+98;Groupe Hospitalier Nord-Essonne;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+98;Groupe Hospitalier Nord-Essonne;Correspondance etablissement a confirmer;Notion : 91 - Longjumeau - CH - GHNE -> Odoo : Groupe Hospitalier Nord-Essonne (VALIDE A LA MAIN)
+99;Assistance Publique des Hôpitaux de Paris - GH A.Chenevier-H.Mondor;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+100;HCL Hôpital Lyon Sud;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+101;HCL HOP Nord - Croix Rousse;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+101;HCL HOP Nord - Croix Rousse;Correspondance etablissement a confirmer;Notion : 69 - Lyon - GHN - Hôpital de la Croix Rousse -> Odoo : HCL HOP Nord - Croix Rousse (VALIDE A LA MAIN)
+102;Clinique SAINT PIERRE;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+102;Clinique SAINT PIERRE;Correspondance etablissement a confirmer;Notion : 66 - Perpignan - Clinique Saint Pierre -> Odoo : Clinique SAINT PIERRE (VALIDE A LA MAIN)
+103;Centre hospitalier intercommunal Eure-Seine;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+104;CH ROCHEFORT;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+105;CH Notre Dame de la Miséricorde;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+106;Centre Hospitalier Régional d'Orléans;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+107;Centre François Baclesse;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+108;Le Coudray - CH de Chartres - Hôpital Louis Pasteur;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+108;Le Coudray - CH de Chartres - Hôpital Louis Pasteur;Correspondance etablissement a confirmer;Notion : 28 - Le Coudray - Chartres - CH -> Odoo : Le Coudray - CH de Chartres - Hôpital Louis Pasteur (VALIDE A LA MAIN)
+110;CHU Limoges;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+110;CHU Limoges;Date manquante;debut=2025-04-01 fin=VIDE
+111;CH BOULOGNE SUR MER;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+111;CH BOULOGNE SUR MER;Date manquante;debut=2025-06-11 fin=VIDE
+112;Centre Hospitalier de Dieppe;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+113;CH Nord Deux-Sèvres;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+114;Centre Hospitalier Emile Roux le Puy en Velay;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+115;Hôpital Nord Franche-Comté;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+115;Hôpital Nord Franche-Comté;Date manquante;debut=2025-09-28 fin=VIDE
+116;GH Saint Vincent;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+117;Centre Hospitalier de Périgueux;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+118;Centre Clinical de Soyaux ELSAN;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+118;Centre Clinical de Soyaux ELSAN;Correspondance etablissement a confirmer;Notion : 16 - Soyaux - Centre Clinical - CL -> Odoo : Centre Clinical de Soyaux ELSAN (VALIDE A LA MAIN)
+119;Clinique Belharra;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+120;HCL - GHE - HOP Femme Mère Enfant;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+120;HCL - GHE - HOP Femme Mère Enfant;Correspondance etablissement a confirmer;Notion : 69 - Lyon - GHE - Hôpital Mère-Enfant -> Odoo : HCL - GHE - HOP Femme Mère Enfant (VALIDE A LA MAIN)
+121;GCS Institut Universitaire du Cancer Toulouse Oncopole (IUCT-O);Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+121;GCS Institut Universitaire du Cancer Toulouse Oncopole (IUCT-O);Date manquante;debut=VIDE fin=VIDE
+122;Assistance Publique des Hôpitaux de Paris - GH A.Chenevier-H.Mondor;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+124;Hôpital Privé Océane - ELSAN;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+126;CLINIQUE MUTUALISTE DE BRETAGNE OCCIDENTALE;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+126;CLINIQUE MUTUALISTE DE BRETAGNE OCCIDENTALE;Correspondance etablissement a confirmer;Notion : 29 - Quimper - Clinique Mutualiste Bretagne HGO -> Odoo : CLINIQUE MUTUALISTE DE BRETAGNE OCCIDENTALE (VALIDE A LA MAIN)
+128;Hôpital Privé des Côtes d'Armor - HGO;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+130;Hôpital Saint Joseph;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+131;Assistance Publique des Hôpitaux de Paris - GH A.Chenevier-H.Mondor;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+134;HCL Hôpital Lyon Sud;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+135;HCL - GHE - HOP Femme Mère Enfant;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+135;HCL - GHE - HOP Femme Mère Enfant;Correspondance etablissement a confirmer;Notion : 69 - Lyon - GHE - Hôpital Mère-Enfant -> Odoo : HCL - GHE - HOP Femme Mère Enfant (VALIDE A LA MAIN)
+136;Hôpital Privé Océane - ELSAN;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+144;CH MONT DE MARSAN;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
+11, 59;Centre Hospitalier Bretagne Atlantique;2 contrats sur le meme etablissement;Verifier qu'il s'agit bien de contrats distincts et non de doublons Notion. Debuts : 2019-12-12, 2021-12-03
+15, 121;GCS Institut Universitaire du Cancer Toulouse Oncopole (IUCT-O);2 contrats sur le meme etablissement;Verifier qu'il s'agit bien de contrats distincts et non de doublons Notion. Debuts : 2020-01-01, ?
+18, 114;Centre Hospitalier Emile Roux le Puy en Velay;2 contrats sur le meme etablissement;Verifier qu'il s'agit bien de contrats distincts et non de doublons Notion. Debuts : 2024-01-01, 2025-07-01
+31, 66;CHU AMIENS PICARDIE;2 contrats sur le meme etablissement;Verifier qu'il s'agit bien de contrats distincts et non de doublons Notion. Debuts : 2025-10-10, 2025-10-10
+45, 100, 134;HCL Hôpital Lyon Sud;3 contrats sur le meme etablissement;Verifier qu'il s'agit bien de contrats distincts et non de doublons Notion. Debuts : 2023-02-23, 2024-07-02, 2026-06-18
+46, 144;CH MONT DE MARSAN;2 contrats sur le meme etablissement;Verifier qu'il s'agit bien de contrats distincts et non de doublons Notion. Debuts : 2026-09-02, 2026-09-02
+99, 122, 131;Assistance Publique des Hôpitaux de Paris - GH A.Chenevier-H.Mondor;3 contrats sur le meme etablissement;Verifier qu'il s'agit bien de contrats distincts et non de doublons Notion. Debuts : 2024-11-17, 2025-12-09, 2026-04-01
+120, 135;HCL - GHE - HOP Femme Mère Enfant;2 contrats sur le meme etablissement;Verifier qu'il s'agit bien de contrats distincts et non de doublons Notion. Debuts : 2025-10-08, 2026-06-17
+124, 136;Hôpital Privé Océane - ELSAN;2 contrats sur le meme etablissement;Verifier qu'il s'agit bien de contrats distincts et non de doublons Notion. Debuts : 2026-03-18, 2026-07-17
