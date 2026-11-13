@@ -28,6 +28,7 @@ import xmlrpc.client
 BASE = os.path.dirname(os.path.abspath(__file__))
 RACINE = os.path.dirname(BASE)
 SORTIE = os.path.join(RACINE, 'livraison')
+DECISIONS = os.path.join(SORTIE, 'decisions_equipe.csv')
 
 # On reutilise les mappings et la logique de l'import : le fichier relu doit
 # decrire exactement ce que l'import fera, sinon la relecture ne sert a rien.
@@ -40,6 +41,12 @@ imp = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(imp)
 
 ANNEES = [str(a) for a in range(2023, 2031)]
+
+
+# charger_decisions() vit dans importer_contrats.py : les deux scripts doivent
+# lire les arbitrages de la meme facon, sinon le fichier relu cesse de decrire
+# ce que l'import fera.
+charger_decisions = imp.charger_decisions
 
 
 def charger_resolution(call):
@@ -107,6 +114,10 @@ def main():
               % (url, db))
 
     resolution, ecartes, qualite = charger_resolution(call)
+    decisions = charger_decisions()
+    if decisions:
+        print('>> %d decision(s) d\'equipe reprises depuis %s'
+              % (len(decisions), os.path.basename(DECISIONS)))
 
     noms_odoo = {}
     if call:
@@ -125,15 +136,29 @@ def main():
         annees = {a: v for a, v in annees.items() if v}
         pays = imp.premier(c.get('Pays') or '')
 
+        ref = imp.montant(c.get('Montant de maintenance')) or 0.0
+        cadence_brute = (c.get('Cadence de facturation') or '')
+        # Un contrat a paiement unique ("Periode integrale") n'a par
+        # construction aucun montant annuel : tout est porte par le montant de
+        # reference. L'ancienne regle "aucun montant annuel -> ecarte" les
+        # jetait, alors que ce sont de vrais contrats -- signale par l'equipe
+        # sur Rouen Becquerel (73 660 EUR) et Avignon Sainte-Catherine
+        # (63 840 EUR), tous deux annotes "paiement integral".
+        paiement_unique = bool(ref) and 'Période intégrale' in cadence_brute
+
+        decision = decisions.get(i, {})
         motif = None
-        if not etab:
+        if decision.get('decision') == 'ignorer':
+            motif = 'ecarte par l\'equipe : %s' % (
+                decision.get('statut_equipe') or 'sans motif')
+        elif not etab:
             motif = 'aucun etablissement renseigne dans Notion'
         elif etab in ecartes:
             motif = 'etablissement %s' % ecartes[etab]
         elif etab not in resolution:
             motif = ('hors France (%s)' % pays) if pays and pays != 'France' \
                 else 'etablissement sans correspondance Odoo certaine'
-        elif not annees:
+        elif not annees and not paiement_unique:
             motif = 'aucun montant annuel dans Notion'
 
         debut = imp.date_iso(c.get('Début Contrat'))
@@ -147,6 +172,7 @@ def main():
                 'pays': pays, 'produit': (c.get('Produit') or '').strip(),
                 'motif': motif,
                 'montant_perdu': round(sum(annees.values()), 2) or '',
+                'statut_equipe': decision.get('statut_equipe', ''),
             })
             continue
 
@@ -184,10 +210,14 @@ def main():
             'nb_postes': int(imp.montant(c.get('Nbre de produits')) or 0),
             'commentaire_notion': (c.get('Commentaire') or '').strip(),
             'commercial': imp.premier(c.get('Commercial') or ''),
+            'decision_equipe': decision.get('decision', ''),
+            'statut_equipe': decision.get('statut_equipe', ''),
+            'paiement_unique': 'oui' if paiement_unique and not annees else '',
         }
         for a in ANNEES:
             rec[a] = annees.get(a, '')
-        rec['total_contrat'] = round(sum(annees.values()), 2)
+        rec['total_contrat'] = round(sum(annees.values()), 2) or (
+            ref if paiement_unique else 0.0)
         a_importer.append(rec)
 
         # ---- points qui demandent une decision humaine ----
@@ -231,20 +261,11 @@ def main():
                           "retenu : %s." % (' / '.join(etabs), etab),
             })
 
-    # ---- doublons de partenaire ----
-    par_partenaire = {}
-    for r in a_importer:
-        par_partenaire.setdefault(r['odoo_partner_id'], []).append(r)
-    for pid, rs in par_partenaire.items():
-        if len(rs) > 1:
-            points.append({
-                'ligne_notion': ', '.join(str(r['ligne_notion']) for r in rs),
-                'etablissement': rs[0]['odoo_partner_nom'],
-                'point': '%d contrats sur le meme etablissement' % len(rs),
-                'detail': "Verifier qu'il s'agit bien de contrats distincts et "
-                          "non de doublons Notion. Debuts : %s"
-                          % ', '.join(r['date_debut'] or '?' for r in rs),
-            })
+    # Plusieurs contrats sur un meme etablissement ne sont PAS une anomalie :
+    # l'equipe a confirme que cela vient des reassorts et des postes places sur
+    # des marches differents, et que Notion garde volontairement une ligne par
+    # reassort pour en suivre la date de garantie. Ce controle a donc ete
+    # retire : il produisait 9 faux positifs.
 
     if not os.path.isdir(SORTIE):
         os.makedirs(SORTIE)
@@ -264,12 +285,13 @@ def main():
                'generation', 'marche', 'statut_commande', 'date_debut',
                'date_fin', 'duree_commandee', 'cadence', 'niveau_facturation',
                'montant_reference', 'revision_syntec', 'modules_factures',
-               'nb_postes', 'commercial'] + ANNEES + ['total_contrat',
-                                                      'commentaire_notion']
+               'nb_postes', 'commercial'] + ANNEES + [
+                   'total_contrat', 'paiement_unique', 'decision_equipe',
+                   'statut_equipe', 'commentaire_notion']
     ecrire('contrats_a_importer.csv', a_importer, entetes)
     ecrire('contrats_ecartes.csv', rejetes,
            ['ligne_notion', 'etablissement_notion', 'pays', 'produit',
-            'motif', 'montant_perdu'])
+            'motif', 'montant_perdu', 'statut_equipe'])
     ecrire('points_a_valider.csv', points,
            ['ligne_notion', 'etablissement', 'point', 'detail'])
 

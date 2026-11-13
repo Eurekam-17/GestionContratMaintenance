@@ -38,6 +38,7 @@ import re
 import sys
 import urllib.request
 import xmlrpc.client
+from datetime import date
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 CONFIG = os.path.join(os.path.dirname(BASE), 'config', 'odoo_test.json')
@@ -46,6 +47,8 @@ VALID = os.path.join(BASE, 'validation_etablissements.csv')
 CONTRATS = os.path.join(
     BASE, 'Assistance DO 79ad412a774a4b35addf604d357bdf28_all.csv')
 JOURNAL = os.path.join(BASE, 'journal_import.csv')
+DECISIONS = os.path.join(os.path.dirname(BASE), 'livraison',
+                         'decisions_equipe.csv')
 
 MODULE_MIGRATION = 'eurekam_migration_notion'
 ANNEES = [str(a) for a in range(2023, 2031)]
@@ -119,6 +122,30 @@ def noms_etab(txt):
 def premier(txt):
     """Premiere valeur d'un rollup Notion ('Paul Geeregat,Paul Geeregat')."""
     return (txt or '').split(',')[0].strip()
+
+
+def charger_decisions():
+    """Decisions prises par l'equipe lors de la relecture.
+
+    Colonnes : ligne_notion ; etablissement ; decision ; statut_equipe
+    `decision` vaut 'inactif', 'ignorer', ou reste vide (= importer).
+
+    Ce fichier est la memoire des arbitrages : il survit aux regenerations du
+    dossier livraison, alors qu'une annotation posee directement dans les CSV
+    de sortie serait ecrasee a la regeneration suivante.
+    """
+    decisions = {}
+    if not os.path.isfile(DECISIONS):
+        return decisions
+    for l in csv.DictReader(io.open(DECISIONS, encoding='utf-8-sig'),
+                            delimiter=';'):
+        cle = (l.get('ligne_notion') or '').strip()
+        if cle.isdigit():
+            decisions[int(cle)] = {
+                'decision': (l.get('decision') or '').strip().lower(),
+                'statut_equipe': (l.get('statut_equipe') or '').strip(),
+            }
+    return decisions
 
 
 # ------------------------------------------------------------------ garde-fou
@@ -267,6 +294,11 @@ def main():
                 ecartes[nom] = 'DECISION AMBIGUE'
 
     # --- parcours des contrats ---
+    decisions = charger_decisions()
+    if decisions:
+        print('>> %d decision(s) de relecture reprises depuis %s'
+              % (len(decisions), os.path.basename(DECISIONS)))
+
     lignes = list(csv.DictReader(io.open(CONTRATS, encoding='utf-8-sig')))
     journal, cree, saute = [], 0, 0
 
@@ -280,15 +312,26 @@ def main():
         annees = {a: v for a, v in annees.items() if v}
         pays = premier(c.get('Pays') or '')
 
+        ref = montant(c.get('Montant de maintenance')) or 0.0
+        # Contrat a paiement unique : "Periode integrale" ne porte aucun
+        # montant annuel, tout est sur le montant de reference. On ne l'ecarte
+        # donc pas, on lui cree une ligne unique sur son annee de debut.
+        paiement_unique = bool(ref) and 'Période intégrale' in (
+            c.get('Cadence de facturation') or '')
+        decision = decisions.get(i, {})
+
         motif = None
-        if not etab:
+        if decision.get('decision') == 'ignorer':
+            motif = "ecarte par l'equipe : %s" % (
+                decision.get('statut_equipe') or 'sans motif')
+        elif not etab:
             motif = 'aucun etablissement'
         elif etab in ecartes:
             motif = 'etablissement %s' % ecartes[etab]
         elif etab not in resolution:
             motif = ('hors France (%s)' % pays) if pays and pays != 'France' \
                 else 'etablissement non resolu'
-        elif not annees:
+        elif not annees and not paiement_unique:
             motif = 'aucun montant annuel'
         if motif:
             saute += 1
@@ -329,6 +372,11 @@ def main():
             'line_ids': [(0, 0, {'year': int(a), 'amount': v})
                          for a, v in sorted(annees.items())],
         }
+        if not annees and paiement_unique:
+            # Ligne unique portant la totalite, posee sur l'annee de debut :
+            # c'est la seule annee que Notion donne pour ces contrats.
+            an = int(debut[:4]) if debut else date.today().year
+            vals['line_ids'] = [(0, 0, {'year': an, 'amount': ref})]
         if march:
             vals['market_type_ids'] = [(6, 0, [marches[march]])]
         if cad:
@@ -343,7 +391,12 @@ def main():
             vals['comment'] = ((vals['comment'] or '') +
                                '\n[Migration] Notion rattachait aussi : %s' % autres).strip()
 
-        total = round(sum(annees.values()), 2)
+        if decision.get('statut_equipe'):
+            vals['comment'] = ((vals['comment'] or '') +
+                               '\n[Relecture equipe] %s'
+                               % decision['statut_equipe']).strip()
+
+        total = round(sum(annees.values()), 2) or (ref if paiement_unique else 0.0)
         if args.dry_run:
             cree += 1
             journal.append({'ligne': i, 'etablissement': etab, 'action': 'A CREER',
@@ -358,11 +411,21 @@ def main():
             'res_id': cid,
             'noupdate': True,
         })
+        action = 'CREE'
+        if decision.get('decision') == 'inactif':
+            # L'equipe a declare ce contrat inactif (equipement transfere,
+            # site ferme...). On le cree quand meme pour garder l'historique
+            # et ses montants, mais en 'cancelled' : il ne compte alors ni
+            # comme actif ni comme expirant, et n'alimente aucune alerte.
+            call('eurekam.maintenance.contract', 'action_cancel', [cid])
+            action = 'CREE INACTIF'
+
         seq = call('eurekam.maintenance.contract', 'read', [cid],
                    fields=['sequence_number'])[0]['sequence_number']
         cree += 1
-        journal.append({'ligne': i, 'etablissement': etab, 'action': 'CREE',
-                        'motif': '', 'contrat': seq, 'total': total})
+        journal.append({'ligne': i, 'etablissement': etab, 'action': action,
+                        'motif': decision.get('statut_equipe', ''),
+                        'contrat': seq, 'total': total})
         if cree % 20 == 0:
             print('   ... %d contrats crees' % cree)
 

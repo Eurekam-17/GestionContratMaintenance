@@ -1,29 +1,27 @@
-﻿ligne_notion;etablissement_notion;pays;produit;motif;montant_perdu
-9;76 - Rouen - CLCC Henri Becquerel;France;Maintenance;aucun montant annuel dans Notion;
-42;84 - Avignon - CL Institut Sainte Catherine;France;Maintenance;aucun montant annuel dans Notion;
-48;50 - CHU Namur - Site de Godinne;Belgique;Maintenance;hors France (Belgique);40260.0
-70;92 - Neuilly - CC Ambroise Paré - Hartmann;France;;aucun montant annuel dans Notion;
-89;50 - Namur - Clinique Saint-Luc Bouge;Belgique;;hors France (Belgique);18515.0
-90;50 - Anvers - UZA;Belgique;;hors France (Belgique);20320.0
-91;40 - Liège - CHR de la Citadelle;Belgique;;hors France (Belgique);41084.0
-92;50 - CHR Namur (sites Sambre / Meuse);Belgique;;hors France (Belgique);
-93;46 - Valence - CHU de La Fe (Pilote Sanustech);Espagne;;hors France (Espagne);6000.0
-94;46 - Valence - Arnau de Vilanova (Sanustech);Espagne;;hors France (Espagne);6000.0
-96;06 - Grand Hôpital de Charleroi;Belgique;;hors France (Belgique);
-109;46 - Alcoy - Verge dels Lliris (Sanustech);Espagne;;hors France (Espagne);4000.0
-123;98 - Monaco - Nouveau Centre Hospitalier Princesse Grace;France;;aucun montant annuel dans Notion;
-125;38 - Grenoble - CHU Grenoble Alpes;France;;aucun montant annuel dans Notion;
-127;73 - Hornu - CH Epicura;Belgique;;hors France (Belgique);
-129;75 - Paris - Institut Medico-chirurgical Montsouris IMM;France;;aucun montant annuel dans Notion;
-132;BA - Klinikum der Universität München Campus Großhadern;Allemagne;;hors France (Allemagne);75600.0
-133;;;;aucun etablissement renseigne dans Notion;
-137;50 - Hôpital Erasme;Belgique;;hors France (Belgique);
-138;10 - Bruxelles - Cliniques Universitaires St Luc (UCLouvain);Belgique;;hors France (Belgique);
-139;75 - Tournai - CHwapi;Belgique;;hors France (Belgique);
-140;SA - Universitätsklinikum Magdeburg A.ö.R.;Allemagne;;hors France (Allemagne);
-141;69 - Lyon - GHC - Hôpital Edouard Herriot;France;;aucun montant annuel dans Notion;
-142;56 - Vannes - CHBA;France;;aucun montant annuel dans Notion;
-143;40 - Dax - CH Cote d’Argent;France;;aucun montant annuel dans Notion;
-145;IT Health Fusion;Italie;;hors France (Italie);
-146;75 - Institut Curie - Site de Paris;France;;aucun montant annuel dans Notion;
-147;59 - Roubaix - CH;France;;aucun montant annuel dans Notion;
+﻿ligne_notion;etablissement_notion;pays;produit;motif;montant_perdu;statut_equipe
+48;50 - CHU Namur - Site de Godinne;Belgique;Maintenance;hors France (Belgique);40260.0;mis en place
+70;92 - Neuilly - CC Ambroise Paré - Hartmann;France;;aucun montant annuel dans Notion;;équipement pas installé
+89;50 - Namur - Clinique Saint-Luc Bouge;Belgique;;hors France (Belgique);18515.0;mis en place
+90;50 - Anvers - UZA;Belgique;;hors France (Belgique);20320.0;mis en place
+91;40 - Liège - CHR de la Citadelle;Belgique;;hors France (Belgique);41084.0;mis en place
+92;50 - CHR Namur (sites Sambre / Meuse);Belgique;;hors France (Belgique);;mis en place
+93;46 - Valence - CHU de La Fe (Pilote Sanustech);Espagne;;hors France (Espagne);6000.0;Sanustech en attente
+94;46 - Valence - Arnau de Vilanova (Sanustech);Espagne;;hors France (Espagne);6000.0;Sanustech en attente
+96;06 - Grand Hôpital de Charleroi;Belgique;;hors France (Belgique);;Mise en place en cours
+109;46 - Alcoy - Verge dels Lliris (Sanustech);Espagne;;hors France (Espagne);4000.0;Sanustech en attente
+123;98 - Monaco - Nouveau Centre Hospitalier Princesse Grace;France;;aucun montant annuel dans Notion;;En cours
+125;38 - Grenoble - CHU Grenoble Alpes;France;;aucun montant annuel dans Notion;;En cours
+127;73 - Hornu - CH Epicura;Belgique;;hors France (Belgique);;En cours
+129;75 - Paris - Institut Medico-chirurgical Montsouris IMM;France;;aucun montant annuel dans Notion;;En cours
+132;BA - Klinikum der Universität München Campus Großhadern;Allemagne;;hors France (Allemagne);75600.0;A partir 2027
+133;;;;aucun etablissement renseigne dans Notion;;
+137;50 - Hôpital Erasme;Belgique;;hors France (Belgique);;en cours
+138;10 - Bruxelles - Cliniques Universitaires St Luc (UCLouvain);Belgique;;hors France (Belgique);;en cours
+139;75 - Tournai - CHwapi;Belgique;;hors France (Belgique);;en cours
+140;SA - Universitätsklinikum Magdeburg A.ö.R.;Allemagne;;hors France (Allemagne);;mis en place
+141;69 - Lyon - GHC - Hôpital Edouard Herriot;France;;aucun montant annuel dans Notion;;en cours
+142;56 - Vannes - CHBA;France;;aucun montant annuel dans Notion;;en cours
+143;40 - Dax - CH Cote d’Argent;France;;aucun montant annuel dans Notion;;mis en place
+145;IT Health Fusion;Italie;;hors France (Italie);;en attente
+146;75 - Institut Curie - Site de Paris;France;;aucun montant annuel dans Notion;;mis en place
+147;59 - Roubaix - CH;France;;aucun montant annuel dans Notion;;en cours

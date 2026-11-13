@@ -127,12 +127,3 @@
 135;HCL - GHE - HOP Femme Mère Enfant;Correspondance etablissement a confirmer;Notion : 69 - Lyon - GHE - Hôpital Mère-Enfant -> Odoo : HCL - GHE - HOP Femme Mère Enfant (VALIDE A LA MAIN)
 136;Hôpital Privé Océane - ELSAN;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
 144;CH MONT DE MARSAN;Aucun produit;Notion ne porte pas de reference article. Le contrat sera cree en BROUILLON et ne pourra pas etre active tant qu'un produit n'est pas choisi.
-11, 59;Centre Hospitalier Bretagne Atlantique;2 contrats sur le meme etablissement;Verifier qu'il s'agit bien de contrats distincts et non de doublons Notion. Debuts : 2019-12-12, 2021-12-03
-15, 121;GCS Institut Universitaire du Cancer Toulouse Oncopole (IUCT-O);2 contrats sur le meme etablissement;Verifier qu'il s'agit bien de contrats distincts et non de doublons Notion. Debuts : 2020-01-01, ?
-18, 114;Centre Hospitalier Emile Roux le Puy en Velay;2 contrats sur le meme etablissement;Verifier qu'il s'agit bien de contrats distincts et non de doublons Notion. Debuts : 2024-01-01, 2025-07-01
-31, 66;CHU AMIENS PICARDIE;2 contrats sur le meme etablissement;Verifier qu'il s'agit bien de contrats distincts et non de doublons Notion. Debuts : 2025-10-10, 2025-10-10
-45, 100, 134;HCL Hôpital Lyon Sud;3 contrats sur le meme etablissement;Verifier qu'il s'agit bien de contrats distincts et non de doublons Notion. Debuts : 2023-02-23, 2024-07-02, 2026-06-18
-46, 144;CH MONT DE MARSAN;2 contrats sur le meme etablissement;Verifier qu'il s'agit bien de contrats distincts et non de doublons Notion. Debuts : 2026-09-02, 2026-09-02
-99, 122, 131;Assistance Publique des Hôpitaux de Paris - GH A.Chenevier-H.Mondor;3 contrats sur le meme etablissement;Verifier qu'il s'agit bien de contrats distincts et non de doublons Notion. Debuts : 2024-11-17, 2025-12-09, 2026-04-01
-120, 135;HCL - GHE - HOP Femme Mère Enfant;2 contrats sur le meme etablissement;Verifier qu'il s'agit bien de contrats distincts et non de doublons Notion. Debuts : 2025-10-08, 2026-06-17
-124, 136;Hôpital Privé Océane - ELSAN;2 contrats sur le meme etablissement;Verifier qu'il s'agit bien de contrats distincts et non de doublons Notion. Debuts : 2026-03-18, 2026-07-17
