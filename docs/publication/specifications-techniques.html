@@ -122,6 +122,41 @@ td.c{text-align:center;font-variant-numeric:tabular-nums}
 a:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(101,168,162,.35);border-radius:var(--radius-sm)}
 @media (max-width:560px){.cover .meta{text-align:left}.band>.wrap,.sec>.wrap{padding-block:32px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* ---------- impression / PDF ---------- */
+@media print{
+  @page{size:A4;margin:15mm 13mm}
+  html,body{background:#fff!important}
+  :root{padding:0!important}
+  body{font-size:10.5pt;line-height:1.45;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .wrap{max-width:none;padding-left:0;padding-right:0}
+  .band{background:transparent!important}
+  .band>.wrap{padding-block:0}
+  .cover{border-bottom:none}
+  .cover>.wrap{padding-block:0 8mm}
+  .cover img{width:150px}
+  section.sec{break-before:page}
+  section.sec>.wrap{padding-block:0}
+  h2.sec-title,h3,h4{break-after:avoid}
+  p,li{orphans:3;widows:3}
+  .bloc,.tbl,.chiffres,.etats{break-inside:avoid}
+  .tbl{overflow:visible;box-shadow:none}
+  table{min-width:0;font-size:9pt}
+  thead{display:table-header-group}
+  tr{break-inside:avoid}
+  .etat{box-shadow:none}
+  a{text-decoration:none}
+  .pied{background:#fff!important;color:var(--fg-1)!important;
+    border-top:2px solid var(--accent-primary)}
+  .pied>.wrap{padding-block:7mm 0}
+  .pied h2{color:var(--fg-1)!important}
+  .pied p{color:var(--fg-2)!important}
+  .pied a{color:var(--text-link)!important}
+  .legal{color:var(--fg-3)!important;border-top-color:var(--border-subtle)!important}
+  .pied code{background:var(--surface-sunken)!important;
+    border-color:var(--border-subtle)!important;color:var(--fg-1)!important}
+}
 </style>
 
 <header class="band cover">
