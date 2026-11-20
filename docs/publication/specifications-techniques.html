@@ -1,0 +1,533 @@
+<title>Spécifications Maintenance Eurekam</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Mise en page : colonne de lecture unique, bandeaux alternés pour séparer les
+   chapitres. Tokens repris du EUREKAM Design System. */
+@font-face{font-family:"Sole Sans";src:url("fonts/SoleSans-Regular.woff2") format("woff2");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"Sole Sans";src:url("fonts/SoleSans-SemiBold.woff2") format("woff2");font-weight:600;font-style:normal;font-display:swap}
+@font-face{font-family:"Sole Sans";src:url("fonts/SoleSans-Bold.woff2") format("woff2");font-weight:700;font-style:normal;font-display:swap}
+
+:root{
+  color-scheme: light;
+  --surface-page:#fafafa; --surface-card:#ffffff; --surface-sunken:#f4f6f7;
+  --surface-brand:#23a6a0; --surface-inverse:#2e2d2d;
+  --fg-1:#2e2d2d; --fg-2:#6e7274; --fg-3:#9ca6ac; --fg-on-brand:#ffffff;
+  --text-link:#3d7570; --text-link-hover:#2f5b57;
+  --accent-primary:#23a6a0; --accent-primary-press:#187873;
+  --accent-highlight:#ff9955; --accent-secondary:#7bacdd; --accent-slate:#6e7274;
+  --border-subtle:#ebebeb; --border-default:#dadada; --border-strong:#a5a4a4;
+  --success-50:#e8f5ee; --success-500:#2e9e6a;
+  --warning-50:#fbf2e4; --warning-500:#d9922b;
+  --danger-50:#faeae8;  --danger-500:#c8453c;
+  --info-50:#eff5fc;    --info-500:#5a90c8;
+  --teal-50:#eef6f5;
+  --font-display:"Sole Sans","Outfit",ui-sans-serif,system-ui,sans-serif;
+  --font-sans:"Sole Sans",ui-sans-serif,system-ui,sans-serif;
+  --font-mono:"JetBrains Mono",ui-monospace,monospace;
+  --radius-sm:4px; --radius-md:6px; --radius-lg:10px; --radius-xl:16px; --radius-pill:999px;
+  --shadow-1:0 1px 2px rgba(46,45,45,.06),0 1px 1px rgba(46,45,45,.04);
+  --shadow-2:0 2px 6px rgba(46,45,45,.08),0 1px 2px rgba(46,45,45,.05);
+}
+
+*{box-sizing:border-box}
+body{background:var(--surface-page);color:var(--fg-1);font-family:var(--font-sans);
+  font-size:15px;line-height:1.5;margin:0;-webkit-font-smoothing:antialiased}
+.wrap{max-width:880px;margin:0 auto;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px))}
+.band{width:100%}
+.band>.wrap{padding-block:44px}
+
+.cover{background:var(--surface-card);border-bottom:1px solid var(--border-subtle)}
+.cover>.wrap{padding-block:40px 36px;display:flex;flex-direction:column;gap:24px}
+.cover-top{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.cover img{width:168px;height:auto}
+.cover .meta{font-size:13px;color:var(--fg-2);text-align:right;min-width:0}
+.cover .meta b{color:var(--fg-1);font-weight:600}
+.overline{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--accent-primary);margin:0}
+.cover h1{font-family:var(--font-display);font-weight:600;font-size:clamp(32px,5.6vw,46px);
+  line-height:1.1;margin:8px 0 0;text-wrap:balance}
+.rule{width:77px;height:6px;background:var(--accent-highlight);margin-top:18px}
+.lede{font-size:17px;line-height:1.5;color:var(--fg-2);margin:0;max-width:64ch}
+
+/* chiffres clés */
+.chiffres{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin:0}
+.chiffre{background:var(--surface-sunken);border-left:11px solid var(--accent-primary);
+  border-radius:0 var(--radius-lg) var(--radius-lg) 0;padding:14px 16px;min-width:0}
+.chiffre:nth-child(2){border-left-color:var(--accent-secondary)}
+.chiffre:nth-child(3){border-left-color:var(--accent-highlight)}
+.chiffre:nth-child(4){border-left-color:var(--accent-slate)}
+.chiffre .v{font-family:var(--font-display);font-size:28px;font-weight:700;line-height:1.1;
+  font-variant-numeric:tabular-nums;display:block}
+.chiffre .l{font-size:12.5px;color:var(--fg-2);display:block;margin-top:4px}
+
+.sec>.wrap{padding-block:40px}
+.kicker{font-family:var(--font-mono);font-size:13px;font-weight:500;color:var(--accent-primary);margin:0 0 6px}
+h2.sec-title{font-family:var(--font-display);font-weight:600;font-size:clamp(23px,4vw,30px);
+  line-height:1.2;margin:0;text-wrap:balance}
+.sec-rule{width:77px;height:6px;background:var(--accent-highlight);margin:14px 0 24px}
+h3{font-family:var(--font-display);font-weight:600;font-size:21px;line-height:1.3;margin:30px 0 10px;text-wrap:balance}
+h4{font-family:var(--font-display);font-weight:600;font-size:16px;line-height:1.35;margin:22px 0 8px}
+p{margin:0 0 14px;max-width:70ch}
+ul,ol{margin:0 0 14px;padding-left:22px;max-width:70ch}
+li{margin:0 0 6px}
+a{color:var(--text-link)}a:hover{color:var(--text-link-hover)}
+strong{font-weight:600}
+code{font-family:var(--font-mono);font-size:.86em;background:var(--surface-sunken);
+  border:1px solid var(--border-subtle);border-radius:var(--radius-sm);padding:1px 5px}
+.num{font-variant-numeric:tabular-nums}
+
+.bloc{background:var(--surface-sunken);border-left:11px solid var(--accent-primary);
+  border-radius:0 var(--radius-lg) var(--radius-lg) 0;padding:16px 20px;margin:0 0 18px;max-width:70ch}
+.bloc>:last-child{margin-bottom:0}
+.bloc.attention{border-left-color:var(--warning-500);background:var(--warning-50)}
+.bloc.danger{border-left-color:var(--danger-500);background:var(--danger-50)}
+.bloc.astuce{border-left-color:var(--accent-secondary);background:var(--info-50)}
+.bloc .titre{font-family:var(--font-display);font-weight:600;font-size:13px;letter-spacing:.06em;
+  text-transform:uppercase;margin:0 0 6px;color:var(--fg-2)}
+
+.tbl{overflow-x:auto;margin:0 0 20px;border:1px solid var(--border-subtle);
+  border-radius:var(--radius-lg);background:var(--surface-card);box-shadow:var(--shadow-1)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:520px}
+th,td{text-align:left;padding:9px 13px;border-bottom:1px solid var(--border-subtle);vertical-align:top}
+th{font-family:var(--font-display);font-weight:600;font-size:11.5px;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--fg-2);background:var(--surface-sunken);white-space:nowrap}
+tbody tr:last-child td{border-bottom:none}
+td code{white-space:nowrap}
+td.c{text-align:center;font-variant-numeric:tabular-nums}
+.oui{color:var(--success-500);font-weight:700}
+.non{color:var(--fg-3)}
+
+/* machine à états */
+.etats{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 20px}
+.etat{background:var(--surface-card);border:1px solid var(--border-subtle);
+  border-left:6px solid var(--accent-primary);border-radius:0 var(--radius-md) var(--radius-md) 0;
+  padding:10px 14px;flex:1 1 140px;min-width:0;box-shadow:var(--shadow-1)}
+.etat code{background:none;border:none;padding:0;font-size:12px;color:var(--fg-2)}
+.etat b{display:block;font-family:var(--font-display);font-size:14.5px;font-weight:600}
+.etat.e2{border-left-color:var(--success-500)}
+.etat.e3{border-left-color:var(--warning-500)}
+.etat.e4{border-left-color:var(--danger-500)}
+.etat.e5{border-left-color:var(--accent-secondary)}
+.etat.e6{border-left-color:var(--fg-3)}
+
+.pied{background:var(--surface-inverse);color:#d8d6d6}
+.pied>.wrap{padding-block:32px}
+.pied h2{font-family:var(--font-display);font-size:18px;font-weight:600;color:#fff;margin:0 0 10px}
+.pied p{color:#d8d6d6;max-width:70ch}
+.pied a{color:#9fd4d0}
+.legal{font-size:12.5px;color:#9b9a9a;margin-top:18px;border-top:1px solid #454343;padding-top:14px}
+a:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(101,168,162,.35);border-radius:var(--radius-sm)}
+@media (max-width:560px){.cover .meta{text-align:left}.band>.wrap,.sec>.wrap{padding-block:32px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<header class="band cover">
+  <div class="wrap">
+    <div class="cover-top">
+      <img src="img/eurekam-logo.svg" alt="EUREKAM">
+      <div class="meta">
+        Module <b>eurekam_maintenance</b><br>
+        Version <b class="num">18.0.2.0.0</b> — Odoo 18 Enterprise<br>
+        Document du <b class="num">20 novembre 2026</b>
+      </div>
+    </div>
+    <div>
+      <p class="overline">Spécifications techniques</p>
+      <h1>Module de suivi des contrats de maintenance</h1>
+      <div class="rule"></div>
+    </div>
+    <p class="lede">Ce document décrit le module tel qu'il est <strong>réellement
+    déployé</strong> : modèle de données relevé sur l'instance, automatisations,
+    sécurité appliquée, intégration au flux de vente, et dette technique connue.
+    Il ne reprend pas le cahier des charges initial, dont il s'écarte sur plusieurs
+    points.</p>
+    <div class="chiffres">
+      <div class="chiffre"><span class="v">12</span><span class="l">modèles de données</span></div>
+      <div class="chiffre"><span class="v">121</span><span class="l">contrats en production</span></div>
+      <div class="chiffre"><span class="v">544</span><span class="l">lignes annuelles</span></div>
+      <div class="chiffre"><span class="v">6,59 M€</span><span class="l">valeur sous suivi</span></div>
+    </div>
+  </div>
+</header>
+
+<section class="band sec">
+  <div class="wrap">
+    <p class="kicker">• 01</p>
+    <h2 class="sec-title">Identité et dépendances</h2>
+    <div class="sec-rule"></div>
+    <div class="tbl"><table>
+      <thead><tr><th>Propriété</th><th>Valeur</th></tr></thead>
+      <tbody>
+        <tr><td>Nom technique</td><td><code>eurekam_maintenance</code></td></tr>
+        <tr><td>Intitulé</td><td>Eurekam - Maintenance Contracts Tracking</td></tr>
+        <tr><td>Version</td><td><span class="num">18.0.2.0.0</span></td></tr>
+        <tr><td>Catégorie</td><td>Sales / Maintenance</td></tr>
+        <tr><td>Licence</td><td>LGPL-3</td></tr>
+        <tr><td>Dépendances</td><td><code>base</code>, <code>mail</code>, <code>product</code>, <code>contacts</code>, <code>account</code>, <code>sale_management</code></td></tr>
+        <tr><td>Mixins</td><td><code>mail.thread</code>, <code>mail.activity.mixin</code> sur le contrat</td></tr>
+        <tr><td>Dépôt</td><td><code>Eurekam-17/GestionContratMaintenance</code>, intégré en sous-module de <code>ScalizerOrg/eurekam</code></td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Environnements</h3>
+    <p>Le déploiement se fait par odoo.sh. Le module est embarqué comme sous-module git :
+    publier une version revient à déplacer le pointeur du sous-module sur la branche
+    visée, ce qui déclenche une construction.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>Environnement</th><th>Adresse</th><th>Base</th><th>Branche</th></tr></thead>
+      <tbody>
+        <tr><td>Production</td><td><code>eurekam.odoo.com</code></td><td><code>tecliberp-eurekam-main-…</code></td><td><code>main</code></td></tr>
+        <tr><td>Recette</td><td><code>eurekam-recette.odoo.com</code></td><td><code>eurekam-staging-&lt;build&gt;</code></td><td><code>Staging</code></td></tr>
+        <tr><td>Bac à sable</td><td><code>eurekam-sandbox.odoo.com</code></td><td><code>eurekam-sandbox-&lt;build&gt;</code></td><td><code>sandbox</code></td></tr>
+      </tbody>
+    </table></div>
+    <div class="bloc attention">
+      <p class="titre">Deux pièges de l'hébergement</p>
+      <p>Le nom de la base <strong>change à chaque reconstruction</strong> : tout script
+      doit le résoudre à chaud via <code>/web/database/list</code> plutôt que le lire dans
+      un fichier de configuration. Par ailleurs, la branche nommée <code>Recette</code>
+      est morte depuis 2023 : c'est bien <code>Staging</code> qui alimente l'environnement
+      de recette, malgré son adresse.</p>
+    </div>
+  </div>
+</section>
+
+<section class="band sec" style="background:var(--surface-card)">
+  <div class="wrap">
+    <p class="kicker">• 02</p>
+    <h2 class="sec-title">Modèle de données</h2>
+    <div class="sec-rule"></div>
+    <p>Douze modèles, relevés sur l'instance. Les quatre premiers portent les données
+    métier ; les autres sont des référentiels de configuration ou des assistants.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>Modèle</th><th>Rôle</th><th>Champs stockés</th></tr></thead>
+      <tbody>
+        <tr><td><code>eurekam.maintenance.contract</code></td><td>Le contrat</td><td class="c">35</td></tr>
+        <tr><td><code>eurekam.maintenance.contract.line</code></td><td>Ligne annuelle</td><td class="c">13</td></tr>
+        <tr><td><code>eurekam.contract.module.line</code></td><td>Module facturé en supplément</td><td class="c">9</td></tr>
+        <tr><td><code>eurekam.billing.frequency</code></td><td>Cadence de facturation</td><td class="c">7</td></tr>
+        <tr><td><code>eurekam.market.type</code></td><td>Marché</td><td class="c">7</td></tr>
+        <tr><td><code>eurekam.product.generation</code></td><td>Génération Drugcam</td><td class="c">7</td></tr>
+        <tr><td><code>eurekam.module.billing</code></td><td>Type de module facturable</td><td class="c">8</td></tr>
+        <tr><td><code>eurekam.module.status</code></td><td>Statut de module</td><td class="c">6</td></tr>
+        <tr><td><code>eurekam.central.purchasing</code></td><td>Centrale d'achat</td><td class="c">7</td></tr>
+        <tr><td><code>eurekam.special.equipment</code></td><td>Équipement spécial</td><td class="c">6</td></tr>
+        <tr><td><code>eurekam.contract.renewal.wizard</code></td><td>Assistant de renouvellement</td><td class="c">11</td></tr>
+        <tr><td><code>eurekam.maintenance.order.wizard</code></td><td>Assistant de création de devis</td><td class="c">9</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Le contrat</h3>
+    <div class="tbl"><table>
+      <thead><tr><th>Champ</th><th>Type</th><th>Cible</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td><code>sequence_number</code></td><td>Char</td><td></td><td>Obligatoire. Séquence <code>MAINT/%(year)s/</code>, 4 chiffres.</td></tr>
+        <tr><td><code>name</code></td><td>Char</td><td></td><td>Référence composée numéro + établissement + produit.</td></tr>
+        <tr><td><code>partner_id</code></td><td>Many2one</td><td><code>res.partner</code></td><td>Obligatoire.</td></tr>
+        <tr><td><code>product_id</code></td><td>Many2one</td><td><code>product.template</code></td><td>Requis pour activer. Résout compte de produits et TVA.</td></tr>
+        <tr><td><code>product_name</code></td><td>Char</td><td></td><td>Libellé repris sur devis et factures.</td></tr>
+        <tr><td><code>commercial_id</code></td><td>Many2one</td><td><code>res.users</code></td><td>Destinataire des alertes d'expiration.</td></tr>
+        <tr><td><code>gen_id</code></td><td>Many2one</td><td><code>eurekam.product.generation</code></td><td>Remplace l'ancien <code>gen</code>, conservé en héritage.</td></tr>
+        <tr><td><code>market_type_ids</code></td><td>Many2many</td><td><code>eurekam.market.type</code></td><td>Remplace <code>market_type</code>. Plusieurs valeurs.</td></tr>
+        <tr><td><code>order_status</code></td><td>Selection</td><td></td><td>Six valeurs, dont « Facturation sans BC » et « Devis envoyé ».</td></tr>
+        <tr><td><code>date_start</code>, <code>date_end</code></td><td>Date</td><td></td><td>Requis pour activer.</td></tr>
+        <tr><td><code>duration</code></td><td>Selection</td><td></td><td>Durée commandée, de 6 mois à 5 ans. Distincte de l'amplitude réelle.</td></tr>
+        <tr><td><code>billing_frequency_ids</code></td><td>Many2many</td><td><code>eurekam.billing.frequency</code></td><td>Une cadence de période et un terme au maximum.</td></tr>
+        <tr><td><code>billing_level</code></td><td>Selection</td><td></td><td>0, 25, 50, 75, 100 %.</td></tr>
+        <tr><td><code>maintenance_amount</code></td><td>Monetary</td><td></td><td>Référence de pré-remplissage. <strong>Jamais facturé.</strong></td></tr>
+        <tr><td><code>syntec_revision</code></td><td>Selection</td><td></td><td>Oui / non.</td></tr>
+        <tr><td><code>line_ids</code></td><td>One2many</td><td><code>…contract.line</code></td><td>Les montants annuels, seule base de facturation.</td></tr>
+        <tr><td><code>contract_module_line_ids</code></td><td>One2many</td><td><code>…module.line</code></td><td>Modules facturés en sus.</td></tr>
+        <tr><td><code>sale_order_ids</code></td><td>One2many</td><td><code>sale.order</code></td><td>Commandes rattachées.</td></tr>
+        <tr><td><code>renewed_from_id</code> / <code>renewed_to_ids</code></td><td>Many2one / One2many</td><td>lui-même</td><td>Chaîne de renouvellement.</td></tr>
+        <tr><td><code>total_contract_value</code></td><td>Monetary</td><td></td><td>Calculé, stocké : somme des lignes annuelles.</td></tr>
+        <tr><td><code>state</code></td><td>Selection</td><td></td><td>Voir le cycle de vie.</td></tr>
+      </tbody>
+    </table></div>
+    <p>Sept champs sont calculés <strong>sans stockage</strong> et ne peuvent donc pas
+    servir de critère de tri ni de regroupement en base :
+    <code>current_year_amount</code>, <code>days_to_expiry</code>,
+    <code>is_expiring_soon</code>, <code>invoice_count</code>,
+    <code>sale_order_count</code>, <code>renewed_to_count</code> et
+    <code>display_name</code>.</p>
+
+    <h3>La ligne annuelle</h3>
+    <p>Treize champs stockés. <code>year</code> et <code>amount</code> sont obligatoires,
+    et une contrainte SQL garantit l'unicité du couple
+    <code>(contract_id, year)</code>. Les champs <code>partner_id</code>,
+    <code>commercial_id</code> et <code>contract_state</code> sont dupliqués depuis le
+    contrat pour rendre la vue transversale filtrable. Le champ
+    <code>invoice_ids</code> est calculé non stocké, dérivé de
+    <code>sale_line_ids.invoice_lines.move_id</code>.</p>
+
+    <h3>Extension des contacts</h3>
+    <p>Le module ajoute quatorze champs à <code>res.partner</code>, dont la case
+    <code>is_maintenance_establishment</code> qui conditionne l'affichage de l'onglet
+    dédié, le <code>central_purchasing_id</code>, le nombre de postes, les statuts de
+    modules, les équipements spéciaux, et cinq compteurs calculés alimentant le bandeau
+    de statut.</p>
+    <div class="bloc danger">
+      <p class="titre">Règle à ne pas enfreindre sur la fiche contact</p>
+      <p>La fiche contact est ouverte par <strong>toute la société</strong>, pas seulement
+      par le groupe Maintenance. Deux conséquences. D'abord, les calculs de compteurs
+      s'exécutent en <code>sudo()</code> : sans cela, un utilisateur hors groupe ne peut
+      plus ouvrir la fiche d'un client sous contrat. Ensuite, tout champ relationnel
+      ajouté ici impose une règle d'accès en lecture sur son modèle cible pour
+      <code>base.group_user</code> — masquer le champ dans la vue ne le retire pas de la
+      lecture effectuée par le client web.</p>
+    </div>
+  </div>
+</section>
+
+<section class="band sec">
+  <div class="wrap">
+    <p class="kicker">• 03</p>
+    <h2 class="sec-title">Cycle de vie</h2>
+    <div class="sec-rule"></div>
+    <div class="etats">
+      <div class="etat"><b>Brouillon</b><code>draft</code></div>
+      <div class="etat e2"><b>Actif</b><code>active</code></div>
+      <div class="etat e3"><b>Expire bientôt</b><code>expiring</code></div>
+      <div class="etat e4"><b>Expiré</b><code>expired</code></div>
+      <div class="etat e5"><b>Renouvelé</b><code>renewed</code></div>
+      <div class="etat e6"><b>Annulé</b><code>cancelled</code></div>
+    </div>
+    <p>L'activation vérifie trois conditions : l'état de départ est brouillon ou annulé,
+    les deux dates sont renseignées, et un article Odoo est rattaché. Elle réévalue
+    ensuite immédiatement l'état en fonction de la date de fin, ce qui permet de reprendre
+    un contrat historique sans attendre la tâche de nuit.</p>
+    <p>Le passage en <code>expiring</code> intervient lorsque la date de fin tombe dans
+    une fenêtre de <span class="num">0</span> à <span class="num">90</span> jours, puis en
+    <code>expired</code> une fois la date dépassée. L'annulation est accessible depuis
+    tout état, y compris <code>draft</code> — propriété utilisée par la reprise de données
+    pour charger un contrat inactif tout en conservant son historique.</p>
+
+    <h3>Méthodes exposées</h3>
+    <div class="tbl"><table>
+      <thead><tr><th>Méthode</th><th>Effet</th></tr></thead>
+      <tbody>
+        <tr><td><code>action_activate</code></td><td>Passe en actif après contrôle, puis réévalue selon la date de fin.</td></tr>
+        <tr><td><code>action_generate_lines</code></td><td>Crée une ligne annuelle par année couverte.</td></tr>
+        <tr><td><code>action_open_create_order_wizard</code></td><td>Ouvre l'assistant de devis.</td></tr>
+        <tr><td><code>action_create_sale_order</code></td><td>Crée la commande et ses lignes selon la cadence.</td></tr>
+        <tr><td><code>action_open_renewal_wizard</code> / <code>action_renew</code></td><td>Crée le contrat suivant et bascule l'ancien en renouvelé.</td></tr>
+        <tr><td><code>action_recompute_state</code></td><td>Force la réévaluation sans attendre la tâche planifiée.</td></tr>
+        <tr><td><code>action_cancel</code> / <code>action_draft</code></td><td>Annule, ou remet en brouillon.</td></tr>
+        <tr><td><code>_cron_check_expiring_contracts</code></td><td>Tâche quotidienne : bascule les états et envoie les alertes.</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</section>
+
+<section class="band sec" style="background:var(--surface-card)">
+  <div class="wrap">
+    <p class="kicker">• 04</p>
+    <h2 class="sec-title">Intégration au flux de vente</h2>
+    <div class="sec-rule"></div>
+    <p>Le module ne crée pas de factures lui-même. Il produit des commandes clients
+    (<code>sale.order</code>), et la facturation reste celle d'Odoo. Le chemin direct
+    contrat → facture a été retiré : il court-circuitait le devis et laissait coexister
+    deux factures pour une même période.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>Champ ajouté</th><th>Modèle</th><th>Rôle</th></tr></thead>
+      <tbody>
+        <tr><td><code>eurekam_maintenance_contract_id</code></td><td><code>sale.order</code></td><td>Rattachement au contrat.</td></tr>
+        <tr><td><code>eurekam_maintenance_year</code></td><td><code>sale.order</code></td><td>Année couverte ; 0 pour l'intégralité du contrat.</td></tr>
+        <tr><td><code>maintenance_period_label</code></td><td><code>sale.order.line</code></td><td>Trimestre, semestre, année ou période intégrale.</td></tr>
+        <tr><td><code>maintenance_line_id</code></td><td><code>sale.order.line</code></td><td>Lien vers la ligne annuelle du contrat.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Synchronisation bidirectionnelle</h3>
+    <p>Montants annuels et lignes de devis ne peuvent plus diverger. Modifier un montant
+    annuel recalcule les devis de l'année et redécoupe selon la cadence ; modifier une
+    ligne de devis reporte le total sur le montant annuel. Chaque propagation laisse une
+    trace dans le fil de discussion du contrat.</p>
+    <div class="bloc">
+      <p class="titre">Deux verrous</p>
+      <p>Une commande <strong>confirmée</strong> n'est jamais réécrite : c'est un
+      engagement commercial, et le contrat se contente de signaler l'écart. Une ligne
+      <strong>déjà facturée</strong> est également protégée. Les modules facturables
+      portent leur propre montant et n'entrent jamais dans le calcul du montant annuel.</p>
+    </div>
+    <p>Le découpage ne produit que les périodes réellement couvertes. Un contrat
+    démarrant le 1<sup>er</sup> octobre en cadence trimestrielle génère une seule ligne,
+    portant l'intégralité du montant de l'année, et non quatre trimestres dont trois
+    antérieurs au contrat.</p>
+  </div>
+</section>
+
+<section class="band sec">
+  <div class="wrap">
+    <p class="kicker">• 05</p>
+    <h2 class="sec-title">Automatisations</h2>
+    <div class="sec-rule"></div>
+    <div class="tbl"><table>
+      <thead><tr><th>Objet</th><th>Configuration</th></tr></thead>
+      <tbody>
+        <tr><td>Tâche planifiée</td><td><code>Eurekam Maintenance: check expiring contracts</code> — toutes les <span class="num">24</span> heures, active.</td></tr>
+        <tr><td>Séquence</td><td>Préfixe <code>MAINT/%(year)s/</code>, remplissage sur <span class="num">4</span> chiffres.</td></tr>
+        <tr><td>Courriel « expire bientôt »</td><td>Destinataire : le commercial du contrat.</td></tr>
+        <tr><td>Courriel « expiré »</td><td>Destinataires : le commercial et l'ensemble des managers.</td></tr>
+      </tbody>
+    </table></div>
+    <div class="bloc attention">
+      <p class="titre">Les environnements de test n'envoient pas de courriel</p>
+      <p>Recette et bac à sable tournent en base neutralisée : les tâches planifiées
+      peuvent être désactivées et aucun courriel ne part. Pour vérifier une bascule
+      d'état, utilisez le bouton <strong>Recalculer l'état</strong> plutôt que d'attendre
+      la tâche de nuit.</p>
+    </div>
+  </div>
+</section>
+
+<section class="band sec" style="background:var(--surface-card)">
+  <div class="wrap">
+    <p class="kicker">• 06</p>
+    <h2 class="sec-title">Sécurité</h2>
+    <div class="sec-rule"></div>
+    <p>Deux groupes, <strong>Eurekam Maintenance / User</strong> et
+    <strong>Eurekam Maintenance / Manager</strong>. Deux règles d'enregistrement
+    restreignent contrats et lignes annuelles aux sociétés autorisées de l'utilisateur
+    (<code>company_id in company_ids</code>).</p>
+    <div class="tbl"><table>
+      <thead><tr><th>Modèle</th><th>Groupe</th><th>L</th><th>É</th><th>C</th><th>S</th></tr></thead>
+      <tbody>
+        <tr><td><code>maintenance.contract</code></td><td>User</td><td class="c oui">✓</td><td class="c oui">✓</td><td class="c oui">✓</td><td class="c non">—</td></tr>
+        <tr><td><code>maintenance.contract</code></td><td>Manager</td><td class="c oui">✓</td><td class="c oui">✓</td><td class="c oui">✓</td><td class="c oui">✓</td></tr>
+        <tr><td><code>maintenance.contract.line</code></td><td>User</td><td class="c oui">✓</td><td class="c oui">✓</td><td class="c oui">✓</td><td class="c non">—</td></tr>
+        <tr><td><code>contract.module.line</code></td><td>User</td><td class="c oui">✓</td><td class="c oui">✓</td><td class="c oui">✓</td><td class="c oui">✓</td></tr>
+        <tr><td><code>market.type</code>, <code>product.generation</code>, <code>central.purchasing</code></td><td>User</td><td class="c oui">✓</td><td class="c oui">✓</td><td class="c oui">✓</td><td class="c non">—</td></tr>
+        <tr><td><code>billing.frequency</code>, <code>module.billing</code>, <code>module.status</code>, <code>special.equipment</code></td><td>User</td><td class="c oui">✓</td><td class="c non">—</td><td class="c non">—</td><td class="c non">—</td></tr>
+        <tr><td><code>module.status</code>, <code>special.equipment</code>, <code>central.purchasing</code></td><td><strong>base.group_user</strong></td><td class="c oui">✓</td><td class="c non">—</td><td class="c non">—</td><td class="c non">—</td></tr>
+        <tr><td>Tous les modèles</td><td>Manager</td><td class="c oui">✓</td><td class="c oui">✓</td><td class="c oui">✓</td><td class="c oui">✓</td></tr>
+      </tbody>
+    </table></div>
+    <p>La ligne <code>base.group_user</code> n'est pas une négligence : ces trois modèles
+    sont cibles de champs relationnels posés sur la fiche contact, que toute la société
+    consulte. Sans cet accès en lecture, la fiche contact échoue pour les utilisateurs
+    hors groupe Maintenance.</p>
+    <p>La suppression des contrats et des lignes annuelles est réservée aux managers ;
+    les utilisateurs disposent de l'annulation, qui conserve l'historique.</p>
+  </div>
+</section>
+
+<section class="band sec">
+  <div class="wrap">
+    <p class="kicker">• 07</p>
+    <h2 class="sec-title">Reprise des données Notion</h2>
+    <div class="sec-rule"></div>
+    <p>Le suivi historique tenu dans Notion (table « Assistance DO ») a été repris en
+    production le <span class="num">13 novembre 2026</span>, après relecture du fichier
+    par l'équipe commerciale.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>Indicateur</th><th>Valeur</th></tr></thead>
+      <tbody>
+        <tr><td>Contrats créés</td><td><span class="num">121</span> — dont <span class="num">120</span> brouillons et <span class="num">1</span> annulé</td></tr>
+        <tr><td>Lignes annuelles</td><td><span class="num">544</span></td></tr>
+        <tr><td>Valeur cumulée</td><td><span class="num">6 591 087,02 €</span></td></tr>
+        <tr><td>Établissements marqués</td><td><span class="num">110</span></td></tr>
+        <tr><td>Contrats écartés</td><td><span class="num">26</span> — lot étranger et équipements non installés</td></tr>
+      </tbody>
+    </table></div>
+    <p>Chaque contrat importé porte une ancre <code>ir.model.data</code> dans le module
+    <code>eurekam_migration_notion</code>. L'import reste donc rejouable tant que personne
+    n'a modifié ces fiches ; passé ce point, le rejeu détruirait du travail réel.</p>
+    <div class="bloc attention">
+      <p class="titre">Limites connues de la reprise</p>
+      <ul>
+        <li>Notion ne porte <strong>aucune référence article</strong> : les 121 contrats
+        sont arrivés sans <code>product_id</code> et restent donc en brouillon.</li>
+        <li>L'extrait utilisé date du <span class="num">2 octobre 2026</span> et a divergé
+        d'environ <span class="num">587 000 €</span> au global : un rattrapage sur données
+        fraîches reste à faire.</li>
+        <li>Quarante-deux montants portent sur des années situées hors de la période du
+        contrat. Ils ont été repris tels quels, les perdre silencieusement étant pire.</li>
+        <li>Quinze correspondances d'établissement restent à confirmer, dont trois
+        établissements lyonnais pointant vers le même contact.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="band sec" style="background:var(--surface-card)">
+  <div class="wrap">
+    <p class="kicker">• 08</p>
+    <h2 class="sec-title">Dette technique connue</h2>
+    <div class="sec-rule"></div>
+    <p>Constats relevés sur l'instance, par ordre d'impact. Aucun n'empêche l'usage du
+    module ; tous méritent une correction.</p>
+    <div class="tbl"><table>
+      <thead><tr><th>Constat</th><th>Effet</th><th>Piste</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Aucun contrat repris ne porte d'article</td>
+          <td>Les 121 contrats restent en brouillon et ne peuvent produire ni devis ni facture.</td>
+          <td>Affectation en masse par marché et génération.</td>
+        </tr>
+        <tr>
+          <td>Vue « Lignes annuelles » sans contrat ni établissement</td>
+          <td>548 lignes identiques à l'écran, vue inexploitable en l'état.</td>
+          <td>Ajouter les colonnes à la vue liste.</td>
+        </tr>
+        <tr>
+          <td>Vue calendrier saturée</td>
+          <td>Un contrat pluriannuel occupant chaque jour, la vue affiche tout le portefeuille en permanence.</td>
+          <td>Filtre par défaut, ou bascule sur les seules dates de fin.</td>
+        </tr>
+        <tr>
+          <td>Titres d'assistants non traduits</td>
+          <td>L'en-tête de l'assistant de renouvellement s'affiche « Renew — MAINT/… » dans une interface par ailleurs française.</td>
+          <td>Les chaînes <code>_()</code> du code ne sont pas extraites dans ce module : vérifier en direct, jamais depuis le fichier de traduction seul.</td>
+        </tr>
+        <tr>
+          <td>Champs d'héritage conservés</td>
+          <td><code>gen</code> et <code>market_type</code> subsistent à côté de <code>gen_id</code> et <code>market_type_ids</code>.</td>
+          <td>Supprimer après vérification qu'aucune vue ni aucun filtre enregistré ne s'y réfère.</td>
+        </tr>
+        <tr>
+          <td>Libellé produit fautif en base</td>
+          <td>Un contrat porte « Maintenace » au lieu de « Maintenance ».</td>
+          <td>Correction à faire dans Notion, source de la donnée.</td>
+        </tr>
+      </tbody>
+    </table></div>
+
+    <h3>Points de vigilance pour les évolutions</h3>
+    <div class="bloc">
+      <p class="titre">Ordre de déclaration des champs</p>
+      <p>Sous Odoo 18, un champ utilisé dans un attribut <code>invisible=</code>,
+      <code>readonly=</code> ou <code>required=</code> doit être déclaré <strong>avant</strong>
+      sa première utilisation dans la vue. La tolérance d'Odoo 17, où une déclaration plus
+      bas suffisait, a disparu.</p>
+    </div>
+    <div class="bloc">
+      <p class="titre">Ancrage des vues héritées</p>
+      <p>Le formulaire contact est déjà largement personnalisé : ancrez les ajouts sur des
+      éléments structurels (<code>//notebook</code>, <code>//button_box</code>) plutôt que
+      sur des noms de champs, dont l'imbrication varie.</p>
+    </div>
+    <div class="bloc">
+      <p class="titre">Constructions odoo.sh rapprochées</p>
+      <p>Plusieurs déplacements de sous-module en quelques minutes conduisent odoo.sh à
+      abandonner des constructions : le dépôt paraît à jour alors que le code n'est pas
+      déployé. Relancer par un commit vide, et vérifier le déploiement sur l'instance
+      elle-même plutôt que sur le dépôt.</p>
+    </div>
+  </div>
+</section>
+
+<footer class="band pied">
+  <div class="wrap">
+    <h2>Contact technique</h2>
+    <p>Pour toute question sur ce document ou sur le module :
+    <a href="mailto:loic.tamarelle@eurekam.fr">loic.tamarelle@eurekam.fr</a>.</p>
+    <p class="legal">Module <code style="background:#3a3838;border-color:#4a4747;color:#d8d6d6">eurekam_maintenance</code>
+    version <span class="num">18.0.2.0.0</span> — Odoo 18 Enterprise.
+    Modèle de données relevé sur l'instance le <span class="num">20 novembre 2026</span>.
+    Document interne EUREKAM. Diffusion restreinte sans l'accord express d'Eurekam.</p>
+  </div>
+</footer>

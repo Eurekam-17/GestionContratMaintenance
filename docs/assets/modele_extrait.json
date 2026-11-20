@@ -1,0 +1,5068 @@
+{
+ "base": "eurekam-staging-41512779",
+ "modeles": [
+  {
+   "model": "eurekam.billing.frequency",
+   "name": "Billing Frequency",
+   "modules": "eurekam_maintenance",
+   "nb_enreg": 6,
+   "champs": [
+    {
+     "id": 40098,
+     "name": "active",
+     "field_description": "Active",
+     "ttype": "boolean",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40095,
+     "name": "code",
+     "field_description": "Code",
+     "ttype": "char",
+     "relation": false,
+     "required": true,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40097,
+     "name": "color",
+     "field_description": "Color",
+     "ttype": "integer",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40099,
+     "name": "description",
+     "field_description": "Description",
+     "ttype": "text",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40100,
+     "name": "id",
+     "field_description": "ID",
+     "ttype": "integer",
+     "relation": false,
+     "required": false,
+     "readonly": true,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40094,
+     "name": "name",
+     "field_description": "Name",
+     "ttype": "char",
+     "relation": false,
+     "required": true,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40096,
+     "name": "sequence",
+     "field_description": "Sequence",
+     "ttype": "integer",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    }
+   ],
+   "calcules": [
+    {
+     "id": 40101,
+     "name": "display_name",
+     "field_description": "Display Name",
+     "ttype": "char",
+     "relation": false
+    }
+   ]
+  },
+  {
+   "model": "eurekam.central.purchasing",
+   "name": "Central Purchasing Body",
+   "modules": "eurekam_maintenance",
+   "nb_enreg": 9,
+   "champs": [
+    {
+     "id": 40086,
+     "name": "active",
+     "field_description": "Active",
+     "ttype": "boolean",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40083,
+     "name": "code",
+     "field_description": "Code",
+     "ttype": "char",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40085,
+     "name": "color",
+     "field_description": "Color",
+     "ttype": "integer",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40087,
+     "name": "description",
+     "field_description": "Description",
+     "ttype": "text",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40088,
+     "name": "id",
+     "field_description": "ID",
+     "ttype": "integer",
+     "relation": false,
+     "required": false,
+     "readonly": true,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40082,
+     "name": "name",
+     "field_description": "Name",
+     "ttype": "char",
+     "relation": false,
+     "required": true,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40084,
+     "name": "sequence",
+     "field_description": "Sequence",
+     "ttype": "integer",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    }
+   ],
+   "calcules": [
+    {
+     "id": 40089,
+     "name": "display_name",
+     "field_description": "Display Name",
+     "ttype": "char",
+     "relation": false
+    }
+   ]
+  },
+  {
+   "model": "eurekam.contract.module.line",
+   "name": "Contract Billable Module",
+   "modules": "eurekam_maintenance",
+   "nb_enreg": 1,
+   "champs": [
+    {
+     "id": 40230,
+     "name": "amount",
+     "field_description": "Annual Amount",
+     "ttype": "monetary",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": "Annual amount of the module. Split by the contract cadence when billed."
+    },
+    {
+     "id": 40234,
+     "name": "company_id",
+     "field_description": "Company",
+     "ttype": "many2one",
+     "relation": "res.company",
+     "required": false,
+     "readonly": true,
+     "selection_ids": [],
+     "compute": false,
+     "related": "contract_id.company_id",
+     "help": false
+    },
+    {
+     "id": 40227,
+     "name": "contract_id",
+     "field_description": "Contract",
+     "ttype": "many2one",
+     "relation": "eurekam.maintenance.contract",
+     "required": true,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40232,
+     "name": "end_year",
+     "field_description": "Billed Until (Year)",
+     "ttype": "integer",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": "Last year the module is billed. Leave empty to bill until the contract end year."
+    },
+    {
+     "id": 40236,
+     "name": "id",
+     "field_description": "ID",
+     "ttype": "integer",
+     "relation": false,
+     "required": false,
+     "readonly": true,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40228,
+     "name": "module_billing_id",
+     "field_description": "Module",
+     "ttype": "many2one",
+     "relation": "eurekam.module.billing",
+     "required": true,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40235,
+     "name": "notes",
+     "field_description": "Notes",
+     "ttype": "char",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40229,
+     "name": "product_id",
+     "field_description": "Invoiced Article",
+     "ttype": "many2one",
+     "relation": "product.product",
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": "Article used on the order / invoice line for this module. If empty, the module's default article is used, otherwise the contract product."
+    },
+    {
+     "id": 40231,
+     "name": "start_year",
+     "field_description": "Billed From (Year)",
+     "ttype": "integer",
+     "relation": false,
+     "required": true,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": "First year the module is billed (e.g. 2027)."
+    }
+   ],
+   "calcules": [
+    {
+     "id": 40233,
+     "name": "currency_id",
+     "field_description": "Currency",
+     "ttype": "many2one",
+     "relation": "res.currency"
+    },
+    {
+     "id": 40237,
+     "name": "display_name",
+     "field_description": "Display Name",
+     "ttype": "char",
+     "relation": false
+    }
+   ]
+  },
+  {
+   "model": "eurekam.contract.renewal.wizard",
+   "name": "Maintenance Contract Renewal Wizard",
+   "modules": "eurekam_maintenance",
+   "nb_enreg": 0,
+   "champs": [
+    {
+     "id": 40249,
+     "name": "apply_syntec",
+     "field_description": "Apply Syntec Revision",
+     "ttype": "boolean",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40255,
+     "name": "cancel_old_lines_invoiced",
+     "field_description": "Flag Unbilled Lines as Transferred",
+     "ttype": "boolean",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": "Adds a note on the unbilled yearly lines of the old contract to signal the carry-over to the new one."
+    },
+    {
+     "id": 40242,
+     "name": "contract_id",
+     "field_description": "Contract to Renew",
+     "ttype": "many2one",
+     "relation": "eurekam.maintenance.contract",
+     "required": true,
+     "readonly": true,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40254,
+     "name": "generate_lines",
+     "field_description": "Generate the New Contract Yearly Lines",
+     "ttype": "boolean",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40256,
+     "name": "id",
+     "field_description": "ID",
+     "ttype": "integer",
+     "relation": false,
+     "required": false,
+     "readonly": true,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40247,
+     "name": "new_date_end",
+     "field_description": "New End Date",
+     "ttype": "date",
+     "relation": false,
+     "required": true,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40246,
+     "name": "new_date_start",
+     "field_description": "New Start Date",
+     "ttype": "date",
+     "relation": false,
+     "required": true,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40248,
+     "name": "new_duration",
+     "field_description": "Duration",
+     "ttype": "selection",
+     "relation": false,
+     "required": true,
+     "readonly": false,
+     "selection_ids": [
+      5856,
+      5857,
+      5858,
+      5859,
+      5860,
+      5861
+     ],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40253,
+     "name": "new_maintenance_amount",
+     "field_description": "New Maintenance Amount",
+     "ttype": "monetary",
+     "relation": false,
+     "required": true,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40251,
+     "name": "old_amount",
+     "field_description": "Previous Amount",
+     "ttype": "monetary",
+     "relation": false,
+     "required": false,
+     "readonly": true,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40250,
+     "name": "syntec_rate",
+     "field_description": "Syntec Rate (%)",
+     "ttype": "float",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": "Percentage of revaluation applied to the maintenance amount."
+    }
+   ],
+   "calcules": [
+    {
+     "id": 40245,
+     "name": "currency_id",
+     "field_description": "Currency",
+     "ttype": "many2one",
+     "relation": "res.currency"
+    },
+    {
+     "id": 40257,
+     "name": "display_name",
+     "field_description": "Display Name",
+     "ttype": "char",
+     "relation": false
+    },
+    {
+     "id": 40243,
+     "name": "partner_id",
+     "field_description": "Establishment",
+     "ttype": "many2one",
+     "relation": "res.partner"
+    },
+    {
+     "id": 40244,
+     "name": "product_id",
+     "field_description": "Product",
+     "ttype": "many2one",
+     "relation": "product.template"
+    },
+    {
+     "id": 40252,
+     "name": "syntec_delta",
+     "field_description": "Syntec Increase",
+     "ttype": "monetary",
+     "relation": false
+    }
+   ]
+  },
+  {
+   "model": "eurekam.maintenance.contract",
+   "name": "Eurekam Maintenance Contract",
+   "modules": "eurekam_maintenance",
+   "nb_enreg": 119,
+   "champs": [
+    {
+     "id": 40194,
+     "name": "active",
+     "field_description": "Active",
+     "ttype": "boolean",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40182,
+     "name": "billing_frequency_ids",
+     "field_description": "Billing Frequencies",
+     "ttype": "many2many",
+     "relation": "eurekam.billing.frequency",
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": "A single contract may combine several frequencies (e.g. Annual + Overdue)."
+    },
+    {
+     "id": 40178,
+     "name": "billing_level",
+     "field_description": "Billing Level",
+     "ttype": "selection",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [
+      5843,
+      5844,
+      5845,
+      5846,
+      5847
+     ],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40195,
+     "name": "color",
+     "field_description": "Color",
+     "ttype": "integer",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40189,
+     "name": "comment",
+     "field_description": "Comment",
+     "ttype": "text",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40167,
+     "name": "commercial_id",
+     "field_description": "Salesperson",
+     "ttype": "many2one",
+     "relation": "res.users",
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40191,
+     "name": "company_id",
+     "field_description": "Company",
+     "ttype": "many2one",
+     "relation": "res.company",
+     "required": true,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40184,
+     "name": "contract_module_line_ids",
+     "field_description": "Billable Modules",
+     "ttype": "one2many",
+     "relation": "eurekam.contract.module.line",
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": "Assistance modules billed on top of the maintenance, each with its own annual amount and a start year. They generate their own order / invoice lines for the years within their window."
+    },
+    {
+     "id": 40193,
+     "name": "country_id",
+     "field_description": "Country",
+     "ttype": "many2one",
+     "relation": "res.country",
+     "required": false,
+     "readonly": true,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40192,
+     "name": "currency_id",
+     "field_description": "Currency",
+     "ttype": "many2one",
+     "relation": "res.currency",
+     "required": false,
+     "readonly": true,
+     "selection_ids": [],
+     "compute": false,
+     "related": "company_id.currency_id",
+     "help": false
+    },
+    {
+     "id": 40174,
+     "name": "date_end",
+     "field_description": "Contract End",
+     "ttype": "date",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40173,
+     "name": "date_start",
+     "field_description": "Contract Start",
+     "ttype": "date",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40175,
+     "name": "duration",
+     "field_description": "Contract Duration",
+     "ttype": "selection",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [
+      5837,
+      5838,
+      5839,
+      5840,
+      5841,
+      5842
+     ],
+     "compute": false,
+     "related": false,
+     "help": "Duration the contract was ordered for. Informational: the billing periods are derived from the start and end dates, not from this field."
+    },
+    {
+     "id": 40169,
+     "name": "gen",
+     "field_description": "Generation (legacy)",
+     "ttype": "selection",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [
+      5819,
+      5820,
+      5821
+     ],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40168,
+     "name": "gen_id",
+     "field_description": "Generation",
+     "ttype": "many2one",
+     "relation": "eurekam.product.generation",
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": "Drugcam generation covered by the contract. Editable list: add a generation from Maintenance > Configuration > Generations, no code change needed."
+    },
+    {
+     "id": 40202,
+     "name": "id",
+     "field_description": "ID",
+     "ttype": "integer",
+     "relation": false,
+     "required": false,
+     "readonly": true,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40188,
+     "name": "line_count",
+     "field_description": "Yearly Lines Count",
+     "ttype": "integer",
+     "relation": false,
+     "required": false,
+     "readonly": true,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40185,
+     "name": "line_ids",
+     "field_description": "Yearly Amounts",
+     "ttype": "one2many",
+     "relation": "eurekam.maintenance.contract.line",
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40179,
+     "name": "maintenance_amount",
+     "field_description": "Maintenance Amount",
+     "ttype": "monetary",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": "Reference amount per year, used to pre-fill the yearly lines on the first 'Generate Yearly Lines'.\nIt is NOT what gets billed: the contract value and the invoices are built from the 'Yearly Amounts' tab, which is where an amount that changes from year to year must be entered."
+    },
+    {
+     "id": 40170,
+     "name": "market_type",
+     "field_description": "Market (legacy)",
+     "ttype": "selection",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [
+      5822,
+      5823,
+      5824,
+      5825,
+      5826,
+      5827,
+      5828,
+      5829,
+      5830
+     ],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40171,
+     "name": "market_type_ids",
+     "field_description": "Market",
+     "ttype": "many2many",
+     "relation": "eurekam.market.type",
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": "Market / public tender. Editable list, several values allowed."
+    },
+    {
+     "id": 40183,
+     "name": "module_billing_ids",
+     "field_description": "Module Assistance Billing",
+     "ttype": "many2many",
+     "relation": "eurekam.module.billing",
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40162,
+     "name": "name",
+     "field_description": "Reference",
+     "ttype": "char",
+     "relation": false,
+     "required": false,
+     "readonly": true,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40181,
+     "name": "nb_products",
+     "field_description": "Number of Products",
+     "ttype": "integer",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40172,
+     "name": "order_status",
+     "field_description": "Order Status",
+     "ttype": "selection",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [
+      5831,
+      5832,
+      5833,
+      5834,
+      5835,
+      5836
+     ],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40166,
+     "name": "partner_id",
+     "field_description": "Establishment",
+     "ttype": "many2one",
+     "relation": "res.partner",
+     "required": true,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": "Any client company can be selected. It is automatically flagged as a Maintenance Establishment when the contract is created."
+    },
+    {
+     "id": 40164,
+     "name": "product_id",
+     "field_description": "Product",
+     "ttype": "many2one",
+     "relation": "product.template",
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40165,
+     "name": "product_name",
+     "field_description": "Product Label",
+     "ttype": "char",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": "Wording used on the customer order and invoice lines, before the number of workstations and the billed period.\nPre-filled from the product's sales description ('Sales' tab, 'Sales Description'); can be overridden manually."
+    },
+    {
+     "id": 40196,
+     "name": "renewed_from_id",
+     "field_description": "Previous Contract (renewed from)",
+     "ttype": "many2one",
+     "relation": "eurekam.maintenance.contract",
+     "required": false,
+     "readonly": true,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": "Set automatically by the renewal wizard."
+    },
+    {
+     "id": 40197,
+     "name": "renewed_to_ids",
+     "field_description": "Next Contracts (renewed to)",
+     "ttype": "one2many",
+     "relation": "eurekam.maintenance.contract",
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40200,
+     "name": "sale_order_ids",
+     "field_description": "Customer Orders",
+     "ttype": "one2many",
+     "relation": "sale.order",
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40163,
+     "name": "sequence_number",
+     "field_description": "Number",
+     "ttype": "char",
+     "relation": false,
+     "required": true,
+     "readonly": true,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40190,
+     "name": "state",
+     "field_description": "Status",
+     "ttype": "selection",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [
+      5850,
+      5851,
+      5852,
+      5853,
+      5854,
+      5855
+     ],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40180,
+     "name": "syntec_revision",
+     "field_description": "Syntec Revision",
+     "ttype": "selection",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [
+      5848,
+      5849
+     ],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40186,
+     "name": "total_contract_value",
+     "field_description": "Total Contract Value",
+     "ttype": "monetary",
+     "relation": false,
+     "required": false,
+     "readonly": true,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": "Sum of the yearly amounts of all contract lines."
+    }
+   ],
+   "calcules": [
+    {
+     "id": 40187,
+     "name": "current_year_amount",
+     "field_description": "Current Year Amount",
+     "ttype": "monetary",
+     "relation": false
+    },
+    {
+     "id": 40176,
+     "name": "days_to_expiry",
+     "field_description": "Days to Expiry",
+     "ttype": "integer",
+     "relation": false
+    },
+    {
+     "id": 40203,
+     "name": "display_name",
+     "field_description": "Display Name",
+     "ttype": "char",
+     "relation": false
+    },
+    {
+     "id": 40199,
+     "name": "invoice_count",
+     "field_description": "Invoices Count",
+     "ttype": "integer",
+     "relation": false
+    },
+    {
+     "id": 40177,
+     "name": "is_expiring_soon",
+     "field_description": "Expiring Soon",
+     "ttype": "boolean",
+     "relation": false
+    },
+    {
+     "id": 40198,
+     "name": "renewed_to_count",
+     "field_description": "Renewals Count",
+     "ttype": "integer",
+     "relation": false
+    },
+    {
+     "id": 40201,
+     "name": "sale_order_count",
+     "field_description": "Customer Orders Count",
+     "ttype": "integer",
+     "relation": false
+    }
+   ]
+  },
+  {
+   "model": "eurekam.maintenance.contract.line",
+   "name": "Eurekam Maintenance Contract Yearly Line",
+   "modules": "eurekam_maintenance",
+   "nb_enreg": 548,
+   "champs": [
+    {
+     "id": 40210,
+     "name": "amount",
+     "field_description": "Amount",
+     "ttype": "monetary",
+     "relation": false,
+     "required": true,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40218,
+     "name": "commercial_id",
+     "field_description": "Salesperson",
+     "ttype": "many2one",
+     "relation": "res.users",
+     "required": false,
+     "readonly": true,
+     "selection_ids": [],
+     "compute": false,
+     "related": "contract_id.commercial_id",
+     "help": false
+    },
+    {
+     "id": 40219,
+     "name": "company_id",
+     "field_description": "Company",
+     "ttype": "many2one",
+     "relation": "res.company",
+     "required": false,
+     "readonly": true,
+     "selection_ids": [],
+     "compute": false,
+     "related": "contract_id.company_id",
+     "help": false
+    },
+    {
+     "id": 40208,
+     "name": "contract_id",
+     "field_description": "Contract",
+     "ttype": "many2one",
+     "relation": "eurekam.maintenance.contract",
+     "required": true,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40220,
+     "name": "contract_state",
+     "field_description": "Contract Status",
+     "ttype": "selection",
+     "relation": false,
+     "required": false,
+     "readonly": true,
+     "selection_ids": [],
+     "compute": false,
+     "related": "contract_id.state",
+     "help": false
+    },
+    {
+     "id": 40216,
+     "name": "currency_id",
+     "field_description": "Currency",
+     "ttype": "many2one",
+     "relation": "res.currency",
+     "required": false,
+     "readonly": true,
+     "selection_ids": [],
+     "compute": false,
+     "related": "contract_id.currency_id",
+     "help": false
+    },
+    {
+     "id": 40222,
+     "name": "id",
+     "field_description": "ID",
+     "ttype": "integer",
+     "relation": false,
+     "required": false,
+     "readonly": true,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40213,
+     "name": "invoice_count",
+     "field_description": "Invoices Count",
+     "ttype": "integer",
+     "relation": false,
+     "required": false,
+     "readonly": true,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40214,
+     "name": "is_invoiced",
+     "field_description": "Invoiced",
+     "ttype": "boolean",
+     "relation": false,
+     "required": false,
+     "readonly": true,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": "Checked as soon as at least one invoice covers the line."
+    },
+    {
+     "id": 40215,
+     "name": "notes",
+     "field_description": "Notes",
+     "ttype": "text",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40217,
+     "name": "partner_id",
+     "field_description": "Establishment",
+     "ttype": "many2one",
+     "relation": "res.partner",
+     "required": false,
+     "readonly": true,
+     "selection_ids": [],
+     "compute": false,
+     "related": "contract_id.partner_id",
+     "help": "Any client company can be selected. It is automatically flagged as a Maintenance Establishment when the contract is created."
+    },
+    {
+     "id": 40211,
+     "name": "sale_line_ids",
+     "field_description": "Order Lines",
+     "ttype": "one2many",
+     "relation": "sale.order.line",
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40209,
+     "name": "year",
+     "field_description": "Year",
+     "ttype": "integer",
+     "relation": false,
+     "required": true,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    }
+   ],
+   "calcules": [
+    {
+     "id": 40221,
+     "name": "display_name",
+     "field_description": "Display Name",
+     "ttype": "char",
+     "relation": false
+    },
+    {
+     "id": 40212,
+     "name": "invoice_ids",
+     "field_description": "Invoices",
+     "ttype": "many2many",
+     "relation": "account.move"
+    }
+   ]
+  },
+  {
+   "model": "eurekam.maintenance.order.wizard",
+   "name": "Maintenance Customer Order Wizard",
+   "modules": "eurekam_maintenance",
+   "nb_enreg": 0,
+   "champs": [
+    {
+     "id": 40271,
+     "name": "apply_syntec",
+     "field_description": "Apply Syntec Revision",
+     "ttype": "boolean",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": "Revalues the covered year before creating the order. The revised amount is written back onto the contract's yearly line, so the contract, the order and the invoices stay consistent.\nOnly available on the 'Year' scope: revaluing the whole contract in one go is done through the renewal wizard."
+    },
+    {
+     "id": 40262,
+     "name": "contract_id",
+     "field_description": "Contract",
+     "ttype": "many2one",
+     "relation": "eurekam.maintenance.contract",
+     "required": true,
+     "readonly": true,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40266,
+     "name": "coverage_mode",
+     "field_description": "Order Scope",
+     "ttype": "selection",
+     "relation": false,
+     "required": true,
+     "readonly": false,
+     "selection_ids": [
+      5862,
+      5863
+     ],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40269,
+     "name": "customer_po_date",
+     "field_description": "PO Receipt Date",
+     "ttype": "date",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40268,
+     "name": "customer_po_reference",
+     "field_description": "Customer PO Reference",
+     "ttype": "char",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": "Purchase order number sent by the customer. Leave empty at the quotation stage and fill it in on the order once received."
+    },
+    {
+     "id": 40278,
+     "name": "id",
+     "field_description": "ID",
+     "ttype": "integer",
+     "relation": false,
+     "required": false,
+     "readonly": true,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40274,
+     "name": "revised_amount",
+     "field_description": "Revised Amount",
+     "ttype": "monetary",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": "Amount actually ordered and written back onto the contract. Suggested from the rate, but freely editable (e.g. to match the exact figure of the customer purchase order)."
+    },
+    {
+     "id": 40272,
+     "name": "syntec_rate",
+     "field_description": "Syntec Rate (%)",
+     "ttype": "float",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40267,
+     "name": "year",
+     "field_description": "Covered Year",
+     "ttype": "integer",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": "Contract year covered by the order. Ignored if scope = Whole contract."
+    }
+   ],
+   "calcules": [
+    {
+     "id": 40273,
+     "name": "base_amount",
+     "field_description": "Contract Amount for the Year",
+     "ttype": "monetary",
+     "relation": false
+    },
+    {
+     "id": 40265,
+     "name": "currency_id",
+     "field_description": "Currency",
+     "ttype": "many2one",
+     "relation": "res.currency"
+    },
+    {
+     "id": 40279,
+     "name": "display_name",
+     "field_description": "Display Name",
+     "ttype": "char",
+     "relation": false
+    },
+    {
+     "id": 40263,
+     "name": "partner_id",
+     "field_description": "Customer",
+     "ttype": "many2one",
+     "relation": "res.partner"
+    },
+    {
+     "id": 40276,
+     "name": "preview_period_count",
+     "field_description": "Number of Lines to Create",
+     "ttype": "integer",
+     "relation": false
+    },
+    {
+     "id": 40277,
+     "name": "preview_total_amount",
+     "field_description": "Total Amount (untaxed)",
+     "ttype": "monetary",
+     "relation": false
+    },
+    {
+     "id": 40264,
+     "name": "product_id",
+     "field_description": "Product",
+     "ttype": "many2one",
+     "relation": "product.template"
+    },
+    {
+     "id": 40275,
+     "name": "syntec_delta",
+     "field_description": "Revision Delta",
+     "ttype": "monetary",
+     "relation": false
+    },
+    {
+     "id": 40270,
+     "name": "syntec_revision",
+     "field_description": "Contract Under Syntec Revision",
+     "ttype": "selection",
+     "relation": false
+    }
+   ]
+  },
+  {
+   "model": "eurekam.market.type",
+   "name": "Market Type",
+   "modules": "eurekam_maintenance",
+   "nb_enreg": 10,
+   "champs": [
+    {
+     "id": 40062,
+     "name": "active",
+     "field_description": "Active",
+     "ttype": "boolean",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40059,
+     "name": "code",
+     "field_description": "Code",
+     "ttype": "char",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40061,
+     "name": "color",
+     "field_description": "Color",
+     "ttype": "integer",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40063,
+     "name": "description",
+     "field_description": "Description",
+     "ttype": "text",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40064,
+     "name": "id",
+     "field_description": "ID",
+     "ttype": "integer",
+     "relation": false,
+     "required": false,
+     "readonly": true,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40058,
+     "name": "name",
+     "field_description": "Name",
+     "ttype": "char",
+     "relation": false,
+     "required": true,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40060,
+     "name": "sequence",
+     "field_description": "Sequence",
+     "ttype": "integer",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    }
+   ],
+   "calcules": [
+    {
+     "id": 40065,
+     "name": "display_name",
+     "field_description": "Display Name",
+     "ttype": "char",
+     "relation": false
+    }
+   ]
+  },
+  {
+   "model": "eurekam.module.billing",
+   "name": "Module Billing Type",
+   "modules": "eurekam_maintenance",
+   "nb_enreg": 9,
+   "champs": [
+    {
+     "id": 40110,
+     "name": "active",
+     "field_description": "Active",
+     "ttype": "boolean",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40107,
+     "name": "code",
+     "field_description": "Code",
+     "ttype": "char",
+     "relation": false,
+     "required": true,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40109,
+     "name": "color",
+     "field_description": "Color",
+     "ttype": "integer",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40111,
+     "name": "description",
+     "field_description": "Description",
+     "ttype": "text",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40113,
+     "name": "id",
+     "field_description": "ID",
+     "ttype": "integer",
+     "relation": false,
+     "required": false,
+     "readonly": true,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40106,
+     "name": "name",
+     "field_description": "Name",
+     "ttype": "char",
+     "relation": false,
+     "required": true,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40112,
+     "name": "product_id",
+     "field_description": "Default Article",
+     "ttype": "many2one",
+     "relation": "product.product",
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": "Catalogue article used by default on the order / invoice lines when this module is billed on a contract."
+    },
+    {
+     "id": 40108,
+     "name": "sequence",
+     "field_description": "Sequence",
+     "ttype": "integer",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    }
+   ],
+   "calcules": [
+    {
+     "id": 40114,
+     "name": "display_name",
+     "field_description": "Display Name",
+     "ttype": "char",
+     "relation": false
+    }
+   ]
+  },
+  {
+   "model": "eurekam.module.status",
+   "name": "Drugcam Module Status",
+   "modules": "eurekam_maintenance",
+   "nb_enreg": 6,
+   "champs": [
+    {
+     "id": 40040,
+     "name": "active",
+     "field_description": "Active",
+     "ttype": "boolean",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40037,
+     "name": "code",
+     "field_description": "Code",
+     "ttype": "char",
+     "relation": false,
+     "required": true,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40039,
+     "name": "color",
+     "field_description": "Color",
+     "ttype": "integer",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40041,
+     "name": "id",
+     "field_description": "ID",
+     "ttype": "integer",
+     "relation": false,
+     "required": false,
+     "readonly": true,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40036,
+     "name": "name",
+     "field_description": "Name",
+     "ttype": "char",
+     "relation": false,
+     "required": true,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40038,
+     "name": "sequence",
+     "field_description": "Sequence",
+     "ttype": "integer",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    }
+   ],
+   "calcules": [
+    {
+     "id": 40042,
+     "name": "display_name",
+     "field_description": "Display Name",
+     "ttype": "char",
+     "relation": false
+    }
+   ]
+  },
+  {
+   "model": "eurekam.product.generation",
+   "name": "Drugcam Generation",
+   "modules": "eurekam_maintenance",
+   "nb_enreg": 3,
+   "champs": [
+    {
+     "id": 40074,
+     "name": "active",
+     "field_description": "Active",
+     "ttype": "boolean",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40071,
+     "name": "code",
+     "field_description": "Code",
+     "ttype": "char",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40073,
+     "name": "color",
+     "field_description": "Color",
+     "ttype": "integer",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40075,
+     "name": "description",
+     "field_description": "Description",
+     "ttype": "text",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40076,
+     "name": "id",
+     "field_description": "ID",
+     "ttype": "integer",
+     "relation": false,
+     "required": false,
+     "readonly": true,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40070,
+     "name": "name",
+     "field_description": "Name",
+     "ttype": "char",
+     "relation": false,
+     "required": true,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40072,
+     "name": "sequence",
+     "field_description": "Sequence",
+     "ttype": "integer",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    }
+   ],
+   "calcules": [
+    {
+     "id": 40077,
+     "name": "display_name",
+     "field_description": "Display Name",
+     "ttype": "char",
+     "relation": false
+    }
+   ]
+  },
+  {
+   "model": "eurekam.special.equipment",
+   "name": "Special Equipment",
+   "modules": "eurekam_maintenance",
+   "nb_enreg": 2,
+   "champs": [
+    {
+     "id": 40051,
+     "name": "active",
+     "field_description": "Active",
+     "ttype": "boolean",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40048,
+     "name": "code",
+     "field_description": "Code",
+     "ttype": "char",
+     "relation": false,
+     "required": true,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40050,
+     "name": "color",
+     "field_description": "Color",
+     "ttype": "integer",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40052,
+     "name": "id",
+     "field_description": "ID",
+     "ttype": "integer",
+     "relation": false,
+     "required": false,
+     "readonly": true,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40047,
+     "name": "name",
+     "field_description": "Name",
+     "ttype": "char",
+     "relation": false,
+     "required": true,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    },
+    {
+     "id": 40049,
+     "name": "sequence",
+     "field_description": "Sequence",
+     "ttype": "integer",
+     "relation": false,
+     "required": false,
+     "readonly": false,
+     "selection_ids": [],
+     "compute": false,
+     "related": false,
+     "help": false
+    }
+   ],
+   "calcules": [
+    {
+     "id": 40053,
+     "name": "display_name",
+     "field_description": "Display Name",
+     "ttype": "char",
+     "relation": false
+    }
+   ]
+  }
+ ],
+ "res_partner": [
+  {
+   "id": 38544,
+   "name": "access_account_type",
+   "field_description": "Account type",
+   "ttype": "selection",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 38545,
+   "name": "access_method",
+   "field_description": "Access method",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 14904,
+   "name": "account_represented_company_ids",
+   "field_description": "Account Represented Company",
+   "ttype": "one2many",
+   "relation": "res.company",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 896,
+   "name": "active",
+   "field_description": "Active",
+   "ttype": "boolean",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 9748,
+   "name": "active_lang_count",
+   "field_description": "Active Lang Count",
+   "ttype": "integer",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 40129,
+   "name": "active_maintenance_contract_count",
+   "field_description": "Active Contracts Count",
+   "ttype": "integer",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 13645,
+   "name": "activity_calendar_event_id",
+   "field_description": "Next Activity Calendar Event",
+   "ttype": "many2one",
+   "relation": "calendar.event",
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 1774,
+   "name": "activity_date_deadline",
+   "field_description": "Next Activity Deadline",
+   "ttype": "date",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 9848,
+   "name": "activity_exception_decoration",
+   "field_description": "Activity Exception Decoration",
+   "ttype": "selection",
+   "relation": false,
+   "store": false,
+   "help": "Type of the exception activity on record."
+  },
+  {
+   "id": 9849,
+   "name": "activity_exception_icon",
+   "field_description": "Icon",
+   "ttype": "char",
+   "relation": false,
+   "store": false,
+   "help": "Icon to indicate an exception activity."
+  },
+  {
+   "id": 1770,
+   "name": "activity_ids",
+   "field_description": "Activities",
+   "ttype": "one2many",
+   "relation": "mail.activity",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 1771,
+   "name": "activity_state",
+   "field_description": "Activity State",
+   "ttype": "selection",
+   "relation": false,
+   "store": false,
+   "help": "Status based on activities\nOverdue: Due date is already passed\nToday: Activity date is today\nPlanned: Future activities."
+  },
+  {
+   "id": 1775,
+   "name": "activity_summary",
+   "field_description": "Next Activity Summary",
+   "ttype": "char",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 11122,
+   "name": "activity_type_icon",
+   "field_description": "Activity Type Icon",
+   "ttype": "char",
+   "relation": false,
+   "store": false,
+   "help": "Font awesome icon e.g. fa-tasks"
+  },
+  {
+   "id": 1773,
+   "name": "activity_type_id",
+   "field_description": "Next Activity Type",
+   "ttype": "many2one",
+   "relation": "mail.activity.type",
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 1772,
+   "name": "activity_user_id",
+   "field_description": "Responsible User",
+   "ttype": "many2one",
+   "relation": "res.users",
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 8178,
+   "name": "additional_info",
+   "field_description": "Additional info",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 35730,
+   "name": "autopost_bills",
+   "field_description": "Auto-post bills",
+   "ttype": "selection",
+   "relation": false,
+   "store": true,
+   "help": "Automatically post bills for this trusted partner"
+  },
+  {
+   "id": 38404,
+   "name": "available_peppol_eas",
+   "field_description": "Available Peppol Eas",
+   "ttype": "json",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 39617,
+   "name": "available_peppol_edi_formats",
+   "field_description": "Available Peppol Edi Formats",
+   "ttype": "json",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 39616,
+   "name": "available_peppol_sending_methods",
+   "field_description": "Available Peppol Sending Methods",
+   "ttype": "json",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 13394,
+   "name": "avatar_1024",
+   "field_description": "Avatar 1024",
+   "ttype": "binary",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 13397,
+   "name": "avatar_128",
+   "field_description": "Avatar 128",
+   "ttype": "binary",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 13393,
+   "name": "avatar_1920",
+   "field_description": "Avatar",
+   "ttype": "binary",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 13396,
+   "name": "avatar_256",
+   "field_description": "Avatar 256",
+   "ttype": "binary",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 13395,
+   "name": "avatar_512",
+   "field_description": "Avatar 512",
+   "ttype": "binary",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 2518,
+   "name": "bank_account_count",
+   "field_description": "Bank",
+   "ttype": "integer",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 890,
+   "name": "bank_ids",
+   "field_description": "Banks",
+   "ttype": "one2many",
+   "relation": "res.partner.bank",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 10979,
+   "name": "barcode",
+   "field_description": "Barcode",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": "Use a barcode to identify this contact."
+  },
+  {
+   "id": 38539,
+   "name": "bottle_catalog_version",
+   "field_description": "Bottle catalog version",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 32984,
+   "name": "buyer_id",
+   "field_description": "Buyer",
+   "ttype": "many2one",
+   "relation": "res.users",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 4388,
+   "name": "calendar_last_notif_ack",
+   "field_description": "Last notification marked as read from base Calendar",
+   "ttype": "datetime",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 9372,
+   "name": "can_publish",
+   "field_description": "Can Publish",
+   "ttype": "boolean",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 893,
+   "name": "category_id",
+   "field_description": "Tags",
+   "ttype": "many2many",
+   "relation": "res.partner.category",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 40122,
+   "name": "central_purchasing",
+   "field_description": "Central Purchasing (legacy)",
+   "ttype": "selection",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 40123,
+   "name": "central_purchasing_id",
+   "field_description": "Central Purchasing",
+   "ttype": "many2one",
+   "relation": "eurekam.central.purchasing",
+   "store": true,
+   "help": "Central purchasing body / buying group (editable list)."
+  },
+  {
+   "id": 38810,
+   "name": "certifications_company_count",
+   "field_description": "Company Certifications Count",
+   "ttype": "integer",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 38809,
+   "name": "certifications_count",
+   "field_description": "Certifications Count",
+   "ttype": "integer",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 1778,
+   "name": "channel_ids",
+   "field_description": "Channels",
+   "ttype": "many2many",
+   "relation": "discuss.channel",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 883,
+   "name": "child_ids",
+   "field_description": "Contact",
+   "ttype": "one2many",
+   "relation": "res.partner",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 39397,
+   "name": "chimio_drugcam_qty",
+   "field_description": "Chemotherapies with Drugcam",
+   "ttype": "integer",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 39396,
+   "name": "chimio_theory_qty_yearly",
+   "field_description": "Theoretical chemotherapies / year",
+   "ttype": "integer",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 16880,
+   "name": "chorus",
+   "field_description": "Chorus code",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 905,
+   "name": "city",
+   "field_description": "City",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 916,
+   "name": "color",
+   "field_description": "Color Index",
+   "ttype": "integer",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 892,
+   "name": "comment",
+   "field_description": "Notes",
+   "ttype": "html",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 922,
+   "name": "commercial_company_name",
+   "field_description": "Company Name Entity",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 920,
+   "name": "commercial_partner_id",
+   "field_description": "Commercial Entity",
+   "ttype": "many2one",
+   "relation": "res.partner",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 915,
+   "name": "company_id",
+   "field_description": "Company",
+   "ttype": "many2one",
+   "relation": "res.company",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 923,
+   "name": "company_name",
+   "field_description": "Company Name",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 15027,
+   "name": "company_registry",
+   "field_description": "Company ID",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": "The registry number of the company. Use it if it is different from the Tax ID. It must be unique across all partners of a same country"
+  },
+  {
+   "id": 35157,
+   "name": "company_registry_label",
+   "field_description": "Company ID Label",
+   "ttype": "char",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 914,
+   "name": "company_type",
+   "field_description": "Company Type",
+   "ttype": "selection",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 878,
+   "name": "complete_name",
+   "field_description": "Complete Name",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 919,
+   "name": "contact_address",
+   "field_description": "Complete Address",
+   "ttype": "char",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 9855,
+   "name": "contact_address_complete",
+   "field_description": "Contact Address Complete",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 22766,
+   "name": "contact_address_inline",
+   "field_description": "Inlined Complete Address",
+   "ttype": "char",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 2517,
+   "name": "contract_ids",
+   "field_description": "Partner Contracts",
+   "ttype": "one2many",
+   "relation": "account.analytic.account",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 13399,
+   "name": "country_code",
+   "field_description": "Country Code",
+   "ttype": "char",
+   "relation": false,
+   "store": false,
+   "help": "The ISO country code in two chars. \nYou can use this field for quick search."
+  },
+  {
+   "id": 907,
+   "name": "country_id",
+   "field_description": "Country",
+   "ttype": "many2one",
+   "relation": "res.country",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 930,
+   "name": "create_date",
+   "field_description": "Created on",
+   "ttype": "datetime",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 929,
+   "name": "create_uid",
+   "field_description": "Created by",
+   "ttype": "many2one",
+   "relation": "res.users",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 2501,
+   "name": "credit",
+   "field_description": "Total Receivable",
+   "ttype": "monetary",
+   "relation": false,
+   "store": false,
+   "help": "Total amount this customer owes you."
+  },
+  {
+   "id": 894,
+   "name": "credit_limit",
+   "field_description": "Credit Limit",
+   "ttype": "float",
+   "relation": false,
+   "store": true,
+   "help": "Credit limit specific to this partner."
+  },
+  {
+   "id": 30094,
+   "name": "credit_to_invoice",
+   "field_description": "Credit To Invoice",
+   "ttype": "monetary",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 2505,
+   "name": "currency_id",
+   "field_description": "Currency",
+   "ttype": "many2one",
+   "relation": "res.currency",
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 38408,
+   "name": "current_securing",
+   "field_description": "Current Securing",
+   "ttype": "many2one",
+   "relation": "company.information.field.item",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 38409,
+   "name": "current_securing_comment",
+   "field_description": "Current Securing Comment",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 10465,
+   "name": "customer_rank",
+   "field_description": "Customer Rank",
+   "ttype": "integer",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 39447,
+   "name": "d2p_life",
+   "field_description": "AVG Days to Payable (lifetime)",
+   "ttype": "float",
+   "relation": false,
+   "store": true,
+   "help": "Average days of payment for incoming invoices."
+  },
+  {
+   "id": 39449,
+   "name": "d2p_ly",
+   "field_description": "AVG Days to Payable (LY)",
+   "ttype": "float",
+   "relation": false,
+   "store": true,
+   "help": "Average days of payment for incoming invoices last year."
+  },
+  {
+   "id": 39448,
+   "name": "d2p_ytd",
+   "field_description": "AVG Days to Payable (YTD)",
+   "ttype": "float",
+   "relation": false,
+   "store": true,
+   "help": "Average days of payment for incoming invoices this year."
+  },
+  {
+   "id": 39450,
+   "name": "d2r_life",
+   "field_description": "AVG Days to Receivable (lifetime)",
+   "ttype": "float",
+   "relation": false,
+   "store": true,
+   "help": "Average days of payment for outgoing invoices."
+  },
+  {
+   "id": 39452,
+   "name": "d2r_ly",
+   "field_description": "AVG Days to Receivable (LY)",
+   "ttype": "float",
+   "relation": false,
+   "store": true,
+   "help": "Average days of payment for outgoing invoices last year."
+  },
+  {
+   "id": 39451,
+   "name": "d2r_ytd",
+   "field_description": "AVG Days to Receivable (YTD)",
+   "ttype": "float",
+   "relation": false,
+   "store": true,
+   "help": "Average days of payment for outgoing invoices this year."
+  },
+  {
+   "id": 17784,
+   "name": "date_localization",
+   "field_description": "Geolocation Date",
+   "ttype": "date",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 30098,
+   "name": "days_sales_outstanding",
+   "field_description": "Days Sales Outstanding (DSO)",
+   "ttype": "float",
+   "relation": false,
+   "store": false,
+   "help": "[(Total Receivable/Total Revenue) * number of days since the first invoice] for this customer"
+  },
+  {
+   "id": 2502,
+   "name": "debit",
+   "field_description": "Total Payable",
+   "ttype": "monetary",
+   "relation": false,
+   "store": false,
+   "help": "Total amount you have to pay to this vendor."
+  },
+  {
+   "id": 2503,
+   "name": "debit_limit",
+   "field_description": "Payable Limit",
+   "ttype": "monetary",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 40120,
+   "name": "department_number",
+   "field_description": "Department No.",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": "French department number (01, 02, ..., 95, 2A, 2B, 971, ...)."
+  },
+  {
+   "id": 35727,
+   "name": "display_invoice_edi_format",
+   "field_description": "Display Invoice Edi Format",
+   "ttype": "boolean",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 35729,
+   "name": "display_invoice_template_pdf_report_id",
+   "field_description": "Display Invoice Template Pdf Report",
+   "ttype": "boolean",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 21206,
+   "name": "display_name",
+   "field_description": "Display Name",
+   "ttype": "char",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 17120,
+   "name": "document_count",
+   "field_description": "Document Count",
+   "ttype": "integer",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 39400,
+   "name": "drugcam_rate",
+   "field_description": "Drugcam rate",
+   "ttype": "float",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 38416,
+   "name": "drugcam_version",
+   "field_description": "Drugcam Version",
+   "ttype": "many2many",
+   "relation": "company.information.field.item",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 38092,
+   "name": "duplicate_bank_partner_ids",
+   "field_description": "Duplicate Bank Partner",
+   "ttype": "many2many",
+   "relation": "res.partner",
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 15560,
+   "name": "duplicated_bank_account_partners_count",
+   "field_description": "Duplicated Bank Account Partners Count",
+   "ttype": "integer",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 908,
+   "name": "email",
+   "field_description": "Email",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 909,
+   "name": "email_formatted",
+   "field_description": "Formatted Email",
+   "ttype": "char",
+   "relation": false,
+   "store": false,
+   "help": "Format email address \"Name <email@domain>\""
+  },
+  {
+   "id": 9124,
+   "name": "email_normalized",
+   "field_description": "Normalized Email",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": "This field is used to search on email address as the primary email field can contain more than strictly an email address."
+  },
+  {
+   "id": 899,
+   "name": "employee",
+   "field_description": "Employee",
+   "ttype": "boolean",
+   "relation": false,
+   "store": true,
+   "help": "Check this box if this contact is an Employee."
+  },
+  {
+   "id": 13744,
+   "name": "employee_ids",
+   "field_description": "Employees",
+   "ttype": "one2many",
+   "relation": "hr.employee",
+   "store": true,
+   "help": "Related employees based on their private address"
+  },
+  {
+   "id": 24509,
+   "name": "employees_count",
+   "field_description": "Employees Count",
+   "ttype": "integer",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 38533,
+   "name": "environement_ids",
+   "field_description": "Environements",
+   "ttype": "one2many",
+   "relation": "customer.asset.environment",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 40121,
+   "name": "establishment_status",
+   "field_description": "Establishment Status",
+   "ttype": "selection",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 39131,
+   "name": "event_count",
+   "field_description": "# Events",
+   "ttype": "integer",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 40131,
+   "name": "expired_maintenance_contract_count",
+   "field_description": "Expired Contracts Count",
+   "ttype": "integer",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 40130,
+   "name": "expiring_maintenance_contract_count",
+   "field_description": "Expiring Contracts Count",
+   "ttype": "integer",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 30092,
+   "name": "fiscal_country_codes",
+   "field_description": "Fiscal Country Codes",
+   "ttype": "char",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 17673,
+   "name": "followup_line_id",
+   "field_description": "Follow-up Level",
+   "ttype": "many2one",
+   "relation": "account_followup.followup.line",
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 17666,
+   "name": "followup_next_action_date",
+   "field_description": "Next reminder",
+   "ttype": "date",
+   "relation": false,
+   "store": true,
+   "help": "No follow-up action will be taken before this date.\n                Sending a reminder will set this date depending on the levels configuration, and you can change it manually."
+  },
+  {
+   "id": 17674,
+   "name": "followup_reminder_type",
+   "field_description": "Reminders",
+   "ttype": "selection",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 17675,
+   "name": "followup_responsible_id",
+   "field_description": "Responsible",
+   "ttype": "many2one",
+   "relation": "res.users",
+   "store": true,
+   "help": "The responsible assigned to manual followup activities, if defined in the level."
+  },
+  {
+   "id": 17672,
+   "name": "followup_status",
+   "field_description": "Follow-up Status",
+   "ttype": "selection",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 900,
+   "name": "function",
+   "field_description": "Job Position",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 16879,
+   "name": "has_chorus",
+   "field_description": "Has a chorus code",
+   "ttype": "boolean",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 13617,
+   "name": "has_message",
+   "field_description": "Has Message",
+   "ttype": "boolean",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 37761,
+   "name": "has_moves",
+   "field_description": "Has Moves",
+   "ttype": "boolean",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 38846,
+   "name": "helpdesk_domain",
+   "field_description": "Helpdesk domain",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 39863,
+   "name": "helpdesk_warn",
+   "field_description": "Helpdesk Warnings",
+   "ttype": "selection",
+   "relation": false,
+   "store": true,
+   "help": "Selecting the \"Warning\" option will notify user with the message, Selecting \"Blocking Message\" will throw an exception with the message and block the flow. The Message has to be written in the next field."
+  },
+  {
+   "id": 39864,
+   "name": "helpdesk_warn_msg",
+   "field_description": "Message for Helpdesk Ticket",
+   "ttype": "text",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 928,
+   "name": "id",
+   "field_description": "ID",
+   "ttype": "integer",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 35723,
+   "name": "ignore_abnormal_invoice_amount",
+   "field_description": "Ignore Abnormal Invoice Amount",
+   "ttype": "boolean",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 35722,
+   "name": "ignore_abnormal_invoice_date",
+   "field_description": "Ignore Abnormal Invoice Date",
+   "ttype": "boolean",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 1439,
+   "name": "im_status",
+   "field_description": "IM Status",
+   "ttype": "char",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 9751,
+   "name": "image_1024",
+   "field_description": "Image 1024",
+   "ttype": "binary",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 925,
+   "name": "image_128",
+   "field_description": "Image 128",
+   "ttype": "binary",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 924,
+   "name": "image_1920",
+   "field_description": "Image",
+   "ttype": "binary",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 9753,
+   "name": "image_256",
+   "field_description": "Image 256",
+   "ttype": "binary",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 9752,
+   "name": "image_512",
+   "field_description": "Image 512",
+   "ttype": "binary",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 9859,
+   "name": "image_medium",
+   "field_description": "Medium-sized image",
+   "ttype": "binary",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 913,
+   "name": "industry_id",
+   "field_description": "Industry",
+   "ttype": "many2one",
+   "relation": "res.partner.industry",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 35725,
+   "name": "invoice_edi_format",
+   "field_description": "eInvoice format",
+   "ttype": "selection",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 32443,
+   "name": "invoice_edi_format_store",
+   "field_description": "Invoice Edi Format Store",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 2516,
+   "name": "invoice_ids",
+   "field_description": "Invoices",
+   "ttype": "one2many",
+   "relation": "account.move",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 35724,
+   "name": "invoice_sending_method",
+   "field_description": "Invoice sending",
+   "ttype": "selection",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 35728,
+   "name": "invoice_template_pdf_report_id",
+   "field_description": "Invoice template",
+   "ttype": "many2one",
+   "relation": "ir.actions.report",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 2520,
+   "name": "invoice_warn",
+   "field_description": "Invoice",
+   "ttype": "selection",
+   "relation": false,
+   "store": true,
+   "help": "Selecting the \"Warning\" option will notify user with the message, Selecting \"Blocking Message\" will throw an exception with the message and block the flow. The Message has to be written in the next field."
+  },
+  {
+   "id": 2521,
+   "name": "invoice_warn_msg",
+   "field_description": "Message for Invoice",
+   "ttype": "text",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 7642,
+   "name": "is_blacklisted",
+   "field_description": "Blacklist",
+   "ttype": "boolean",
+   "relation": false,
+   "store": false,
+   "help": "If the email address is on the blacklist, the contact won't receive mass mailing anymore, from any list"
+  },
+  {
+   "id": 30122,
+   "name": "is_coa_installed",
+   "field_description": "Is Coa Installed",
+   "ttype": "boolean",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 912,
+   "name": "is_company",
+   "field_description": "Is a Company",
+   "ttype": "boolean",
+   "relation": false,
+   "store": true,
+   "help": "Check if the contact is a company, otherwise it is a person"
+  },
+  {
+   "id": 40119,
+   "name": "is_maintenance_establishment",
+   "field_description": "Maintenance Establishment",
+   "ttype": "boolean",
+   "relation": false,
+   "store": true,
+   "help": "Tick if this contact is a client establishment tracked for the Eurekam maintenance contracts. Only ticked contacts appear in the selection list when creating a contract."
+  },
+  {
+   "id": 38547,
+   "name": "is_mfa",
+   "field_description": "MFA",
+   "ttype": "boolean",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 36716,
+   "name": "is_peppol_edi_format",
+   "field_description": "Is Peppol Edi Format",
+   "ttype": "boolean",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 15029,
+   "name": "is_public",
+   "field_description": "Is Public",
+   "ttype": "boolean",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 7410,
+   "name": "is_published",
+   "field_description": "Is Published",
+   "ttype": "boolean",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 8597,
+   "name": "is_seo_optimized",
+   "field_description": "SEO optimized",
+   "ttype": "boolean",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 36715,
+   "name": "is_ubl_format",
+   "field_description": "Is Ubl Format",
+   "ttype": "boolean",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 33438,
+   "name": "iso20022_lei",
+   "field_description": "LEI",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": "Legal Entity Identifier"
+  },
+  {
+   "id": 2507,
+   "name": "journal_item_count",
+   "field_description": "Journal Items",
+   "ttype": "integer",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 37848,
+   "name": "l10n_din5008_date",
+   "field_description": "L10N Din5008 Date",
+   "ttype": "date",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 885,
+   "name": "lang",
+   "field_description": "Language",
+   "ttype": "selection",
+   "relation": false,
+   "store": true,
+   "help": "All the emails and documents sent to this contact will be translated in this language."
+  },
+  {
+   "id": 38405,
+   "name": "lap",
+   "field_description": "LAP",
+   "ttype": "many2one",
+   "relation": "company.information.field.item",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 38406,
+   "name": "lap_comment",
+   "field_description": "LAP (version / date)",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 38536,
+   "name": "lap_version",
+   "field_description": "LAP and Version",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 38542,
+   "name": "last_intervention_date",
+   "field_description": "Last intervention",
+   "ttype": "date",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 40128,
+   "name": "maintenance_contract_count",
+   "field_description": "Maintenance Contracts Count",
+   "ttype": "integer",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 40127,
+   "name": "maintenance_contract_ids",
+   "field_description": "Maintenance Contracts",
+   "ttype": "one2many",
+   "relation": "eurekam.maintenance.contract",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 40132,
+   "name": "maintenance_status",
+   "field_description": "Maintenance Status",
+   "ttype": "selection",
+   "relation": false,
+   "store": false,
+   "help": "Synthetic indicator visible to the whole team (notably support) summarizing the maintenance contract state and the commercial relationship of the establishment. Computed in real time.\n- ACTIVE: at least 1 active contract\n- EXPIRING SOON: no active one but at least 1 expiring within 90 days\n- EXPIRED: all contracts are expired\n- Customer WITHOUT contract: no contract but at least 1 customer order (potential to convert)\n- No commercial relationship: neither contract nor order in Odoo"
+  },
+  {
+   "id": 4531,
+   "name": "meeting_count",
+   "field_description": "# Meetings",
+   "ttype": "integer",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 4529,
+   "name": "meeting_ids",
+   "field_description": "Meetings",
+   "ttype": "many2many",
+   "relation": "calendar.event",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 7640,
+   "name": "message_attachment_count",
+   "field_description": "Attachment Count",
+   "ttype": "integer",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 1776,
+   "name": "message_bounce",
+   "field_description": "Bounce",
+   "ttype": "integer",
+   "relation": false,
+   "store": true,
+   "help": "Counter of the number of bounced emails for this contact"
+  },
+  {
+   "id": 1780,
+   "name": "message_follower_ids",
+   "field_description": "Followers",
+   "ttype": "one2many",
+   "relation": "mail.followers",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 7638,
+   "name": "message_has_error",
+   "field_description": "Message Delivery error",
+   "ttype": "boolean",
+   "relation": false,
+   "store": false,
+   "help": "If checked, some messages have a delivery error."
+  },
+  {
+   "id": 7639,
+   "name": "message_has_error_counter",
+   "field_description": "Number of errors",
+   "ttype": "integer",
+   "relation": false,
+   "store": false,
+   "help": "Number of messages with delivery error"
+  },
+  {
+   "id": 10031,
+   "name": "message_has_sms_error",
+   "field_description": "SMS Delivery error",
+   "ttype": "boolean",
+   "relation": false,
+   "store": false,
+   "help": "If checked, some messages have a delivery error."
+  },
+  {
+   "id": 1783,
+   "name": "message_ids",
+   "field_description": "Messages",
+   "ttype": "one2many",
+   "relation": "mail.message",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 1779,
+   "name": "message_is_follower",
+   "field_description": "Is Follower",
+   "ttype": "boolean",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 1787,
+   "name": "message_needaction",
+   "field_description": "Action Needed",
+   "ttype": "boolean",
+   "relation": false,
+   "store": false,
+   "help": "If checked, new messages require your attention."
+  },
+  {
+   "id": 1788,
+   "name": "message_needaction_counter",
+   "field_description": "Number of Actions",
+   "ttype": "integer",
+   "relation": false,
+   "store": false,
+   "help": "Number of messages requiring action"
+  },
+  {
+   "id": 1781,
+   "name": "message_partner_ids",
+   "field_description": "Followers (Partners)",
+   "ttype": "many2many",
+   "relation": "res.partner",
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 911,
+   "name": "mobile",
+   "field_description": "Mobile",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 11467,
+   "name": "mobile_blacklisted",
+   "field_description": "Blacklisted Phone Is Mobile",
+   "ttype": "boolean",
+   "relation": false,
+   "store": false,
+   "help": "Indicates if a blacklisted sanitized phone number is a mobile number. Helps distinguish which number is blacklisted             when there is both a mobile and phone field in a model."
+  },
+  {
+   "id": 40124,
+   "name": "module_status_ids",
+   "field_description": "Module Statuses",
+   "ttype": "many2many",
+   "relation": "eurekam.module.status",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 11123,
+   "name": "my_activity_date_deadline",
+   "field_description": "My Activity Deadline",
+   "ttype": "date",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 877,
+   "name": "name",
+   "field_description": "Name",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 38413,
+   "name": "nb_cytotoxic_workstation",
+   "field_description": "Number of Cytotoxic Workstation",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 38407,
+   "name": "nb_drugcam_workstation",
+   "field_description": "Number of Drugcam Workstation",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 38412,
+   "name": "nb_max_workstation",
+   "field_description": "Max Number of Workstation",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 38411,
+   "name": "nb_prep_by_year",
+   "field_description": "Number of Prep by year",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 40125,
+   "name": "nb_workstations",
+   "field_description": "Number of Workstations",
+   "ttype": "integer",
+   "relation": false,
+   "store": true,
+   "help": "Number of Drugcam workstations installed on site."
+  },
+  {
+   "id": 38543,
+   "name": "next_intervention_date",
+   "field_description": "Next intervention",
+   "ttype": "date",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 9714,
+   "name": "ocn_token",
+   "field_description": "OCN Token",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": "Used for sending notification to registered devices"
+  },
+  {
+   "id": 12787,
+   "name": "on_time_rate",
+   "field_description": "On-Time Delivery Rate",
+   "ttype": "float",
+   "relation": false,
+   "store": false,
+   "help": "Over the past x days; the number of products received on time divided by the number of ordered products.x is either the System Parameter purchase_stock.on_time_delivery_days or the default 365"
+  },
+  {
+   "id": 17553,
+   "name": "online_partner_information",
+   "field_description": "Online Partner Information",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 4530,
+   "name": "opportunity_count",
+   "field_description": "Opportunity Count",
+   "ttype": "integer",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 4528,
+   "name": "opportunity_ids",
+   "field_description": "Opportunities",
+   "ttype": "one2many",
+   "relation": "crm.lead",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 881,
+   "name": "parent_id",
+   "field_description": "Related Company",
+   "ttype": "many2one",
+   "relation": "res.partner",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 882,
+   "name": "parent_name",
+   "field_description": "Parent name",
+   "ttype": "char",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 35714,
+   "name": "partner_company_registry_placeholder",
+   "field_description": "Partner Company Registry Placeholder",
+   "ttype": "char",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 8177,
+   "name": "partner_gid",
+   "field_description": "Company database ID",
+   "ttype": "integer",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 39401,
+   "name": "partner_group_id",
+   "field_description": "Group",
+   "ttype": "many2one",
+   "relation": "partner.group",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 9749,
+   "name": "partner_latitude",
+   "field_description": "Geo Latitude",
+   "ttype": "float",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 9750,
+   "name": "partner_longitude",
+   "field_description": "Geo Longitude",
+   "ttype": "float",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 918,
+   "name": "partner_share",
+   "field_description": "Share Partner",
+   "ttype": "boolean",
+   "relation": false,
+   "store": true,
+   "help": "Either customer (not a user), either shared user. Indicated the current partner is a customer without access or with a limited access created for sharing data."
+  },
+  {
+   "id": 35713,
+   "name": "partner_vat_placeholder",
+   "field_description": "Partner Vat Placeholder",
+   "ttype": "char",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 3907,
+   "name": "payment_token_count",
+   "field_description": "Payment Token Count",
+   "ttype": "integer",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 3906,
+   "name": "payment_token_ids",
+   "field_description": "Payment Tokens",
+   "ttype": "one2many",
+   "relation": "payment.token",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 39802,
+   "name": "pdp_verification_display_state",
+   "field_description": "E-Invoicing State",
+   "ttype": "selection",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 32445,
+   "name": "peppol_eas",
+   "field_description": "Peppol e-address (EAS)",
+   "ttype": "selection",
+   "relation": false,
+   "store": true,
+   "help": "Code used to identify the Endpoint for BIS Billing 3.0 and its derivatives.\n             List available at https://docs.peppol.eu/poacc/billing/3.0/codelist/eas/"
+  },
+  {
+   "id": 32444,
+   "name": "peppol_endpoint",
+   "field_description": "Peppol Endpoint",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": "Unique identifier used by the BIS Billing 3.0 and its derivatives, also known as 'Endpoint ID'."
+  },
+  {
+   "id": 39695,
+   "name": "peppol_response_support",
+   "field_description": "Peppol Response Service",
+   "ttype": "boolean",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 39694,
+   "name": "peppol_supported_documents",
+   "field_description": "Supported Peppol Documents",
+   "ttype": "json",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 39618,
+   "name": "peppol_verification_state",
+   "field_description": "Peppol status",
+   "ttype": "selection",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 32568,
+   "name": "perform_vies_validation",
+   "field_description": "Perform Vies Validation",
+   "ttype": "boolean",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 910,
+   "name": "phone",
+   "field_description": "Phone",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 11466,
+   "name": "phone_blacklisted",
+   "field_description": "Blacklisted Phone is Phone",
+   "ttype": "boolean",
+   "relation": false,
+   "store": false,
+   "help": "Indicates if a blacklisted sanitized phone number is a phone number. Helps distinguish which number is blacklisted             when there is both a mobile and phone field in a model."
+  },
+  {
+   "id": 14028,
+   "name": "phone_mobile_search",
+   "field_description": "Phone/Mobile",
+   "ttype": "char",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 10029,
+   "name": "phone_sanitized",
+   "field_description": "Sanitized Number",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": "Field used to store sanitized phone number. Helps speeding up searches and comparisons."
+  },
+  {
+   "id": 10030,
+   "name": "phone_sanitized_blacklisted",
+   "field_description": "Phone Blacklisted",
+   "ttype": "boolean",
+   "relation": false,
+   "store": false,
+   "help": "If the sanitized phone number is on the blacklist, the contact won't receive mass mailing sms anymore, from any list"
+  },
+  {
+   "id": 5016,
+   "name": "picking_warn",
+   "field_description": "Stock Picking",
+   "ttype": "selection",
+   "relation": false,
+   "store": true,
+   "help": "Selecting the \"Warning\" option will notify user with the message, Selecting \"Blocking Message\" will throw an exception with the message and block the flow. The Message has to be written in the next field."
+  },
+  {
+   "id": 5017,
+   "name": "picking_warn_msg",
+   "field_description": "Message for Stock Picking",
+   "ttype": "text",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 38537,
+   "name": "plugin_version",
+   "field_description": "Plugin version",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 39395,
+   "name": "prep_qty_yearly",
+   "field_description": "Preparations / year",
+   "ttype": "integer",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 39402,
+   "name": "prep_type_ids",
+   "field_description": "Preparation types",
+   "ttype": "many2many",
+   "relation": "prep.type",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 38540,
+   "name": "prepation_per_year_nb",
+   "field_description": "Preparation per year",
+   "ttype": "integer",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 26410,
+   "name": "project_ids",
+   "field_description": "Projects",
+   "ttype": "one2many",
+   "relation": "project.project",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 2508,
+   "name": "property_account_payable_id",
+   "field_description": "Account Payable",
+   "ttype": "many2one",
+   "relation": "account.account",
+   "store": true,
+   "help": "This account will be used instead of the default one as the payable account for the current partner"
+  },
+  {
+   "id": 2510,
+   "name": "property_account_position_id",
+   "field_description": "Fiscal Position",
+   "ttype": "many2one",
+   "relation": "account.fiscal.position",
+   "store": true,
+   "help": "The fiscal position determines the taxes/accounts used for this contact."
+  },
+  {
+   "id": 2509,
+   "name": "property_account_receivable_id",
+   "field_description": "Account Receivable",
+   "ttype": "many2one",
+   "relation": "account.account",
+   "store": true,
+   "help": "This account will be used instead of the default one as the receivable account for the current partner"
+  },
+  {
+   "id": 35732,
+   "name": "property_inbound_payment_method_line_id",
+   "field_description": "Property Inbound Payment Method Line",
+   "ttype": "many2one",
+   "relation": "account.payment.method.line",
+   "store": true,
+   "help": "Preferred payment method when selling to this customer. This will be set by default on all incoming payments created for this customer"
+  },
+  {
+   "id": 35731,
+   "name": "property_outbound_payment_method_line_id",
+   "field_description": "Property Outbound Payment Method Line",
+   "ttype": "many2one",
+   "relation": "account.payment.method.line",
+   "store": true,
+   "help": "Preferred payment method when buying from this vendor. This will be set by default on all outgoing payments created for this vendor"
+  },
+  {
+   "id": 2511,
+   "name": "property_payment_term_id",
+   "field_description": "Customer Payment Terms",
+   "ttype": "many2one",
+   "relation": "account.payment.term",
+   "store": true,
+   "help": "This payment term will be used instead of the default one for sales orders and customer invoices"
+  },
+  {
+   "id": 2391,
+   "name": "property_product_pricelist",
+   "field_description": "Pricelist",
+   "ttype": "many2one",
+   "relation": "product.pricelist",
+   "store": false,
+   "help": "This pricelist will be used, instead of the default one, for sales to the current partner"
+  },
+  {
+   "id": 5819,
+   "name": "property_purchase_currency_id",
+   "field_description": "Supplier Currency",
+   "ttype": "many2one",
+   "relation": "res.currency",
+   "store": true,
+   "help": "This currency will be used, instead of the default one, for purchases from the current partner"
+  },
+  {
+   "id": 5014,
+   "name": "property_stock_customer",
+   "field_description": "Customer Location",
+   "ttype": "many2one",
+   "relation": "stock.location",
+   "store": true,
+   "help": "The stock location used as destination when sending goods to this contact."
+  },
+  {
+   "id": 5015,
+   "name": "property_stock_supplier",
+   "field_description": "Vendor Location",
+   "ttype": "many2one",
+   "relation": "stock.location",
+   "store": true,
+   "help": "The stock location used as source when receiving goods from this contact."
+  },
+  {
+   "id": 2512,
+   "name": "property_supplier_payment_term_id",
+   "field_description": "Vendor Payment Terms",
+   "ttype": "many2one",
+   "relation": "account.payment.term",
+   "store": true,
+   "help": "This payment term will be used instead of the default one for purchase orders and vendor bills"
+  },
+  {
+   "id": 38449,
+   "name": "public_nas_name",
+   "field_description": "PUBLIC NAS Name",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 12786,
+   "name": "purchase_line_ids",
+   "field_description": "Purchase Lines",
+   "ttype": "one2many",
+   "relation": "purchase.order.line",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 5820,
+   "name": "purchase_order_count",
+   "field_description": "Purchase Order Count",
+   "ttype": "integer",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 5822,
+   "name": "purchase_warn",
+   "field_description": "Purchase Order Warning",
+   "ttype": "selection",
+   "relation": false,
+   "store": true,
+   "help": "Selecting the \"Warning\" option will notify user with the message, Selecting \"Blocking Message\" will throw an exception with the message and block the flow. The Message has to be written in the next field."
+  },
+  {
+   "id": 5823,
+   "name": "purchase_warn_msg",
+   "field_description": "Message for Purchase Order",
+   "ttype": "text",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 23982,
+   "name": "rating_ids",
+   "field_description": "Ratings",
+   "ttype": "one2many",
+   "relation": "rating.rating",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 12720,
+   "name": "receipt_reminder_email",
+   "field_description": "Receipt Reminder",
+   "ttype": "boolean",
+   "relation": false,
+   "store": true,
+   "help": "Automatically send a confirmation email to the vendor X days before the expected receipt date, asking him to confirm the exact date."
+  },
+  {
+   "id": 884,
+   "name": "ref",
+   "field_description": "Reference",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 2513,
+   "name": "ref_company_ids",
+   "field_description": "Companies that refers to partner",
+   "ttype": "one2many",
+   "relation": "res.company",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 12721,
+   "name": "reminder_date_before_receipt",
+   "field_description": "Days Before Receipt",
+   "ttype": "integer",
+   "relation": false,
+   "store": true,
+   "help": "Number of days to send reminder email before the promised receipt date"
+  },
+  {
+   "id": 3932,
+   "name": "sale_order_count",
+   "field_description": "Sale Order Count",
+   "ttype": "integer",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 3933,
+   "name": "sale_order_ids",
+   "field_description": "Sales Order",
+   "ttype": "one2many",
+   "relation": "sale.order",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 3934,
+   "name": "sale_warn",
+   "field_description": "Sales Warnings",
+   "ttype": "selection",
+   "relation": false,
+   "store": true,
+   "help": "Selecting the \"Warning\" option will notify user with the message, Selecting \"Blocking Message\" will throw an exception with the message and block the flow. The Message has to be written in the next field."
+  },
+  {
+   "id": 3935,
+   "name": "sale_warn_msg",
+   "field_description": "Message for Sales Order",
+   "ttype": "text",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 15026,
+   "name": "same_company_registry_partner_id",
+   "field_description": "Partner with same Company Registry",
+   "ttype": "many2one",
+   "relation": "res.partner",
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 9087,
+   "name": "same_vat_partner_id",
+   "field_description": "Partner with same Tax ID",
+   "ttype": "many2one",
+   "relation": "res.partner",
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 927,
+   "name": "self",
+   "field_description": "Self",
+   "ttype": "many2one",
+   "relation": "res.partner",
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 12775,
+   "name": "seo_name",
+   "field_description": "Seo name",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 15558,
+   "name": "show_credit_limit",
+   "field_description": "Show Credit Limit",
+   "ttype": "boolean",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 2018,
+   "name": "signup_type",
+   "field_description": "Signup Token Type",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 4153,
+   "name": "siret",
+   "field_description": "SIRET",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 19822,
+   "name": "sla_ids",
+   "field_description": "SLA Policies",
+   "ttype": "many2many",
+   "relation": "helpdesk.sla",
+   "store": true,
+   "help": "SLA Policies that will automatically apply to the tickets submitted by this customer."
+  },
+  {
+   "id": 38541,
+   "name": "software_addon_ids",
+   "field_description": "Addons",
+   "ttype": "many2many",
+   "relation": "customer.asset.software.addon",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 40126,
+   "name": "special_equipment_ids",
+   "field_description": "Special Equipment",
+   "ttype": "many2many",
+   "relation": "eurekam.special.equipment",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 35037,
+   "name": "specific_property_product_pricelist",
+   "field_description": "Specific Property Product Pricelist",
+   "ttype": "many2one",
+   "relation": "product.pricelist",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 38538,
+   "name": "stargate_version",
+   "field_description": "Stargate version",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 22767,
+   "name": "starred_message_ids",
+   "field_description": "Starred Message",
+   "ttype": "many2many",
+   "relation": "mail.message",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 906,
+   "name": "state_id",
+   "field_description": "State",
+   "ttype": "many2one",
+   "relation": "res.country.state",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 39132,
+   "name": "static_map_url",
+   "field_description": "Static Map Url",
+   "ttype": "char",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 39133,
+   "name": "static_map_url_is_valid",
+   "field_description": "Static Map Url Is Valid",
+   "ttype": "boolean",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 38418,
+   "name": "sterile_confines_class",
+   "field_description": "Sterile Confines Class",
+   "ttype": "many2many",
+   "relation": "company.information.field.item",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 38410,
+   "name": "sterile_confines_class_comment",
+   "field_description": "Sterile Confines Class Comment",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 39399,
+   "name": "sterile_prep_drugcam_qty",
+   "field_description": "Sterile preparations with Drugcam",
+   "ttype": "integer",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 39398,
+   "name": "sterile_prep_qty",
+   "field_description": "Sterile preparations",
+   "ttype": "integer",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 902,
+   "name": "street",
+   "field_description": "Street",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 903,
+   "name": "street2",
+   "field_description": "Street2",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 38414,
+   "name": "subcontractor_subcontracted",
+   "field_description": "Subcontractor Subcontracted",
+   "ttype": "many2one",
+   "relation": "company.information.field.item",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 38415,
+   "name": "subcontractor_subcontracted_comment",
+   "field_description": "Subcontractor Subcontracted Comment",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 5821,
+   "name": "supplier_invoice_count",
+   "field_description": "# Vendor Bills",
+   "ttype": "integer",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 10464,
+   "name": "supplier_rank",
+   "field_description": "Supplier Rank",
+   "ttype": "integer",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 39403,
+   "name": "syringe_kit_note",
+   "field_description": "Syringe kit",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 18426,
+   "name": "task_count",
+   "field_description": "# Tasks",
+   "ttype": "integer",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 18425,
+   "name": "task_ids",
+   "field_description": "Tasks",
+   "ttype": "one2many",
+   "relation": "project.task",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 19821,
+   "name": "ticket_count",
+   "field_description": "Tickets",
+   "ttype": "integer",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 880,
+   "name": "title",
+   "field_description": "Title",
+   "ttype": "many2one",
+   "relation": "res.partner.title",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 38003,
+   "name": "total_all_due",
+   "field_description": "Total All Due",
+   "ttype": "monetary",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 38004,
+   "name": "total_all_overdue",
+   "field_description": "Total All Overdue",
+   "ttype": "monetary",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 17670,
+   "name": "total_due",
+   "field_description": "Total Due",
+   "ttype": "monetary",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 2504,
+   "name": "total_invoiced",
+   "field_description": "Total Invoiced",
+   "ttype": "monetary",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 17671,
+   "name": "total_overdue",
+   "field_description": "Total Overdue",
+   "ttype": "monetary",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 38546,
+   "name": "transfer_method",
+   "field_description": "Transfer method",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 2519,
+   "name": "trust",
+   "field_description": "Degree of trust you have in this debtor",
+   "ttype": "selection",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 901,
+   "name": "type",
+   "field_description": "Address Type",
+   "ttype": "selection",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 886,
+   "name": "tz",
+   "field_description": "Timezone",
+   "ttype": "selection",
+   "relation": false,
+   "store": true,
+   "help": "When printing documents and exporting/importing data, time values are computed according to this timezone.\nIf the timezone is not set, UTC (Coordinated Universal Time) is used.\nAnywhere else, time values are computed according to the time offset of your web client."
+  },
+  {
+   "id": 887,
+   "name": "tz_offset",
+   "field_description": "Timezone offset",
+   "ttype": "char",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 17668,
+   "name": "unpaid_invoice_ids",
+   "field_description": "Unpaid Invoice",
+   "ttype": "one2many",
+   "relation": "account.move",
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 17669,
+   "name": "unpaid_invoices_count",
+   "field_description": "Unpaid Invoices Count",
+   "ttype": "integer",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 17667,
+   "name": "unreconciled_aml_ids",
+   "field_description": "Unreconciled Aml",
+   "ttype": "one2many",
+   "relation": "account.move.line",
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 15557,
+   "name": "use_partner_credit_limit",
+   "field_description": "Partner Limit",
+   "ttype": "boolean",
+   "relation": false,
+   "store": false,
+   "help": "Set a value greater than 0.0 to activate a credit limit check"
+  },
+  {
+   "id": 888,
+   "name": "user_id",
+   "field_description": "Salesperson",
+   "ttype": "many2one",
+   "relation": "res.users",
+   "store": true,
+   "help": "The internal user in charge of this contact."
+  },
+  {
+   "id": 917,
+   "name": "user_ids",
+   "field_description": "Users",
+   "ttype": "one2many",
+   "relation": "res.users",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 889,
+   "name": "vat",
+   "field_description": "Tax ID",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": "The Tax Identification Number. Values here will be validated based on the country format. You can use '/' to indicate that the partner is not subject to tax."
+  },
+  {
+   "id": 35156,
+   "name": "vat_label",
+   "field_description": "Tax ID Label",
+   "ttype": "char",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 32567,
+   "name": "vies_valid",
+   "field_description": "Intra-Community Valid",
+   "ttype": "boolean",
+   "relation": false,
+   "store": true,
+   "help": "European VAT numbers are automatically checked on the VIES database."
+  },
+  {
+   "id": 32569,
+   "name": "vies_vat_to_check",
+   "field_description": "Vies Vat To Check",
+   "ttype": "char",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 10425,
+   "name": "visitor_ids",
+   "field_description": "Visitors",
+   "ttype": "one2many",
+   "relation": "website.visitor",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 891,
+   "name": "website",
+   "field_description": "Website Link",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 7412,
+   "name": "website_description",
+   "field_description": "Website Partner Full Description",
+   "ttype": "html",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 8307,
+   "name": "website_id",
+   "field_description": "Website",
+   "ttype": "many2one",
+   "relation": "website",
+   "store": true,
+   "help": "Restrict to a specific website."
+  },
+  {
+   "id": 2082,
+   "name": "website_message_ids",
+   "field_description": "Website Messages",
+   "ttype": "one2many",
+   "relation": "mail.message",
+   "store": true,
+   "help": "Website communication history"
+  },
+  {
+   "id": 7408,
+   "name": "website_meta_description",
+   "field_description": "Website meta description",
+   "ttype": "text",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 7409,
+   "name": "website_meta_keywords",
+   "field_description": "Website meta keywords",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 8598,
+   "name": "website_meta_og_img",
+   "field_description": "Website opengraph image",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 7407,
+   "name": "website_meta_title",
+   "field_description": "Website meta title",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 8599,
+   "name": "website_published",
+   "field_description": "Visible on current website",
+   "ttype": "boolean",
+   "relation": false,
+   "store": false,
+   "help": false
+  },
+  {
+   "id": 7413,
+   "name": "website_short_description",
+   "field_description": "Website Partner Short Description",
+   "ttype": "text",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 7411,
+   "name": "website_url",
+   "field_description": "Website URL",
+   "ttype": "char",
+   "relation": false,
+   "store": false,
+   "help": "The full URL to access the document through the website."
+  },
+  {
+   "id": 38534,
+   "name": "workstation_ids",
+   "field_description": "Workstations",
+   "ttype": "one2many",
+   "relation": "customer.asset.workstation",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 38535,
+   "name": "workstation_installed_nb",
+   "field_description": "Workstations installed",
+   "ttype": "integer",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 932,
+   "name": "write_date",
+   "field_description": "Last Updated on",
+   "ttype": "datetime",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 931,
+   "name": "write_uid",
+   "field_description": "Last Updated by",
+   "ttype": "many2one",
+   "relation": "res.users",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 18985,
+   "name": "x_studio_auto_followup",
+   "field_description": "A relancer automatiquement",
+   "ttype": "boolean",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 18990,
+   "name": "x_studio_followup_contacts",
+   "field_description": "Contacts de relance",
+   "ttype": "many2many",
+   "relation": "res.partner",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 39351,
+   "name": "x_studio_many2one_field_51_1jatq2ik2",
+   "field_description": "Nouveau Many2One",
+   "ttype": "many2one",
+   "relation": "customer.asset.workstation",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 39354,
+   "name": "x_studio_many2one_field_7ql_1jatr6uhg",
+   "field_description": "Nouveau Many2One",
+   "ttype": "many2one",
+   "relation": "customer.asset.workstation",
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 39465,
+   "name": "x_studio_plan_implantation",
+   "field_description": "Plan d'implantation",
+   "ttype": "binary",
+   "relation": false,
+   "store": true,
+   "help": false
+  },
+  {
+   "id": 904,
+   "name": "zip",
+   "field_description": "Zip",
+   "ttype": "char",
+   "relation": false,
+   "store": true,
+   "help": false
+  }
+ ],
+ "groupes": [
+  {
+   "name": "Eurekam Maintenance / Manager",
+   "nb_users": 4
+  },
+  {
+   "name": "Eurekam Maintenance / User",
+   "nb_users": 4
+  }
+ ],
+ "acl": [
+  {
+   "modele": "Eurekam Maintenance Contract",
+   "groupe": "Eurekam Maintenance / Manager",
+   "r": true,
+   "w": true,
+   "c": true,
+   "d": true
+  },
+  {
+   "modele": "Eurekam Maintenance Contract",
+   "groupe": "Eurekam Maintenance / User",
+   "r": true,
+   "w": true,
+   "c": true,
+   "d": false
+  },
+  {
+   "modele": "Billing Frequency",
+   "groupe": "Eurekam Maintenance / Manager",
+   "r": true,
+   "w": true,
+   "c": true,
+   "d": true
+  },
+  {
+   "modele": "Billing Frequency",
+   "groupe": "Eurekam Maintenance / User",
+   "r": true,
+   "w": false,
+   "c": false,
+   "d": false
+  },
+  {
+   "modele": "Central Purchasing Body",
+   "groupe": "User types / Internal User",
+   "r": true,
+   "w": false,
+   "c": false,
+   "d": false
+  },
+  {
+   "modele": "Central Purchasing Body",
+   "groupe": "Eurekam Maintenance / Manager",
+   "r": true,
+   "w": true,
+   "c": true,
+   "d": true
+  },
+  {
+   "modele": "Central Purchasing Body",
+   "groupe": "Eurekam Maintenance / User",
+   "r": true,
+   "w": true,
+   "c": true,
+   "d": false
+  },
+  {
+   "modele": "Contract Billable Module",
+   "groupe": "Eurekam Maintenance / Manager",
+   "r": true,
+   "w": true,
+   "c": true,
+   "d": true
+  },
+  {
+   "modele": "Contract Billable Module",
+   "groupe": "Eurekam Maintenance / User",
+   "r": true,
+   "w": true,
+   "c": true,
+   "d": true
+  },
+  {
+   "modele": "Drugcam Generation",
+   "groupe": "Eurekam Maintenance / Manager",
+   "r": true,
+   "w": true,
+   "c": true,
+   "d": true
+  },
+  {
+   "modele": "Drugcam Generation",
+   "groupe": "Eurekam Maintenance / User",
+   "r": true,
+   "w": true,
+   "c": true,
+   "d": false
+  },
+  {
+   "modele": "Drugcam Module Status",
+   "groupe": "User types / Internal User",
+   "r": true,
+   "w": false,
+   "c": false,
+   "d": false
+  },
+  {
+   "modele": "Drugcam Module Status",
+   "groupe": "Eurekam Maintenance / Manager",
+   "r": true,
+   "w": true,
+   "c": true,
+   "d": true
+  },
+  {
+   "modele": "Drugcam Module Status",
+   "groupe": "Eurekam Maintenance / User",
+   "r": true,
+   "w": false,
+   "c": false,
+   "d": false
+  },
+  {
+   "modele": "Eurekam Maintenance Contract Yearly Line",
+   "groupe": "Eurekam Maintenance / Manager",
+   "r": true,
+   "w": true,
+   "c": true,
+   "d": true
+  },
+  {
+   "modele": "Eurekam Maintenance Contract Yearly Line",
+   "groupe": "Eurekam Maintenance / User",
+   "r": true,
+   "w": true,
+   "c": true,
+   "d": false
+  },
+  {
+   "modele": "Maintenance Contract Renewal Wizard",
+   "groupe": "Eurekam Maintenance / Manager",
+   "r": true,
+   "w": true,
+   "c": true,
+   "d": true
+  },
+  {
+   "modele": "Maintenance Contract Renewal Wizard",
+   "groupe": "Eurekam Maintenance / User",
+   "r": true,
+   "w": true,
+   "c": true,
+   "d": true
+  },
+  {
+   "modele": "Maintenance Customer Order Wizard",
+   "groupe": "Eurekam Maintenance / Manager",
+   "r": true,
+   "w": true,
+   "c": true,
+   "d": true
+  },
+  {
+   "modele": "Maintenance Customer Order Wizard",
+   "groupe": "Eurekam Maintenance / User",
+   "r": true,
+   "w": true,
+   "c": true,
+   "d": true
+  },
+  {
+   "modele": "Market Type",
+   "groupe": "Eurekam Maintenance / Manager",
+   "r": true,
+   "w": true,
+   "c": true,
+   "d": true
+  },
+  {
+   "modele": "Market Type",
+   "groupe": "Eurekam Maintenance / User",
+   "r": true,
+   "w": true,
+   "c": true,
+   "d": false
+  },
+  {
+   "modele": "Module Billing Type",
+   "groupe": "Eurekam Maintenance / Manager",
+   "r": true,
+   "w": true,
+   "c": true,
+   "d": true
+  },
+  {
+   "modele": "Module Billing Type",
+   "groupe": "Eurekam Maintenance / User",
+   "r": true,
+   "w": false,
+   "c": false,
+   "d": false
+  },
+  {
+   "modele": "Special Equipment",
+   "groupe": "User types / Internal User",
+   "r": true,
+   "w": false,
+   "c": false,
+   "d": false
+  },
+  {
+   "modele": "Special Equipment",
+   "groupe": "Eurekam Maintenance / Manager",
+   "r": true,
+   "w": true,
+   "c": true,
+   "d": true
+  },
+  {
+   "modele": "Special Equipment",
+   "groupe": "Eurekam Maintenance / User",
+   "r": true,
+   "w": false,
+   "c": false,
+   "d": false
+  }
+ ],
+ "crons": [
+  {
+   "id": 98,
+   "name": "Eurekam Maintenance: check expiring contracts",
+   "interval_number": 1,
+   "interval_type": "days",
+   "active": true,
+   "nextcall": "2026-11-20 13:45:54",
+   "model_id": [
+    1873,
+    "Eurekam Maintenance Contract"
+   ]
+  }
+ ],
+ "sequences": [
+  {
+   "id": 59,
+   "name": "Eurekam Maintenance Contract",
+   "code": "eurekam.maintenance.contract",
+   "prefix": "MAINT/%(year)s/",
+   "padding": 4,
+   "number_next_actual": 120
+  }
+ ],
+ "courriels": [
+  {
+   "id": 103,
+   "name": "Eurekam: maintenance contract EXPIRED",
+   "model": "eurekam.maintenance.contract",
+   "subject": "[ALERT] Maintenance contract EXPIRED: {{ object.sequence_number }}"
+  },
+  {
+   "id": 102,
+   "name": "Eurekam: maintenance contract expiring soon",
+   "model": "eurekam.maintenance.contract",
+   "subject": "Maintenance contract expiring: {{ object.sequence_number }}"
+  }
+ ]
+}
