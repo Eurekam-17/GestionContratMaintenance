@@ -2,9 +2,13 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 # Ordering status of a yearly line. Deliberately not a plain boolean: a line
-# nobody can order yet -- a draft or cancelled contract, a year lying outside
-# the contract period -- must not be counted as "to order", otherwise the
-# campaign list drowns in noise.
+# nobody is going to order -- a draft, expired or cancelled contract, a year
+# lying outside the contract period -- must not be counted as "to order",
+# otherwise the campaign list drowns in noise.
+# Contracts closed for good are excluded on purpose (decided with Loïc,
+# 2026-11-24): a year never billed on an expired contract is lost revenue, but
+# chasing it is a bookkeeping matter, not a quotation campaign.
+CLOSED_CONTRACT_STATES = ('draft', 'expired', 'cancelled')
 ORDER_STATES = [
     ('to_order', "To Order"),
     ('ordered', "Ordered"),
@@ -105,8 +109,8 @@ class EurekamMaintenanceContractLine(models.Model):
         store=True,
         help="To Order: no quotation has been issued for this year yet.\n"
              "Ordered: at least one live customer order covers it.\n"
-             "Not Applicable: the contract is draft or cancelled, has no "
-             "dates, or does not run during that year.",
+             "Not Applicable: the contract is draft, expired or cancelled, "
+             "has no dates, or does not run during that year.",
     )
     notes = fields.Text(string='Notes')
 
@@ -269,10 +273,12 @@ class EurekamMaintenanceContractLine(models.Model):
         """True when the year is one a quotation can sensibly be issued for.
 
         A draft contract cannot be ordered -- it has to be activated first --
-        and a cancelled one never will be. Beyond that, the year has to fall
-        inside the contract period: the Notion import left behind yearly lines
-        spilling outside their own contract's dates, and those are a data
-        problem, not a quotation to chase.
+        and a cancelled or expired one never will be: whatever was not billed
+        while it ran is a bookkeeping matter now, not a quotation campaign.
+        Beyond that, the year has to fall inside the contract period: the
+        Notion import left behind yearly lines spilling outside their own
+        contract's dates, and those are a data problem, not a quotation to
+        chase.
 
         The overlap test goes through `_periods_for_year` rather than
         comparing years by hand, so it cannot drift from the rule the order
@@ -282,7 +288,7 @@ class EurekamMaintenanceContractLine(models.Model):
         """
         self.ensure_one()
         contrat = self.contract_id
-        if contrat.state in ('draft', 'cancelled'):
+        if contrat.state in CLOSED_CONTRACT_STATES:
             return False
         if not contrat.date_start or not contrat.date_end:
             return False

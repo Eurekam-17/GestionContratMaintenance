@@ -1017,6 +1017,23 @@ class TestMaintenanceContract(TransactionCase):
         contract.action_cancel()
         self.assertEqual(set(self._etats(contract).values()), {'not_applicable'})
 
+    def test_order_state_not_applicable_on_expired(self):
+        """A contract closed for good is no longer a quotation to chase.
+
+        A year never billed on an expired contract is still lost revenue, but
+        it is a bookkeeping matter -- it has no place in the campaign list
+        (decided with Loïc, 2026-11-24).
+        """
+        an = ofields.Date.context_today(self.env['res.partner']).year
+        contract = self._make_contract(
+            date_start=date(an - 3, 1, 1), date_end=date(an - 1, 12, 31),
+            duration='3y')
+        contract.action_generate_lines()
+        contract.action_activate()
+        self.assertEqual(contract.state, 'expired')
+        self.assertEqual(set(self._etats(contract).values()),
+                         {'not_applicable'})
+
     def test_order_state_not_applicable_outside_the_contract_period(self):
         """The Notion import left yearly lines spilling outside their dates.
 
