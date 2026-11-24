@@ -1018,6 +1018,97 @@ class TestMaintenanceContract(TransactionCase):
         self.assertEqual(set(self._etats(contract).values()), {'not_applicable'})
 
     # ======================================================================
+    # 25. Attaching an order issued outside the module
+    # ======================================================================
+    def _devis_externe(self, contract, libelle, montant=9000.0):
+        """A quotation born outside the module: no link of any kind."""
+        return self.env['sale.order'].create({
+            'partner_id': contract.partner_id.id,
+            'order_line': [(0, 0, {
+                'product_id': self.product.product_variant_id.id,
+                'name': libelle,
+                'product_uom_qty': 1.0,
+                'price_unit': montant,
+            })],
+        })
+
+    def _assistant_rattachement(self, contract, order):
+        wiz = self.env['eurekam.maintenance.attach.order.wizard'].create({
+            'contract_id': contract.id,
+            'order_id': order.id,
+        })
+        wiz._onchange_order_id()
+        return wiz
+
+    def test_attach_proposes_the_year_written_in_the_label(self):
+        """936 of the 1068 lines to attach spell their year out."""
+        contract, an = self._contrat_pluriannuel()
+        order = self._devis_externe(
+            contract, "Assistance 2 Postes - Annee 1 avec Garantie - %s" % (an + 1))
+        wiz = self._assistant_rattachement(contract, order)
+
+        self.assertEqual(len(wiz.line_ids), 1)
+        row = wiz.line_ids
+        self.assertTrue(row.attach, "A placeable line is ticked by default.")
+        self.assertEqual(row.maintenance_line_id.year, an + 1)
+
+    def test_attach_links_the_year_and_the_contract_sees_the_order(self):
+        contract, an = self._contrat_pluriannuel()
+        order = self._devis_externe(contract, "Assistance %s" % an)
+        self._assistant_rattachement(contract, order).action_attach()
+
+        annuelle = contract.line_ids.filtered(lambda l: l.year == an)
+        self.assertIn(order, annuelle.sale_line_ids.order_id)
+        # The whole point: every screen must now see it.
+        self.assertIn(order, contract.sale_order_ids)
+        self.assertEqual(contract.sale_order_count, 1)
+        annuelle.invalidate_recordset(['order_state'])
+        self.assertEqual(annuelle.order_state, 'ordered')
+
+    def test_attach_leaves_the_customer_wording_alone(self):
+        """These quotations were signed outside the module: never rewrite them."""
+        contract, an = self._contrat_pluriannuel()
+        order = self._devis_externe(contract, "Assistance %s" % an, montant=7777.0)
+        self._assistant_rattachement(contract, order).action_attach()
+
+        ligne = order.order_line
+        self.assertEqual(ligne.name, "Assistance %s" % an)
+        self.assertAlmostEqual(ligne.price_unit, 7777.0, places=2)
+        # No period label: _sync_vers_devis must never re-split this order.
+        self.assertFalse(ligne.maintenance_period_label)
+        annuelle = contract.line_ids.filtered(lambda l: l.year == an)
+        annuelle.amount = 12345.0
+        self.assertAlmostEqual(order.order_line.price_unit, 7777.0, places=2)
+
+    def test_attach_refuses_a_year_already_covered(self):
+        contract, an = self._contrat_pluriannuel()
+        premier = self._devis_externe(contract, "Assistance %s" % an)
+        self._assistant_rattachement(contract, premier).action_attach()
+
+        second = self._devis_externe(contract, "Assistance %s" % an)
+        wiz = self._assistant_rattachement(contract, second)
+        with self.assertRaises(UserError):
+            wiz.action_attach()
+
+    def test_attach_sets_the_header_only_when_unambiguous(self):
+        """One order may cover several contracts; a Many2one cannot say so."""
+        contract, an = self._contrat_pluriannuel()
+        order = self._devis_externe(contract, "Assistance %s" % an)
+        self._assistant_rattachement(contract, order).action_attach()
+        self.assertEqual(order.eurekam_maintenance_contract_id, contract)
+        self.assertEqual(order.eurekam_maintenance_year, an)
+
+    def test_attach_refuses_lines_without_a_year(self):
+        contract, _an = self._contrat_pluriannuel()
+        order = self._devis_externe(contract, "Prestation sans annee lisible")
+        wiz = self._assistant_rattachement(contract, order)
+        self.assertFalse(wiz.line_ids.attach,
+                         "An unplaceable line must not be ticked.")
+        wiz.line_ids.attach = True
+        with self.assertRaises(UserError):
+            wiz.action_attach()
+
+    # ======================================================================
     # 24. Weekly cron: contract years still to be quoted
     # ======================================================================
     def _type_activite_devis(self):

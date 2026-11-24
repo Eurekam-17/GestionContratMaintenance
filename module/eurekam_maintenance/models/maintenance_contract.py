@@ -395,10 +395,20 @@ class EurekamMaintenanceContract(models.Model):
         string='Invoices Count',
         compute='_compute_invoice_count',
     )
-    sale_order_ids = fields.One2many(
+    # Orders the module issued itself: the wizard stamps the contract on the
+    # order header. Technical, and deliberately not the one the screens use --
+    # see sale_order_ids right below.
+    sale_order_header_ids = fields.One2many(
         'sale.order',
         'eurekam_maintenance_contract_id',
+        string="Orders Issued From the Contract",
+    )
+    sale_order_ids = fields.Many2many(
+        'sale.order',
         string="Customer Orders",
+        compute='_compute_sale_order_ids',
+        help="Every customer order covering this contract, whether the module "
+             "issued it or it was attached afterwards.",
     )
     sale_order_count = fields.Integer(
         string="Customer Orders Count",
@@ -464,6 +474,22 @@ class EurekamMaintenanceContract(models.Model):
     def _compute_invoice_count(self):
         for rec in self:
             rec.invoice_count = len(rec.line_ids.mapped('invoice_ids'))
+
+    @api.depends('sale_order_header_ids',
+                 'line_ids.sale_line_ids.order_id')
+    def _compute_sale_order_ids(self):
+        """Every order covering the contract, by either of the two links.
+
+        The header link cannot be the whole truth: one customer order may
+        cover several contracts at once -- quotation 202611234 covers the
+        three Mondor contracts -- and a single Many2one cannot say so. The
+        line-level link can, so it is the one that carries the meaning, and
+        the header is kept for the orders the module issued itself.
+        """
+        for rec in self:
+            rec.sale_order_ids = (
+                rec.sale_order_header_ids | rec.line_ids.sale_line_ids.order_id
+            )
 
     @api.depends('sale_order_ids')
     def _compute_sale_order_count(self):
@@ -711,6 +737,23 @@ class EurekamMaintenanceContract(models.Model):
             'res_model': 'eurekam.maintenance.contract.line',
             'view_mode': 'list,pivot,graph,form',
             'domain': [('contract_id', '=', self.id)],
+            'context': {'default_contract_id': self.id},
+        }
+
+    def action_open_attach_order_wizard(self):
+        """Open the wizard that attaches an order issued outside the module."""
+        self.ensure_one()
+        if not self.line_ids:
+            raise UserError(_(
+                "Generate the yearly lines first: an order is attached to a "
+                "contract year, and this contract has none yet."
+            ))
+        return {
+            'name': _("Attach an Existing Customer Order"),
+            'type': 'ir.actions.act_window',
+            'res_model': 'eurekam.maintenance.attach.order.wizard',
+            'view_mode': 'form',
+            'target': 'new',
             'context': {'default_contract_id': self.id},
         }
 
@@ -965,8 +1008,13 @@ class EurekamMaintenanceContract(models.Model):
         still be an unsaved record -- or none at all, on a line being typed in
         the contract form's inline list. An empty recordset must answer
         "no order", not raise.
+
+        Reads the header link, not the union in sale_order_ids: a
+        'full_contract' order is always one the wizard issued itself, so it
+        carries the header -- and the union is a non-stored computed field,
+        which the yearly lines' STORED order_state must not depend on.
         """
-        return self.sale_order_ids.filtered(
+        return self.sale_order_header_ids.filtered(
             lambda o: o.state != 'cancel' and any(
                 l.maintenance_kind == 'contract'
                 and l.maintenance_period_label == FULL_PERIOD_CODE

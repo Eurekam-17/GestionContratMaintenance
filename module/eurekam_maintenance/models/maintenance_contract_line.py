@@ -305,8 +305,8 @@ class EurekamMaintenanceContractLine(models.Model):
                  'contract_id.state',
                  'contract_id.date_start',
                  'contract_id.date_end',
-                 'contract_id.sale_order_ids.state',
-                 'contract_id.sale_order_ids.order_line.maintenance_period_label')
+                 'contract_id.sale_order_header_ids.state',
+                 'contract_id.sale_order_header_ids.order_line.maintenance_period_label')
     def _compute_order_state(self):
         for rec in self:
             commandes = rec._commandes_couvrantes()
@@ -321,8 +321,8 @@ class EurekamMaintenanceContractLine(models.Model):
     # Not stored, so kept out of _compute_order_state -- see the note on
     # _compute_invoice_ids about Odoo 18's "inconsistent 'store'" warning.
     @api.depends('sale_line_ids.order_id.state',
-                 'contract_id.sale_order_ids.state',
-                 'contract_id.sale_order_ids.order_line.maintenance_period_label')
+                 'contract_id.sale_order_header_ids.state',
+                 'contract_id.sale_order_header_ids.order_line.maintenance_period_label')
     def _compute_order_ids(self):
         for rec in self:
             rec.order_ids = rec._commandes_couvrantes()

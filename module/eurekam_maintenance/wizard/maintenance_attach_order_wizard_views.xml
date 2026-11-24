@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_maintenance_attach_order_wizard_form" model="ir.ui.view">
+        <field name="name">eurekam.maintenance.attach.order.wizard.form</field>
+        <field name="model">eurekam.maintenance.attach.order.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Attach an Existing Customer Order">
+                <group>
+                    <group>
+                        <field name="contract_id"/>
+                        <field name="partner_id"/>
+                    </group>
+                    <group>
+                        <field name="order_id"
+                               options="{'no_create': True, 'no_open': True}"/>
+                    </group>
+                </group>
+                <div class="alert alert-info" role="status"
+                     invisible="not order_id">
+                    Tick the lines to attach and set the contract year of each.
+                    The year is pre-filled from the line label when it states
+                    one. The order itself is never modified: only the link is
+                    written, and the wording the customer received stays as it
+                    was signed.
+                </div>
+                <field name="line_ids" invisible="not order_id">
+                    <list editable="bottom" create="false" delete="false">
+                        <field name="currency_id" column_invisible="1"/>
+                        <field name="attach" widget="boolean_toggle"/>
+                        <field name="product_id" readonly="1"/>
+                        <field name="name" readonly="1"/>
+                        <field name="price_subtotal" readonly="1" sum="Total"/>
+                        <field name="maintenance_line_id"
+                               options="{'no_create': True}"/>
+                        <field name="maintenance_kind"/>
+                    </list>
+                </field>
+                <field name="warning" invisible="not warning" readonly="1"
+                       class="text-warning" nolabel="1"/>
+                <footer>
+                    <button name="action_attach" type="object"
+                            string="Attach" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_maintenance_attach_order_wizard" model="ir.actions.act_window">
+        <field name="name">Attach an Existing Customer Order</field>
+        <field name="res_model">eurekam.maintenance.attach.order.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" eval="False"/>
+    </record>
+
+</odoo>
