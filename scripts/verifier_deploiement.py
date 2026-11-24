@@ -1,0 +1,219 @@
+# -*- coding: utf-8 -*-
+"""Verifie qu'une version du module est REELLEMENT en place sur une instance.
+
+LECTURE SEULE. N'ecrit rien, ne declenche rien.
+
+Pourquoi ce script existe : un bump de sous-module n'est pas un deploiement.
+Odoo.sh peut abandonner un build, ou un build peut echouer en laissant tourner
+l'ANCIEN code pendant que git a l'air parfaitement sain. Et meme quand le code
+est bien en ligne, un champ calcule STOCKE ne se recalcule pas quand sa logique
+change : le 2026-11-24, tous les controles techniques etaient au vert sur des
+donnees fausses.
+
+Ce script controle donc deux choses distinctes :
+  - la PRESENCE du code (version, champs, vues, modeles, droits) ;
+  - le COMPORTEMENT attendu (assertions metier).
+
+Usage :
+    python scripts/verifier_deploiement.py
+    python scripts/verifier_deploiement.py --url https://eurekam-recette.odoo.com
+    python scripts/verifier_deploiement.py --production OUI-JE-VALIDE-LA-PRODUCTION \
+        --url https://eurekam.odoo.com
+
+Code de sortie 0 si tout est conforme, 1 sinon.
+"""
+
+import argparse
+import io
+import json
+import os
+import re
+import sys
+import urllib.request
+import xmlrpc.client
+
+BASE = os.path.dirname(os.path.abspath(__file__))
+CONFIG = os.path.join(os.path.dirname(BASE), 'config', 'odoo_test.json')
+
+JETON_PRODUCTION = 'OUI-JE-VALIDE-LA-PRODUCTION'
+URL_PRODUCTION = 'https://eurekam.odoo.com'
+MOTIF_BASE_PRODUCTION = r'^tecliberp-eurekam-main-\d+$'
+MOTS_TEST = ('test', 'staging', 'sandbox', 'recette', 'dev', 'preprod')
+MOTIF_BASE_DEFAUT = r'^eurekam-(sandbox|staging|recette|test|dev|preprod)(-\d+)?$'
+
+VERSION_ATTENDUE = '18.0.2.3.0'
+LIGNE = 'eurekam.maintenance.contract.line'
+CONTRAT = 'eurekam.maintenance.contract'
+
+CHAMPS_LIGNE = ('order_state', 'order_count', 'order_ids')
+CHAMPS_CONTRAT = (('sale_order_header_ids', 'one2many'),
+                  ('sale_order_ids', 'many2many'))
+FILTRES = ('filter_to_order', 'filter_to_order_due', 'filter_ordered',
+           'group_order_state')
+MODELES_ASSISTANT = ('eurekam.maintenance.attach.order.wizard',
+                     'eurekam.maintenance.attach.order.line')
+
+
+def resoudre_base(url):
+    req = urllib.request.Request(
+        url + '/web/database/list',
+        data=json.dumps({'jsonrpc': '2.0', 'method': 'call',
+                         'params': {}}).encode(),
+        headers={'Content-Type': 'application/json'})
+    return json.load(urllib.request.urlopen(req, timeout=60))['result'][0]
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument('--url')
+    ap.add_argument('--production', metavar='JETON')
+    ap.add_argument('--version', default=VERSION_ATTENDUE)
+    args = ap.parse_args()
+
+    cfg = json.load(io.open(CONFIG, encoding='utf-8'))
+    url = (args.url or cfg['url']).rstrip('/')
+
+    # --- Garde-fou, AVANT tout contact reseau ---
+    if args.production:
+        if args.production != JETON_PRODUCTION:
+            sys.exit("STOP : --production attend le jeton exact %r. "
+                     "Aucune requete n'a ete envoyee." % JETON_PRODUCTION)
+        if url.lower() != URL_PRODUCTION:
+            sys.exit("STOP : --production n'autorise que %s. "
+                     "Aucune requete n'a ete envoyee." % URL_PRODUCTION)
+        db = resoudre_base(url)
+        if not re.match(MOTIF_BASE_PRODUCTION, db):
+            sys.exit('STOP : base %r inattendue.' % db)
+        print('>> ENVIRONNEMENT : *** PRODUCTION *** -- Base : %s' % db)
+    else:
+        u = url.lower()
+        if not any(mot in u for mot in MOTS_TEST):
+            sys.exit("STOP : l'URL %s ne contient aucun mot-cle de test. "
+                     "Aucune requete n'a ete envoyee." % url)
+        for mot in ('prod', 'production'):
+            if mot in u and 'preprod' not in u:
+                sys.exit("STOP : mot-cle interdit '%s' dans l'URL." % mot)
+        db = resoudre_base(url)
+        if not re.match(MOTIF_BASE_DEFAUT, db):
+            sys.exit('STOP : base %r hors du motif de test.' % db)
+        print('>> ENVIRONNEMENT : TEST -- Base : %s' % db)
+    print('>> MODE          : LECTURE SEULE')
+    print('>> VERSION VISEE : %s\n' % args.version)
+
+    pwd = cfg.get('password') or cfg.get('api_key')
+    uid = xmlrpc.client.ServerProxy(url + '/xmlrpc/2/common').authenticate(
+        db, cfg['username'], pwd, {})
+    if not uid:
+        sys.exit('STOP : authentification refusee.')
+    models = xmlrpc.client.ServerProxy(url + '/xmlrpc/2/object',
+                                       allow_none=True)
+
+    def call(model, method, *a, **kw):
+        kw.setdefault('context', {})['lang'] = 'fr_FR'
+        return models.execute_kw(db, uid, pwd, model, method, list(a), kw)
+
+    ok = True
+
+    def verdict(bon, libelle, detail=''):
+        nonlocal ok
+        ok = ok and bon
+        print('  %-7s %s%s' % ('OK' if bon else 'ECHEC', libelle,
+                               ('  %s' % detail) if detail else ''))
+
+    # ---- 1. Presence du code --------------------------------------------
+    print('--- Module ---')
+    mod = call('ir.module.module', 'search_read',
+               [('name', '=', 'eurekam_maintenance')],
+               fields=['state', 'latest_version', 'write_date'])
+    if not mod:
+        print('  ECHEC   module introuvable'); sys.exit(1)
+    m = mod[0]
+    verdict(m['state'] == 'installed', 'module installe', m['state'])
+    verdict(m['latest_version'] == args.version, 'version en ligne',
+            '%s (ecrit le %s UTC)' % (m['latest_version'], m['write_date']))
+
+    print('\n--- Champs ---')
+    presents = {c['name'] for c in call(
+        'ir.model.fields', 'search_read',
+        [('model', '=', LIGNE), ('name', 'in', list(CHAMPS_LIGNE))],
+        fields=['name'])}
+    for nom in CHAMPS_LIGNE:
+        verdict(nom in presents, '%s.%s' % (LIGNE, nom))
+    types = call(CONTRAT, 'fields_get', [], ['type'])
+    for nom, attendu in CHAMPS_CONTRAT:
+        c = types.get(nom)
+        verdict(bool(c) and c['type'] == attendu,
+                '%s.%s' % (CONTRAT, nom), c['type'] if c else 'absent')
+
+    print('\n--- Vues et assistant ---')
+    vues = call('ir.ui.view', 'search_read',
+                [('model', '=', LIGNE), ('type', '=', 'list'),
+                 ('inherit_id', '=', False)], fields=['name'])
+    verdict(len(vues) == 1,
+            'une seule vue liste autonome sur la ligne annuelle',
+            '%d trouvee(s)' % len(vues))
+    arch = call(LIGNE, 'get_view', **{'view_type': 'search'})['arch']
+    for nom in FILTRES:
+        verdict('name="%s"' % nom in arch, 'filtre %s' % nom)
+    liste = call(LIGNE, 'get_view', **{'view_type': 'list'})['arch']
+    for champ in ('contract_id', 'partner_id', 'order_state'):
+        verdict('name="%s"' % champ in liste,
+                'colonne %s dans la liste du menu' % champ)
+    for modele in MODELES_ASSISTANT:
+        verdict(bool(call('ir.model', 'search_count',
+                          [('model', '=', modele)])), 'modele %s' % modele)
+    acl = call('ir.model.access', 'search_count',
+               [('model_id.model', 'in', list(MODELES_ASSISTANT))])
+    verdict(acl >= 4, 'droits d acces de l assistant', '%d / 4' % acl)
+    form = call(CONTRAT, 'get_view', **{'view_type': 'form'})['arch']
+    verdict('action_open_attach_order_wizard' in form,
+            'bouton "Rattacher une commande"')
+    verdict('name="order_state"' in form,
+            'pastille Commande dans l onglet Montants annuels')
+
+    print('\n--- Planification ---')
+    # active_test=False : ce cron est livre DESACTIVE, et une recherche Odoo
+    # ecarte les inactifs par defaut. Sans ce contexte, le controle declare
+    # absent un cron parfaitement en place.
+    crons = call('ir.cron', 'search_read',
+                 [('code', 'like', '_cron_check_years_to_order')],
+                 fields=['name', 'active'],
+                 context={'active_test': False, 'lang': 'fr_FR'})
+    verdict(bool(crons), 'cron des annees sans devis present')
+    if crons:
+        verdict(not crons[0]['active'],
+                'cron livre DESACTIVE (a activer apres le rattachement)',
+                'actif=%s' % crons[0]['active'])
+    verdict(bool(call('mail.activity.type', 'search_count',
+                      [('res_model', '=', CONTRAT)])),
+            'type d activite "Devis annuel a emettre"')
+
+    # ---- 2. Comportement attendu ----------------------------------------
+    print('\n--- Assertions metier ---')
+    try:
+        groupes = call(LIGNE, 'read_group', [], ['id'], ['order_state'])
+        repartition = {g['order_state'] or '(vide)': g['order_state_count']
+                       for g in groupes}
+        verdict(bool(groupes), 'le statut de commande repond',
+                ', '.join('%s=%d' % kv for kv in sorted(repartition.items())))
+    except Exception as exc:
+        verdict(False, 'le statut de commande repond', str(exc)[:90])
+
+    fermes = call(LIGNE, 'search_count',
+                  [('order_state', '=', 'to_order'),
+                   ('contract_state', 'in', ['draft', 'expired', 'cancelled'])])
+    verdict(fermes == 0,
+            'aucune ligne "a commander" sur un contrat ferme',
+            '%d trouvee(s)' % fermes)
+
+    g = call(LIGNE, 'read_group', [], ['year', 'amount'], ['contract_id'])
+    verdict(not (g and 'year' in g[0]),
+            'l annee n est pas totalisee par groupe')
+
+    print('\n==> %s' % ('DEPLOIEMENT CONFORME' if ok
+                        else 'DEPLOIEMENT NON CONFORME'))
+    sys.exit(0 if ok else 1)
+
+
+if __name__ == '__main__':
+    main()
