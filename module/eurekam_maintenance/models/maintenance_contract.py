@@ -41,6 +41,13 @@ WORKSTATION_LABEL = {'one': "%(n)s poste", 'many': "%(n)s postes"}
 FULL_PERIOD_LABEL = "Période complète (du %(start)s au %(end)s)"
 MODULE_FULL_PERIOD_LABEL = "%(module)s - Période complète (%(n)d an(s))"
 
+# Technical key stamped on maintenance_period_label by the order wizard when a
+# single order covers the whole contract ('full_contract' mode). Unlike the
+# yearly keys ("Q1 2026", "Year 2026") it is produced outside _periods_for_year,
+# so it lives here rather than in PERIOD_LABELS. Never translated: the ordering
+# status of the yearly lines matches on it.
+FULL_PERIOD_CODE = "Full period"
+
 
 def _split_amount(amount, n):
     """Split an amount into n fractions rounded to 2 decimals.
@@ -928,6 +935,28 @@ class EurekamMaintenanceContract(models.Model):
             'target': 'new',
             'context': {'default_contract_id': self.id},
         }
+
+    def _full_contract_orders(self):
+        """Live orders covering the whole contract in one go.
+
+        In 'full_contract' mode the wizard issues a single order for the
+        entire contract. Its lines carry no `maintenance_line_id` -- they
+        belong to no particular year -- yet they do cover every one of them.
+        Without this, each yearly line of such a contract would be reported as
+        still to be ordered.
+
+        No ensure_one(): the yearly lines call it while their own contract may
+        still be an unsaved record -- or none at all, on a line being typed in
+        the contract form's inline list. An empty recordset must answer
+        "no order", not raise.
+        """
+        return self.sale_order_ids.filtered(
+            lambda o: o.state != 'cancel' and any(
+                l.maintenance_kind == 'contract'
+                and l.maintenance_period_label == FULL_PERIOD_CODE
+                for l in o.order_line
+            )
+        )
 
     def action_view_sale_orders(self):
         """Open the customer orders (sale.order) linked to this contract."""

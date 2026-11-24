@@ -576,6 +576,7 @@ msgstr "Client"
 
 #. module: eurekam_maintenance
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__sale_order_ids
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract_line__order_ids
 msgid "Customer Orders"
 msgstr "Commandes client"
 
@@ -2591,3 +2592,52 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:eurekam_maintenance.report_maintenance_contract
 msgid "Ordered Duration"
 msgstr "Durée commandée"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_contract_line__order_ids
+msgid "Customer orders covering this yearly line."
+msgstr "Commandes client couvrant cette ligne annuelle."
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract_line__order_state__not_applicable
+msgid "Not Applicable"
+msgstr "Sans objet"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract_line__order_state__ordered
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_line_search
+msgid "Ordered"
+msgstr "Commandée"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract_line__order_state
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_line_search
+msgid "Ordering"
+msgstr "Commande"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract_line__order_count
+msgid "Orders Count"
+msgstr "Nb de commandes"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract_line__order_state__to_order
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_line_search
+msgid "To Order"
+msgstr "À commander"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_line_search
+msgid "To Order - Period Started"
+msgstr "À commander — période entamée"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_contract_line__order_state
+msgid ""
+"To Order: no quotation has been issued for this year yet.\n"
+"Ordered: at least one live customer order covers it.\n"
+"Not Applicable: the contract is draft or cancelled, has no dates, or does not run during that year."
+msgstr ""
+"À commander : aucun devis n'a encore été émis pour cette année.\n"
+"Commandée : au moins une commande client vivante la couvre.\n"
+"Sans objet : le contrat est en brouillon ou annulé, n'a pas de dates, ou ne court pas sur cette année."

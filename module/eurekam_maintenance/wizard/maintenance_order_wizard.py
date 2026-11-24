@@ -16,6 +16,7 @@ from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 from odoo.addons.eurekam_maintenance.models.maintenance_contract import (
+    FULL_PERIOD_CODE,
     MODULE_FULL_PERIOD_LABEL,
 )
 
@@ -393,7 +394,8 @@ class EurekamMaintenanceOrderWizard(models.TransientModel):
                 'product_uom_qty': 1.0,
                 'price_unit': total,
                 # Technical key, never translated (see _periods_for_year).
-                'maintenance_period_label': "Full period",
+                # The yearly lines' ordering status matches on it.
+                'maintenance_period_label': FULL_PERIOD_CODE,
                 'maintenance_kind': 'contract',
             }))
             # ---- Billable modules over the whole contract ----
@@ -412,7 +414,7 @@ class EurekamMaintenanceOrderWizard(models.TransientModel):
                     'product_uom_qty': 1.0,
                     'price_unit': round(ml.amount * len(covered), 2),
                     # Technical key, never translated (see _periods_for_year).
-                    'maintenance_period_label': "Full period",
+                    'maintenance_period_label': FULL_PERIOD_CODE,
                     'maintenance_kind': 'module',
                 }))
         else:

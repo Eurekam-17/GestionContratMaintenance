@@ -16,6 +16,12 @@
                 <field name="partner_id"/>
                 <field name="year"/>
                 <field name="amount" sum="Total"/>
+                <field name="order_state" widget="badge"
+                       decoration-warning="order_state == 'to_order'"
+                       decoration-success="order_state == 'ordered'"
+                       decoration-muted="order_state == 'not_applicable'"/>
+                <field name="order_count" optional="hide"/>
+                <field name="order_ids" widget="many2many_tags" optional="hide"/>
                 <field name="invoice_count" optional="show"/>
                 <field name="is_invoiced" widget="boolean_toggle" readonly="1"/>
                 <field name="invoice_ids" widget="many2many_tags" optional="show"/>
@@ -36,6 +42,10 @@
                   decoration-success="is_invoiced">
                 <field name="year"/>
                 <field name="amount" sum="Total"/>
+                <field name="order_state" widget="badge" readonly="1"
+                       decoration-warning="order_state == 'to_order'"
+                       decoration-success="order_state == 'ordered'"
+                       decoration-muted="order_state == 'not_applicable'"/>
                 <field name="is_invoiced" widget="boolean_toggle"/>
                 <field name="notes" optional="hide"/>
             </list>
@@ -59,6 +69,9 @@
                             <field name="amount"/>
                         </group>
                         <group>
+                            <field name="order_state" readonly="1"/>
+                            <field name="order_count" readonly="1"/>
+                            <field name="order_ids" widget="many2many_tags" readonly="1"/>
                             <field name="is_invoiced" widget="boolean_toggle" readonly="1"/>
                             <field name="invoice_count" readonly="1"/>
                             <field name="invoice_ids" widget="many2many_tags" readonly="1"/>
@@ -114,6 +127,16 @@
                 <field name="partner_id"/>
                 <field name="year"/>
                 <separator/>
+                <!-- Years still awaiting a quotation. 'Not Applicable' lines
+                     are excluded by the status itself: draft or cancelled
+                     contracts, and years outside the contract period. -->
+                <filter string="To Order" name="filter_to_order"
+                        domain="[('order_state','=','to_order')]"/>
+                <filter string="To Order - Period Started" name="filter_to_order_due"
+                        domain="[('order_state','=','to_order'),('year','&lt;=', context_today().year)]"/>
+                <filter string="Ordered" name="filter_ordered"
+                        domain="[('order_state','=','ordered')]"/>
+                <separator/>
                 <filter string="Invoiced" name="filter_invoiced"
                         domain="[('is_invoiced','=',True)]"/>
                 <filter string="Not Invoiced" name="filter_not_invoiced"
@@ -130,6 +153,8 @@
                             context="{'group_by':'partner_id'}"/>
                     <filter string="Contract" name="group_contract"
                             context="{'group_by':'contract_id'}"/>
+                    <filter string="Ordering" name="group_order_state"
+                            context="{'group_by':'order_state'}"/>
                     <filter string="Contract Status" name="group_contract_state"
                             context="{'group_by':'contract_state'}"/>
                     <filter string="Salesperson" name="group_commercial"

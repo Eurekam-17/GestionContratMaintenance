@@ -937,6 +937,100 @@ class TestMaintenanceContract(TransactionCase):
         contract.gen_id = gen3
         self.assertEqual(contract.gen_id.name, 'GEN3')
 
+    # ======================================================================
+    # 23. Ordering status of the yearly lines ("year to order")
+    #
+    # Nothing issues the next year's quotation on its own -- the only cron
+    # watches the contract end date. These tests pin down the indicator the
+    # sales team uses to spot a year nobody has quoted yet.
+    # ======================================================================
+    def _contrat_pluriannuel(self, montant=30000.0):
+        """Active 3-year contract with its yearly lines, no order yet."""
+        an = ofields.Date.context_today(self.env['res.partner']).year
+        contract = self._make_contract(
+            date_start=date(an, 1, 1), date_end=date(an + 2, 12, 31),
+            duration='3y', maintenance_amount=montant)
+        contract.action_activate()
+        contract.action_generate_lines()
+        return contract, an
+
+    def _etats(self, contract):
+        contract.line_ids.invalidate_recordset(['order_state', 'order_count'])
+        return {l.year: l.order_state for l in contract.line_ids}
+
+    def test_order_state_to_order_by_default(self):
+        """Every year of an active contract starts out awaiting a quotation."""
+        contract, an = self._contrat_pluriannuel()
+        self.assertEqual(len(contract.line_ids), 3)
+        self.assertEqual(self._etats(contract),
+                         {an: 'to_order', an + 1: 'to_order', an + 2: 'to_order'})
+        for line in contract.line_ids:
+            self.assertEqual(line.order_count, 0)
+
+    def test_order_state_follows_the_quotation(self):
+        """Ordering one year marks that year only -- and cancelling undoes it."""
+        contract, an = self._contrat_pluriannuel()
+        wizard = self.env['eurekam.maintenance.order.wizard'].with_context(
+            default_contract_id=contract.id).create({'year': an})
+        order = self.env['sale.order'].browse(
+            wizard.action_create_sale_order()['res_id'])
+
+        self.assertEqual(self._etats(contract),
+                         {an: 'ordered', an + 1: 'to_order', an + 2: 'to_order'})
+        ligne = contract.line_ids.filtered(lambda l: l.year == an)
+        self.assertEqual(ligne.order_count, 1)
+        self.assertIn(order, ligne.order_ids)
+
+        # A cancelled order covers nothing any more: the year is open again.
+        order._action_cancel()
+        self.assertEqual(self._etats(contract)[an], 'to_order')
+
+    def test_order_state_full_contract_order_covers_every_year(self):
+        """'Full contract' mode stamps no yearly line, yet it covers them all.
+
+        Its order lines carry no maintenance_line_id -- they belong to no
+        single year. Matching on the 'Full period' technical key is what keeps
+        those contracts out of the "to order" list.
+        """
+        contract, an = self._contrat_pluriannuel()
+        wizard = self.env['eurekam.maintenance.order.wizard'].with_context(
+            default_contract_id=contract.id).create({
+                'coverage_mode': 'full_contract'})
+        wizard.action_create_sale_order()
+
+        self.assertEqual(self._etats(contract),
+                         {an: 'ordered', an + 1: 'ordered', an + 2: 'ordered'})
+
+    def test_order_state_not_applicable_on_draft_and_cancelled(self):
+        """A year nobody can order yet must not pollute the campaign list."""
+        an = ofields.Date.context_today(self.env['res.partner']).year
+        contract = self._make_contract(
+            date_start=date(an, 1, 1), date_end=date(an + 1, 12, 31),
+            duration='2y')
+        contract.action_generate_lines()
+        self.assertEqual(contract.state, 'draft')
+        self.assertEqual(set(self._etats(contract).values()), {'not_applicable'})
+
+        contract.action_activate()
+        self.assertEqual(set(self._etats(contract).values()), {'to_order'})
+
+        contract.action_cancel()
+        self.assertEqual(set(self._etats(contract).values()), {'not_applicable'})
+
+    def test_order_state_not_applicable_outside_the_contract_period(self):
+        """The Notion import left yearly lines spilling outside their dates.
+
+        Those are a data problem, not a quotation to chase.
+        """
+        contract, an = self._contrat_pluriannuel()
+        hors = self.env['eurekam.maintenance.contract.line'].create({
+            'contract_id': contract.id,
+            'year': an - 3,
+            'amount': 5000.0,
+        })
+        self.assertEqual(hors.order_state, 'not_applicable')
+        self.assertEqual(self._etats(contract)[an], 'to_order')
+
         # The code stays unique, so the mapping from the legacy values holds.
         # assertRaises takes a single class here, like the other constraint
         # tests in this file: Odoo 18 refuses a tuple of exception classes.

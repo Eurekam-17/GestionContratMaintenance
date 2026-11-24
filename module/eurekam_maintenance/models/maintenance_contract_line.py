@@ -1,6 +1,16 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
+# Ordering status of a yearly line. Deliberately not a plain boolean: a line
+# nobody can order yet -- a draft or cancelled contract, a year lying outside
+# the contract period -- must not be counted as "to order", otherwise the
+# campaign list drowns in noise.
+ORDER_STATES = [
+    ('to_order', "To Order"),
+    ('ordered', "Ordered"),
+    ('not_applicable', "Not Applicable"),
+]
+
 
 class EurekamMaintenanceContractLine(models.Model):
     _name = 'eurekam.maintenance.contract.line'
@@ -68,6 +78,35 @@ class EurekamMaintenanceContractLine(models.Model):
         compute='_compute_invoice_status',
         store=True,
         help="Checked as soon as at least one invoice covers the line.",
+    )
+    # ---- Ordering status -------------------------------------------------
+    # Nothing in the module issues the next year's quotation on its own: the
+    # only scheduled action watches the contract end date. These three fields
+    # are what makes the years still awaiting a quotation listable, so a year
+    # of a multi-year contract can no longer be forgotten.
+    order_ids = fields.Many2many(
+        'sale.order',
+        string='Customer Orders',
+        compute='_compute_order_ids',
+        help="Customer orders covering this yearly line.",
+    )
+    # Stored, for the same reason as invoice_count above: the Yearly Lines
+    # search view filters and groups on them, and Odoo refuses a filter whose
+    # field cannot be searched.
+    order_count = fields.Integer(
+        string='Orders Count',
+        compute='_compute_order_state',
+        store=True,
+    )
+    order_state = fields.Selection(
+        ORDER_STATES,
+        string='Ordering',
+        compute='_compute_order_state',
+        store=True,
+        help="To Order: no quotation has been issued for this year yet.\n"
+             "Ordered: at least one live customer order covers it.\n"
+             "Not Applicable: the contract is draft or cancelled, has no "
+             "dates, or does not run during that year.",
     )
     notes = fields.Text(string='Notes')
 
@@ -208,6 +247,74 @@ class EurekamMaintenanceContractLine(models.Model):
             factures = rec._factures_couvrantes()
             rec.invoice_count = len(factures)
             rec.is_invoiced = bool(factures)
+
+    # ------------------------------------------------------------------
+    # Ordering status
+    # ------------------------------------------------------------------
+    def _commandes_couvrantes(self):
+        """Live customer orders covering the line.
+
+        Two paths: the usual one, where the wizard stamped
+        `maintenance_line_id` on every line it created for that year, and the
+        rare 'full_contract' order, which covers all the years at once without
+        pointing at any of them.
+        """
+        self.ensure_one()
+        par_annee = self.sale_line_ids.filtered(
+            lambda l: l.order_id.state != 'cancel'
+        ).order_id
+        return par_annee | self.contract_id._full_contract_orders()
+
+    def _est_commandable(self):
+        """True when the year is one a quotation can sensibly be issued for.
+
+        A draft contract cannot be ordered -- it has to be activated first --
+        and a cancelled one never will be. Beyond that, the year has to fall
+        inside the contract period: the Notion import left behind yearly lines
+        spilling outside their own contract's dates, and those are a data
+        problem, not a quotation to chase.
+
+        The overlap test goes through `_periods_for_year` rather than
+        comparing years by hand, so it cannot drift from the rule the order
+        wizard actually applies when it splits a year. The period code is
+        irrelevant here: whatever the frequency, at least one period survives
+        exactly when the calendar year overlaps the contract.
+        """
+        self.ensure_one()
+        contrat = self.contract_id
+        if contrat.state in ('draft', 'cancelled'):
+            return False
+        if not contrat.date_start or not contrat.date_end:
+            return False
+        return bool(contrat._periods_for_year(
+            self.year, 0.0, 'annual', contrat.date_start, contrat.date_end))
+
+    @api.depends('year',
+                 'sale_line_ids.order_id.state',
+                 'contract_id.state',
+                 'contract_id.date_start',
+                 'contract_id.date_end',
+                 'contract_id.sale_order_ids.state',
+                 'contract_id.sale_order_ids.order_line.maintenance_period_label')
+    def _compute_order_state(self):
+        for rec in self:
+            commandes = rec._commandes_couvrantes()
+            rec.order_count = len(commandes)
+            if commandes:
+                rec.order_state = 'ordered'
+            elif rec._est_commandable():
+                rec.order_state = 'to_order'
+            else:
+                rec.order_state = 'not_applicable'
+
+    # Not stored, so kept out of _compute_order_state -- see the note on
+    # _compute_invoice_ids about Odoo 18's "inconsistent 'store'" warning.
+    @api.depends('sale_line_ids.order_id.state',
+                 'contract_id.sale_order_ids.state',
+                 'contract_id.sale_order_ids.order_line.maintenance_period_label')
+    def _compute_order_ids(self):
+        for rec in self:
+            rec.order_ids = rec._commandes_couvrantes()
 
     # ------------------------------------------------------------------
     # Constraints
