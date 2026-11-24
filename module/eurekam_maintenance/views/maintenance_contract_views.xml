@@ -169,6 +169,11 @@
                                       decoration-success="is_invoiced">
                                     <field name="year"/>
                                     <field name="amount" sum="Total"/>
+                                    <field name="order_state" widget="badge" readonly="1"
+                                           decoration-warning="order_state == 'to_order'"
+                                           decoration-success="order_state == 'ordered'"
+                                           decoration-muted="order_state == 'not_applicable'"/>
+                                    <field name="order_count" optional="hide"/>
                                     <field name="invoice_count" optional="show"/>
                                     <field name="is_invoiced" widget="boolean_toggle" readonly="1"/>
                                     <field name="invoice_ids" widget="many2many_tags" optional="show"/>

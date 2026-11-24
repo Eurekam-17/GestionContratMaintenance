@@ -1017,6 +1017,44 @@ class TestMaintenanceContract(TransactionCase):
         contract.action_cancel()
         self.assertEqual(set(self._etats(contract).values()), {'not_applicable'})
 
+    def test_yearly_lines_menu_shows_the_full_list(self):
+        """The Yearly Lines menu must render the rich list, not a twin.
+
+        A second standalone list view on this model is enough to hijack the
+        menu: Odoo picks by (priority, name, id), so an alphabetically earlier
+        name wins at equal priority. That is exactly what an orphan
+        "...inline.list" view did for months -- the menu showed neither the
+        contract nor the establishment, and nobody could tell why.
+        """
+        vues = self.env['ir.ui.view'].search([
+            ('model', '=', 'eurekam.maintenance.contract.line'),
+            ('type', '=', 'list'),
+            ('inherit_id', '=', False),
+        ])
+        self.assertEqual(
+            vues,
+            self.env.ref('eurekam_maintenance.view_maintenance_contract_line_list'),
+            "A second standalone list view would hijack the Yearly Lines menu.",
+        )
+        arch = self.env['eurekam.maintenance.contract.line'].get_view(
+            view_type='list')['arch']
+        for champ in ('contract_id', 'partner_id', 'order_state'):
+            self.assertIn('name="%s"' % champ, arch,
+                          "The menu list view must carry %s." % champ)
+
+    def test_year_is_never_summed(self):
+        """A year is a label, not a quantity.
+
+        Grouped, the Year column used to show 2025 + 2027 + 2028 = 6 080.
+        """
+        contract, an = self._contrat_pluriannuel()
+        groupes = self.env['eurekam.maintenance.contract.line'].read_group(
+            [('contract_id', '=', contract.id)], ['year', 'amount'],
+            ['contract_id'])
+        self.assertTrue(groupes)
+        self.assertNotIn('year', groupes[0],
+                         "The year must not be aggregated across a group.")
+
     def test_order_state_not_applicable_on_expired(self):
         """A contract closed for good is no longer a quotation to chase.
 

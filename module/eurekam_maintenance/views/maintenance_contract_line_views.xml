@@ -31,26 +31,15 @@
         </field>
     </record>
 
-    <!-- ============================================================== -->
-    <!-- Inline editable list view inside the contract form              -->
-    <!-- ============================================================== -->
-    <record id="view_maintenance_contract_line_inline_list" model="ir.ui.view">
-        <field name="name">eurekam.maintenance.contract.line.inline.list</field>
-        <field name="model">eurekam.maintenance.contract.line</field>
-        <field name="arch" type="xml">
-            <list editable="bottom"
-                  decoration-success="is_invoiced">
-                <field name="year"/>
-                <field name="amount" sum="Total"/>
-                <field name="order_state" widget="badge" readonly="1"
-                       decoration-warning="order_state == 'to_order'"
-                       decoration-success="order_state == 'ordered'"
-                       decoration-muted="order_state == 'not_applicable'"/>
-                <field name="is_invoiced" widget="boolean_toggle"/>
-                <field name="notes" optional="hide"/>
-            </list>
-        </field>
-    </record>
+    <!-- There is deliberately NO standalone "inline" list view here.
+         The contract form embeds its own list inside the "Yearly Amounts"
+         page, so a second standalone list view would be an orphan, and a
+         harmful one: with both at the default priority 16, Odoo picks by
+         (priority, name, id), and "...inline.list" sorts before "...list".
+         The orphan therefore won, and the "Yearly Lines" menu silently
+         rendered the stripped-down view, without Contract, Establishment,
+         Salesperson or Contract Status, for months (found 2026-11-24).
+         test_yearly_lines_menu_shows_the_full_list guards against a relapse. -->
 
     <!-- ============================================================== -->
     <!-- Yearly line form view                                           -->

@@ -39,6 +39,11 @@ class EurekamMaintenanceContractLine(models.Model):
         string='Year',
         required=True,
         index=True,
+        # Odoo aggregates integers in grouped lists by default, so the Year
+        # column showed "6 080" for a group holding 2025, 2027 and 2028 --
+        # a meaningless number that reads like a bug. A year is a label, not
+        # a quantity: it is never summed, averaged or totalled.
+        aggregator=False,
     )
     amount = fields.Monetary(
         string='Amount',
