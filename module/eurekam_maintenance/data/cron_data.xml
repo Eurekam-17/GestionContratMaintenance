@@ -20,5 +20,36 @@
             <field name="active" eval="True"/>
         </record>
 
+        <!--
+            Weekly cron: raise an activity on each contract year that still
+            has no quotation attached.
+
+            Code executed:
+                model._cron_check_years_to_order()
+
+            SHIPPED INACTIVE ON PURPOSE. The alert reads the link between a
+            contract year and a customer order, and that link is barely
+            populated yet: production carries roughly 970 customer orders of
+            which only a handful point at a contract, because the orders
+            predate the module. Switched on as it stands, the first run would
+            raise an activity on very nearly every live contract, all of them
+            wrong, since the quotation usually exists and is simply not
+            attached. The team would learn to ignore the alert inside a
+            fortnight, and the feature would be dead on arrival.
+
+            Enable it (Settings > Technical > Scheduled Actions) once the
+            existing orders have been attached to their contracts.
+        -->
+        <record id="cron_check_years_to_order" model="ir.cron">
+            <field name="name">Eurekam Maintenance: contract years still to be quoted</field>
+            <field name="model_id" ref="model_eurekam_maintenance_contract"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_check_years_to_order()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">weeks</field>
+            <field name="active" eval="False"/>
+        </record>
+
     </data>
 </odoo>

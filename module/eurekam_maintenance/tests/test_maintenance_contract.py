@@ -1017,6 +1017,85 @@ class TestMaintenanceContract(TransactionCase):
         contract.action_cancel()
         self.assertEqual(set(self._etats(contract).values()), {'not_applicable'})
 
+    # ======================================================================
+    # 24. Weekly cron: contract years still to be quoted
+    # ======================================================================
+    def _type_activite_devis(self):
+        return self.env.ref(
+            'eurekam_maintenance.activity_type_year_to_order')
+
+    def _activites_devis(self, contract):
+        return contract.activity_ids.filtered(
+            lambda a: a.activity_type_id == self._type_activite_devis())
+
+    def test_order_cron_raises_one_activity_per_contract(self):
+        """One activity listing the years, not one per yearly line."""
+        contract, an = self._contrat_pluriannuel()
+        self.env['eurekam.maintenance.contract']._cron_check_years_to_order()
+
+        activites = self._activites_devis(contract)
+        self.assertEqual(len(activites), 1,
+                         "A salesperson must get one activity per contract.")
+        self.assertEqual(activites.user_id, self.user_commercial)
+        # The current year is due; next year's period starts within the lead
+        # time only if we are late in the year, so assert on the current one.
+        self.assertIn(str(an), activites.summary)
+
+    def test_order_cron_is_idempotent(self):
+        """A year stays 'to order' until someone acts -- do not re-alert.
+
+        This is the whole reason the reminder is an activity and not an
+        email: the expiry cron gets idempotence from its state transition,
+        this one has no state to flip.
+        """
+        contract, _an = self._contrat_pluriannuel()
+        Contract = self.env['eurekam.maintenance.contract']
+        Contract._cron_check_years_to_order()
+        Contract._cron_check_years_to_order()
+        Contract._cron_check_years_to_order()
+        self.assertEqual(len(self._activites_devis(contract)), 1,
+                         "Three runs must leave a single activity.")
+
+    def test_order_cron_ignores_years_already_quoted(self):
+        """Issuing the quotation takes the year out of the reminder."""
+        contract, an = self._contrat_pluriannuel()
+        wizard = self.env['eurekam.maintenance.order.wizard'].with_context(
+            default_contract_id=contract.id).create({'year': an})
+        wizard.action_create_sale_order()
+
+        self.env['eurekam.maintenance.contract']._cron_check_years_to_order()
+        activites = self._activites_devis(contract)
+        if activites:
+            self.assertNotIn(str(an), activites.summary,
+                             "The quoted year must not be reminded.")
+
+    def test_order_cron_horizon_is_bounded(self):
+        """A contract running far out must not raise all its years at once."""
+        an = ofields.Date.context_today(self.env['res.partner']).year
+        contract = self._make_contract(
+            date_start=date(an, 1, 1), date_end=date(an + 5, 12, 31),
+            duration='5y')
+        contract.action_activate()
+        contract.action_generate_lines()
+        self.assertEqual(len(contract.line_ids), 6)
+
+        self.env['eurekam.maintenance.contract']._cron_check_years_to_order()
+        activites = self._activites_devis(contract)
+        self.assertTrue(activites)
+        for lointaine in range(an + 2, an + 6):
+            self.assertNotIn(str(lointaine), activites.summary,
+                             "Only the current year and the next one are due.")
+
+    def test_order_cron_skips_contracts_without_salesperson(self):
+        """An activity assigned to nobody is noise, not a reminder."""
+        contract, _an = self._contrat_pluriannuel()
+        contract.commercial_id = False
+        res = self.env[
+            'eurekam.maintenance.contract']._cron_check_years_to_order()
+        self.assertFalse(self._activites_devis(contract))
+        self.assertIn(contract.sequence_number,
+                      res['skipped_no_salesperson'])
+
     def test_yearly_lines_menu_shows_the_full_list(self):
         """The Yearly Lines menu must render the rich list, not a twin.
 

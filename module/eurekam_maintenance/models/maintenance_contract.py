@@ -1,5 +1,5 @@
 import logging
-from datetime import date
+from datetime import date, timedelta
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError, ValidationError
@@ -47,6 +47,22 @@ MODULE_FULL_PERIOD_LABEL = "%(module)s - Période complète (%(n)d an(s))"
 # so it lives here rather than in PERIOD_LABELS. Never translated: the ordering
 # status of the yearly lines matches on it.
 FULL_PERIOD_CODE = "Full period"
+
+# Wording of the "year still to be quoted" activity. French for the same
+# reason as PERIOD_LABELS above: _() does not survive extraction here.
+ORDER_REMINDER_SUMMARY = "Devis à émettre : %(years)s"
+ORDER_REMINDER_LINE = "<li>%(year)s — période à compter du %(start)s</li>"
+ORDER_REMINDER_NOTE = (
+    "Aucun devis n'est rattaché à ce contrat pour :"
+    "<ul>%(lines)s</ul>"
+    "Utilisez le bouton « Créer le devis » du contrat. Si le devis a déjà "
+    "été émis en dehors du module, rattachez-le plutôt que d'en créer un "
+    "second."
+)
+# How long before a billing period starts the salesperson is reminded.
+# Overridable without a deployment through the system parameter
+# `eurekam_maintenance.order_reminder_lead_days`.
+ORDER_REMINDER_LEAD_DAYS = 60
 
 
 def _split_amount(amount, n):
@@ -1097,3 +1113,116 @@ class EurekamMaintenanceContract(models.Model):
             'expiring': passed_to_expiring.ids,
             'expired': passed_to_expired.ids,
         }
+
+    # ------------------------------------------------------------------
+    # Years still to be quoted
+    # ------------------------------------------------------------------
+    def _years_due_for_order(self, today, lead_days, horizon):
+        """Years awaiting a quotation whose billing period is near enough.
+
+        Returns [(year, period_start), ...] sorted by year.
+
+        The trigger is the real start of the year's first billing period, not
+        1 January: a contract running from 1 June does not start its 2027 slice
+        in January, and `_periods_for_year` already knows where it does start.
+        """
+        self.ensure_one()
+        if not self.date_start or not self.date_end:
+            return []
+        period_code = self._get_billing_period_code()
+        due = []
+        for line in self.line_ids:
+            if line.order_state != 'to_order' or line.year > horizon:
+                continue
+            periods = self._periods_for_year(
+                line.year, line.amount, period_code,
+                self.date_start, self.date_end)
+            if not periods:
+                continue
+            start = periods[0][3]
+            if start - timedelta(days=lead_days) <= today:
+                due.append((line.year, start))
+        return sorted(due)
+
+    @api.model
+    def _cron_check_years_to_order(self):
+        """Weekly job: raise an activity on the years nobody has quoted yet.
+
+        The expiry cron watches a single date per contract -- the end -- so a
+        contract running to 2031 and billed yearly triggers exactly one alert
+        in its whole life. The intermediate renewals went unwatched.
+
+        An activity rather than an email, for one reason: idempotence. The
+        expiry cron gets it for free, because the state transition *is* the
+        memory -- once a contract is 'expiring' it is never notified again. A
+        year stays 'to order' until somebody acts, so a mail-based reminder
+        would fire every single run until then, and the team would filter it
+        out within a fortnight. "Is there already an open activity of this type
+        on this contract?" is the memory we would otherwise have to invent.
+
+        One activity per contract, listing the years, not one per yearly line:
+        a salesperson holding thirty contracts would otherwise be handed sixty
+        notifications on the first run.
+        """
+        today = fields.Date.context_today(self)
+        lead_days = int(self.env['ir.config_parameter'].sudo().get_param(
+            'eurekam_maintenance.order_reminder_lead_days',
+            ORDER_REMINDER_LEAD_DAYS,
+        ))
+        # Current year plus the next one. Without this bound, a contract
+        # running to 2031 would raise five years at once on the first run.
+        horizon = today.year + 1
+
+        activity_type = self.env.ref(
+            'eurekam_maintenance.activity_type_year_to_order',
+            raise_if_not_found=False,
+        )
+        if not activity_type:
+            _logger.warning(
+                "Order reminder cron: activity type missing, nothing done.")
+            return {'created': [], 'skipped_no_salesperson': []}
+
+        contracts = self.search([('state', 'in', ('active', 'expiring'))])
+        created, sans_commercial, deja_ouvert = [], [], 0
+
+        for contract in contracts:
+            # Idempotence: one open reminder per contract at a time.
+            if contract.activity_ids.filtered(
+                    lambda a: a.activity_type_id == activity_type):
+                deja_ouvert += 1
+                continue
+            due = contract._years_due_for_order(today, lead_days, horizon)
+            if not due:
+                continue
+            if not contract.commercial_id:
+                # An activity assigned to nobody is noise: it would land on
+                # the cron's own user and never be seen.
+                sans_commercial.append(contract.sequence_number)
+                continue
+            lines = ''.join(
+                ORDER_REMINDER_LINE % {'year': year,
+                                       'start': start.strftime('%d/%m/%Y')}
+                for year, start in due
+            )
+            contract.activity_schedule(
+                'eurekam_maintenance.activity_type_year_to_order',
+                date_deadline=due[0][1],
+                summary=ORDER_REMINDER_SUMMARY % {
+                    'years': ', '.join(str(year) for year, _s in due)},
+                note=ORDER_REMINDER_NOTE % {'lines': lines},
+                user_id=contract.commercial_id.id,
+            )
+            created.append(contract.sequence_number)
+
+        _logger.info(
+            "Order reminder cron: %d contracts checked, %d activities created, "
+            "%d already open, %d skipped for want of a salesperson.",
+            len(contracts), len(created), deja_ouvert, len(sans_commercial),
+        )
+        if sans_commercial:
+            _logger.warning(
+                "Order reminder cron: no salesperson on %s.",
+                ', '.join(sans_commercial),
+            )
+        return {'created': created,
+                'skipped_no_salesperson': sans_commercial}
