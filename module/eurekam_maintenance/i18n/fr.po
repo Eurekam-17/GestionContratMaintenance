@@ -2770,3 +2770,8 @@ msgstr "Écriture comptable"
 #: code:addons/eurekam_maintenance/wizard/maintenance_order_wizard.py:0
 msgid "The revised amount must be greater than zero."
 msgstr "Le montant révisé doit être supérieur à zéro."
+
+#. module: eurekam_maintenance
+#: model:res.groups,name:eurekam_maintenance.group_maintenance_readonly
+msgid "Read Only"
+msgstr "Lecture seule"

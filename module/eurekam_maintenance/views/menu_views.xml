@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- Root menu "Maintenance" -->
+    <!-- Root menu "Maintenance".
+         Opened to the read-only level: User implies Read Only (see
+         migrations/18.0.2.5.0/post-migrate.py), so the three levels all
+         see the menu, while Configuration below stays Manager only. -->
     <menuitem id="menu_root_maintenance"
               name="Maintenance"
               sequence="55"
-              groups="group_maintenance_user"/>
+              groups="group_maintenance_readonly"/>
 
     <!-- Submenu "Contracts" -->
     <menuitem id="menu_maintenance_contracts"

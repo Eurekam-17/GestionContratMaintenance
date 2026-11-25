@@ -41,7 +41,7 @@ MOTIF_BASE_PRODUCTION = r'^tecliberp-eurekam-main-\d+$'
 MOTS_TEST = ('test', 'staging', 'sandbox', 'recette', 'dev', 'preprod')
 MOTIF_BASE_DEFAUT = r'^eurekam-(sandbox|staging|recette|test|dev|preprod)(-\d+)?$'
 
-VERSION_ATTENDUE = '18.0.2.4.3'
+VERSION_ATTENDUE = '18.0.2.5.0'
 LIGNE = 'eurekam.maintenance.contract.line'
 CONTRAT = 'eurekam.maintenance.contract'
 
@@ -285,6 +285,81 @@ def main():
         verdict(len(bloc) > 1 and "'format': false" in bloc[1][:80],
                 'annee non formatee en milliers (%s)' % etiquette)
 
+    print('\n--- Niveau lecture seule ---')
+
+    def ref_id(xmlid):
+        mod, nom = xmlid.split('.')
+        d = call('ir.model.data', 'search_read',
+                 [('module', '=', mod), ('name', '=', nom)], fields=['res_id'])
+        return d[0]['res_id'] if d else 0
+
+    id_lecture = ref_id('eurekam_maintenance.group_maintenance_readonly')
+    id_user = ref_id('eurekam_maintenance.group_maintenance_user')
+    verdict(bool(id_lecture), 'groupe Lecture seule present')
+
+    # Le controle qui compte : group_maintenance_user a ete cree dans un
+    # bloc noupdate, donc l implication ne peut pas etre declaree en XML et
+    # vient d une migration. Si elle manque, tout le reste parait en place.
+    implies = call('res.groups', 'read', [id_user],
+                   fields=['implied_ids'])[0]['implied_ids'] if id_user else []
+    verdict(bool(id_lecture) and id_lecture in implies,
+            '"Utilisateur" implique "Lecture seule"',
+            '' if id_lecture and id_lecture in implies
+            else 'migration 18.0.2.5.0 non appliquee')
+
+    # Sans ce garde-fou, un domaine ('group_id', '=', 0) remonte les droits
+    # SANS groupe et le controle s auto-felicite sur 38 lignes etrangeres.
+    acl = call('ir.model.access', 'search_read',
+               [('group_id', '=', id_lecture)],
+               fields=['name', 'model_id', 'perm_read', 'perm_write',
+                       'perm_create', 'perm_unlink']) if id_lecture else []
+    verdict(len(acl) == 10, 'droits de lecture seule', '%d ligne(s)' % len(acl))
+    ecrivent = [a['name'] for a in acl
+                if a['perm_write'] or a['perm_create'] or a['perm_unlink']]
+    verdict(bool(acl) and not ecrivent,
+            'aucun droit d ecriture en lecture seule',
+            ', '.join(ecrivent) or ('' if acl else 'aucun droit a controler'))
+    assistants = [a['name'] for a in acl if 'wizard' in a['model_id'][1]]
+    verdict(bool(acl) and not assistants,
+            'aucun assistant ouvert en lecture seule',
+            ', '.join(assistants) or ('' if acl else 'aucun droit a controler'))
+
+    for xmlid, etiquette in (
+            ('rule_maintenance_contract_company_readonly', 'contrats'),
+            ('rule_maintenance_contract_line_company_readonly', 'lignes')):
+        rid = ref_id('eurekam_maintenance.' + xmlid)
+        if not rid:
+            verdict(False, 'regle de societe (%s) en lecture seule' % etiquette)
+            continue
+        regle = call('ir.rule', 'read', [rid],
+                     fields=['perm_read', 'perm_write', 'active'])[0]
+        verdict(regle['active'] and regle['perm_read']
+                and not regle['perm_write'],
+                'regle de societe (%s) en lecture seule' % etiquette)
+
+    id_menu = ref_id('eurekam_maintenance.menu_root_maintenance')
+    groupes_menu = call('ir.ui.menu', 'read', [id_menu],
+                        fields=['groups_id'])[0]['groups_id'] if id_menu else []
+    verdict(id_lecture in groupes_menu, 'menu Maintenance ouvert a la lecture')
+
+    # L arche STOCKEE, pas celle rendue : Odoo retire l attribut groups de
+    # l arche servie au client, un get_view ne le montrerait jamais.
+    id_vue = ref_id('eurekam_maintenance.view_maintenance_contract_form')
+    brut = call('ir.ui.view', 'read', [id_vue],
+                fields=['arch_db'])[0]['arch_db'] if id_vue else ''
+    attendus = ('action_activate', 'action_generate_lines',
+                'action_open_renewal_wizard', 'action_open_create_order_wizard',
+                'action_open_attach_order_wizard', 'action_recompute_state',
+                'action_cancel', 'action_draft')
+    sans_garde = []
+    for nom in attendus:
+        marque = 'name="%s"' % nom
+        pos = brut.find(marque)
+        if pos < 0 or 'group_maintenance_user' not in brut[pos:pos + 400]:
+            sans_garde.append(nom)
+    verdict(not sans_garde, 'les 8 boutons d action sont reserves',
+            ', '.join(sans_garde))
+
     print('\n--- Traductions francaises ---')
     # Lues sur l arche RENDUE en fr_FR, pas dans le fichier .po : un msgid
     # qui ne correspond pas a la chaine source donne une traduction morte,
@@ -294,6 +369,11 @@ def main():
         (form, u'Rattacher une commande', 'bouton de rattachement'),
         (form, u'Cr%ser le devis' % E, 'bouton de creation de devis'),
     )
+    if id_lecture:
+        nom_groupe = call('res.groups', 'read', [id_lecture],
+                          fields=['name'])[0]['name']
+        verdict(nom_groupe == u'Lecture seule',
+                'libelle francais : groupe lecture seule', nom_groupe)
     arch_cmd = arch_recherche('sale.sale_order_view_search_inherit_sale')
     for terme, etiquette in (
             (u'Contrat de maintenance', 'filtre contrat de maintenance'),

@@ -52,4 +52,57 @@
         </record>
 
     </data>
+
+    <!-- ==================================================================
+         Read-only level, added in 18.0.2.5.0.
+
+         Deliberately OUTSIDE the noupdate block above: these records must
+         stay correctable by a simple module update. The groups and rules
+         above were created with noupdate=1, so a module upgrade silently
+         skips any change to them - which is why the implication
+         "User implies Read Only" cannot be declared here and is set by
+         migrations/18.0.2.5.0/post-migrate.py instead.
+         ================================================================== -->
+    <data>
+
+        <record id="group_maintenance_readonly" model="res.groups">
+            <field name="name">Read Only</field>
+            <field name="category_id" ref="module_category_maintenance"/>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="comment">Consults the maintenance contracts without
+                being able to change anything: no creation, no edit, no
+                deletion, no wizard, no configuration.</field>
+        </record>
+
+        <!-- Company isolation for read-only members.
+
+             New rules rather than an edit of the two above, for the same
+             noupdate reason. Odoo ORs the rules of a model across the
+             groups a user belongs to; both carry the same domain, so a
+             User who is also in Read Only by implication sees exactly what
+             they saw before. -->
+        <record id="rule_maintenance_contract_company_readonly" model="ir.rule">
+            <field name="name">Maintenance contracts: company isolation (read only)</field>
+            <field name="model_id" ref="model_eurekam_maintenance_contract"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('group_maintenance_readonly'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+        <record id="rule_maintenance_contract_line_company_readonly" model="ir.rule">
+            <field name="name">Maintenance lines: company isolation (read only)</field>
+            <field name="model_id" ref="model_eurekam_maintenance_contract_line"/>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+            <field name="groups" eval="[(4, ref('group_maintenance_readonly'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="False"/>
+            <field name="perm_create" eval="False"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+    </data>
+
 </odoo>

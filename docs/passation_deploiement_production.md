@@ -1,7 +1,7 @@
 # Passation — déploiement de `eurekam_maintenance` en production
 
 **Destinataire : prestataire Odoo (Scalizer).**
-Version cible : **18.0.2.4.3**. Mis à jour le 2026-11-25.
+Version cible : **18.0.2.5.0**. Mis à jour le 2026-11-25.
 Toutes les mesures ci-dessous ont été relevées sur les instances ce jour-là.
 
 ---
@@ -12,7 +12,7 @@ Toutes les mesures ci-dessous ont été relevées sur les instances ce jour-là.
 |---|---|---|---|
 | `main` | **production** `eurekam.odoo.com` | `a007d99` | 18.0.2.0.0 (12/11) |
 | `Staging` | recette `eurekam-recette.odoo.com` | `a007d99` | 18.0.2.0.0 |
-| `sandbox` | sandbox `eurekam-sandbox.odoo.com` | `aece7d6` | **18.0.2.4.3** ✅ |
+| `sandbox` | sandbox `eurekam-sandbox.odoo.com` | `aece7d6` | **18.0.2.5.0** ✅ |
 
 La sandbox porte la version cible, vérifiée fonctionnellement le 25/11.
 La production et la recette ont sept versions de retard.
@@ -126,6 +126,29 @@ Si cela arrive en recette ou en production : ouvrir la branche sur Odoo.sh,
 Settings → Custom domains, cliquer l'icône d'information du domaine. Elle
 indique l'état de résolution et l'adresse exacte à viser. En attendant, tout
 reste joignable sur l'adresse du bouton **CONNECT**.
+
+### 3.8 Un troisième niveau de droits, et sa migration obligatoire
+
+La catégorie « Eurekam Maintenance » passe à trois niveaux : **Lecture seule**,
+Utilisateur, Gestionnaire. Le premier consulte contrats, lignes annuelles,
+établissements et tableau de bord sans rien pouvoir modifier ; les huit boutons
+d'action de l'en-tête du contrat lui sont masqués, les assistants n'ont aucune
+ligne de droits pour lui, et la Configuration reste réservée aux gestionnaires.
+
+**`migrations/18.0.2.5.0/post-migrate.py` n'est pas optionnelle.** Le groupe
+Utilisateur a été créé dans un bloc `<data noupdate="1">` : une mise à jour du
+module saute ces enregistrements, donc l'implication « Utilisateur implique
+Lecture seule » ne peut pas être déclarée en XML — elle ne produirait ni erreur
+ni effet. Sans elle, deux conséquences : les utilisateurs standard perdent le
+menu Maintenance (ouvert au niveau lecture seule), et le sélecteur de droits
+affiche trois cases indépendantes au lieu d'une échelle, Odoo construisant
+celle-ci à partir du graphe d'implication.
+
+Pour la même raison, les deux règles d'isolation par société du niveau lecture
+seule sont des règles **neuves**, hors bloc `noupdate`, et non une modification
+des deux existantes.
+
+Le script du §4 contrôle les neuf points, l'implication comprise.
 
 ## 4. Vérification après déploiement
 
