@@ -64,6 +64,29 @@ ORDER_REMINDER_NOTE = (
 # `eurekam_maintenance.order_reminder_lead_days`.
 ORDER_REMINDER_LEAD_DAYS = 60
 
+# Wording of the "period falls due" activity. French, same reason as above.
+PERIOD_REMINDER_LEAD_DAYS = 15
+PERIOD_SEND_SUMMARY = "Devis %(period)s à envoyer (échéance %(date)s)"
+PERIOD_SEND_NOTE = (
+    "Le devis <b>%(order)s</b> couvre la période <b>%(period)s</b>, due le "
+    "%(date)s, et n'a pas encore été envoyé au client.<br/>"
+    "Les devis de ce contrat partent période par période, à leur échéance : "
+    "celui-ci est à envoyer maintenant, les suivants le seront le moment venu."
+)
+PERIOD_CONFIRM_SUMMARY = "Devis annuel à confirmer avant %(period)s"
+PERIOD_CONFIRM_NOTE = (
+    "La période <b>%(period)s</b> est due le %(date)s, mais le devis annuel "
+    "<b>%(order)s</b> est encore à l'état de brouillon.<br/>"
+    "Confirmez-le pour pouvoir facturer la période."
+)
+PERIOD_BILL_SUMMARY = "Période %(period)s à facturer (échéance %(date)s)"
+PERIOD_BILL_NOTE = (
+    "La période <b>%(period)s</b> du devis <b>%(order)s</b> est due le "
+    "%(date)s et n'est pas encore facturée.<br/>"
+    "Facturez cette ligne seule, pas l'ensemble du devis : les autres "
+    "périodes se factureront à leur propre échéance."
+)
+
 
 def _split_amount(amount, n):
     """Split an amount into n fractions rounded to 2 decimals.
@@ -395,6 +418,24 @@ class EurekamMaintenanceContract(models.Model):
         string='Invoices Count',
         compute='_compute_invoice_count',
     )
+    # Which document the establishment expects, period by period. Some
+    # hospitals accept one yearly quotation and are then invoiced each
+    # quarter; others require a separate quotation for every period, because
+    # their own purchase-order process demands one. The module has to serve
+    # both, so the choice belongs on the contract.
+    billing_document_mode = fields.Selection(
+        [('annual_quote', "Annual quotation, billed per period"),
+         ('quote_per_period', "One quotation per period")],
+        string="Document Rhythm",
+        default='annual_quote',
+        required=True,
+        tracking=True,
+        help="Annual quotation: one quotation a year, confirmed once, then "
+             "one invoice per period as each falls due.\n"
+             "One quotation per period: a separate quotation for each period, "
+             "sent to the customer when that period falls due.",
+    )
+
     # Orders the module issued itself: the wizard stamps the contract on the
     # order header. Technical, and deliberately not the one the screens use --
     # see sale_order_ids right below.
@@ -1274,3 +1315,100 @@ class EurekamMaintenanceContract(models.Model):
             )
         return {'created': created,
                 'skipped_no_salesperson': sans_commercial}
+
+    # ------------------------------------------------------------------
+    # Periods falling due
+    # ------------------------------------------------------------------
+    @api.model
+    def _cron_check_periods_due(self):
+        """Daily job: ask for the ONE period that is due, never the whole year.
+
+        A quarterly contract produces four documents a year, and they must go
+        out one at a time, each at its own date. Nothing watched that: a
+        yearly quotation split in four could be invoiced in a single click,
+        and a quarter could be skipped without a trace.
+
+        Two rules, depending on what the establishment expects:
+        - 'one quotation per period': the draft quotation of the due period
+          has to be SENT;
+        - 'annual quotation': the yearly order must be confirmed, then the
+          due period's line INVOICED on its own.
+
+        Only lines carrying period bounds are watched, which means the
+        quotations this module issues. Historical orders attached after the
+        fact have no bounds -- on purpose, they are never re-split -- so they
+        stay out of this follow-up.
+        """
+        today = fields.Date.context_today(self)
+        lead_days = int(self.env['ir.config_parameter'].sudo().get_param(
+            'eurekam_maintenance.period_reminder_lead_days',
+            PERIOD_REMINDER_LEAD_DAYS,
+        ))
+        activity_type = self.env.ref(
+            'eurekam_maintenance.activity_type_period_due',
+            raise_if_not_found=False,
+        )
+        if not activity_type:
+            _logger.warning(
+                "Period cron: activity type missing, nothing done.")
+            return {'created': []}
+
+        lignes = self.env['sale.order.line'].search([
+            ('maintenance_billing_date', '!=', False),
+            ('maintenance_billing_date', '<=',
+             fields.Date.add(today, days=lead_days)),
+            ('maintenance_kind', '=', 'contract'),
+            ('order_id.state', '!=', 'cancel'),
+        ])
+        created, deja = [], 0
+
+        for ligne in lignes:
+            contrat = ligne.maintenance_line_id.contract_id
+            if not contrat or contrat.state not in ('active', 'expiring'):
+                continue
+            commande = ligne.order_id
+            periode = ligne.maintenance_period_label or '?'
+            echeance = ligne.maintenance_billing_date.strftime('%d/%m/%Y')
+            champs = {'order': commande.name, 'period': periode,
+                      'date': echeance}
+
+            if contrat.billing_document_mode == 'quote_per_period':
+                if commande.state != 'draft':
+                    continue                      # deja envoye ou confirme
+                resume = PERIOD_SEND_SUMMARY % champs
+                note = PERIOD_SEND_NOTE % champs
+            elif commande.state == 'draft':
+                resume = PERIOD_CONFIRM_SUMMARY % champs
+                note = PERIOD_CONFIRM_NOTE % champs
+            else:
+                factures = ligne.invoice_lines.move_id.filtered(
+                    lambda m: m.state != 'cancel')
+                if factures:
+                    continue
+                resume = PERIOD_BILL_SUMMARY % champs
+                note = PERIOD_BILL_NOTE % champs
+
+            # Idempotence : le resume est deterministe, periode comprise. Une
+            # relance deja ouverte pour CETTE periode n'est pas doublee, mais
+            # la periode suivante en obtient bien une nouvelle -- ce qu'une
+            # dedup par contrat aurait silencieusement avale.
+            if commande.activity_ids.filtered(
+                    lambda a: a.activity_type_id == activity_type
+                    and a.summary == resume):
+                deja += 1
+                continue
+
+            commande.activity_schedule(
+                'eurekam_maintenance.activity_type_period_due',
+                date_deadline=ligne.maintenance_billing_date,
+                summary=resume,
+                note=note,
+                user_id=(contrat.commercial_id.id
+                         or commande.user_id.id or self.env.uid),
+            )
+            created.append('%s %s' % (commande.name, periode))
+
+        _logger.info(
+            "Period cron: %d line(s) examined, %d activities created, "
+            "%d already open.", len(lignes), len(created), deja)
+        return {'created': created}

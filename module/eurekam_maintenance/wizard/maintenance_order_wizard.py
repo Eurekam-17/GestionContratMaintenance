@@ -60,6 +60,7 @@ class EurekamMaintenanceOrderWizard(models.TransientModel):
     coverage_mode = fields.Selection(
         [
             ('annual_split', "Year (split by frequency)"),
+            ('period_split', "One quotation per period"),
             ('full_contract', "Whole contract (rare case)"),
         ],
         string='Order Scope',
@@ -245,6 +246,12 @@ class EurekamMaintenanceOrderWizard(models.TransientModel):
         if contract_id:
             contract = self.env['eurekam.maintenance.contract'].browse(contract_id)
             res['contract_id'] = contract.id
+            # The document rhythm is a property of the establishment, decided
+            # once on the contract. Proposing it here spares the sales team
+            # from choosing it again on every quotation -- and from choosing
+            # it wrongly.
+            if contract.billing_document_mode == 'quote_per_period':
+                res['coverage_mode'] = 'period_split'
             # Default proposed year: the first future year not yet covered by an order.
             # A cancelled order covers nothing: its year stays proposable, so a
             # cancelled (or deleted) order can be recreated.
@@ -332,9 +339,16 @@ class EurekamMaintenanceOrderWizard(models.TransientModel):
         # clear message before anything is created; sale.order also enforces it
         # (_check_maintenance_order_unicity) for imports/API/manual entry.
         # Cancelled orders are ignored -> a cancelled/deleted order is recreatable.
-        year_key = self.year if self.coverage_mode == 'annual_split' else 0
+        year_key = (self.year if self.coverage_mode in ('annual_split',
+                                                        'period_split') else 0)
         existing = contract.sale_order_ids.filtered(
-            lambda o: o.state != 'cancel' and o.eurekam_maintenance_year == year_key
+            lambda o: o.state != 'cancel'
+            and o.eurekam_maintenance_year == year_key
+            # In 'one quotation per period' mode the year legitimately carries
+            # several orders, one per period; they are told apart by their
+            # period code, and each is guarded on its own below.
+            and not (self.coverage_mode == 'period_split'
+                     and o.eurekam_maintenance_period)
         )
         if existing:
             if year_key:
@@ -366,6 +380,11 @@ class EurekamMaintenanceOrderWizard(models.TransientModel):
             'company_id': contract.company_id.id,
             'origin': contract.sequence_number,
         }
+
+        # ---- One quotation per period: a separate order for each ----
+        if self.coverage_mode == 'period_split':
+            return self._creer_devis_par_periode(contract, so_vals)
+        # (definition below, kept out of this already long method)
 
         # ---- Build the lines ----
         product_template = contract.product_id
@@ -441,7 +460,7 @@ class EurekamMaintenanceOrderWizard(models.TransientModel):
                 self.year, year_amount, period_code,
                 contract.date_start, contract.date_end)
 
-            for code, label, fraction, _start, _end in periods:
+            for code, label, fraction, start, end in periods:
                 order_lines.append((0, 0, {
                     'product_id': product_variant.id,
                     'name': contract._billing_line_description(label),
@@ -450,6 +469,11 @@ class EurekamMaintenanceOrderWizard(models.TransientModel):
                     'maintenance_line_id': line.id,
                     'maintenance_period_label': code,
                     'maintenance_kind': 'contract',
+                    # Kept, at last: these bounds are what tells the follow-up
+                    # WHEN each quarter falls due, instead of billing a whole
+                    # year in one go or forgetting a period.
+                    'maintenance_period_start': start,
+                    'maintenance_period_end': end,
                 }))
 
             # ---- Billable modules active that year ----
@@ -459,7 +483,7 @@ class EurekamMaintenanceOrderWizard(models.TransientModel):
                 m_periods = contract._periods_for_year(
                     self.year, ml.amount, period_code,
                     contract.date_start, contract.date_end)
-                for base_code, base_label, fraction, _s, _e in m_periods:
+                for base_code, base_label, fraction, m_start, m_end in m_periods:
                     order_lines.append((0, 0, {
                         'product_id': ml_product.id,
                         'name': "%s - %s" % (module_name, base_label),
@@ -468,6 +492,8 @@ class EurekamMaintenanceOrderWizard(models.TransientModel):
                         'maintenance_line_id': line.id,
                         'maintenance_period_label': "%s — %s" % (module_name, base_code),
                         'maintenance_kind': 'module',
+                        'maintenance_period_start': m_start,
+                        'maintenance_period_end': m_end,
                     }))
 
         so_vals['order_line'] = order_lines
@@ -493,5 +519,104 @@ class EurekamMaintenanceOrderWizard(models.TransientModel):
             'res_model': 'sale.order',
             'res_id': sale_order.id,
             'view_mode': 'form',
+            'target': 'current',
+        }
+
+    # ==================================================================
+    # One quotation per period
+    # ==================================================================
+    def _creer_devis_par_periode(self, contract, so_vals):
+        """Issue one draft quotation per period of the year.
+
+        For the establishments whose own purchase-order process demands a
+        separate quotation for each quarter or half-year.
+
+        All of them are created at once, as DRAFTS, because the amounts are
+        known from the contract and there is nothing to gain from typing them
+        four times. What must not happen all at once is the *sending*: each
+        quotation carries the date its period falls due, and the follow-up
+        cron asks for the one that is due and still unsent -- never for the
+        whole year up front.
+        """
+        self.ensure_one()
+        if not self.year:
+            raise UserError(_("The year to cover is required."))
+        line = contract.line_ids.filtered(lambda l: l.year == self.year)
+        if not line:
+            raise UserError(_(
+                "No yearly line for year %s. "
+                "Click 'Generate Yearly Lines' on the contract first.",
+                self.year,
+            ))
+        variant = contract.product_id.product_variant_id
+        if not variant:
+            raise UserError(_(
+                "Product %s has no variant. Cannot create the order.",
+                contract.product_id.name,
+            ))
+
+        year_amount = self._apply_syntec_on_line(line)
+        periods = contract._periods_for_year(
+            self.year, year_amount, contract._get_billing_period_code(),
+            contract.date_start, contract.date_end)
+        if len(periods) < 2:
+            raise UserError(_(
+                "Contract %(contract)s bills year %(year)s in a single "
+                "period, so there is nothing to split into several "
+                "quotations. Use the 'Year' scope instead.",
+                contract=contract.sequence_number, year=self.year,
+            ))
+
+        deja = {o.eurekam_maintenance_period
+                for o in contract.sale_order_ids
+                if o.state != 'cancel' and o.eurekam_maintenance_year == self.year}
+        Order = self.env['sale.order'].with_context(eurekam_sync=True)
+        crees = Order.browse()
+        ignorees = []
+
+        for code, label, fraction, start, end in periods:
+            if code in deja:
+                # Already quoted: leave it alone rather than refusing the
+                # whole batch. Re-running the wizard must be able to fill in
+                # the periods that are missing.
+                ignorees.append(code)
+                continue
+            vals = dict(so_vals)
+            vals['eurekam_maintenance_period'] = code
+            vals['order_line'] = [(0, 0, {
+                'product_id': variant.id,
+                'name': contract._billing_line_description(label),
+                'product_uom_qty': 1.0,
+                'price_unit': fraction,
+                'maintenance_line_id': line.id,
+                'maintenance_period_label': code,
+                'maintenance_kind': 'contract',
+                'maintenance_period_start': start,
+                'maintenance_period_end': end,
+            })]
+            crees |= Order.create(vals)
+
+        if not crees:
+            raise UserError(_(
+                "Every period of year %(year)s already has its quotation "
+                "(%(periods)s).",
+                year=self.year, periods=', '.join(sorted(ignorees)),
+            ))
+
+        contract.message_post(body=(
+            "%(n)d devis créés pour %(year)s, un par période : %(noms)s.%(skip)s"
+            % dict(
+                n=len(crees), year=self.year,
+                noms=', '.join(crees.mapped('name')),
+                skip=(" Périodes déjà couvertes et laissées telles quelles : %s."
+                      % ', '.join(sorted(ignorees))) if ignorees else '',
+            )))
+
+        return {
+            'name': _("Quotations %s", self.year),
+            'type': 'ir.actions.act_window',
+            'res_model': 'sale.order',
+            'domain': [('id', 'in', crees.ids)],
+            'view_mode': 'list,form',
             'target': 'current',
         }

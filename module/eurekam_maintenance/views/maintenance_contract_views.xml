@@ -128,6 +128,7 @@
                                            widget="many2many_tags"
                                            options="{'color_field': 'color'}"
                                            nolabel="1"/>
+                                    <field name="billing_document_mode"/>
                                 </group>
                                 <group string="Module Billing">
                                     <field name="module_billing_ids"

@@ -32,8 +32,18 @@ class SaleOrder(models.Model):
         help="Contract year covered by this customer order. "
              "0 if the order covers the whole contract (rare case).",
     )
+    # Empty when the order covers a whole year, as it almost always does.
+    # Filled with the period code ('Q1 2027') when the contract is set to one
+    # quotation per period: without it, four quarterly orders of the same year
+    # would collide on the unicity guard below.
+    eurekam_maintenance_period = fields.Char(
+        string="Covered Period",
+        copy=False,
+        index=True,
+    )
 
-    @api.constrains('eurekam_maintenance_contract_id', 'eurekam_maintenance_year', 'state')
+    @api.constrains('eurekam_maintenance_contract_id', 'eurekam_maintenance_year',
+                    'eurekam_maintenance_period', 'state')
     def _check_maintenance_order_unicity(self):
         """A contract year can only be ordered once.
 
@@ -53,10 +63,24 @@ class SaleOrder(models.Model):
                 ('id', '!=', order.id),
                 ('eurekam_maintenance_contract_id', '=', contract.id),
                 ('eurekam_maintenance_year', '=', order.eurekam_maintenance_year),
+                # The period is part of the key: a contract billed with one
+                # quotation per quarter legitimately has four live orders on
+                # the same year, one per period.
+                ('eurekam_maintenance_period', '=',
+                 order.eurekam_maintenance_period or False),
                 ('state', '!=', 'cancel'),
             ], limit=1)
             if not duplicate:
                 continue
+            if order.eurekam_maintenance_period:
+                raise ValidationError(_(
+                    "Order %(existing)s already covers period %(period)s of "
+                    "contract %(contract)s.\n\n"
+                    "To recreate it, first cancel or delete %(existing)s.",
+                    existing=duplicate.name,
+                    period=order.eurekam_maintenance_period,
+                    contract=contract.sequence_number,
+                ))
             if order.eurekam_maintenance_year:
                 raise ValidationError(_(
                     "Order %(existing)s already covers year %(year)s of contract "
@@ -102,6 +126,38 @@ class SaleOrderLine(models.Model):
         string="Maintenance Line Type",
         copy=False,
     )
+    # ---- Period dates --------------------------------------------------
+    # _periods_for_year has always known the real bounds of each period; the
+    # wizard used to throw them away and keep only the label. Without them
+    # nothing could tell WHEN a quarter falls due, so a yearly order split in
+    # four was billed in one go, or a quarter was simply forgotten.
+    maintenance_period_start = fields.Date(
+        string="Period Start", copy=False, index=True)
+    maintenance_period_end = fields.Date(
+        string="Period End", copy=False)
+    maintenance_billing_date = fields.Date(
+        string="Due On",
+        compute='_compute_maintenance_billing_date',
+        store=True,
+        index=True,
+        help="Date this period's document falls due: the start of the period "
+             "when the contract bills in advance ('a echoir'), its end when it "
+             "bills in arrears ('echu').",
+    )
+
+    @api.depends('maintenance_period_start', 'maintenance_period_end',
+                 'maintenance_line_id.contract_id.billing_frequency_ids')
+    def _compute_maintenance_billing_date(self):
+        for ligne in self:
+            debut = ligne.maintenance_period_start
+            fin = ligne.maintenance_period_end
+            if not debut and not fin:
+                ligne.maintenance_billing_date = False
+                continue
+            contrat = ligne.maintenance_line_id.contract_id
+            echu = contrat and contrat._get_billing_timing_code() == 'overdue'
+            ligne.maintenance_billing_date = (fin or debut) if echu else (
+                debut or fin)
 
     # ------------------------------------------------------------------
     # Synchronisation with the contract's yearly line

@@ -51,5 +51,30 @@
             <field name="active" eval="False"/>
         </record>
 
+        <!--
+            Daily cron: the period that falls due, one at a time.
+
+            Code executed:
+                model._cron_check_periods_due()
+
+            Livre ACTIF, contrairement au precedent. Il ne regarde que les
+            lignes portant des bornes de periode, c'est-a-dire les devis que
+            ce module emet lui-meme. Les commandes historiques rattachees
+            apres coup n'en ont pas, a dessein : elles ne sont jamais
+            redecoupees. Le premier passage ne trouve donc rien, et le suivi
+            grandit au rythme des devis reellement emis. Aucun risque de
+            crier au loup sur l'existant.
+        -->
+        <record id="cron_check_periods_due" model="ir.cron">
+            <field name="name">Eurekam Maintenance: maintenance period falling due</field>
+            <field name="model_id" ref="model_eurekam_maintenance_contract"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_check_periods_due()</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="active" eval="True"/>
+        </record>
+
     </data>
 </odoo>

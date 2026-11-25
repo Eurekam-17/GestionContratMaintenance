@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================== -->
+    <!-- Customer order form: the maintenance link and the period dates -->
+    <!-- ============================================================== -->
+    <record id="view_order_form_eurekam_maintenance" model="ir.ui.view">
+        <field name="name">sale.order.form.eurekam.maintenance</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <!-- Anchored on the notebook, a structural element, rather than
+                 on a field name: the sale.order form is heavily customised
+                 here and field positions move. -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Maintenance" name="eurekam_maintenance"
+                      invisible="not eurekam_maintenance_contract_id and not eurekam_maintenance_period">
+                    <group>
+                        <group>
+                            <field name="eurekam_maintenance_contract_id"
+                                   readonly="1"/>
+                            <field name="eurekam_maintenance_year"
+                                   readonly="1"/>
+                            <field name="eurekam_maintenance_period"
+                                   readonly="1"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+
+            <!-- Period bounds on each line, hidden by default: they matter
+                 when chasing a quarter, not when reading a quotation.
+                 Appended INSIDE the list rather than placed before a named
+                 sibling: the sale.order form is heavily customised here and
+                 field positions move, while the list element itself does
+                 not. -->
+            <xpath expr="//field[@name='order_line']/list" position="inside">
+                <field name="maintenance_period_label" optional="hide"
+                       string="Period"/>
+                <field name="maintenance_period_start" optional="hide"/>
+                <field name="maintenance_period_end" optional="hide"/>
+                <field name="maintenance_billing_date" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- ============================================================== -->
+    <!-- Orders carrying a maintenance period that is due                -->
+    <!-- ============================================================== -->
+    <record id="view_order_search_eurekam_maintenance" model="ir.ui.view">
+        <field name="name">sale.order.search.eurekam.maintenance</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.sale_order_view_search_inherit_sale"/>
+        <field name="arch" type="xml">
+            <xpath expr="//search" position="inside">
+                <separator/>
+                <filter string="Maintenance Contract"
+                        name="eurekam_has_contract"
+                        domain="[('eurekam_maintenance_contract_id', '!=', False)]"/>
+                <filter string="Maintenance Period Due"
+                        name="eurekam_period_due"
+                        domain="[('order_line.maintenance_billing_date', '&lt;=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter string="Quotation Not Sent Yet"
+                        name="eurekam_not_sent"
+                        domain="[('eurekam_maintenance_period', '!=', False), ('state', '=', 'draft')]"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

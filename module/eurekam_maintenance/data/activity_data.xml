@@ -18,5 +18,21 @@
             <field name="sequence">30</field>
         </record>
 
+        <!--
+            Activity raised by _cron_check_periods_due on the customer order
+            whose period falls due: the quotation to send, or the period to
+            invoice. Carried by the ORDER and not the contract, so that a
+            quarterly contract can hold one reminder per period at a time
+            instead of a single one hiding the next.
+        -->
+        <record id="activity_type_period_due" model="mail.activity.type">
+            <field name="name">Période de maintenance échue</field>
+            <field name="summary">Devis à envoyer, ou période à facturer</field>
+            <field name="icon">fa-calendar-check-o</field>
+            <field name="res_model">sale.order</field>
+            <field name="delay_count">0</field>
+            <field name="sequence">31</field>
+        </record>
+
     </data>
 </odoo>

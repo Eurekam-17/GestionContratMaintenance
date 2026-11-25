@@ -1018,6 +1018,126 @@ class TestMaintenanceContract(TransactionCase):
         self.assertEqual(set(self._etats(contract).values()), {'not_applicable'})
 
     # ======================================================================
+    # 26. Periods: one document at a time, each at its own date
+    # ======================================================================
+    def _contrat_trimestriel(self, mode='annual_quote', montant=20000.0):
+        freq = self.env.ref('eurekam_maintenance.freq_quarterly')
+        an = ofields.Date.context_today(self.env['res.partner']).year
+        contract = self._make_contract(
+            date_start=date(an, 1, 1), date_end=date(an, 12, 31),
+            maintenance_amount=montant,
+            billing_document_mode=mode,
+            billing_frequency_ids=[(6, 0, [freq.id])])
+        contract.action_activate()
+        contract.action_generate_lines()
+        return contract, an
+
+    def _activites_periode(self, order):
+        typ = self.env.ref('eurekam_maintenance.activity_type_period_due')
+        return order.activity_ids.filtered(
+            lambda a: a.activity_type_id == typ)
+
+    def test_period_dates_are_kept_on_the_order_lines(self):
+        """_periods_for_year always knew the bounds; they used to be lost."""
+        contract, an = self._contrat_trimestriel()
+        wizard = self.env['eurekam.maintenance.order.wizard'].with_context(
+            default_contract_id=contract.id).create({'year': an})
+        order = self.env['sale.order'].browse(
+            wizard.action_create_sale_order()['res_id'])
+
+        self.assertEqual(len(order.order_line), 4)
+        for ligne in order.order_line:
+            self.assertTrue(ligne.maintenance_period_start)
+            self.assertTrue(ligne.maintenance_period_end)
+            self.assertTrue(ligne.maintenance_billing_date)
+        bornes = sorted(order.order_line.mapped('maintenance_period_start'))
+        self.assertEqual(bornes[0], date(an, 1, 1))
+        self.assertEqual(bornes[-1], date(an, 10, 1))
+
+    def test_billing_date_follows_the_timing_code(self):
+        """'A echoir' bills at the start of the period, 'echu' at its end."""
+        contract, an = self._contrat_trimestriel()
+        echoir = self.env.ref('eurekam_maintenance.freq_upcoming')
+        contract.billing_frequency_ids = [(4, echoir.id)]
+        wizard = self.env['eurekam.maintenance.order.wizard'].with_context(
+            default_contract_id=contract.id).create({'year': an})
+        order = self.env['sale.order'].browse(
+            wizard.action_create_sale_order()['res_id'])
+        q1 = order.order_line.filtered(
+            lambda l: l.maintenance_period_start == date(an, 1, 1))
+        self.assertEqual(q1.maintenance_billing_date, date(an, 1, 1))
+
+        echu = self.env.ref('eurekam_maintenance.freq_overdue')
+        contract.billing_frequency_ids = [(3, echoir.id), (4, echu.id)]
+        q1.invalidate_recordset(['maintenance_billing_date'])
+        self.assertEqual(q1.maintenance_billing_date, date(an, 3, 31))
+
+    def test_one_quotation_per_period_creates_four_orders(self):
+        contract, an = self._contrat_trimestriel(mode='quote_per_period')
+        wizard = self.env['eurekam.maintenance.order.wizard'].with_context(
+            default_contract_id=contract.id).create({'year': an})
+        # The contract's rhythm drives the wizard: no second choice to make.
+        self.assertEqual(wizard.coverage_mode, 'period_split')
+        action = wizard.action_create_sale_order()
+
+        orders = self.env['sale.order'].search(action['domain'][0][2] and
+                                               [('id', 'in', action['domain'][0][2])])
+        self.assertEqual(len(orders), 4)
+        self.assertEqual(
+            sorted(orders.mapped('eurekam_maintenance_period')),
+            ['Q1 %s' % an, 'Q2 %s' % an, 'Q3 %s' % an, 'Q4 %s' % an])
+        for o in orders:
+            self.assertEqual(o.state, 'draft',
+                             "All four are drafts: what must not happen all "
+                             "at once is the sending, not the creation.")
+            self.assertEqual(len(o.order_line), 1)
+        self.assertAlmostEqual(sum(orders.mapped('amount_untaxed')),
+                               20000.0, places=2)
+
+    def test_four_quarterly_orders_do_not_collide_on_unicity(self):
+        """The period is part of the key, so the year can hold four orders."""
+        contract, an = self._contrat_trimestriel(mode='quote_per_period')
+        wizard = self.env['eurekam.maintenance.order.wizard'].with_context(
+            default_contract_id=contract.id).create({'year': an})
+        wizard.action_create_sale_order()      # must not raise
+        self.assertEqual(len(contract.sale_order_ids), 4)
+
+    def test_period_cron_asks_for_one_period_at_a_time(self):
+        contract, an = self._contrat_trimestriel()
+        wizard = self.env['eurekam.maintenance.order.wizard'].with_context(
+            default_contract_id=contract.id).create({'year': an})
+        order = self.env['sale.order'].browse(
+            wizard.action_create_sale_order()['res_id'])
+
+        self.env['eurekam.maintenance.contract']._cron_check_periods_due()
+        activites = self._activites_periode(order)
+        self.assertTrue(activites, "The due period must be asked for.")
+        # Never the whole year at once: Q4 is not due in January.
+        self.assertLess(len(activites), 4)
+
+    def test_period_cron_is_idempotent_per_period(self):
+        """Deduped on the period, not the contract: the next one still fires."""
+        contract, an = self._contrat_trimestriel()
+        wizard = self.env['eurekam.maintenance.order.wizard'].with_context(
+            default_contract_id=contract.id).create({'year': an})
+        order = self.env['sale.order'].browse(
+            wizard.action_create_sale_order()['res_id'])
+        Contract = self.env['eurekam.maintenance.contract']
+        Contract._cron_check_periods_due()
+        avant = len(self._activites_periode(order))
+        Contract._cron_check_periods_due()
+        Contract._cron_check_periods_due()
+        self.assertEqual(len(self._activites_periode(order)), avant)
+
+    def test_period_cron_ignores_historical_attached_orders(self):
+        """Attached quotations carry no period bounds, by design."""
+        contract, an = self._contrat_pluriannuel()
+        order = self._devis_externe(contract, "Assistance %s" % an)
+        self._assistant_rattachement(contract, order).action_attach()
+        self.env['eurekam.maintenance.contract']._cron_check_periods_due()
+        self.assertFalse(self._activites_periode(order))
+
+    # ======================================================================
     # 25. Attaching an order issued outside the module
     # ======================================================================
     def _devis_externe(self, contract, libelle, montant=9000.0):
