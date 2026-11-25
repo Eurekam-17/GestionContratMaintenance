@@ -941,6 +941,7 @@ msgstr "Localisation"
 #. module: eurekam_maintenance
 #: model:ir.ui.menu,name:eurekam_maintenance.menu_root_maintenance
 #: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_res_partner_form_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_order_form_eurekam_maintenance
 msgid "Maintenance"
 msgstr "Maintenance"
 
@@ -2641,3 +2642,70 @@ msgstr ""
 "À commander : aucun devis n'a encore été émis pour cette année.\n"
 "Commandée : au moins une commande client vivante la couvre.\n"
 "Sans objet : le contrat est en brouillon, expiré ou annulé, n'a pas de dates, ou ne court pas sur cette année."
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_eurekam_maintenance_contract__billing_document_mode
+msgid "Document Rhythm"
+msgstr "Rythme des documents"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__billing_document_mode__annual_quote
+msgid "Annual quotation, billed per period"
+msgstr "Devis annuel, facturé par période"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_contract__billing_document_mode__quote_per_period
+#: model:ir.model.fields.selection,name:eurekam_maintenance.selection__eurekam_maintenance_order_wizard__coverage_mode__period_split
+msgid "One quotation per period"
+msgstr "Un devis par période"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_sale_order_line__maintenance_period_start
+msgid "Period Start"
+msgstr "Début de période"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_sale_order_line__maintenance_period_end
+msgid "Period End"
+msgstr "Fin de période"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_sale_order_line__maintenance_billing_date
+msgid "Due On"
+msgstr "Échéance"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,field_description:eurekam_maintenance.field_sale_order__eurekam_maintenance_period
+msgid "Covered Period"
+msgstr "Période couverte"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_order_form_eurekam_maintenance
+msgid "Period"
+msgstr "Période"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_order_search_eurekam_maintenance
+msgid "Maintenance Period Due"
+msgstr "Période de maintenance échue"
+
+#. module: eurekam_maintenance
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_order_search_eurekam_maintenance
+msgid "Quotation Not Sent Yet"
+msgstr "Devis pas encore envoyé"
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_eurekam_maintenance_contract__billing_document_mode
+msgid ""
+"Annual quotation: one quotation a year, confirmed once, then one invoice per period as each falls due.\n"
+"One quotation per period: a separate quotation for each period, sent to the customer when that period falls due."
+msgstr ""
+"Devis annuel : un devis par an, confirmé une fois, puis une facture par période à mesure que chacune échoit.\n"
+"Un devis par période : un devis distinct pour chaque période, envoyé au client quand cette période échoit."
+
+#. module: eurekam_maintenance
+#: model:ir.model.fields,help:eurekam_maintenance.field_sale_order_line__maintenance_billing_date
+msgid ""
+"Date this period's document falls due: the start of the period when the contract bills in advance ('a echoir'), its end when it bills in arrears ('echu')."
+msgstr ""
+"Date à laquelle le document de cette période est dû : le début de la période si le contrat facture à échoir, sa fin s'il facture à terme échu."
