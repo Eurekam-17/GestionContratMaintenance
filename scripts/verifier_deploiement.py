@@ -55,12 +55,33 @@ MODELES_ASSISTANT = ('eurekam.maintenance.attach.order.wizard',
 
 
 def resoudre_base(url):
+    """Demande a l'instance le nom de sa base.
+
+    Une reponse qui n'est pas du JSON ne veut pas dire que l'instance est
+    tombee : l'alias de branche odoo.sh peut rediriger ailleurs alors que le
+    build tourne. On le dit explicitement plutot que de laisser remonter une
+    trace d'erreur JSON illisible.
+    """
     req = urllib.request.Request(
         url + '/web/database/list',
         data=json.dumps({'jsonrpc': '2.0', 'method': 'call',
                          'params': {}}).encode(),
         headers={'Content-Type': 'application/json'})
-    return json.load(urllib.request.urlopen(req, timeout=60))['result'][0]
+    reponse = urllib.request.urlopen(req, timeout=60)
+    arrivee = reponse.geturl()
+    brut = reponse.read()
+    try:
+        return json.loads(brut)['result'][0]
+    except (ValueError, KeyError, IndexError):
+        sys.exit(
+            "STOP : %s n'a pas repondu en JSON.\n"
+            "       Requete arrivee sur : %s\n"
+            "       L'instance n'est pas forcement tombee : sur odoo.sh\n"
+            "       l'alias de branche peut cesser de pointer sur le build\n"
+            "       alors que celui-ci tourne. Ouvrir la branche sur\n"
+            "       odoo.sh, relever l'adresse du bouton CONNECT (de la\n"
+            "       forme https://<projet>-<branche>-<build>.dev.odoo.com)\n"
+            "       et relancer avec --url sur cette adresse." % (url, arrivee))
 
 
 def main():
