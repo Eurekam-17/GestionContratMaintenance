@@ -186,7 +186,20 @@ def main():
     acl = call('ir.model.access', 'search_count',
                [('model_id.model', 'in', list(MODELES_ASSISTANT))])
     verdict(acl >= 4, 'droits d acces de l assistant', '%d / 4' % acl)
-    form = call(CONTRAT, 'get_view', **{'view_type': 'form'})['arch']
+    # get_view rend la vue TELLE QUE LA VOIT LE COMPTE qui interroge : Odoo
+    # en retire les elements reserves a un groupe. Lance avec un compte en
+    # lecture seule, il ferait echouer le controle des boutons alors que le
+    # deploiement est parfait. Les assertions sur le contenu de NOTRE
+    # formulaire lisent donc l arche stockee, traduite par le contexte de
+    # langue et independante du lecteur. L appel a get_view reste, comme
+    # test de fumee : une vue heritee cassee leve ici.
+    call(CONTRAT, 'get_view', **{'view_type': 'form'})
+    vue_contrat = call('ir.model.data', 'search_read',
+                       [('module', '=', 'eurekam_maintenance'),
+                        ('name', '=', 'view_maintenance_contract_form')],
+                       fields=['res_id'])
+    form = call('ir.ui.view', 'read', [vue_contrat[0]['res_id']],
+                fields=['arch_db'])[0]['arch_db'] if vue_contrat else ''
     # Ce controle porte sur la METHODE, pas sur le libelle : le libelle est
     # verifie plus bas, dans la section des traductions. Le dire ici evite
     # de lire "OK" pour un bouton qui s affiche en anglais.
@@ -342,11 +355,10 @@ def main():
                         fields=['groups_id'])[0]['groups_id'] if id_menu else []
     verdict(id_lecture in groupes_menu, 'menu Maintenance ouvert a la lecture')
 
-    # L arche STOCKEE, pas celle rendue : Odoo retire l attribut groups de
-    # l arche servie au client, un get_view ne le montrerait jamais.
-    id_vue = ref_id('eurekam_maintenance.view_maintenance_contract_form')
-    brut = call('ir.ui.view', 'read', [id_vue],
-                fields=['arch_db'])[0]['arch_db'] if id_vue else ''
+    # L arche STOCKEE (lue plus haut), pas celle rendue : Odoo retire
+    # l attribut groups de l arche servie au client, un get_view ne le
+    # montrerait jamais.
+    brut = form
     attendus = ('action_activate', 'action_generate_lines',
                 'action_open_renewal_wizard', 'action_open_create_order_wizard',
                 'action_open_attach_order_wizard', 'action_recompute_state',
