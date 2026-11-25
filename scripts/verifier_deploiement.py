@@ -41,7 +41,7 @@ MOTIF_BASE_PRODUCTION = r'^tecliberp-eurekam-main-\d+$'
 MOTS_TEST = ('test', 'staging', 'sandbox', 'recette', 'dev', 'preprod')
 MOTIF_BASE_DEFAUT = r'^eurekam-(sandbox|staging|recette|test|dev|preprod)(-\d+)?$'
 
-VERSION_ATTENDUE = '18.0.2.3.0'
+VERSION_ATTENDUE = '18.0.2.4.0'
 LIGNE = 'eurekam.maintenance.contract.line'
 CONTRAT = 'eurekam.maintenance.contract'
 
@@ -184,9 +184,49 @@ def main():
         verdict(not crons[0]['active'],
                 'cron livre DESACTIVE (a activer apres le rattachement)',
                 'actif=%s' % crons[0]['active'])
-    verdict(bool(call('mail.activity.type', 'search_count',
-                      [('res_model', '=', CONTRAT)])),
+    # Recherche par xmlid, pas par res_model : la base porte deja des types
+    # d'activite sur sale.order ("Commande additionnelle"), et un controle par
+    # modele repondait OK sans rien verifier de ce que nous livrons.
+    def type_active(nom_xml):
+        return bool(call('ir.model.data', 'search_count',
+                         [('module', '=', 'eurekam_maintenance'),
+                          ('model', '=', 'mail.activity.type'),
+                          ('name', '=', nom_xml)]))
+
+    verdict(type_active('activity_type_year_to_order'),
             'type d activite "Devis annuel a emettre"')
+    periodiques = call('ir.cron', 'search_read',
+                       [('code', 'like', '_cron_check_periods_due')],
+                       fields=['active'],
+                       context={'active_test': False, 'lang': 'fr_FR'})
+    verdict(bool(periodiques), 'cron des periodes echues present')
+    if periodiques:
+        verdict(periodiques[0]['active'],
+                'cron des periodes livre ACTIF (il ne voit que les devis '
+                'emis par le module)')
+    verdict(type_active('activity_type_period_due'),
+            'type d activite "Periode de maintenance echue"')
+
+    print('\n--- Rythme des documents ---')
+    champs_ligne = call('sale.order.line', 'fields_get', [], ['type'])
+    for nom in ('maintenance_period_start', 'maintenance_period_end',
+                'maintenance_billing_date'):
+        verdict(nom in champs_ligne, 'sale.order.line.%s' % nom)
+    champs_cmd = call('sale.order', 'fields_get', [], ['type'])
+    verdict('eurekam_maintenance_period' in champs_cmd,
+            'sale.order.eurekam_maintenance_period')
+    modes = call(CONTRAT, 'fields_get', ['billing_document_mode'],
+                 ['selection'])
+    codes = [c for c, _l in (modes.get('billing_document_mode') or
+                             {}).get('selection', [])]
+    verdict(sorted(codes) == ['annual_quote', 'quote_per_period'],
+            'les deux rythmes de document sur le contrat', str(codes))
+    wiz = call('eurekam.maintenance.order.wizard', 'fields_get',
+               ['coverage_mode'], ['selection'])
+    codes_wiz = [c for c, _l in (wiz.get('coverage_mode') or
+                                 {}).get('selection', [])]
+    verdict('period_split' in codes_wiz,
+            'mode "un devis par periode" dans l assistant', str(codes_wiz))
 
     # ---- 2. Comportement attendu ----------------------------------------
     print('\n--- Assertions metier ---')
