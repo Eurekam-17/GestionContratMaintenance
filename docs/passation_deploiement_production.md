@@ -1,7 +1,7 @@
 # Passation — déploiement de `eurekam_maintenance` en production
 
 **Destinataire : prestataire Odoo (Scalizer).**
-Version cible : **18.0.2.4.1**. Mis à jour le 2026-11-25.
+Version cible : **18.0.2.4.2**. Mis à jour le 2026-11-25.
 Toutes les mesures ci-dessous ont été relevées sur les instances ce jour-là.
 
 ---
@@ -12,7 +12,7 @@ Toutes les mesures ci-dessous ont été relevées sur les instances ce jour-là.
 |---|---|---|---|
 | `main` | **production** `eurekam.odoo.com` | `a007d99` | 18.0.2.0.0 (12/11) |
 | `Staging` | recette `eurekam-recette.odoo.com` | `a007d99` | 18.0.2.0.0 |
-| `sandbox` | sandbox `eurekam-sandbox.odoo.com` | `aece7d6` | **18.0.2.4.1** ✅ |
+| `sandbox` | sandbox `eurekam-sandbox.odoo.com` | `aece7d6` | **18.0.2.4.2** ✅ |
 
 La sandbox porte la version cible, vérifiée fonctionnellement le 25/11.
 La production et la recette ont sept versions de retard.

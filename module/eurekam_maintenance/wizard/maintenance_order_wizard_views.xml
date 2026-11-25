@@ -29,6 +29,7 @@
                         <group string="Order Scope">
                             <field name="coverage_mode" widget="radio"/>
                             <field name="year"
+                                   options="{'format': false}"
                                    invisible="coverage_mode == 'full_contract'"
                                    required="coverage_mode == 'annual_split'"/>
                         </group>

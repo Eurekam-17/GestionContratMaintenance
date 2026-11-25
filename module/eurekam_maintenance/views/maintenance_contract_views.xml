@@ -172,7 +172,10 @@
                                    context="{'default_amount': maintenance_amount}">
                                 <list editable="bottom"
                                       decoration-success="is_invoiced">
-                                    <field name="year"/>
+                                    <!-- A year is a label, not a quantity:
+                                         without this option it renders
+                                         "2 026". -->
+                                    <field name="year" options="{'format': false}"/>
                                     <field name="amount" sum="Total"/>
                                     <field name="order_state" widget="badge" readonly="1"
                                            decoration-warning="order_state == 'to_order'"

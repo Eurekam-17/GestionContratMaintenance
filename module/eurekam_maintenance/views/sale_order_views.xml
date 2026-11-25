@@ -19,7 +19,10 @@
                         <group>
                             <field name="eurekam_maintenance_contract_id"
                                    readonly="1"/>
+                            <!-- A year is a label, not a quantity: without
+                                 this option it renders "2 026". -->
                             <field name="eurekam_maintenance_year"
+                                   options="{'format': false}"
                                    readonly="1"/>
                             <field name="eurekam_maintenance_period"
                                    readonly="1"/>
@@ -47,10 +50,16 @@
     <!-- ============================================================== -->
     <!-- Orders carrying a maintenance period that is due                -->
     <!-- ============================================================== -->
+    <!-- Anchored on the ROOT search view, not on the one the Orders list
+         uses. Sales has two sibling search views, both inheriting this
+         root: sale_order_view_search_inherit_sale for Orders and
+         sale_order_view_search_inherit_quotation for Quotations. Extending
+         the Orders one left the filters missing from the Quotations list,
+         which is precisely where "Quotation Not Sent Yet" belongs. -->
     <record id="view_order_search_eurekam_maintenance" model="ir.ui.view">
         <field name="name">sale.order.search.eurekam.maintenance</field>
         <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.sale_order_view_search_inherit_sale"/>
+        <field name="inherit_id" ref="sale.view_sales_order_filter"/>
         <field name="arch" type="xml">
             <xpath expr="//search" position="inside">
                 <separator/>

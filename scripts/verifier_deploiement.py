@@ -41,7 +41,7 @@ MOTIF_BASE_PRODUCTION = r'^tecliberp-eurekam-main-\d+$'
 MOTS_TEST = ('test', 'staging', 'sandbox', 'recette', 'dev', 'preprod')
 MOTIF_BASE_DEFAUT = r'^eurekam-(sandbox|staging|recette|test|dev|preprod)(-\d+)?$'
 
-VERSION_ATTENDUE = '18.0.2.4.1'
+VERSION_ATTENDUE = '18.0.2.4.2'
 LIGNE = 'eurekam.maintenance.contract.line'
 CONTRAT = 'eurekam.maintenance.contract'
 
@@ -248,6 +248,39 @@ def main():
                                  {}).get('selection', [])]
     verdict('period_split' in codes_wiz,
             'mode "un devis par periode" dans l assistant', str(codes_wiz))
+
+    print('\n--- Filtres sur les commandes clients ---')
+
+    def arch_recherche(xmlid):
+        mod, nom = xmlid.split('.')
+        d = call('ir.model.data', 'search_read',
+                 [('module', '=', mod), ('name', '=', nom)], fields=['res_id'])
+        if not d:
+            return ''
+        return call('sale.order', 'get_view',
+                    **{'view_id': d[0]['res_id'],
+                       'view_type': 'search'})['arch']
+
+    # Les deux listes, pas une seule : Ventes a deux vues de recherche
+    # soeurs, et "Devis pas encore envoye" n a de sens que cote devis.
+    for etiquette, xmlid in (
+            ('liste des devis', 'sale.sale_order_view_search_inherit_quotation'),
+            ('liste des commandes', 'sale.sale_order_view_search_inherit_sale')):
+        arch = arch_recherche(xmlid)
+        for filtre in ('eurekam_has_contract', 'eurekam_period_due',
+                       'eurekam_not_sent'):
+            verdict('name="%s"' % filtre in arch,
+                    'filtre %s sur la %s' % (filtre, etiquette))
+
+    # Une annee est un libelle, pas une quantite : sans cette option elle
+    # s affiche "2 026".
+    for etiquette, modele, type_vue in (
+            ('onglet Montants annuels', CONTRAT, 'form'),
+            ('menu Lignes annuelles', LIGNE, 'list')):
+        arch = call(modele, 'get_view', **{'view_type': type_vue})['arch']
+        bloc = arch.split('name="year"')
+        verdict(len(bloc) > 1 and "'format': false" in bloc[1][:80],
+                'annee non formatee en milliers (%s)' % etiquette)
 
     # ---- 2. Comportement attendu ----------------------------------------
     print('\n--- Assertions metier ---')

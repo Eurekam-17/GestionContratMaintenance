@@ -960,6 +960,7 @@ msgstr "Montant de maintenance"
 #: model:ir.model.fields,field_description:eurekam_maintenance.field_sale_order__eurekam_maintenance_contract_id
 #: model_terms:ir.ui.view,arch_db:eurekam_maintenance.report_maintenance_contract
 #: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_maintenance_contract_form
+#: model_terms:ir.ui.view,arch_db:eurekam_maintenance.view_order_search_eurekam_maintenance
 msgid "Maintenance Contract"
 msgstr "Contrat de maintenance"
 
