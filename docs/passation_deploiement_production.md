@@ -104,9 +104,28 @@ administrateur.
 ### 3.6 Un build échoué laisse tourner l'ancien code
 
 Déjà rencontré en octobre avec les champs fantômes des modules `s6r_*`.
-À noter aussi : le build sandbox de la 18.0.2.4.1 a pris **48 minutes** contre
-~9 habituellement, sans échouer. Ne pas conclure trop vite à un blocage ; et ne
-jamais relancer par « Rebuild », qui réinitialiserait la base.
+
+À noter aussi : c'est l'**attente avant le build** qui s'étire, pas le build.
+Sur la sandbox le 25/11, un bump a mis environ 45 minutes à être pris en compte,
+puis a été construit en 31 secondes. Ne pas conclure trop vite à un blocage ; et
+ne jamais relancer par « Rebuild », qui réinitialiserait la base.
+
+### 3.7 L'adresse courte d'une branche peut cesser de résoudre
+
+`eurekam-sandbox.odoo.com` et `eurekam-recette.odoo.com` ne sont pas des alias
+automatiques : ce sont des **domaines personnalisés** déclarés dans les
+paramètres de la branche, et leur enregistrement DNS doit viser le serveur du
+build en cours (`<projet>-<branche>-<build>.dev.odoo.com`).
+
+Le 25/11, celui de la sandbox a cessé de résoudre : Odoo.sh l'affichait
+*« Unknown server »*, le nom pointait sur l'IP générique d'odoo.com au lieu de
+celle de la plateforme, et toute requête finissait sur une page projet
+inexistante. **L'instance, elle, tournait normalement** sur l'adresse longue.
+
+Si cela arrive en recette ou en production : ouvrir la branche sur Odoo.sh,
+Settings → Custom domains, cliquer l'icône d'information du domaine. Elle
+indique l'état de résolution et l'adresse exacte à viser. En attendant, tout
+reste joignable sur l'adresse du bouton **CONNECT**.
 
 ## 4. Vérification après déploiement
 
