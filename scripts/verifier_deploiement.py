@@ -41,7 +41,7 @@ MOTIF_BASE_PRODUCTION = r'^tecliberp-eurekam-main-\d+$'
 MOTS_TEST = ('test', 'staging', 'sandbox', 'recette', 'dev', 'preprod')
 MOTIF_BASE_DEFAUT = r'^eurekam-(sandbox|staging|recette|test|dev|preprod)(-\d+)?$'
 
-VERSION_ATTENDUE = '18.0.2.4.2'
+VERSION_ATTENDUE = '18.0.2.4.3'
 LIGNE = 'eurekam.maintenance.contract.line'
 CONTRAT = 'eurekam.maintenance.contract'
 
@@ -187,8 +187,11 @@ def main():
                [('model_id.model', 'in', list(MODELES_ASSISTANT))])
     verdict(acl >= 4, 'droits d acces de l assistant', '%d / 4' % acl)
     form = call(CONTRAT, 'get_view', **{'view_type': 'form'})['arch']
+    # Ce controle porte sur la METHODE, pas sur le libelle : le libelle est
+    # verifie plus bas, dans la section des traductions. Le dire ici evite
+    # de lire "OK" pour un bouton qui s affiche en anglais.
     verdict('action_open_attach_order_wizard' in form,
-            'bouton "Rattacher une commande"')
+            'bouton de rattachement present (methode)')
     verdict('name="order_state"' in form,
             'pastille Commande dans l onglet Montants annuels')
 
@@ -281,6 +284,26 @@ def main():
         bloc = arch.split('name="year"')
         verdict(len(bloc) > 1 and "'format': false" in bloc[1][:80],
                 'annee non formatee en milliers (%s)' % etiquette)
+
+    print('\n--- Traductions francaises ---')
+    # Lues sur l arche RENDUE en fr_FR, pas dans le fichier .po : un msgid
+    # qui ne correspond pas a la chaine source donne une traduction morte,
+    # que le .po seul ne revele jamais.
+    E, A = u'é', u'à'
+    attendus = (
+        (form, u'Rattacher une commande', 'bouton de rattachement'),
+        (form, u'Cr%ser le devis' % E, 'bouton de creation de devis'),
+    )
+    arch_cmd = arch_recherche('sale.sale_order_view_search_inherit_sale')
+    for terme, etiquette in (
+            (u'Contrat de maintenance', 'filtre contrat de maintenance'),
+            (u'P%(e)sriode de maintenance %(e)schue' % {'e': E},
+             'filtre periode echue'),
+            (u'Devis pas encore envoy%s' % E, 'filtre devis non envoye')):
+        attendus += ((arch_cmd, terme, etiquette),)
+    for arch, terme, etiquette in attendus:
+        verdict(terme in arch, 'libelle francais : %s' % etiquette,
+                '' if terme in arch else 'attendu %r' % terme)
 
     # ---- 2. Comportement attendu ----------------------------------------
     print('\n--- Assertions metier ---')
