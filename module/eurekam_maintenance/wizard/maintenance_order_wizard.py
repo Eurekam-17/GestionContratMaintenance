@@ -372,7 +372,13 @@ class EurekamMaintenanceOrderWizard(models.TransientModel):
         so_vals = {
             'partner_id': contract.partner_id.id,
             'eurekam_maintenance_contract_id': contract.id,
-            'eurekam_maintenance_year': self.year if self.coverage_mode == 'annual_split' else 0,
+            # year_key, not a second expression that can drift from it: when
+            # the two disagreed, period_split stamped year 0 on its orders.
+            # The Maintenance tab then displayed "0", the already-quoted
+            # periods could no longer be recognised, and re-running the
+            # wizard hit the unicity constraint instead of filling in the
+            # missing quarters. Reported by the integrator on 2026-11-26.
+            'eurekam_maintenance_year': year_key,
             'client_order_ref': self.customer_po_reference or False,
             'date_order': (fields.Datetime.to_datetime(self.customer_po_date)
                            if self.customer_po_date else fields.Datetime.now()),

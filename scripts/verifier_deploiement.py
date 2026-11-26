@@ -41,7 +41,7 @@ MOTIF_BASE_PRODUCTION = r'^tecliberp-eurekam-main-\d+$'
 MOTS_TEST = ('test', 'staging', 'sandbox', 'recette', 'dev', 'preprod')
 MOTIF_BASE_DEFAUT = r'^eurekam-(sandbox|staging|recette|test|dev|preprod)(-\d+)?$'
 
-VERSION_ATTENDUE = '18.0.2.5.0'
+VERSION_ATTENDUE = '18.0.2.5.1'
 LIGNE = 'eurekam.maintenance.contract.line'
 CONTRAT = 'eurekam.maintenance.contract'
 
@@ -371,6 +371,61 @@ def main():
             sans_garde.append(nom)
     verdict(not sans_garde, 'les 8 boutons d action sont reserves',
             ', '.join(sans_garde))
+
+    print('\n--- Groupes references par nos vues ---')
+    # Le controle qui manquait le 25/11 : dans une arche de vue, Odoo ne
+    # resout pas groups="xxx" par rapport au module courant. Un nom non
+    # qualifie ne leve rien - l element disparait pour TOUT LE MONDE,
+    # gestionnaires compris. Les 8 boutons du contrat ont vecu ainsi une
+    # journee entiere, avec un verificateur au vert.
+    vues_module = call('ir.model.data', 'search_read',
+                       [('module', '=', 'eurekam_maintenance'),
+                        ('model', '=', 'ir.ui.view')], fields=['res_id'])
+    arches = call('ir.ui.view', 'read',
+                  [v['res_id'] for v in vues_module], fields=['name', 'arch_db'])
+    cites, introuvables, nus = set(), [], []
+    for vue in arches:
+        for attribut in re.findall(r'groups="([^"]+)"', vue['arch_db'] or ''):
+            for brut in attribut.split(','):
+                nom = brut.strip().lstrip('!')
+                if not nom:
+                    continue
+                cites.add(nom)
+                if '.' not in nom:
+                    nus.append('%s (%s)' % (nom, vue['name']))
+    verdict(not nus, 'tout groups= des vues est un xmlid qualifie',
+            ', '.join(sorted(set(nus))))
+    for nom in sorted(cites):
+        if '.' not in nom:
+            continue
+        mod, court = nom.split('.', 1)
+        if not call('ir.model.data', 'search_count',
+                    [('module', '=', mod), ('name', '=', court),
+                     ('model', '=', 'res.groups')]):
+            introuvables.append(nom)
+    verdict(not introuvables,
+            'les %d groupes cites existent' % len(cites),
+            ', '.join(introuvables))
+
+    # Un compteur en sudo suffit pour un entier ; pas pour un
+    # many2many_tags, dont le client lit lui-meme les enregistrements.
+    for xmlid, champ in (
+            ('view_maintenance_contract_line_list', 'order_ids'),
+            ('view_maintenance_contract_line_list', 'invoice_ids'),
+            ('view_maintenance_contract_form', 'invoice_ids')):
+        rid = ref_id('eurekam_maintenance.' + xmlid)
+        arch = call('ir.ui.view', 'read', [rid],
+                    fields=['arch_db'])[0]['arch_db'] if rid else ''
+        pos = arch.find('name="%s"' % champ)
+        verdict(pos >= 0 and 'group_sale_salesman' in arch[pos:pos + 220],
+                'colonne %s reservee aux droits Ventes (%s)'
+                % (champ, xmlid.replace('view_maintenance_', '')))
+
+    orphelins = call('sale.order', 'search_count',
+                     [('eurekam_maintenance_period', '!=', False),
+                      ('eurekam_maintenance_year', 'in', [0, False])])
+    verdict(orphelins == 0, 'aucun devis par periode sans annee',
+            '%d trouve(s)' % orphelins)
 
     print('\n--- Traductions francaises ---')
     # Lues sur l arche RENDUE en fr_FR, pas dans le fichier .po : un msgid

@@ -513,8 +513,12 @@ class EurekamMaintenanceContract(models.Model):
 
     @api.depends('line_ids.invoice_ids')
     def _compute_invoice_count(self):
+        # sudo: a Read Only maintenance user has no rights on account.move.
+        # Without it the compute raises while the form is still loading, and
+        # the contract simply cannot be opened -- reported by the integrator
+        # on 2026-11-26. The result is a count, not the records themselves.
         for rec in self:
-            rec.invoice_count = len(rec.line_ids.mapped('invoice_ids'))
+            rec.invoice_count = len(rec.sudo().line_ids.invoice_ids)
 
     @api.depends('sale_order_header_ids',
                  'line_ids.sale_line_ids.order_id')
@@ -527,9 +531,14 @@ class EurekamMaintenanceContract(models.Model):
         line-level link can, so it is the one that carries the meaning, and
         the header is kept for the orders the module issued itself.
         """
+        # sudo for the same reason as _compute_invoice_count: traversing
+        # sale.order.line is refused to a Read Only maintenance user, and the
+        # contract form would not open at all.
         for rec in self:
+            lecture = rec.sudo()
             rec.sale_order_ids = (
-                rec.sale_order_header_ids | rec.line_ids.sale_line_ids.order_id
+                lecture.sale_order_header_ids
+                | lecture.line_ids.sale_line_ids.order_id
             )
 
     @api.depends('sale_order_ids')

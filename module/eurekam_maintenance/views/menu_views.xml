@@ -8,7 +8,7 @@
     <menuitem id="menu_root_maintenance"
               name="Maintenance"
               sequence="55"
-              groups="group_maintenance_readonly"/>
+              groups="eurekam_maintenance.group_maintenance_readonly"/>
 
     <!-- Submenu "Contracts" -->
     <menuitem id="menu_maintenance_contracts"
@@ -49,7 +49,7 @@
     <menuitem id="menu_maintenance_config"
               name="Configuration"
               parent="menu_root_maintenance"
-              groups="group_maintenance_manager"
+              groups="eurekam_maintenance.group_maintenance_manager"
               sequence="90"/>
 
     <!-- Establishment types and product versions: use the standard

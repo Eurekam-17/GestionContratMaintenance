@@ -234,9 +234,14 @@ class EurekamMaintenanceContractLine(models.Model):
         maintenance_line_id is set by the order wizard, so a yearly line knows
         every invoice issued against it. Cancelled invoices are ignored: they
         cover nothing.
+
+        sudo: a Read Only maintenance user has no rights on sale.order.line
+        nor account.move. Without it this raises while the yearly lines are
+        still loading, so neither the contract nor the Yearly Lines menu
+        opens at all -- reported by the integrator on 2026-11-26.
         """
         self.ensure_one()
-        return self.sale_line_ids.invoice_lines.move_id.filtered(
+        return self.sudo().sale_line_ids.invoice_lines.move_id.filtered(
             lambda m: m.move_type == 'out_invoice' and m.state != 'cancel'
         )
 
@@ -267,12 +272,15 @@ class EurekamMaintenanceContractLine(models.Model):
         `maintenance_line_id` on every line it created for that year, and the
         rare 'full_contract' order, which covers all the years at once without
         pointing at any of them.
+
+        sudo for the same reason as _factures_couvrantes.
         """
         self.ensure_one()
-        par_annee = self.sale_line_ids.filtered(
+        lecture = self.sudo()
+        par_annee = lecture.sale_line_ids.filtered(
             lambda l: l.order_id.state != 'cancel'
         ).order_id
-        return par_annee | self.contract_id._full_contract_orders()
+        return par_annee | lecture.contract_id._full_contract_orders()
 
     def _est_commandable(self):
         """True when the year is one a quotation can sensibly be issued for.

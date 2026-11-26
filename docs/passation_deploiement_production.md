@@ -1,7 +1,7 @@
 # Passation — déploiement de `eurekam_maintenance` en production
 
 **Destinataire : prestataire Odoo (Scalizer).**
-Version cible : **18.0.2.5.0**. Mis à jour le 2026-11-25.
+Version cible : **18.0.2.5.1**. Mis à jour le 2026-11-25.
 Toutes les mesures ci-dessous ont été relevées sur les instances ce jour-là.
 
 ---
@@ -12,7 +12,7 @@ Toutes les mesures ci-dessous ont été relevées sur les instances ce jour-là.
 |---|---|---|---|
 | `main` | **production** `eurekam.odoo.com` | `a007d99` | 18.0.2.0.0 (12/11) |
 | `Staging` | recette `eurekam-recette.odoo.com` | `a007d99` | 18.0.2.0.0 |
-| `sandbox` | sandbox `eurekam-sandbox.odoo.com` | `aece7d6` | **18.0.2.5.0** ✅ |
+| `sandbox` | sandbox `eurekam-sandbox.odoo.com` | `aece7d6` | **18.0.2.5.1** ✅ |
 
 La sandbox porte la version cible, vérifiée fonctionnellement le 25/11.
 La production et la recette ont sept versions de retard.
@@ -149,6 +149,34 @@ seule sont des règles **neuves**, hors bloc `noupdate`, et non une modification
 des deux existantes.
 
 Le script du §4 contrôle les neuf points, l'implication comprise.
+
+### 3.9 Trois correctifs issus de votre relecture (18.0.2.5.1)
+
+Merci — les trois étaient réels et reproduits avant correction.
+
+**`groups=` dans une arborescence de vue exige l'xmlid complet.** Les huit
+boutons du contrat portaient `groups="group_maintenance_user"` : Odoo ne résout
+pas ce nom par rapport au module courant, n'émet rien de visible, et masque
+l'élément **pour tout le monde**, gestionnaires compris. Vérifié sur l'instance :
+compte Gestionnaire, zéro bouton rendu sur huit. Tous les `groups=` du module
+sont désormais qualifiés, y compris les `menuitem`, où le chargeur XML qualifie
+pourtant tout seul — une règle sans exception se retient mieux.
+
+**Les compteurs de devis et de factures passent en `sudo()`.** Un lecteur sans
+droits Ventes ne pouvait pas ouvrir un contrat. En complément de votre
+prescription : `sudo()` suffit pour un compteur, qui est un entier rendu par le
+serveur, mais **pas** pour les colonnes `order_ids` et `invoice_ids` en
+`many2many_tags` — le client va lire lui-même le nom des commandes et des
+factures et se fait refuser. Ces cinq colonnes sont réservées à
+`sales_team.group_sale_salesman`, le plus petit groupe donnant la lecture sur
+`sale.order`, `sale.order.line` et `account.move` sur cette instance.
+
+**Le mode « un devis par période » stampille l'année.** La valeur réutilise
+`year_key`, déjà calculé pour le garde-fou d'unicité, au lieu d'une seconde
+expression qui pouvait en diverger — c'était exactement la cause. La migration
+`18.0.2.5.1` réannote les devis déjà émis avec 0, en déduisant l'année de la
+ligne annuelle que chaque ligne de commande désigne, et laisse de côté ceux dont
+les lignes ne s'accordent pas.
 
 ## 4. Vérification après déploiement
 
