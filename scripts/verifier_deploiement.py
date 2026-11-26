@@ -41,7 +41,7 @@ MOTIF_BASE_PRODUCTION = r'^tecliberp-eurekam-main-\d+$'
 MOTS_TEST = ('test', 'staging', 'sandbox', 'recette', 'dev', 'preprod')
 MOTIF_BASE_DEFAUT = r'^eurekam-(sandbox|staging|recette|test|dev|preprod)(-\d+)?$'
 
-VERSION_ATTENDUE = '18.0.2.5.1'
+VERSION_ATTENDUE = '18.0.2.5.2'
 LIGNE = 'eurekam.maintenance.contract.line'
 CONTRAT = 'eurekam.maintenance.contract'
 
@@ -382,7 +382,8 @@ def main():
                        [('module', '=', 'eurekam_maintenance'),
                         ('model', '=', 'ir.ui.view')], fields=['res_id'])
     arches = call('ir.ui.view', 'read',
-                  [v['res_id'] for v in vues_module], fields=['name', 'arch_db'])
+                  [v['res_id'] for v in vues_module],
+                  fields=['name', 'type', 'arch_db'])
     cites, introuvables, nus = set(), [], []
     for vue in arches:
         for attribut in re.findall(r'groups="([^"]+)"', vue['arch_db'] or ''):
@@ -406,6 +407,34 @@ def main():
     verdict(not introuvables,
             'les %d groupes cites existent' % len(cites),
             ', '.join(introuvables))
+
+    print('\n--- Champs toujours invisibles : justifies ? ---')
+    # Odoo 18 embarque un test, TestInvisibleField.test_uncommented_invisible_field
+    # (odoo/addons/base/tests/test_views.py), qui exige qu un champ toujours
+    # invisible d une vue list ou form soit suivi IMMEDIATEMENT d un
+    # commentaire XML disant pourquoi il est la. Il n echoue pas : il ecrit
+    # des lignes ERROR, qui suffisent a faire rougir un build. Il ne tourne
+    # que sur un build qui lance les tests - jamais sur la sandbox, qui est
+    # une branche de type staging. D ou ce controle ici : meme regex
+    # qu Odoo, mais sur l arche stockee de l instance, a tout moment.
+    #
+    # Attention : la regex attrape aussi column_invisible="1", dont la fin
+    # est litteralement invisible="1".
+    non_commentes = []
+    for vue in arches:
+        if vue.get('type') not in ('list', 'form'):
+            continue
+        for balise, _val, suite in re.findall(
+                r'''(<field [^>]*invisible=['"](True|1)['"][^>]*>)[\s\t\n ]*(.*)''',
+                vue['arch_db'] or ''):
+            if not suite.lstrip().startswith('<!--'):
+                nom = re.search(r'name="([^"]+)"', balise)
+                non_commentes.append('%s (%s)'
+                                     % (nom.group(1) if nom else balise,
+                                        vue['name']))
+    verdict(not non_commentes,
+            'tout champ toujours invisible porte sa justification',
+            ', '.join(sorted(set(non_commentes))))
 
     # Un compteur en sudo suffit pour un entier ; pas pour un
     # many2many_tags, dont le client lit lui-meme les enregistrements.

@@ -1218,10 +1218,34 @@ class TestMaintenanceContract(TransactionCase):
         self.assertEqual(order.eurekam_maintenance_contract_id, contract)
         self.assertEqual(order.eurekam_maintenance_year, an)
 
-    def test_attach_refuses_lines_without_a_year(self):
-        contract, _an = self._contrat_pluriannuel()
+    def test_attach_falls_back_on_the_order_date(self):
+        """Third signal: no year in the label, so the order date places it.
+
+        648 historical orders carry wording the module never wrote. When the
+        label says nothing, the date the order was issued is the best guess
+        left, and _deduire_annee uses it on purpose. Asserted here because
+        the first version of the test below assumed the opposite.
+        """
+        contract, an = self._contrat_pluriannuel()
         order = self._devis_externe(contract, "Prestation sans annee lisible")
+        # _devis_externe leaves date_order at today, inside the contract.
         wiz = self._assistant_rattachement(contract, order)
+        self.assertEqual(wiz.line_ids.maintenance_line_id.year, an)
+        self.assertTrue(wiz.line_ids.attach,
+                        "A line the order date can place is ticked.")
+
+    def test_attach_refuses_lines_without_a_year(self):
+        """A line none of the three signals can place must stay blank.
+
+        No year in the label, no year on the header, and an order date that
+        falls outside the contract: nothing lands on a contract year.
+        """
+        contract, an = self._contrat_pluriannuel()
+        order = self._devis_externe(contract, "Prestation sans annee lisible")
+        order.date_order = '%d-06-01 10:00:00' % (an - 5)
+        wiz = self._assistant_rattachement(contract, order)
+        self.assertFalse(wiz.line_ids.maintenance_line_id,
+                         "No contract year matches this line.")
         self.assertFalse(wiz.line_ids.attach,
                          "An unplaceable line must not be ticked.")
         wiz.line_ids.attach = True

@@ -24,6 +24,9 @@
                  modifier expression), so they don't need a copy here. -->
             <xpath expr="//div[@name='button_box']" position="inside">
                 <field name="maintenance_status" invisible="1"/>
+                <!-- Always invisible on purpose: read by the 'invisible'
+                     expressions of the four status banners below. Shown to the
+                     user as a colored banner, never as a raw field. -->
                 <field name="is_maintenance_establishment" invisible="1"/>
                 <!-- groups=: the button opens the contract list, which is
                      readable by the Maintenance groups only. Left ungrouped it

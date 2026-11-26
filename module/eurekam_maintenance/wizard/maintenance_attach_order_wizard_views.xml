@@ -27,6 +27,10 @@
                 <field name="line_ids" invisible="not order_id">
                     <list editable="bottom" create="false" delete="false">
                         <field name="currency_id" column_invisible="1"/>
+                        <!-- Always invisible on purpose: it backs the Monetary
+                             widget of price_subtotal, which cannot render an
+                             amount without knowing its currency. Never a
+                             column of its own. -->
                         <field name="attach" widget="boolean_toggle"/>
                         <field name="product_id" readonly="1"/>
                         <field name="name" readonly="1"/>

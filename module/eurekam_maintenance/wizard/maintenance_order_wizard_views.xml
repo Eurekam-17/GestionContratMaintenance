@@ -7,10 +7,12 @@
         <field name="arch" type="xml">
             <form string="Create Quotation">
                 <sheet>
-                    <!-- Declared first: currency_id backs every Monetary field
-                         below, and Odoo 18 requires modifier/currency fields to
-                         be present before their first use. -->
                     <field name="currency_id" invisible="1"/>
+                    <!-- Always invisible on purpose: currency_id backs every
+                         Monetary field below, and Odoo 18 requires such a
+                         field to be declared before its first use. Declared
+                         first for that reason, never shown. -->
+
                     <div class="oe_title">
                         <h2>New Maintenance Quotation</h2>
                     </div>
@@ -42,6 +44,9 @@
                          and only on the per-year scope (revaluing the whole
                          contract at once is the renewal wizard's job). -->
                     <field name="syntec_revision" invisible="1"/>
+                    <!-- Always invisible on purpose: read by the 'invisible'
+                         expression of the group just below. The user sets it
+                         on the contract, never here. -->
                     <group string="Syntec Revision"
                            invisible="syntec_revision != 'yes' or coverage_mode != 'annual_split'">
                         <group>
