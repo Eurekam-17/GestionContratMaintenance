@@ -1,7 +1,7 @@
 # Passation — déploiement de `eurekam_maintenance` en production
 
 **Destinataire : prestataire Odoo (Scalizer).**
-Version cible : **18.0.2.5.1**. Mis à jour le 2026-11-25.
+Version cible : **18.0.2.5.2**. Mis à jour le 2026-11-26.
 Toutes les mesures ci-dessous ont été relevées sur les instances ce jour-là.
 
 ---
@@ -12,7 +12,7 @@ Toutes les mesures ci-dessous ont été relevées sur les instances ce jour-là.
 |---|---|---|---|
 | `main` | **production** `eurekam.odoo.com` | `a007d99` | 18.0.2.0.0 (12/11) |
 | `Staging` | recette `eurekam-recette.odoo.com` | `a007d99` | 18.0.2.0.0 |
-| `sandbox` | sandbox `eurekam-sandbox.odoo.com` | `aece7d6` | **18.0.2.5.1** ✅ |
+| `sandbox` | sandbox `eurekam-sandbox.odoo.com` | `58a1533` | **18.0.2.5.2** ✅ |
 
 La sandbox porte la version cible, vérifiée fonctionnellement le 25/11.
 La production et la recette ont sept versions de retard.
@@ -42,6 +42,8 @@ contiennent pas de manifeste et sont ignorés par le serveur.
 | `5c3dde7` | Cron hebdomadaire des années sans devis (**livré désactivé**) |
 | `9f00006` | Assistant « Rattacher une commande » |
 | `aece7d6` | Suivi des périodes : un document à la fois, chacun à sa date |
+| `1f9720f` | Les trois défauts remontés par votre relecture (§3.9) |
+| `58a1533` | Le test de rattachement corrigé, les champs invisibles justifiés (§3.10) |
 
 ## 3. Points d'attention
 
@@ -177,6 +179,52 @@ expression qui pouvait en diverger — c'était exactement la cause. La migratio
 `18.0.2.5.1` réannote les devis déjà émis avec 0, en déduisant l'année de la
 ligne annuelle que chaque ligne de commande désigne, et laisse de côté ceux dont
 les lignes ne s'accordent pas.
+
+### 3.10 Le build du 26/11 : un seul échec sur cinq est à nous
+
+Merci pour ce build — il nous a appris quelque chose que nos propres builds ne
+pouvaient pas nous dire.
+
+**Nos tests n'avaient jamais tourné.** La sandbox est une branche de type
+*staging* : Odoo.sh y met les modules à jour sans lancer la suite. Votre build
+sur une branche de dev est la **première exécution** des 26 tests ajoutés
+depuis la version 18.0.2.0.0 qui tourne en production.
+
+`TestMaintenanceContract.test_attach_refuses_lines_without_a_year` : le test
+avait tort, pas le code. Il supposait qu'une ligne de commande sans année dans
+son libellé n'est pas cochée par l'assistant de rattachement. Or
+`_deduire_annee` a un troisième signal, délibéré : la date de la commande —
+c'est lui qui place les 648 devis historiques dont le libellé ne dit rien. Le
+devis fabriqué par le test étant daté du jour, il tombait dans le contrat et la
+ligne était bien cochée. Comportement reproduit sur la sandbox avant
+correction. Le test date désormais le devis hors du contrat, et un second test
+couvre le signal lui-même, qui n'en avait aucun.
+
+**Les quatre autres échecs ne peuvent pas venir de nous** : `mail` (2 tours),
+`account_accountant` (bank rec, paiement). Le module n'hérite que de
+`res.partner`, `sale.order` et `sale.order.line`, et ne touche ni
+`account.payment`, ni le rapprochement bancaire, ni Discuss. Ces échecs
+s'accompagnent de `RuntimeError: can't start new thread` et de `Failed to
+fetch` répétés : le conteneur était à bout de ressources.
+
+**À savoir pour lire le rapport** : le runner s'arrête à 5 échecs. Nos tests
+passent par ordre alphabétique et celui qui tombait est le **5ᵉ sur 56** — les
+51 suivants ont été *skipped*, pas réussis. Un nouveau build de dev reste donc
+nécessaire pour valider l'ensemble ; nous n'avons aucun moyen de le faire de
+notre côté.
+
+**Les champs toujours invisibles** signalés en tête de log : c'est le test
+`TestInvisibleField.test_uncommented_invisible_field` d'Odoo 18 lui-même
+(`odoo/addons/base/tests/test_views.py`). Il n'échoue pas, il écrit des lignes
+`ERROR`. Sa règle exacte : un champ toujours invisible d'une vue *list* ou
+*form* doit être suivi **immédiatement** d'un commentaire XML disant pourquoi
+il est là — un commentaire placé *avant* la balise ne compte pas, et sa regex
+attrape aussi `column_invisible="1"`. Les quatre champs sont légitimes (deux
+`currency_id` qui portent des widgets Monetary, `syntec_revision` et
+`maintenance_status` lus par des expressions `invisible=`) : ils sont
+désormais justifiés sur place, et le script du §4 rejoue la regex d'Odoo sur
+l'arche stockée de l'instance, pour que ce contrôle ne dépende plus d'un build
+de dev.
 
 ## 4. Vérification après déploiement
 
