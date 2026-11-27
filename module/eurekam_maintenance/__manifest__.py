@@ -1,6 +1,6 @@
 {
     'name': 'Eurekam - Maintenance Contracts Tracking',
-    'version': '18.0.2.5.2',
+    'version': '18.0.2.5.3',
     'category': 'Sales/Maintenance',
     'summary': 'Lifecycle management of Drugcam maintenance contracts',
     'description': """

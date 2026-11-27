@@ -158,8 +158,8 @@
                                     <field name="module_billing_id"/>
                                     <field name="product_id" optional="show"/>
                                     <field name="amount" sum="Total / year"/>
-                                    <field name="start_year"/>
-                                    <field name="end_year"/>
+                                    <field name="start_year" options="{'enable_formatting': false}"/>
+                                    <field name="end_year" options="{'enable_formatting': false}"/>
                                     <field name="notes" optional="hide"/>
                                 </list>
                             </field>
@@ -183,7 +183,7 @@
                                     <!-- A year is a label, not a quantity:
                                          without this option it renders
                                          "2 026". -->
-                                    <field name="year" options="{'format': false}"/>
+                                    <field name="year" options="{'enable_formatting': false}"/>
                                     <field name="amount" sum="Total"/>
                                     <field name="order_state" widget="badge" readonly="1"
                                            decoration-warning="order_state == 'to_order'"

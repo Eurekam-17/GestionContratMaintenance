@@ -22,7 +22,7 @@
                             <!-- A year is a label, not a quantity: without
                                  this option it renders "2 026". -->
                             <field name="eurekam_maintenance_year"
-                                   options="{'format': false}"
+                                   options="{'enable_formatting': false}"
                                    readonly="1"/>
                             <field name="eurekam_maintenance_period"
                                    readonly="1"/>

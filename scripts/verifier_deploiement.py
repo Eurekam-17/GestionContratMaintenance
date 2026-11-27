@@ -41,7 +41,7 @@ MOTIF_BASE_PRODUCTION = r'^tecliberp-eurekam-main-\d+$'
 MOTS_TEST = ('test', 'staging', 'sandbox', 'recette', 'dev', 'preprod')
 MOTIF_BASE_DEFAUT = r'^eurekam-(sandbox|staging|recette|test|dev|preprod)(-\d+)?$'
 
-VERSION_ATTENDUE = '18.0.2.5.2'
+VERSION_ATTENDUE = '18.0.2.5.3'
 LIGNE = 'eurekam.maintenance.contract.line'
 CONTRAT = 'eurekam.maintenance.contract'
 
@@ -288,15 +288,34 @@ def main():
             verdict('name="%s"' % filtre in arch,
                     'filtre %s sur la %s' % (filtre, etiquette))
 
-    # Une annee est un libelle, pas une quantite : sans cette option elle
-    # s affiche "2 026".
-    for etiquette, modele, type_vue in (
-            ('onglet Montants annuels', CONTRAT, 'form'),
-            ('menu Lignes annuelles', LIGNE, 'list')):
-        arch = call(modele, 'get_view', **{'view_type': type_vue})['arch']
-        bloc = arch.split('name="year"')
-        verdict(len(bloc) > 1 and "'format': false" in bloc[1][:80],
-                'annee non formatee en milliers (%s)' % etiquette)
+    # Une annee est un libelle, pas une quantite : sans option elle s affiche
+    # "2 026". L option du champ Integer s appelle enable_formatting, et rien
+    # d autre - lu dans addons/web/static/src/views/fields/integer/
+    # integer_field.js, branche 18.0 :
+    #     formatNumber: options?.enable_formatting !== undefined
+    #                   ? Boolean(options.enable_formatting) : true
+    # Un nom d option inconnu est ignore en silence. Nous avons vecu deux
+    # jours avec options="{'format': false}" et un controle au vert, qui
+    # confirmait que l attribut etait ecrit, pas qu il servait a quelque
+    # chose. On balaie donc toutes les vues du module, pas deux.
+    vues = call('ir.model.data', 'search_read',
+                [('module', '=', 'eurekam_maintenance'),
+                 ('model', '=', 'ir.ui.view')], fields=['res_id'])
+    toutes = call('ir.ui.view', 'read', [v['res_id'] for v in vues],
+                  fields=['name', 'type', 'arch_db'])
+    mal_formatees = []
+    for vue in toutes:
+        # Une vue de recherche n affiche aucune valeur : rien a formater.
+        if vue.get('type') not in ('list', 'form'):
+            continue
+        for balise in re.findall(r'<field [^>]*name="[a-z_]*year"[^>]*>',
+                                 vue['arch_db'] or ''):
+            if 'enable_formatting' not in balise:
+                nom = re.search(r'name="([^"]+)"', balise).group(1)
+                mal_formatees.append('%s (%s)' % (nom, vue['name']))
+    verdict(not mal_formatees,
+            'toute annee affichee porte enable_formatting',
+            ', '.join(sorted(set(mal_formatees))))
 
     print('\n--- Niveau lecture seule ---')
 

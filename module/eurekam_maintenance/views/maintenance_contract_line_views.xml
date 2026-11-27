@@ -17,7 +17,7 @@
                 <!-- A year is a label, not a quantity: without this option
                      it renders "2 026". Same reason as aggregator=False on
                      the field itself. -->
-                <field name="year" options="{'format': false}"/>
+                <field name="year" options="{'enable_formatting': false}"/>
                 <field name="amount" sum="Total"/>
                 <field name="order_state" widget="badge"
                        decoration-warning="order_state == 'to_order'"
@@ -57,7 +57,7 @@
                         <group>
                             <field name="contract_id"/>
                             <field name="partner_id" readonly="1"/>
-                            <field name="year" options="{'format': false}"/>
+                            <field name="year" options="{'enable_formatting': false}"/>
                             <field name="amount"/>
                         </group>
                         <group>
