@@ -1,7 +1,7 @@
 # Passation — déploiement de `eurekam_maintenance` en production
 
 **Destinataire : prestataire Odoo (Scalizer).**
-Version cible : **18.0.2.5.2**. Mis à jour le 2026-11-26.
+Version cible : **18.0.2.5.3**. Mis à jour le 2026-11-27.
 Toutes les mesures ci-dessous ont été relevées sur les instances ce jour-là.
 
 ---
@@ -11,11 +11,12 @@ Toutes les mesures ci-dessous ont été relevées sur les instances ce jour-là.
 | Branche de `ScalizerOrg/eurekam` | Instance | Pointeur du sous-module | Version |
 |---|---|---|---|
 | `main` | **production** `eurekam.odoo.com` | `a007d99` | 18.0.2.0.0 (12/11) |
-| `Staging` | recette `eurekam-recette.odoo.com` | `a007d99` | 18.0.2.0.0 |
-| `sandbox` | sandbox `eurekam-sandbox.odoo.com` | `58a1533` | **18.0.2.5.2** ✅ |
+| `Staging` | recette `eurekam-recette.odoo.com` | `58a1533` | 18.0.2.5.2 (27/11) |
+| `sandbox` | sandbox `eurekam-sandbox.odoo.com` | `644ab06` | **18.0.2.5.3** ✅ |
 
-La sandbox porte la version cible, vérifiée fonctionnellement le 25/11.
-La production et la recette ont sept versions de retard.
+La sandbox porte la version cible, vérifiée fonctionnellement et **à l'écran**
+le 27/11. La recette n'a qu'une version de retard, mais c'est celle qui
+corrige l'affichage des années (§3.11). La production, elle, en a douze.
 
 ## 2. Ce qu'il y a à faire
 
@@ -44,6 +45,7 @@ contiennent pas de manifeste et sont ignorés par le serveur.
 | `aece7d6` | Suivi des périodes : un document à la fois, chacun à sa date |
 | `1f9720f` | Les trois défauts remontés par votre relecture (§3.9) |
 | `58a1533` | Le test de rattachement corrigé, les champs invisibles justifiés (§3.10) |
+| `644ab06` | Les années cessent de s'afficher « 2 026 », pour de bon (§3.11) |
 
 ## 3. Points d'attention
 
@@ -225,6 +227,36 @@ attrape aussi `column_invisible="1"`. Les quatre champs sont légitimes (deux
 désormais justifiés sur place, et le script du §4 rejoue la regex d'Odoo sur
 l'arche stockée de l'instance, pour que ce contrôle ne dépende plus d'un build
 de dev.
+
+### 3.11 Les années s'affichaient encore « 2 026 » (18.0.2.5.3)
+
+Merci d'avoir mis Recette à jour : c'est en la regardant que le défaut est
+apparu. Les années se sont affichées **« 2 024 », « 2 025 »** dans l'onglet
+Montants annuels et sur les 548 lignes du menu Lignes annuelles — alors que
+nos contrôles de déploiement annonçaient le contraire depuis deux jours.
+
+La cause : sur un champ `Integer`, l'option qui retire le séparateur de
+milliers s'appelle **`enable_formatting`**, et pas `format`. Lu dans
+`addons/web/static/src/views/fields/integer/integer_field.js` :
+
+```js
+formatNumber: options?.enable_formatting !== undefined
+              ? Boolean(options.enable_formatting) : true
+```
+
+Un nom d'option inconnu est **ignoré en silence** — ni erreur au build, ni
+avertissement en console. Notre contrôle cherchait l'ancien nom dans l'arche
+et le trouvait : il confirmait que l'attribut était écrit, jamais qu'il
+servait à quelque chose.
+
+Le contrôle balaie désormais **toutes** les vues *list* et *form* du module à
+la recherche d'un champ d'année, au lieu des deux que nous avions en tête. Il
+a trouvé `start_year` et `end_year` sur les modules facturables, jamais
+corrigés : **sept champs au total**. Vérifié à l'écran sur la sandbox après
+correction — 2025, 2026, 2027, sans espace.
+
+**Recette porte encore 18.0.2.5.2** et donc encore le défaut : il faudra
+rebumper `Staging` sur la tête de `main`.
 
 ## 4. Vérification après déploiement
 
