@@ -21,10 +21,13 @@ Run with:
 
 from datetime import date, timedelta
 
+from freezegun import freeze_time
+
 from odoo import fields as ofields
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
+from odoo.tools import mute_logger
 
 
 @tagged('post_install', '-at_install', 'eurekam_maintenance')
@@ -112,8 +115,11 @@ class TestMaintenanceContract(TransactionCase):
         self.assertNotEqual(contract.sequence_number, 'New')
         self.assertTrue(contract.name)
 
-        # partner_id is mandatory
-        with self.assertRaises(Exception):
+        # partner_id is mandatory. mute_logger keeps the deliberate
+        # constraint violation out of the build log: it was printed there as
+        # a red "bad query ... violates not-null constraint", one line above
+        # a genuine failure, and cost a careful reading on 27/11/2026.
+        with mute_logger('odoo.sql_db'), self.assertRaises(Exception):
             self.env['eurekam.maintenance.contract'].create({
                 'product_id': self.product.id,
                 'maintenance_amount': 1000.0,
@@ -1102,7 +1108,23 @@ class TestMaintenanceContract(TransactionCase):
         wizard.action_create_sale_order()      # must not raise
         self.assertEqual(len(contract.sale_order_ids), 4)
 
+    @freeze_time('2026-05-20')
     def test_period_cron_asks_for_one_period_at_a_time(self):
+        """Only the periods already due, never the whole year in advance.
+
+        The clock is frozen on purpose, and the first version of this test
+        is why. It read the real calendar: the contract runs from 1 January
+        to 31 December, so the four quarterly billing dates drift into the
+        past one after another, and by 1 October all four are due. It passed
+        every run before that date and failed every run after it -- which it
+        did on 27/11/2026, the first build that ever reached it.
+
+        Frozen on 20 May, lead time included, Q1 and Q2 have fallen due and
+        Q3 (1 July) and Q4 (1 October) have not. Four reminders at once is
+        not the defect being guarded against here: a contract quoted in
+        November really does owe four overdue periods. What must never
+        happen is asking for a quarter before it starts.
+        """
         contract, an = self._contrat_trimestriel()
         wizard = self.env['eurekam.maintenance.order.wizard'].with_context(
             default_contract_id=contract.id).create({'year': an})
@@ -1111,9 +1133,14 @@ class TestMaintenanceContract(TransactionCase):
 
         self.env['eurekam.maintenance.contract']._cron_check_periods_due()
         activites = self._activites_periode(order)
-        self.assertTrue(activites, "The due period must be asked for.")
-        # Never the whole year at once: Q4 is not due in January.
-        self.assertLess(len(activites), 4)
+        self.assertEqual(len(activites), 2,
+                         "Two quarters are due on 20 May, not four.")
+        resumes = ' | '.join(activites.mapped('summary'))
+        self.assertIn('Q1 %d' % an, resumes)
+        self.assertIn('Q2 %d' % an, resumes)
+        self.assertNotIn('Q3 %d' % an, resumes,
+                         "A quarter that has not started is not asked for.")
+        self.assertNotIn('Q4 %d' % an, resumes)
 
     def test_period_cron_is_idempotent_per_period(self):
         """Deduped on the period, not the contract: the next one still fires."""

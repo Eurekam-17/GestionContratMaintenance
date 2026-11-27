@@ -41,7 +41,7 @@ MOTIF_BASE_PRODUCTION = r'^tecliberp-eurekam-main-\d+$'
 MOTS_TEST = ('test', 'staging', 'sandbox', 'recette', 'dev', 'preprod')
 MOTIF_BASE_DEFAUT = r'^eurekam-(sandbox|staging|recette|test|dev|preprod)(-\d+)?$'
 
-VERSION_ATTENDUE = '18.0.2.5.3'
+VERSION_ATTENDUE = '18.0.2.5.4'
 LIGNE = 'eurekam.maintenance.contract.line'
 CONTRAT = 'eurekam.maintenance.contract'
 
