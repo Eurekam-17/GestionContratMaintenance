@@ -1,7 +1,7 @@
 # Passation — déploiement de `eurekam_maintenance` en production
 
 **Destinataire : prestataire Odoo (Scalizer).**
-Version cible : **18.0.2.5.3**. Mis à jour le 2026-11-27.
+Version cible : **18.0.2.5.4**. Mis à jour le 2026-11-27.
 Toutes les mesures ci-dessous ont été relevées sur les instances ce jour-là.
 
 ---
@@ -12,11 +12,11 @@ Toutes les mesures ci-dessous ont été relevées sur les instances ce jour-là.
 |---|---|---|---|
 | `main` | **production** `eurekam.odoo.com` | `a007d99` | 18.0.2.0.0 (12/11) |
 | `Staging` | recette `eurekam-recette.odoo.com` | `58a1533` | 18.0.2.5.2 (27/11) |
-| `sandbox` | sandbox `eurekam-sandbox.odoo.com` | `644ab06` | **18.0.2.5.3** ✅ |
+| `sandbox` | sandbox `eurekam-sandbox.odoo.com` | `75be365` | **18.0.2.5.4** ✅ |
 
 La sandbox porte la version cible, vérifiée fonctionnellement et **à l'écran**
-le 27/11. La recette n'a qu'une version de retard, mais c'est celle qui
-corrige l'affichage des années (§3.11). La production, elle, en a douze.
+le 27/11. La recette a deux versions de retard, dont celle qui corrige
+l'affichage des années (§3.11). La production, elle, en a treize.
 
 ## 2. Ce qu'il y a à faire
 
@@ -257,6 +257,45 @@ correction — 2025, 2026, 2027, sans espace.
 
 **Recette porte encore 18.0.2.5.2** et donc encore le défaut : il faudra
 rebumper `Staging` sur la tête de `main`.
+
+### 3.12 Le build du 27/11 : encore un seul échec à nous (18.0.2.5.4)
+
+Merci pour ce second build de dev. Même compte qu'hier : **un échec sur cinq
+est à nous**, et c'est un autre que la veille.
+
+| Test en échec | À nous ? | Lecture |
+|---|---|---|
+| `TestMenusAdminLight.test_01_click_apps_menus_as_admin` | non | `ConnectionLostError`, précédé de `RuntimeError: can't start new thread` |
+| une douzaine de tests HOOT `debug_manager` | non | « Failed to fetch », même cause |
+| `TestMailComposerUI.test_mail_composer_test_tour` | non | le chatter ne charge pas en 10 s ; déjà en échec le 26/11 |
+| `TestAccountBillPayment.test_bill_state_change_on_payment_state` | non | `account_accountant`, modèle que nous n'héritons pas ; déjà en échec le 26/11 |
+| `TestSaleComboConfigurator.test_sale_combo_configurator` | non | `ConnectionLostError` sur un `onchange` ; échec réseau, pas d'assertion |
+| `TestMaintenanceContract.test_period_cron_asks_for_one_period_at_a_time` | **oui** | corrigé en 18.0.2.5.4 |
+
+**Le `RuntimeError: can't start new thread` revient tout au long du log** : le
+conteneur de build n'arrive plus à créer de threads. C'est ce qui casse le
+clickbot, HOOT et le configurateur de combos. Si vous pouvez donner plus de
+ressources au build, quatre de ces cinq échecs devraient disparaître.
+
+**Notre test lisait le calendrier.** Le contrat de contrôle court du 1er
+janvier au 31 décembre, facturé *à échoir* : ses quatre échéances
+trimestrielles tombent les 01/01, 01/04, 01/07 et 01/10. Elles basculent
+dans le passé l'une après l'autre, si bien que le test passait avant le
+1er octobre et échouait après — « 4 not less than 4 ». Le code, lui, a
+raison : un contrat devisé en novembre doit bien quatre périodes.
+L'horloge du test est désormais gelée au 20 mai, où deux trimestres sont dus
+et deux ne le sont pas. Constaté sur la sandbox avant correction (contrat
+`MAINT/2026/0129`).
+
+**Et une demande, si c'est possible de votre côté.** Le runner s'arrête à
+cinq échecs : `Test suite halted: max failed tests already reached (5)`.
+Comme quatre des cinq ne sont pas à nous, nous ne découvrons qu'**un seul de
+nos tests par build**, à raison d'un build par jour. Concrètement,
+**19 de nos 57 tests n'ont encore jamais été exécutés** — tous ceux qui
+viennent après `test_period_cron_asks…` dans l'ordre alphabétique. Relever
+`--max-failed-tests` (ou lancer le build avec `--test-tags
+eurekam_maintenance` seul) nous donnerait la liste complète en une fois, au
+lieu de l'égrener. Nous n'avons pas d'Odoo local pour les jouer nous-mêmes.
 
 ## 4. Vérification après déploiement
 
